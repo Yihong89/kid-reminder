@@ -59,7 +59,8 @@ Behavior:
   they created. Parent-created tasks can't be deleted by the kid.
 
 Admin panel features:
-- **Calendar** — month view with per-day completion dots; click any day to inspect it.
+- **Calendar** — month view with per-day completion dots (green all done / amber partial)
+  and **pink markers on countdown event days**; click any day to inspect it.
 - **Emoji picker** — choose from a curated dropdown instead of typing.
 - **Time spent** — when marking a task done, enter the minutes; shown as `⏱ Nm`.
 - **Red highlight** — unfinished one-off tasks are shown in red.
@@ -69,8 +70,9 @@ Admin panel features:
   dropdown (Daily / Weekly / Bi-weekly / Monthly / Once), a **date** field, and a
   **countdown** checkbox that unlocks the days-before value.
 - **Kid mode** — logging in with the kid PIN shows a big, friendly view with **📋 Today**
-  and **⏳ Countdown** tabs. The kid can tap tasks done (with time), add tasks via **＋**,
-  and delete only their own tasks (parent tasks show no delete button). "All done! 🎉" when finished.
+  (including a calendar with completion dots and countdown event markers) and **⏳ Countdown**
+  tabs. The kid can tap tasks done (with time), add tasks via **＋**, and delete only their own
+  tasks (parent tasks show no delete button). "All done! 🎉" when finished.
 - **Countdown** — set a target date on a future task (e.g. an exam). Within the
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
   and `⏰ Nd ago` once passed. Future events can't be checked off until their day.
