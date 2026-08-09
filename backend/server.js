@@ -32,11 +32,13 @@ db.exec(`
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     title           TEXT NOT NULL,
     emoji           TEXT NOT NULL DEFAULT '',
-    recurring       INTEGER NOT NULL DEFAULT 1,   -- 1: shows every day, 0: one-off (hides once done)
+    recurring       INTEGER NOT NULL DEFAULT 1,   -- legacy column, kept for migration; use repeat
+    repeat          TEXT NOT NULL DEFAULT 'daily',-- daily | weekly | biweekly | monthly | once
     active          INTEGER NOT NULL DEFAULT 1,
     sort            INTEGER NOT NULL DEFAULT 0,
-    target_date     TEXT,                          -- YYYY-MM-DD optional future event (countdown)
-    countdown_start INTEGER NOT NULL DEFAULT 7,    -- show countdown when this many days remain
+    target_date     TEXT,                          -- task date / schedule anchor / countdown target
+    countdown_enabled INTEGER NOT NULL DEFAULT 0,  -- show a countdown towards target_date
+    countdown_start INTEGER NOT NULL DEFAULT 7,    -- days before target when countdown activates
     created_by      TEXT NOT NULL DEFAULT 'admin', -- "admin" | "kid" (kids can only delete their own)
     created_at      TEXT NOT NULL DEFAULT (datetime('now'))
   );
@@ -53,6 +55,14 @@ try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAU
 try { db.exec("ALTER TABLE tasks ADD COLUMN target_date TEXT"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE tasks ADD COLUMN countdown_start INTEGER NOT NULL DEFAULT 7"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE tasks ADD COLUMN created_by TEXT NOT NULL DEFAULT 'admin'"); } catch { /* exists */ }
+try {
+  db.exec("ALTER TABLE tasks ADD COLUMN repeat TEXT NOT NULL DEFAULT 'daily'");
+  db.exec("UPDATE tasks SET repeat = 'once' WHERE recurring = 0"); // migrate legacy one-offs
+} catch { /* exists */ }
+try {
+  db.exec("ALTER TABLE tasks ADD COLUMN countdown_enabled INTEGER NOT NULL DEFAULT 0");
+  db.exec("UPDATE tasks SET countdown_enabled = 1 WHERE target_date IS NOT NULL"); // migrate legacy countdowns
+} catch { /* exists */ }
 console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 
 // ---------------------------------------------------------------- helpers
@@ -70,14 +80,26 @@ function daysBetween(from, to) {
   return Math.round((b - a) / 86400000);
 }
 
+// scheduledOn: does a weekly / bi-weekly / monthly task fall on date d?
+// anchor is the task's first date (target_date or creation date).
+function scheduledOn(repeat, anchor, d) {
+  if (d < anchor) return false;
+  if (repeat === "weekly") return weekdayOf(d) === weekdayOf(anchor);
+  if (repeat === "biweekly") return daysBetween(anchor, d) % 14 === 0;
+  if (repeat === "monthly") return dayOfMonth(d) === dayOfMonth(anchor);
+  return false;
+}
+function weekdayOf(iso) { const [y, m, dd] = iso.split("-").map(Number); return new Date(Date.UTC(y, m - 1, dd)).getUTCDay(); }
+function dayOfMonth(iso) { return Number(iso.slice(8, 10)); }
+
 // listTasks(dateStr): tasks as-of a given date (default today).
 //   recurring tasks appear every day; a one-off task appears until the day it
 //   is completed (then hides the next day). "done" reflects that date's record.
 function listTasks(dateStr, type) {
   const d = dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr) ? dateStr : today();
   let sql = "SELECT * FROM tasks WHERE active = 1";
-  if (type === "todo") sql += " AND target_date IS NULL";      // today's checklist
-  if (type === "countdown") sql += " AND target_date IS NOT NULL"; // future events
+  if (type === "todo") sql += " AND countdown_enabled = 0";          // today's checklist
+  if (type === "countdown") sql += " AND countdown_enabled = 1 AND target_date IS NOT NULL"; // events
   sql += " ORDER BY sort, id";
   const tasks = db.prepare(sql).all();
   const doneOn = new Map(
@@ -89,15 +111,19 @@ function listTasks(dateStr, type) {
   const result = [];
   for (const task of tasks) {
     if (String(task.created_at).slice(0, 10) > d) continue; // not created yet on that date
-    if (!task.recurring && doneBefore.has(task.id)) continue; // one-off done on an earlier day
+    const repeat = task.repeat || "daily";
+    if (repeat === "once" && doneBefore.has(task.id)) continue; // one-off done on an earlier day
+    const anchor = task.target_date || String(task.created_at).slice(0, 10);
+    if (repeat !== "daily" && repeat !== "once" && !scheduledOn(repeat, anchor, d)) continue; // off-schedule
     result.push({
       id: task.id,
       title: task.title,
       emoji: task.emoji,
-      recurring: !!task.recurring,
+      repeat,
       done: doneOn.has(task.id),
       minutes: doneOn.get(task.id) || 0,
       targetDate: task.target_date || null,
+      countdownEnabled: !!task.countdown_enabled,
       countdownStart: task.countdown_start,
       daysLeft: task.target_date ? daysBetween(d, task.target_date) : null,
       createdBy: task.created_by,
@@ -191,12 +217,16 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const title = (body.title || "").trim();
       if (!title) return sendJSON(400, { error: "title is required" });
+      const repeat = ["daily", "weekly", "biweekly", "monthly", "once"].includes(body.repeat)
+        ? body.repeat
+        : (body.recurring === false ? "once" : "daily"); // backward compat
       const targetDate = /^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null;
+      const countdownEnabled = body.countdownEnabled ? 1 : 0;
       const countdownStart = Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)));
       const createdBy = isAdmin ? "admin" : "kid";
       const info = db
-        .prepare("INSERT INTO tasks (title, emoji, recurring, target_date, countdown_start, created_by) VALUES (?, ?, ?, ?, ?, ?)")
-        .run(title, String(body.emoji || "").slice(0, 8), body.recurring === false ? 0 : 1, targetDate, countdownStart, createdBy);
+        .prepare("INSERT INTO tasks (title, emoji, repeat, target_date, countdown_enabled, countdown_start, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        .run(title, String(body.emoji || "").slice(0, 8), repeat, targetDate, countdownEnabled, countdownStart, createdBy);
       return sendJSON(201, { id: Number(info.lastInsertRowid), createdBy });
     }
 
@@ -221,9 +251,11 @@ const server = http.createServer(async (req, res) => {
         const vals = [];
         if (body.title !== undefined) { sets.push("title = ?"); vals.push(String(body.title).trim()); }
         if (body.emoji !== undefined) { sets.push("emoji = ?"); vals.push(String(body.emoji).slice(0, 8)); }
-        if (body.recurring !== undefined) { sets.push("recurring = ?"); vals.push(body.recurring ? 1 : 0); }
+        if (body.repeat !== undefined) { sets.push("repeat = ?"); vals.push(["daily","weekly","biweekly","monthly","once"].includes(body.repeat) ? body.repeat : "daily"); }
+        else if (body.recurring !== undefined) { sets.push("repeat = ?"); vals.push(body.recurring ? "daily" : "once"); }
         if (body.active !== undefined) { sets.push("active = ?"); vals.push(body.active ? 1 : 0); }
         if (body.targetDate !== undefined) { sets.push("target_date = ?"); vals.push(/^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null); }
+        if (body.countdownEnabled !== undefined) { sets.push("countdown_enabled = ?"); vals.push(body.countdownEnabled ? 1 : 0); }
         if (body.countdownStart !== undefined) { sets.push("countdown_start = ?"); vals.push(Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)))); }
         if (!sets.length) return sendJSON(400, { error: "nothing to update" });
         vals.push(id);

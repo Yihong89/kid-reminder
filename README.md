@@ -35,20 +35,24 @@ node server.js        # PORT=2021, ADMIN_PIN=1234 (env-overridable)
 | Endpoint | Auth | Description |
 |---|---|---|
 | `GET /api/tasks?date=YYYY-MM-DD&type=todo\|countdown` | — | Task list for a date (default today). `type=todo` = daily checklist only; `type=countdown` = future-dated events only. `{ today, date, type, tasks: [{id,title,emoji,recurring,done,minutes,targetDate,countdownStart,daysLeft}] }` |
-| `POST /api/tasks` | `X-Admin-Pin` or `X-Kid-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }`; owner recorded as `createdBy` |
+| `POST /api/tasks` | `X-Admin-Pin` or `X-Kid-Pin` | Create task `{ title, emoji, repeat, targetDate?, countdownEnabled?, countdownStart? }`; owner recorded as `createdBy` |
 | `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (admin only) |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` or `X-Kid-Pin` | Delete; admin any task, kid only tasks they created |
 | `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
 | `POST /api/verify` | — | Check admin PIN |
 | `GET /`, `/admin` | — | Parent admin panel |
 
-Countdown fields: `targetDate` (YYYY-MM-DD) sets a future event; `countdownStart`
-(default 7) is the number of days remaining at which the countdown becomes active.
-`daysLeft` is computed server-side relative to the requested `date`.
+Repeat values: `daily`, `weekly`, `biweekly`, `monthly`, `once`.
+
+Countdown: `targetDate` (YYYY-MM-DD) is the task's date; `countdownEnabled` turns on
+the countdown; `countdownStart` (default 7) is the days-remaining threshold where it
+becomes active. `daysLeft` is computed server-side relative to the requested `date`.
 
 Behavior:
-- **Rollover** — tasks not done stay in the list the next day.
-- **Recurring** — `recurring: true` shows every day; `recurring: false` (one-off) hides the day after it's completed.
+- **Repeat** — `daily` shows every day; `once` hides after it's completed; `weekly`,
+  `biweekly`, and `monthly` show only on their scheduled days (anchored to the task's
+  date, or its creation date if no date is set).
+- **Rollover** — daily tasks not done stay in the list the next day.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
 - **Permissions** — admin actions require the admin PIN. The **kid PIN** (`KID_PIN`, default `0626`)
   unlocks the kid view: mark tasks done (with time), add new tasks, and delete only tasks
@@ -61,7 +65,9 @@ Admin panel features:
 - **Red highlight** — unfinished one-off tasks are shown in red.
 - **Two panels** — the **📋 Today** tab is the daily checklist (plus the calendar);
   future-dated tasks live in a separate **⏳ Countdown** tab.
-- **Add-task popup** — a **＋** button opens a form dialog instead of an inline form.
+- **Add-task popup** — a **＋** button opens a form dialog: name, emoji, a **repeat**
+  dropdown (Daily / Weekly / Bi-weekly / Monthly / Once), a **date** field, and a
+  **countdown** checkbox that unlocks the days-before value.
 - **Kid mode** — logging in with the kid PIN shows a big, friendly view with **📋 Today**
   and **⏳ Countdown** tabs. The kid can tap tasks done (with time), add tasks via **＋**,
   and delete only their own tasks (parent tasks show no delete button). "All done! 🎉" when finished.
