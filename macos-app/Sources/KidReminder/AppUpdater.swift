@@ -6,7 +6,7 @@ struct ReleaseInfo: Codable {
     let assets: [Asset]
     struct Asset: Codable {
         let name: String
-        let browserDownloadUrl: String
+        let browserDownloadUrl: String? // may be absent while GitHub processes a fresh upload
     }
     enum CodingKeys: String, CodingKey {
         case tagName = "tag_name"
@@ -14,8 +14,10 @@ struct ReleaseInfo: Codable {
         case assets
     }
     var zipDownloadURL: URL? {
-        assets.first { $0.name.hasSuffix(".zip") }
-            .flatMap { URL(string: $0.browserDownloadUrl) }
+        guard let asset = assets.first(where: { $0.name.hasSuffix(".zip") }) else { return nil }
+        // Prefer the API-provided URL; fall back to the stable <repo>/releases/download/<tag>/<name>
+        if let u = asset.browserDownloadUrl.flatMap({ URL(string: $0) }) { return u }
+        return URL(string: "https://github.com/Yihong89/kid-reminder/releases/download/\(tagName)/\(asset.name)")
     }
 }
 

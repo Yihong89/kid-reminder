@@ -20,6 +20,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
 struct ContentView: View {
     @EnvironmentObject var settings: SettingsStore
     @State private var selection: SidebarItem = .today
+    @StateObject private var updater = AppUpdater()
 
     var body: some View {
         NavigationSplitView {
@@ -35,5 +36,6 @@ struct ContentView: View {
             case .settings: SettingsView()
             }
         }
+        .task { await updater.check() }
     }
 }
