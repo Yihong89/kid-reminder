@@ -37,6 +37,7 @@ db.exec(`
     sort            INTEGER NOT NULL DEFAULT 0,
     target_date     TEXT,                          -- YYYY-MM-DD optional future event (countdown)
     countdown_start INTEGER NOT NULL DEFAULT 7,    -- show countdown when this many days remain
+    created_by      TEXT NOT NULL DEFAULT 'admin', -- "admin" | "kid" (kids can only delete their own)
     created_at      TEXT NOT NULL DEFAULT (datetime('now'))
   );
   CREATE TABLE IF NOT EXISTS completions (
@@ -51,6 +52,7 @@ db.exec(`
 try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE tasks ADD COLUMN target_date TEXT"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE tasks ADD COLUMN countdown_start INTEGER NOT NULL DEFAULT 7"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE tasks ADD COLUMN created_by TEXT NOT NULL DEFAULT 'admin'"); } catch { /* exists */ }
 console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 
 // ---------------------------------------------------------------- helpers
@@ -98,6 +100,7 @@ function listTasks(dateStr, type) {
       targetDate: task.target_date || null,
       countdownStart: task.countdown_start,
       daysLeft: task.target_date ? daysBetween(d, task.target_date) : null,
+      createdBy: task.created_by,
     });
   }
   return result;
@@ -180,18 +183,21 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { today: today(), date, type, tasks: listTasks(date, type) });
     }
 
-    // --- create task (parent) ------------------------------------------
+    // --- create task (admin or kid) ------------------------------------
     if (method === "POST" && pathname === "/api/tasks") {
-      if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
       const body = await readBody(req);
       const title = (body.title || "").trim();
       if (!title) return sendJSON(400, { error: "title is required" });
       const targetDate = /^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null;
       const countdownStart = Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)));
+      const createdBy = isAdmin ? "admin" : "kid";
       const info = db
-        .prepare("INSERT INTO tasks (title, emoji, recurring, target_date, countdown_start) VALUES (?, ?, ?, ?, ?)")
-        .run(title, String(body.emoji || "").slice(0, 8), body.recurring === false ? 0 : 1, targetDate, countdownStart);
-      return sendJSON(201, { id: Number(info.lastInsertRowid) });
+        .prepare("INSERT INTO tasks (title, emoji, recurring, target_date, countdown_start, created_by) VALUES (?, ?, ?, ?, ?, ?)")
+        .run(title, String(body.emoji || "").slice(0, 8), body.recurring === false ? 0 : 1, targetDate, countdownStart, createdBy);
+      return sendJSON(201, { id: Number(info.lastInsertRowid), createdBy });
     }
 
     // --- task by id -----------------------------------------------------
@@ -226,9 +232,14 @@ const server = http.createServer(async (req, res) => {
         return sendJSON(200, { ok: true });
       }
 
-      // delete (parent)
+      // delete (admin any; kid only their own tasks)
       if (method === "DELETE") {
-        if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+        const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+        const isKid = req.headers["x-kid-pin"] === KID_PIN;
+        if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+        const task = db.prepare("SELECT created_by FROM tasks WHERE id = ?").get(id);
+        if (!task) return sendJSON(404, { error: "task not found" });
+        if (!isAdmin && task.created_by !== "kid") return sendJSON(403, { error: "kids can only delete their own tasks" });
         db.prepare("DELETE FROM tasks WHERE id = ?").run(id);
         return sendJSON(200, { ok: true });
       }

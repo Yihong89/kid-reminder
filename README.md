@@ -35,9 +35,9 @@ node server.js        # PORT=2021, ADMIN_PIN=1234 (env-overridable)
 | Endpoint | Auth | Description |
 |---|---|---|
 | `GET /api/tasks?date=YYYY-MM-DD&type=todo\|countdown` | — | Task list for a date (default today). `type=todo` = daily checklist only; `type=countdown` = future-dated events only. `{ today, date, type, tasks: [{id,title,emoji,recurring,done,minutes,targetDate,countdownStart,daysLeft}] }` |
-| `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }` |
-| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (same fields as create) |
-| `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
+| `POST /api/tasks` | `X-Admin-Pin` or `X-Kid-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }`; owner recorded as `createdBy` |
+| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (admin only) |
+| `DELETE /api/tasks/:id` | `X-Admin-Pin` or `X-Kid-Pin` | Delete; admin any task, kid only tasks they created |
 | `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
 | `POST /api/verify` | — | Check admin PIN |
 | `GET /`, `/admin` | — | Parent admin panel |
@@ -51,7 +51,8 @@ Behavior:
 - **Recurring** — `recurring: true` shows every day; `recurring: false` (one-off) hides the day after it's completed.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
 - **Permissions** — admin actions require the admin PIN. The **kid PIN** (`KID_PIN`, default `0626`)
-  unlocks a read-only kid view: mark tasks done (with time) only — no add/edit/delete, no admin panels.
+  unlocks the kid view: mark tasks done (with time), add new tasks, and delete only tasks
+  they created. Parent-created tasks can't be deleted by the kid.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots; click any day to inspect it.
@@ -60,8 +61,10 @@ Admin panel features:
 - **Red highlight** — unfinished one-off tasks are shown in red.
 - **Two panels** — the **📋 Today** tab is the daily checklist (plus the calendar);
   future-dated tasks live in a separate **⏳ Countdown** tab.
-- **Kid mode** — logging in with the kid PIN shows a big, friendly, read-only
-  checklist: tap a task, enter minutes, done. "All done! 🎉" when finished.
+- **Add-task popup** — a **＋** button opens a form dialog instead of an inline form.
+- **Kid mode** — logging in with the kid PIN shows a big, friendly view with **📋 Today**
+  and **⏳ Countdown** tabs. The kid can tap tasks done (with time), add tasks via **＋**,
+  and delete only their own tasks (parent tasks show no delete button). "All done! 🎉" when finished.
 - **Countdown** — set a target date on a future task (e.g. an exam). Within the
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
   and `⏰ Nd ago` once passed. Future events can't be checked off until their day.

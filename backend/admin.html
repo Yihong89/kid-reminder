@@ -103,6 +103,19 @@
   .kid-task.done { background:#ecfdf5; border-color:var(--done); }
   .kid-task.done .title { color:var(--muted); text-decoration:line-through; }
   .kid-task.done .check { border-color:var(--done); background:var(--done); color:#fff; }
+  .kid-task.locked { cursor:default; }
+  .kid-task.locked:hover { border-color:var(--border); }
+  .kid-del { border:none; background:none; cursor:pointer; font-size:18px; color:var(--muted); padding:4px; }
+  .kid-del:hover { color:var(--danger); }
+  .badge.mine { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+  .badge.parent { background:var(--bg); color:var(--muted); }
+  #fabAdd { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
+            background:var(--accent); color:#fff; border:none; font-size:28px; line-height:1; cursor:pointer;
+            box-shadow:0 6px 18px rgba(37,99,235,.35); z-index:20; }
+  #fabAdd:hover { filter:brightness(1.08); }
+  #addDialog .add { gap:8px; }
+  #addDialog .add input[type=text] { flex:1 1 100%; width:100%; }
+  #addDialog .add select { flex:0 0 auto; }
 </style>
 </head>
 <body>
@@ -155,25 +168,17 @@
 
     <div class="msg err" id="err"></div>
 
-    <div class="card" style="margin-top:18px">
-      <div class="add">
-        <input type="text" id="newTitle" placeholder="Add a task…" maxlength="100" />
-        <select id="newEmoji"></select>
-        <label><input type="checkbox" id="newRecurring" checked /> repeats daily</label>
-        <button class="primary" id="addBtn">Add</button>
-      </div>
-      <div class="cnt-row">
-        <label>Countdown to <input type="date" id="newTarget" /></label>
-        <label>start showing when <input type="number" id="newCountdown" min="1" max="30" value="7" style="width:70px" /> days left</label>
-      </div>
-    </div>
-    <p class="hint">PIN is only needed to add / edit / delete. Change it on the server with <code>ADMIN_PIN</code>.</p>
+    <p class="hint">Use <b>＋</b> to add a task. Parent-created tasks can only be removed by the parent.</p>
   </div>
 
   <!-- kid view -->
   <div id="kidView" hidden>
     <div class="kid-top">
-      <span class="kid-title">⭐ Today</span>
+      <span class="kid-title">⭐ Kid</span>
+    </div>
+    <div class="tabs">
+      <button class="tab active" id="kidTabToday">📋 Today</button>
+      <button class="tab" id="kidTabCountdown">⏳ Countdown</button>
     </div>
     <div class="kid-date" id="kidDate"></div>
     <div class="done-summary" id="kidSummary"></div>
@@ -181,6 +186,27 @@
     <div class="msg err" id="kidErr"></div>
   </div>
 </div>
+
+<button id="fabAdd" title="Add task" hidden>＋</button>
+
+<dialog id="addDialog">
+  <h3>➕ New task</h3>
+  <div class="add">
+    <input type="text" id="dlgTitle" placeholder="Task name…" maxlength="100" />
+  </div>
+  <div class="add">
+    <select id="dlgEmoji"></select>
+    <label><input type="checkbox" id="dlgRecurring" checked /> repeats daily</label>
+  </div>
+  <div class="cnt-row">
+    <label>Countdown to <input type="date" id="dlgTarget" /></label>
+    <label>start when <input type="number" id="dlgCountdown" min="1" max="30" value="7" style="width:70px" /> days left</label>
+  </div>
+  <div class="row">
+    <button class="ghost" id="dlgCancel">Cancel</button>
+    <button class="primary" id="dlgCreate">Create</button>
+  </div>
+</dialog>
 
 <dialog id="minutesDialog">
   <h3>How long did it take? ⏱</h3>
@@ -225,7 +251,8 @@
 
   async function api(path, opts = {}) {
     const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
-    if (pin) headers["X-Admin-Pin"] = pin;
+    if (role === "kid") headers["X-Kid-Pin"] = pin;
+    else if (pin) headers["X-Admin-Pin"] = pin;
     const res = await fetch(path, Object.assign({}, opts, { headers }));
     let body = {};
     try { body = await res.json(); } catch {}
@@ -453,9 +480,13 @@
   function showMain() {
     $("#pinGate").hidden = true;
     $("#logoutBtn").hidden = false;
+    $("#fabAdd").hidden = false;
     if (role === "kid") {
       $("#main").hidden = true;
       $("#kidView").hidden = false;
+      kidTab = "today";
+      $("#kidTabToday").onclick = () => setKidTab("today");
+      $("#kidTabCountdown").onclick = () => setKidTab("countdown");
       refreshKid();
     } else {
       $("#kidView").hidden = true;
@@ -466,40 +497,67 @@
   function showAdmin() {
     const d = new Date();
     viewYear = d.getFullYear(); viewMonth = d.getMonth();
-    $("#newEmoji").innerHTML = emojiOptions("");
     $("#tabToday").onclick = () => setTab("today");
     $("#tabCountdown").onclick = () => setTab("countdown");
-    $("#newTitle").focus();
     refresh();
     refreshDayFlags();
   }
 
   // ---- kid view ---------------------------------------------------------
+  let kidTab = "today"; // "today" | "countdown"
+
+  function setKidTab(t) {
+    kidTab = t;
+    $("#kidTabToday").classList.toggle("active", t === "today");
+    $("#kidTabCountdown").classList.toggle("active", t === "countdown");
+    refreshKid();
+  }
+
   async function refreshKid() {
     try {
-      const data = await api("/api/tasks?type=todo");
-      const list = data.tasks;
+      const type = kidTab === "countdown" ? "countdown" : "todo";
+      const data = await api(`/api/tasks?type=${type}`);
+      let list = data.tasks;
+      if (kidTab === "countdown") list = list.slice().sort((a, b) => (a.daysLeft ?? 999) - (b.daysLeft ?? 999));
       $("#kidDate").textContent = prettyDate(data.today);
       const done = list.filter((t) => t.done).length;
-      $("#kidSummary").textContent = list.length
-        ? (done === list.length ? "🎉 All done! Great job!" : `${done} of ${list.length} done`)
-        : "";
+      $("#kidSummary").textContent = kidTab === "countdown"
+        ? (list.length ? `${list.length} event${list.length > 1 ? "s" : ""}` : "")
+        : (list.length ? (done === list.length ? "🎉 All done! Great job!" : `${done} of ${list.length} done`) : "");
       const el = $("#kidList");
       el.innerHTML = "";
-      if (!list.length) { el.innerHTML = '<div class="empty">Nothing to do today! 🎉</div>'; return; }
-      for (const t of list) el.appendChild(kidRow(t));
+      if (!list.length) {
+        el.innerHTML = kidTab === "countdown" ? '<div class="empty">No countdown events yet.</div>' : '<div class="empty">Nothing to do today! 🎉</div>';
+        return;
+      }
+      for (const t of list) el.appendChild(kidTaskRow(t));
     } catch (e) { $("#kidErr").textContent = e.message; }
   }
 
-  function kidRow(t) {
+  function kidTaskRow(t) {
+    const canToggle = kidTab === "today" || (t.daysLeft !== null && t.daysLeft <= 0);
+    const mine = t.createdBy === "kid";
     const row = document.createElement("div");
-    row.className = "kid-task" + (t.done ? " done" : "");
+    row.className = "kid-task" + (t.done ? " done" : "") + (canToggle ? "" : " locked");
     row.innerHTML = `
       <span class="emoji">${t.emoji || "📝"}</span>
       <span class="title">${escapeHtml(t.title)}</span>
+      ${mine ? '<span class="badge mine">👤 mine</span>' : '<span class="badge parent">👨‍👩‍👧</span>'}
+      ${countdownBadge(t)}
       ${t.done && t.minutes > 0 ? `<span class="min">⏱ ${t.minutes}m</span>` : ""}
+      ${mine ? '<button class="kid-del" title="delete">🗑️</button>' : ""}
       <span class="check">✓</span>`;
+    const delBtn = row.querySelector(".kid-del");
+    if (delBtn) {
+      delBtn.onclick = async (e) => {
+        e.stopPropagation();
+        if (!confirm(`Delete "${t.title}"?`)) return;
+        try { await api(`/api/tasks/${t.id}`, { method: "DELETE" }); refreshKid(); }
+        catch (err) { $("#kidErr").textContent = err.message; }
+      };
+    }
     row.onclick = async () => {
+      if (!canToggle) return;
       row.classList.add("busy");
       if (!t.done) {
         const minutes = await askMinutes();
@@ -525,6 +583,7 @@
     $("#main").hidden = true;
     $("#kidView").hidden = true;
     $("#logoutBtn").hidden = true;
+    $("#fabAdd").hidden = true;
     $("#pinGate").hidden = false;
     $("#pinInput").value = "";
     $("#pinInput").focus();
@@ -537,29 +596,40 @@
   };
   $("#prevMonth").onclick = () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } refreshDayFlags(); };
   $("#nextMonth").onclick = () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } refreshDayFlags(); };
-  $("#addBtn").onclick = async () => {
-    const title = $("#newTitle").value.trim();
+  // add-task popup
+  function openAddDialog() {
+    $("#dlgTitle").value = "";
+    $("#dlgEmoji").innerHTML = emojiOptions("");
+    $("#dlgRecurring").checked = true;
+    $("#dlgTarget").value = "";
+    $("#dlgCountdown").value = 7;
+    $("#addDialog").showModal();
+    $("#dlgTitle").focus();
+  }
+  $("#fabAdd").onclick = openAddDialog;
+  $("#dlgCancel").onclick = () => $("#addDialog").close();
+  $("#dlgCreate").onclick = async () => {
+    const title = $("#dlgTitle").value.trim();
     if (!title) return;
-    const hadTarget = !!$("#newTarget").value;
+    const hadTarget = !!$("#dlgTarget").value;
     try {
       await api("/api/tasks", {
         method: "POST",
         body: JSON.stringify({
           title,
-          emoji: $("#newEmoji").value,
-          recurring: $("#newRecurring").checked,
-          targetDate: $("#newTarget").value,
-          countdownStart: Number($("#newCountdown").value) || 7,
+          emoji: $("#dlgEmoji").value,
+          recurring: $("#dlgRecurring").checked,
+          targetDate: $("#dlgTarget").value,
+          countdownStart: Number($("#dlgCountdown").value) || 7,
         }),
       });
-      $("#newTitle").value = "";
-      $("#newRecurring").checked = true;
-      $("#newTarget").value = "";
-      $("#newCountdown").value = 7;
-      setTab(hadTarget ? "countdown" : "today"); // show the task where it now lives
+      $("#addDialog").close();
+      if (role === "kid") setKidTab(hadTarget ? "countdown" : "today");
+      else if (hadTarget) setTab("countdown");
+      else { refresh(); refreshDayFlags(); }
     } catch (e) { showErr(e.message); }
   };
-  $("#newTitle").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#addBtn").click(); });
+  $("#dlgTitle").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#dlgCreate").click(); });
 
   if (pin && role) { showMain(); } else { $("#pinGate").hidden = false; }
 </script>

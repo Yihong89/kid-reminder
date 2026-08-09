@@ -61,9 +61,9 @@ Base path `/api`:
 | Endpoint | Auth | Description |
 |---|---|---|
 | `GET /api/tasks?date=YYYY-MM-DD&type=todo\|countdown` | — | Task list for a date (default today). `type=todo` = daily checklist only; `type=countdown` = future-dated events only. |
-| `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }` |
-| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (same fields as create) |
-| `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
+| `POST /api/tasks` | `X-Admin-Pin` or `X-Kid-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }`; owner recorded as `createdBy` |
+| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (admin only) |
+| `DELETE /api/tasks/:id` | `X-Admin-Pin` or `X-Kid-Pin` | Delete; admin any task, kid only tasks they created |
 | `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
 | `POST /api/verify` | — | Check a PIN, returns `{ role: "admin" }` or `{ role: "kid" }` |
 | `GET /`, `/admin` | — | Parent admin panel |
@@ -77,7 +77,8 @@ computed server-side relative to the requested `date`.
 - **Rollover** — tasks not done stay in the list the next day.
 - **Recurring** — `recurring: true` shows every day; `recurring: false` (one-off) hides the day after it's completed.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
-- **Permissions** — parent actions require the admin PIN; the kid's app has no edit/delete controls.
+- **Permissions** — parent actions require the admin PIN. The kid PIN unlocks a kid view that
+  can mark tasks done, add tasks, and delete only tasks it created (parent tasks are protected).
 - **LAN only** — bind to your private network; don't expose it to the internet (no TLS).
 
 The admin panel has two tabs: **📋 Today** (the daily checklist + month calendar) and
