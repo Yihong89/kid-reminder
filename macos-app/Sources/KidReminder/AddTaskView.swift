@@ -23,9 +23,13 @@ struct AddTaskView: View {
                 .frame(maxWidth: 340)
 
             HStack(spacing: 16) {
-                TextField("emoji", text: $emoji)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 90)
+                Picker("Emoji", selection: $emoji) {
+                    ForEach(EmojiChoices, id: \.0) { e, label in
+                        Text(e.isEmpty ? "😶  none" : "\(e)  \(label)").tag(e)
+                    }
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: 250)
 
                 Picker("Repeat", selection: $repeatType) {
                     ForEach(repeats, id: \.self) { r in Text(r.capitalized) }
