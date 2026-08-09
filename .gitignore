@@ -1,0 +1,18 @@
+# Node
+node_modules/
+
+# Databases & logs
+*.db
+*.db-wal
+*.db-shm
+*.log
+
+# Local-only operational notes (contains home IPs / usernames)
+backend-setup.local.md
+
+# macOS
+.DS_Store
+
+# Swift build output (macOS app)
+.build/
+*.xcodeproj/xcuserdata/
