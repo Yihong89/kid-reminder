@@ -309,7 +309,7 @@
     card.className = "card task-row" + (t.repeat === "once" && !t.done ? " urgent" : "");
     card.dataset.id = t.id;
     const minBadge = t.done && t.minutes > 0 ? `<span class="min">⏱ ${t.minutes}m</span>` : "";
-    const canDelete = role === "admin" || t.createdBy === "kid";
+    const canModify = role === "admin" || t.createdBy === "kid"; // kid edits/deletes only their own
     const ownerBadge = role === "kid"
       ? (t.createdBy === "kid" ? '<span class="badge mine">👤 mine</span>' : '<span class="badge parent">👨‍👩‍👧</span>')
       : "";
@@ -322,8 +322,8 @@
         ${minBadge}
         ${countdownBadge(t)}
         <input type="checkbox" ${t.done ? "checked" : ""} ${allowDone ? "" : "disabled"} title="${allowDone ? "done" : "view-only"}" />
-        <button class="edit" title="edit">✏️</button>
-        ${canDelete ? '<button class="del" title="delete">🗑️</button>' : ""}
+        ${canModify ? '<button class="edit" title="edit">✏️</button>' : ""}
+        ${canModify ? '<button class="del" title="delete">🗑️</button>' : ""}
       </div>`;
     card.querySelector("input[type=checkbox]").onchange = async () => {
       if (!t.done) {
@@ -345,7 +345,8 @@
         catch (e) { showErr(e.message); }
       };
     }
-    card.querySelector(".edit").onclick = () => { card.replaceWith(editRow(t)); };
+    const editBtn = card.querySelector(".edit");
+    if (editBtn) editBtn.onclick = () => { card.replaceWith(editRow(t)); };
     return card;
   }
 

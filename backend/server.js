@@ -243,11 +243,16 @@ const server = http.createServer(async (req, res) => {
         return sendJSON(result.status, result.json);
       }
 
-      // edit (admin or kid)
+      // edit (admin any; kid only their own tasks)
       if (method === "PATCH") {
         const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
         const isKid = req.headers["x-kid-pin"] === KID_PIN;
         if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+        if (isKid) {
+          const task = db.prepare("SELECT created_by FROM tasks WHERE id = ?").get(id);
+          if (!task) return sendJSON(404, { error: "task not found" });
+          if (task.created_by !== "kid") return sendJSON(403, { error: "kids can only edit their own tasks" });
+        }
         const body = await readBody(req);
         const sets = [];
         const vals = [];

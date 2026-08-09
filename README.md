@@ -55,8 +55,9 @@ Behavior:
 - **Rollover** — daily tasks not done stay in the list the next day.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
 - **Permissions** — the **admin PIN** unlocks full control; the **kid PIN** (`KID_PIN`, default `0626`)
-  unlocks the same interface but the kid can only delete tasks they created. Admin can edit
-  and delete everything; the kid can edit anything but not delete parent tasks.
+  unlocks the same interface, but the kid can only **edit or delete tasks they created**.
+  Parent-created tasks are locked for the kid (no edit/delete buttons, and the server rejects
+  them with 403). Both roles can add tasks and mark tasks done.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots (green all done / amber partial)
@@ -70,9 +71,9 @@ Admin panel features:
   dropdown (Daily / Weekly / Bi-weekly / Monthly / Once), a **date** field, and a
   **countdown** checkbox that unlocks the days-before value.
 - **Kid mode** — the kid sees the **exact same interface** as the parent (full calendar
-  with day navigation, Today/Countdown tabs, add/edit, minutes, countdown). The only
-  difference: the kid can delete only tasks they created — parent tasks show no delete
-  button (also enforced server-side with a 403).
+  with day navigation, Today/Countdown tabs, add, minutes, countdown). The only difference:
+  the kid can edit/delete only tasks they created — parent tasks show no ✏️/🗑 buttons
+  (also enforced server-side with a 403).
 - **Countdown** — set a target date on a future task (e.g. an exam). Within the
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
   and `⏰ Nd ago` once passed. Future events can't be checked off until their day.
