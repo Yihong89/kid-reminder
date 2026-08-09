@@ -114,7 +114,9 @@ function listTasks(dateStr, type) {
     const repeat = task.repeat || "daily";
     if (repeat === "once") {
       if (doneBefore.has(task.id)) continue; // completed on an earlier day
-      if (task.target_date && d !== task.target_date) continue; // dated one-off: only on its day
+      // a dated non-countdown one-off only shows on its own day; countdown
+      // events stay visible every day so the countdown panel can count down.
+      if (!task.countdown_enabled && task.target_date && d !== task.target_date) continue;
     }
     const anchor = task.target_date || String(task.created_at).slice(0, 10);
     if (repeat !== "daily" && repeat !== "once" && !scheduledOn(repeat, anchor, d)) continue; // off-schedule
