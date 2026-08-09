@@ -3,6 +3,8 @@
 A simple daily checklist app for kids. The parent manages tasks from a web panel;
 the kid sees the checklist and marks tasks done from a native macOS app.
 
+**Language: English | [中文](README.zh-CN.md)**
+
 ![arch: backend on Mac Mini + web admin + macOS client]
 
 ## Architecture
