@@ -114,9 +114,13 @@ function listTasks(dateStr, type) {
     const repeat = task.repeat || "daily";
     if (repeat === "once") {
       if (doneBefore.has(task.id)) continue; // completed on an earlier day
-      // a dated non-countdown one-off only shows on its own day; countdown
-      // events stay visible every day so the countdown panel can count down.
-      if (!task.countdown_enabled && task.target_date && d !== task.target_date) continue;
+      // a non-countdown one-off shows only on its own day (its date, or the day
+      // it was created) and never rolls over; countdown events stay visible
+      // every day so the countdown panel can count down.
+      if (!task.countdown_enabled) {
+        const onceDate = task.target_date || String(task.created_at).slice(0, 10);
+        if (d !== onceDate) continue;
+      }
     }
     const anchor = task.target_date || String(task.created_at).slice(0, 10);
     if (repeat !== "daily" && repeat !== "once" && !scheduledOn(repeat, anchor, d)) continue; // off-schedule
@@ -186,7 +190,7 @@ const server = http.createServer(async (req, res) => {
     // --- admin panel --------------------------------------------------
     if (method === "GET" && (pathname === "/" || pathname === "/admin")) {
       const html = fs.readFileSync(ADMIN_HTML_PATH);
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(html);
     }
     if (method === "GET" && pathname === "/favicon.ico") {

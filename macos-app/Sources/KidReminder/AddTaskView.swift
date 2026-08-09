@@ -8,6 +8,9 @@ struct AddTaskView: View {
     @State private var title = ""
     @State private var emoji = ""
     @State private var repeatType = "once"
+    @State private var date = Date()
+    @State private var countdownEnabled = false
+    @State private var countdownDays = 7
     @State private var busy = false
     @State private var error: String?
 
@@ -32,10 +35,22 @@ struct AddTaskView: View {
                 .frame(maxWidth: 250)
 
                 Picker("Repeat", selection: $repeatType) {
-                    ForEach(repeats, id: \.self) { r in Text(r.capitalized) }
+                    ForEach(repeats, id: \.self) { r in
+                        Text(r.capitalized).tag(r)
+                    }
                 }
                 .pickerStyle(.menu)
             }
+
+            HStack(spacing: 16) {
+                DatePicker("Date", selection: $date, displayedComponents: .date)
+                    .labelsHidden()
+                Toggle("Countdown", isOn: $countdownEnabled)
+                if countdownEnabled {
+                    Stepper("\(countdownDays) days", value: $countdownDays, in: 1...30)
+                }
+            }
+            .frame(maxWidth: 340)
 
             if let error {
                 Text(error).foregroundStyle(.red).font(.callout)
@@ -50,7 +65,7 @@ struct AddTaskView: View {
             }
         }
         .padding(24)
-        .frame(width: 380)
+        .frame(width: 420)
     }
 
     private func create() {
@@ -61,12 +76,21 @@ struct AddTaskView: View {
                 try await api.addTask(
                     title: title.trimmingCharacters(in: .whitespaces),
                     emoji: emoji.trimmingCharacters(in: .whitespaces),
-                    repeatType: repeatType)
+                    repeatType: repeatType,
+                    targetDate: countdownEnabled ? Self.iso(date) : nil,
+                    countdownEnabled: countdownEnabled,
+                    countdownStart: countdownDays)
                 dismiss()
                 onSaved()
             } catch let e {
                 error = (e as? LocalizedError)?.errorDescription ?? e.localizedDescription
             }
         }
+    }
+
+    static func iso(_ d: Date) -> String {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        return f.string(from: d)
     }
 }
