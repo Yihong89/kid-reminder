@@ -80,12 +80,23 @@ Admin panel features:
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
   and `⏰ Nd ago` once passed. Future events can't be checked off until their day.
 
-## macOS app (planned)
+## macOS app
 
-Native SwiftUI app for the kid's MacBook:
-- Shows today's checklist from `GET /api/tasks`
-- Tap to mark done via `POST /api/tasks/:id/toggle`
-- Daily morning notification (local, scheduled on the MacBook)
+Native SwiftUI app (`macos-app/`). Today checklist, Countdown panel, and a
+**Settings** view where the server IP, port, and PIN are configured — changes
+apply immediately (no restart needed).
+
+Build it (no Xcode required, just Command Line Tools + Swift):
+
+```bash
+cd macos-app
+./build.sh        # produces build/KidReminder.app
+```
+
+Copy `KidReminder.app` to the MacBook, **right-click → Open** on first launch.
+On first run, open **Settings** and enter the server IP, port, and PIN. The kid
+PIN unlocks the checklist (own tasks only); the admin PIN unlocks full control.
+The app reads the connection settings on every request, so edits apply instantly.
 
 ## Deployment notes
 
