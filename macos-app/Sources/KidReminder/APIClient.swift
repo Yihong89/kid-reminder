@@ -61,8 +61,9 @@ final class APIClient {
         return try JSONDecoder().decode(Resp.self, from: data).role
     }
 
-    func tasks(type: String, date: String? = nil) async throws -> [KidTask] {
-        var items: [URLQueryItem] = [URLQueryItem(name: "type", value: type)]
+    func tasks(type: String?, date: String? = nil) async throws -> [KidTask] {
+        var items: [URLQueryItem] = []
+        if let type = type { items.append(URLQueryItem(name: "type", value: type)) }
         if let date = date { items.append(URLQueryItem(name: "date", value: date)) }
         var comps = URLComponents()
         comps.queryItems = items

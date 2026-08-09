@@ -82,9 +82,11 @@ Admin panel features:
 
 ## macOS app
 
-Native SwiftUI app (`macos-app/`). Today checklist, Countdown panel, and a
-**Settings** view where the server IP, port, and PIN are configured — changes
-apply immediately (no restart needed).
+Native SwiftUI app (`macos-app/`). **Today** checklist, **Calendar** (month view
+with completion dots + pink countdown-event markers; click any day to inspect
+its tasks), **Countdown** panel, and a **Settings** view where the server IP,
+port, and PIN are configured — changes apply immediately (no restart needed).
+The build produces a signed `.app` with a custom icon (from `Resources/AppIcon.svg`).
 
 Build it (no Xcode required, just Command Line Tools + Swift):
 

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="rgba(255,255,255,0.45)"/>
+      <stop offset="1" stop-color="rgba(255,255,255,0.18)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded background -->
+  <rect x="48" y="48" width="928" height="928" rx="210" fill="url(#bg)"/>
+
+  <!-- calendar header strip -->
+  <rect x="176" y="176" width="672" height="150" rx="52" fill="url(#header)"/>
+  <!-- calendar header dots (page rings) -->
+  <circle cx="300" cy="252" r="18" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="512" cy="252" r="18" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="724" cy="252" r="18" fill="rgba(255,255,255,0.9)"/>
+
+  <!-- white check circle -->
+  <circle cx="512" cy="590" r="250" fill="#ffffff"/>
+
+  <!-- big green check -->
+  <path d="M390 590 L475 676 L645 502" stroke="#10b981" stroke-width="72"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- sparkle (kid touch) -->
+  <path d="M820 300 l26 62 62 26 -62 26 -26 62 -26 -62 -62 -26 62 -26 z" fill="#fde047"/>
+</svg>

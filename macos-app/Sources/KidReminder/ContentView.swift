@@ -2,6 +2,7 @@ import SwiftUI
 
 enum SidebarItem: String, CaseIterable, Identifiable {
     case today = "Today"
+    case calendar = "Calendar"
     case countdown = "Countdown"
     case settings = "Settings"
 
@@ -9,6 +10,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .today: return "checklist"
+        case .calendar: return "calendar"
         case .countdown: return "timer"
         case .settings: return "gearshape"
         }
@@ -28,6 +30,7 @@ struct ContentView: View {
         } detail: {
             switch selection {
             case .today: TodayView()
+            case .calendar: CalendarView()
             case .countdown: CountdownView()
             case .settings: SettingsView()
             }
