@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var settings: SettingsStore
+    @StateObject private var updater = AppUpdater()
     @State private var host = ""
     @State private var port = ""
     @State private var pin = ""
@@ -42,7 +43,29 @@ struct SettingsView: View {
                           systemImage: role == "admin" ? "person.crop.circle.fill" : "face.smiling")
                 }
             }
+
+            Section("Updates") {
+                LabeledContent("Current version", value: updater.currentVersion)
+                switch updater.state {
+                case .idle, .checking:
+                    Button("Check for Updates") { Task { await updater.check() } }
+                        .disabled(ifChecking(updater.state))
+                case .available(let release):
+                    LabeledContent("New version", value: release.tagName)
+                    Button("Download & Update") { Task { await updater.update(to: release) } }
+                        .keyboardShortcut(.defaultAction)
+                case .downloading:
+                    HStack { ProgressView().controlSize(.small); Text("Downloading…") }
+                case .installing:
+                    HStack { ProgressView().controlSize(.small); Text("Installing…") }
+                case .upToDate:
+                    Text("You're up to date ✓").foregroundStyle(.secondary)
+                case .failed(let msg):
+                    Text(msg).foregroundStyle(.red).font(.callout)
+                }
+            }
         }
+        .onAppear { Task { await updater.check() } }
         .formStyle(.grouped)
         .navigationTitle("Settings")
         .onAppear {
@@ -79,5 +102,10 @@ struct SettingsView: View {
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             statusMessage = "Could not connect: \(msg)"
         }
+    }
+
+    private func ifChecking(_ s: AppUpdater.State) -> Bool {
+        if case .checking = s { return true }
+        return false
     }
 }

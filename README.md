@@ -98,6 +98,10 @@ Grab the latest release from the **Releases** page:
 (it's ad-hoc signed, so macOS shows a warning once). Then open **Settings** and
 enter the server IP, port, and PIN.
 
+**Updates are automatic:** the app checks GitHub for a newer release on launch;
+in **Settings → Updates** a **Download & Update** button fetches and installs the
+new version automatically (no manual download).
+
 ### Build from source (no Xcode needed, just Command Line Tools + Swift)
 
 ```bash
