@@ -36,10 +36,8 @@ struct TasksResponse: Codable {
 
 /// Curated emoji choices for the add-task form (matches the web panel).
 let EmojiChoices: [(String, String)] = [
-    ("", "none"), ("🦷", "brush teeth"), ("🪥", "teeth"), ("🛁", "bath"), ("🧼", "wash"),
-    ("📚", "homework"), ("✏️", "write"), ("📖", "read"), ("🎨", "art"), ("🎹", "piano"), ("🎸", "guitar"),
-    ("💧", "water"), ("🍎", "fruit"), ("🥦", "veg"), ("🍽️", "meals"), ("🍵", "tea"),
-    ("🛏️", "bed"), ("🌅", "morning"), ("🌙", "night"), ("😴", "sleep"), ("☀️", "day"),
-    ("🎒", "school"), ("🏃", "run"), ("⚽", "football"), ("🏀", "ball"), ("💪", "workout"),
-    ("🧹", "chores"), ("🧺", "laundry"), ("🐶", "dog"), ("🪴", "plant"), ("🧠", "focus"), ("⭐", "star"),
+    ("", "none"), ("📚", "homework"), ("📝", "writing"), ("✏️", "write"), ("📖", "read"), ("📒", "notes"),
+    ("🗣️", "oral"), ("🧮", "math"), ("📐", "geometry"), ("🔬", "science"), ("🧪", "lab"), ("🌍", "geography"),
+    ("🎨", "art"), ("🎹", "piano"), ("🎸", "guitar"), ("🎤", "singing"), ("🎭", "drama"), ("🏊", "swimming"), ("⚽", "sports"),
+    ("🧠", "focus"), ("⭐", "star"), ("📅", "deadline"), ("⏰", "time"),
 ]
