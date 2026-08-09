@@ -6,33 +6,55 @@
 <title>Checklist Admin</title>
 <style>
   :root { --bg:#f4f6fb; --card:#fff; --ink:#1f2430; --muted:#8a93a6; --accent:#3b82f6;
-          --done:#10b981; --border:#e6e9f0; --danger:#ef4444; }
+          --done:#10b981; --border:#e6e9f0; --danger:#ef4444; --urgent-bg:#fef2f2; --urgent-bd:#fecaca; --urgent-ink:#b91c1c; }
   * { box-sizing:border-box; }
   body { margin:0; font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
          background:var(--bg); color:var(--ink); }
   .wrap { max-width:560px; margin:0 auto; padding:24px 16px 80px; }
   h1 { font-size:22px; margin:0 0 2px; }
-  .date { color:var(--muted); font-size:14px; margin-bottom:18px; }
+  .date-line { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .date-line .date { color:var(--muted); font-size:14px; }
+  .date-line button { background:none; border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:13px; cursor:pointer; color:var(--ink); }
   .card { background:var(--card); border:1px solid var(--border); border-radius:14px;
           padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 2px rgba(20,30,60,.04); }
+  /* calendar */
+  .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .cal-head .month-label { font-weight:600; font-size:15px; }
+  .cal-head button { background:none; border:1px solid var(--border); border-radius:8px; width:32px; height:32px; font-size:16px; cursor:pointer; }
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center; }
+  .cal-dow { font-size:11px; color:var(--muted); padding:4px 0; }
+  .cal-day { position:relative; padding:8px 0 4px; border-radius:10px; cursor:pointer; font-size:14px; }
+  .cal-day:hover { background:#eef2ff; }
+  .cal-day.today { box-shadow:inset 0 0 0 2px var(--accent); }
+  .cal-day.selected { background:var(--accent); color:#fff; }
+  .cal-day.other { color:var(--muted); }
+  .cal-day .dot { display:block; height:4px; width:4px; border-radius:50%; margin:3px auto 0; }
+  .cal-day .dot.full { background:var(--done); }
+  .cal-day .dot.part { background:#f59e0b; }
   /* task row */
   .task { display:flex; align-items:center; gap:12px; }
+  .task-row.urgent { background:var(--urgent-bg); border-color:var(--urgent-bd); }
   .task .emoji { font-size:24px; width:32px; text-align:center; }
   .task .title { flex:1; font-size:17px; }
+  .task-row.urgent .title { color:var(--urgent-ink); font-weight:600; }
   .task .title.done { color:var(--muted); text-decoration:line-through; }
+  .task .min { font-size:12px; color:var(--muted); background:var(--bg); border-radius:99px; padding:2px 8px; white-space:nowrap; }
   .task input[type=checkbox] { width:26px; height:26px; accent-color:var(--done); cursor:pointer; }
+  .task input[type=checkbox]:disabled { opacity:.35; cursor:not-allowed; }
   .task button { border:none; background:none; cursor:pointer; font-size:16px; color:var(--muted); padding:4px; }
   .task button:hover { color:var(--ink); }
   .task button.del:hover { color:var(--danger); }
-  .badge { font-size:11px; color:var(--muted); border:1px solid var(--border); border-radius:99px; padding:1px 8px; }
+  .badge { font-size:11px; color:var(--muted); border:1px solid var(--border); border-radius:99px; padding:1px 8px; white-space:nowrap; }
+  .badge.once { color:var(--urgent-ink); border-color:var(--urgent-bd); background:var(--urgent-bg); }
+  .ro-note { font-size:12px; color:var(--muted); margin-top:8px; }
   /* edit row */
   .edit input[type=text] { flex:1; font-size:16px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; }
-  .edit .emoji-in { width:56px; text-align:center; }
+  .edit select { font-size:16px; padding:7px 6px; border:1px solid var(--border); border-radius:8px; }
   .edit label { display:flex; align-items:center; gap:6px; font-size:14px; color:var(--muted); white-space:nowrap; }
   /* add form */
   .add { display:flex; gap:8px; flex-wrap:wrap; }
   .add input[type=text] { flex:1 1 100%; font-size:16px; padding:11px 12px; border:1px solid var(--border); border-radius:10px; }
-  .add input.emoji-in { flex:0 0 64px; text-align:center; }
+  .add select { font-size:15px; padding:9px 8px; border:1px solid var(--border); border-radius:10px; }
   .add label { display:flex; align-items:center; gap:6px; font-size:14px; color:var(--muted); }
   button.primary { background:var(--accent); color:#fff; border:none; border-radius:10px; padding:11px 18px;
                    font-size:15px; font-weight:600; cursor:pointer; }
@@ -42,6 +64,12 @@
   .msg.err { color:var(--danger); }
   .empty { text-align:center; color:var(--muted); padding:30px 0; }
   .done-summary { font-size:13px; color:var(--done); font-weight:600; margin-bottom:10px; }
+  /* minutes dialog */
+  dialog { border:none; border-radius:14px; padding:22px; width:300px; box-shadow:0 10px 40px rgba(20,30,60,.2); }
+  dialog h3 { margin:0 0 6px; font-size:17px; }
+  dialog p { margin:0 0 14px; color:var(--muted); font-size:13px; }
+  dialog input { width:100%; font-size:20px; text-align:center; padding:10px; border:1px solid var(--border); border-radius:10px; }
+  dialog .row { display:flex; gap:8px; justify-content:flex-end; margin-top:14px; }
   /* pin gate */
   #pinGate { text-align:center; padding:60px 0; }
   #pinGate input { font-size:22px; letter-spacing:6px; text-align:center; padding:12px; width:180px;
@@ -53,7 +81,10 @@
 <body>
 <div class="wrap" id="app">
   <h1>✅ Kid's checklist</h1>
-  <div class="date" id="date"></div>
+  <div class="date-line">
+    <span class="date" id="date"></span>
+    <button id="todayBtn">Today</button>
+  </div>
 
   <!-- PIN gate -->
   <div id="pinGate" class="card" hidden>
@@ -66,14 +97,25 @@
 
   <!-- main -->
   <div id="main" hidden>
+    <!-- calendar -->
+    <div class="card">
+      <div class="cal-head">
+        <button id="prevMonth" title="previous month">‹</button>
+        <span class="month-label" id="monthLabel"></span>
+        <button id="nextMonth" title="next month">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
     <div class="done-summary" id="summary"></div>
     <div id="list"></div>
+    <div class="ro-note" id="roNote" hidden>Showing a past/future day — only today's tasks can be checked off.</div>
     <div class="msg err" id="err"></div>
 
     <div class="card" style="margin-top:18px">
       <div class="add">
         <input type="text" id="newTitle" placeholder="Add a task…" maxlength="100" />
-        <input type="text" id="newEmoji" class="emoji-in" placeholder="🙂" maxlength="8" />
+        <select id="newEmoji"></select>
         <label><input type="checkbox" id="newRecurring" checked /> repeats daily</label>
         <button class="primary" id="addBtn">Add</button>
       </div>
@@ -82,15 +124,43 @@
   </div>
 </div>
 
+<dialog id="minutesDialog">
+  <h3>How long did it take? ⏱</h3>
+  <p>Enter minutes spent on this task (0 is fine)</p>
+  <input type="number" id="minInput" min="0" max="999" inputmode="numeric" autofocus />
+  <div class="row">
+    <button class="ghost" id="minCancel">Cancel</button>
+    <button class="primary" id="minOk">Save</button>
+  </div>
+</dialog>
+
 <script>
   const $ = (s) => document.querySelector(s);
   let pin = sessionStorage.getItem("pin") || "";
   let tasks = [];
+  let selectedDate = todayStr();
+  let viewYear, viewMonth;
+  const dayFlags = {}; // date -> {total, done}
 
-  const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  function renderDate() {
+  const EMOJIS = [
+    ["", "none"], ["🦷","brush teeth"], ["🪥","teeth"], ["🛁","bath"], ["🧼","wash"],
+    ["📚","homework"], ["✏️","write"], ["📖","read"], ["🎨","art"], ["🎹","piano"], ["🎸","guitar"],
+    ["💧","water"], ["🍎","fruit"], ["🥦","veg"], ["🍽️","meals"], ["🍵","tea"],
+    ["🛏️","bed"], ["🌅","morning"], ["🌙","night"], ["😴","sleep"], ["☀️","day"],
+    ["🎒","school"], ["🏃","run"], ["⚽","football"], ["🏀","ball"], ["💪","workout"],
+    ["🧹","chores"], ["🧺","laundry"], ["🐶","dog"], ["🪴","plant"], ["🧠","focus"], ["⭐","star"],
+  ];
+
+  function todayStr() {
     const d = new Date();
-    $("#date").textContent = `${weekday[d.getDay()]}, ${d.toLocaleDateString(undefined, {month:"long", day:"numeric"})}`;
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  function prettyDate(iso) {
+    const d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString(undefined, { weekday:"long", month:"long", day:"numeric", year: d.getFullYear() !== new Date().getFullYear() ? "numeric" : undefined });
+  }
+  function emojiOptions(selected) {
+    return EMOJIS.map(([e,l]) => `<option value="${e}" ${e===selected?"selected":""}>${e} ${l}</option>`).join("");
   }
 
   async function api(path, opts = {}) {
@@ -103,35 +173,86 @@
     return body;
   }
 
+  // ---- calendar -----------------------------------------------------------
+  function renderCalendar() {
+    const first = new Date(viewYear, viewMonth, 1);
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const startDow = first.getDay(); // 0=Sunday
+    const grid = $("#calGrid");
+    grid.innerHTML = '<div class="cal-dow">S</div><div class="cal-dow">M</div><div class="cal-dow">T</div><div class="cal-dow">W</div><div class="cal-dow">T</div><div class="cal-dow">F</div><div class="cal-dow">S</div>';
+    for (let i = 0; i < startDow; i++) grid.insertAdjacentHTML("beforeend", '<div class="cal-day other"></div>');
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${viewYear}-${String(viewMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      const cls = ["cal-day"];
+      if (iso === todayStr()) cls.push("today");
+      if (iso === selectedDate) cls.push("selected");
+      const fl = dayFlags[iso];
+      const dot = fl && fl.total > 0 ? `<span class="dot ${fl.done === fl.total ? "full" : "part"}"></span>` : "";
+      grid.insertAdjacentHTML("beforeend", `<div class="${cls.join(" ")}" data-date="${iso}">${d}${dot}</div>`);
+    }
+    $("#monthLabel").textContent = new Date(viewYear, viewMonth, 1).toLocaleDateString(undefined, { month:"long", year:"numeric" });
+    document.querySelectorAll(".cal-day[data-date]").forEach((el) => {
+      el.onclick = () => { selectedDate = el.dataset.date; renderCalendar(); refresh(); };
+    });
+  }
+
+  // fetch done/total for every day of the visible month (cheap on LAN)
+  async function refreshDayFlags() {
+    const days = new Date(viewYear, viewMonth + 1, 0).getDate();
+    const dates = [];
+    for (let d = 1; d <= days; d++) dates.push(`${viewYear}-${String(viewMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`);
+    const results = await Promise.all(dates.map((iso) => api(`/api/tasks?date=${iso}`).catch(() => null)));
+    results.forEach((data, i) => {
+      if (!data) return;
+      const total = data.tasks.length;
+      const done = data.tasks.filter((t) => t.done).length;
+      dayFlags[dates[i]] = { total, done };
+    });
+    renderCalendar();
+  }
+
+  // ---- list ---------------------------------------------------------------
   function render() {
     const doneCount = tasks.filter((t) => t.done).length;
     $("#summary").textContent = tasks.length ? `${doneCount} of ${tasks.length} done` : "";
+    const isToday = selectedDate === todayStr();
+    $("#roNote").hidden = isToday;
     const list = $("#list");
     list.innerHTML = "";
-    if (!tasks.length) { list.innerHTML = '<div class="empty">No tasks yet — add one below!</div>'; return; }
-    for (const t of tasks) list.appendChild(taskRow(t));
+    if (!tasks.length) { list.innerHTML = '<div class="empty">No tasks for this day.</div>'; return; }
+    for (const t of tasks) list.appendChild(taskRow(t, isToday));
   }
 
-  function taskRow(t) {
+  function taskRow(t, isToday) {
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card task-row" + (t.recurring ? "" : !t.done ? " urgent" : "");
     card.dataset.id = t.id;
+    const minBadge = t.done && t.minutes > 0 ? `<span class="min">⏱ ${t.minutes}m</span>` : "";
     card.innerHTML = `
       <div class="task">
         <span class="emoji">${t.emoji || "📝"}</span>
         <span class="title ${t.done ? "done" : ""}">${escapeHtml(t.title)}</span>
-        ${t.recurring ? "" : '<span class="badge">once</span>'}
-        <input type="checkbox" ${t.done ? "checked" : ""} title="done today" />
+        ${t.recurring ? "" : '<span class="badge once">once</span>'}
+        ${minBadge}
+        <input type="checkbox" ${t.done ? "checked" : ""} ${isToday ? "" : "disabled"} title="${isToday ? "done today" : "view-only"}" />
         <button class="edit" title="edit">✏️</button>
         <button class="del" title="delete">🗑️</button>
       </div>`;
     card.querySelector("input[type=checkbox]").onchange = async () => {
-      try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: "{}" }); await refresh(); }
-      catch (e) { showErr(e.message); }
+      if (!t.done) {
+        // marking done -> ask for minutes
+        const minutes = await askMinutes();
+        if (minutes === null) { render(); return; } // cancelled
+        try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: JSON.stringify({ minutes }) }); await afterChange(); }
+        catch (e) { showErr(e.message); }
+      } else {
+        try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: "{}" }); await afterChange(); }
+        catch (e) { showErr(e.message); }
+      }
     };
     card.querySelector(".del").onclick = async () => {
       if (!confirm(`Delete "${t.title}"?`)) return;
-      try { await api(`/api/tasks/${t.id}`, { method: "DELETE" }); await refresh(); }
+      try { await api(`/api/tasks/${t.id}`, { method: "DELETE" }); await afterChange(); }
       catch (e) { showErr(e.message); }
     };
     card.querySelector(".edit").onclick = () => { card.replaceWith(editRow(t)); };
@@ -143,31 +264,51 @@
     card.className = "card edit";
     card.innerHTML = `
       <div class="task">
-        <input type="text" class="emoji-in" value="${escapeHtml(t.emoji)}" maxlength="8" />
+        <select class="emoji-in">${emojiOptions(t.emoji)}</select>
         <input type="text" value="${escapeHtml(t.title)}" maxlength="100" />
         <label><input type="checkbox" ${t.recurring ? "checked" : ""} /> daily</label>
         <button class="primary save">Save</button>
         <button class="ghost cancel">Cancel</button>
       </div>`;
     card.querySelector(".save").onclick = async () => {
-      const [emoji, title, recurring] = [
-        card.querySelector(".emoji-in").value, card.querySelector("input[type=text]").value,
-        card.querySelector("input[type=checkbox]").checked,
-      ];
-      if (!title.trim()) return;
+      const emoji = card.querySelector(".emoji-in").value;
+      const title = card.querySelector("input[type=text]").value.trim();
+      const recurring = card.querySelector("input[type=checkbox]").checked;
+      if (!title) return;
       try {
-        await api(`/api/tasks/${t.id}`, { method: "PATCH", body: JSON.stringify({ title: title.trim(), emoji, recurring }) });
-        await refresh();
+        await api(`/api/tasks/${t.id}`, { method: "PATCH", body: JSON.stringify({ title, emoji, recurring }) });
+        await afterChange();
       } catch (e) { showErr(e.message); }
     };
-    card.querySelector(".cancel").onclick = () => card.replaceWith(taskRow(t));
+    card.querySelector(".cancel").onclick = () => card.replaceWith(taskRow(t, selectedDate === todayStr()));
     return card;
+  }
+
+  // minutes prompt dialog -> Promise<number|null>
+  function askMinutes() {
+    return new Promise((resolve) => {
+      const dlg = $("#minutesDialog");
+      const input = $("#minInput");
+      input.value = "";
+      dlg.showModal();
+      const done = (val) => { dlg.close(); resolve(val); };
+      $("#minOk").onclick = () => done(Math.max(0, Math.round(Number(input.value) || 0)));
+      $("#minCancel").onclick = () => done(null);
+      dlg.oncancel = () => done(null);
+      input.onkeydown = (e) => { if (e.key === "Enter") done(Math.max(0, Math.round(Number(input.value) || 0))); };
+    });
+  }
+
+  async function afterChange() {
+    await refresh();
+    await refreshDayFlags();
   }
 
   async function refresh() {
     try {
-      const data = await api("/api/tasks");
+      const data = await api(`/api/tasks?date=${selectedDate}`);
       tasks = data.tasks;
+      $("#date").textContent = prettyDate(selectedDate);
       render();
     } catch (e) { showErr(e.message); }
   }
@@ -178,6 +319,7 @@
   }
   const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 
+  // ---- pin gate -----------------------------------------------------------
   async function unlock() {
     const value = $("#pinInput").value.trim();
     if (!value) return;
@@ -191,31 +333,42 @@
       $("#pinErr").textContent = "Wrong PIN";
     }
   }
-
   function showMain() {
     $("#pinGate").hidden = true;
     $("#main").hidden = false;
+    const d = new Date();
+    viewYear = d.getFullYear(); viewMonth = d.getMonth();
+    $("#newEmoji").innerHTML = emojiOptions("");
     $("#newTitle").focus();
     refresh();
+    refreshDayFlags();
   }
 
   $("#pinBtn").onclick = unlock;
   $("#pinInput").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+  $("#todayBtn").onclick = () => {
+    const d = new Date();
+    viewYear = d.getFullYear(); viewMonth = d.getMonth();
+    selectedDate = todayStr();
+    renderCalendar(); refresh(); refreshDayFlags();
+  };
+  $("#prevMonth").onclick = () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } refreshDayFlags(); };
+  $("#nextMonth").onclick = () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } refreshDayFlags(); };
   $("#addBtn").onclick = async () => {
     const title = $("#newTitle").value.trim();
     if (!title) return;
     try {
       await api("/api/tasks", {
         method: "POST",
-        body: JSON.stringify({ title, emoji: $("#newEmoji").value.trim(), recurring: $("#newRecurring").checked }),
+        body: JSON.stringify({ title, emoji: $("#newEmoji").value, recurring: $("#newRecurring").checked }),
       });
-      $("#newTitle").value = ""; $("#newEmoji").value = "";
-      await refresh();
+      $("#newTitle").value = "";
+      $("#newRecurring").checked = true;
+      await afterChange();
     } catch (e) { showErr(e.message); }
   };
   $("#newTitle").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#addBtn").click(); });
 
-  renderDate();
   if (pin) { showMain(); } else { $("#pinGate").hidden = false; }
 </script>
 </body>

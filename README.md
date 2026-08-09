@@ -34,18 +34,25 @@ node server.js        # PORT=2021, ADMIN_PIN=1234 (env-overridable)
 
 | Endpoint | Auth | Description |
 |---|---|---|
-| `GET /api/tasks` | — | Today's task list `{ today, tasks: [{id,title,emoji,recurring,done}] }` |
+| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes}] }` |
 | `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring }` |
 | `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
-| `POST /api/tasks/:id/toggle` | — | Mark done / not done (used by kid's app) |
+| `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
 | `POST /api/verify` | — | Check admin PIN |
 | `GET /` , `/admin` | — | Parent admin panel |
 
 Behavior:
 - **Rollover** — tasks not done stay in the list the next day.
 - **Recurring** — `recurring: true` shows every day; `recurring: false` (one-off) hides the day after it's completed.
+- **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
 - **Permissions** — parent actions require the admin PIN; the kid's app has no edit/delete controls.
+
+Admin panel features:
+- **Calendar** — month view with per-day completion dots; click any day to inspect it.
+- **Emoji picker** — choose from a curated dropdown instead of typing.
+- **Time spent** — when marking a task done, enter the minutes; shown as `⏱ Nm`.
+- **Red highlight** — unfinished one-off tasks are shown in red.
 
 ## macOS app (planned)
 

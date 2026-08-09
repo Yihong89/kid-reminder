@@ -39,10 +39,17 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS completions (
     task_id      INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
     date         TEXT NOT NULL,              -- YYYY-MM-DD (server-local)
+    minutes      INTEGER NOT NULL DEFAULT 0, -- time spent completing, entered when marked done
     completed_at TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (task_id, date)
   );
 `);
+// migrate older databases that predate the `minutes` column
+try {
+  db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0");
+} catch {
+  /* column already exists */
+}
 console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 
 // ---------------------------------------------------------------- helpers
@@ -51,37 +58,48 @@ function today() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function listTasks() {
-  const t = today();
+// listTasks(dateStr): tasks as-of a given date (default today).
+//   recurring tasks appear every day; a one-off task appears until the day it
+//   is completed (then hides the next day). "done" reflects that date's record.
+function listTasks(dateStr) {
+  const d = dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr) ? dateStr : today();
   const tasks = db.prepare("SELECT * FROM tasks WHERE active = 1 ORDER BY sort, id").all();
-  const doneToday = new Set(
-    db.prepare("SELECT task_id FROM completions WHERE date = ?").all(t).map((r) => r.task_id)
+  const doneOn = new Map(
+    db.prepare("SELECT task_id, minutes FROM completions WHERE date = ?").all(d).map((r) => [r.task_id, r.minutes])
   );
-  const oneOffDoneBefore = new Set(
-    db.prepare("SELECT task_id FROM completions WHERE date < ?").all(t).map((r) => r.task_id)
+  const doneBefore = new Set(
+    db.prepare("SELECT DISTINCT task_id FROM completions WHERE date < ?").all(d).map((r) => r.task_id)
   );
-  return tasks
-    .filter((task) => task.recurring || !oneOffDoneBefore.has(task.id))
-    .map((task) => ({
+  const result = [];
+  for (const task of tasks) {
+    if (String(task.created_at).slice(0, 10) > d) continue; // not created yet on that date
+    if (!task.recurring && doneBefore.has(task.id)) continue; // one-off done on an earlier day
+    result.push({
       id: task.id,
       title: task.title,
       emoji: task.emoji,
       recurring: !!task.recurring,
-      done: doneToday.has(task.id),
-    }));
+      done: doneOn.has(task.id),
+      minutes: doneOn.get(task.id) || 0,
+    });
+  }
+  return result;
 }
 
-function toggleTask(id) {
+// toggleTask(id, minutes): mark done/undone for today. If marking done, stores
+// the minutes the kid says they spent on it.
+function toggleTask(id, minutes) {
   const task = db.prepare("SELECT id FROM tasks WHERE id = ? AND active = 1").get(id);
   if (!task) return { status: 404, json: { error: "task not found" } };
   const t = today();
   const existing = db.prepare("SELECT task_id FROM completions WHERE task_id = ? AND date = ?").get(id, t);
   if (existing) {
     db.prepare("DELETE FROM completions WHERE task_id = ? AND date = ?").run(id, t);
-    return { status: 200, json: { done: false } };
+    return { status: 200, json: { done: false, minutes: 0 } };
   } else {
-    db.prepare("INSERT INTO completions (task_id, date) VALUES (?, ?)").run(id, t);
-    return { status: 200, json: { done: true } };
+    const m = Math.max(0, Math.min(999, Math.round(Number(minutes) || 0)));
+    db.prepare("INSERT INTO completions (task_id, date, minutes) VALUES (?, ?, ?)").run(id, t, m);
+    return { status: 200, json: { done: true, minutes: m } };
   }
 }
 
@@ -137,7 +155,9 @@ const server = http.createServer(async (req, res) => {
 
     // --- tasks list (open) ---------------------------------------------
     if (method === "GET" && pathname === "/api/tasks") {
-      return sendJSON(200, { today: today(), tasks: listTasks() });
+      const reqDate = url.searchParams.get("date") || "";
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(reqDate) ? reqDate : today();
+      return sendJSON(200, { today: today(), date, tasks: listTasks(date) });
     }
 
     // --- create task (parent) ------------------------------------------
@@ -160,7 +180,8 @@ const server = http.createServer(async (req, res) => {
 
       // toggle done (kid's app, open)
       if (method === "POST" && isToggle) {
-        const result = toggleTask(id);
+        const body = await readBody(req);
+        const result = toggleTask(id, body.minutes);
         return sendJSON(result.status, result.json);
       }
 

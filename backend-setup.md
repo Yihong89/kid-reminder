@@ -60,11 +60,11 @@ Base path `/api`:
 
 | Endpoint | Auth | Description |
 |---|---|---|
-| `GET /api/tasks` | — | Today's task list `{ today, tasks: [{id,title,emoji,recurring,done}] }` |
+| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes}] }` |
 | `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring }` |
 | `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
-| `POST /api/tasks/:id/toggle` | — | Mark done / not done (used by the kid's app) |
+| `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
 | `POST /api/verify` | — | Check admin PIN |
 | `GET /`, `/admin` | — | Parent admin panel |
 
@@ -72,8 +72,12 @@ Base path `/api`:
 
 - **Rollover** — tasks not done stay in the list the next day.
 - **Recurring** — `recurring: true` shows every day; `recurring: false` (one-off) hides the day after it's completed.
+- **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
 - **Permissions** — parent actions require the admin PIN; the kid's app has no edit/delete controls.
 - **LAN only** — bind to your private network; don't expose it to the internet (no TLS).
+
+The admin panel includes a month **calendar** (click any day), an **emoji picker** dropdown,
+**time-spent** entry when checking off, and a **red highlight** on unfinished one-off tasks.
 
 ## Env vars
 
