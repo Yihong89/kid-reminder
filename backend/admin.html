@@ -89,25 +89,6 @@
   .topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
   #logoutBtn { background:none; border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:13px; cursor:pointer; color:var(--muted); }
   #logoutBtn:hover { color:var(--danger); border-color:var(--danger); }
-  .kid-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
-  .kid-title { font-size:26px; font-weight:700; }
-  .kid-date { color:var(--muted); font-size:15px; margin-bottom:14px; }
-  .kid-task { display:flex; align-items:center; gap:14px; background:var(--card); border:2px solid var(--border);
-              border-radius:16px; padding:18px 16px; margin-bottom:12px; cursor:pointer; user-select:none; }
-  .kid-task:hover { border-color:var(--accent); }
-  .kid-task.busy { opacity:.6; }
-  .kid-task .emoji { font-size:34px; width:44px; text-align:center; }
-  .kid-task .title { flex:1; font-size:20px; font-weight:600; }
-  .kid-task .min { font-size:13px; color:var(--muted); background:var(--bg); border-radius:99px; padding:2px 8px; }
-  .kid-task .check { width:32px; height:32px; border-radius:50%; border:3px solid var(--border);
-                     display:flex; align-items:center; justify-content:center; font-size:20px; color:transparent; flex:none; }
-  .kid-task.done { background:#ecfdf5; border-color:var(--done); }
-  .kid-task.done .title { color:var(--muted); text-decoration:line-through; }
-  .kid-task.done .check { border-color:var(--done); background:var(--done); color:#fff; }
-  .kid-task.locked { cursor:default; }
-  .kid-task.locked:hover { border-color:var(--border); }
-  .kid-del { border:none; background:none; cursor:pointer; font-size:18px; color:var(--muted); padding:4px; }
-  .kid-del:hover { color:var(--danger); }
   .badge.mine { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
   .badge.parent { background:var(--bg); color:var(--muted); }
   .badge.rep { background:#fefce8; border-color:#fde68a; color:#a16207; }
@@ -173,28 +154,6 @@
     <p class="hint">Use <b>＋</b> to add a task. Parent-created tasks can only be removed by the parent.</p>
   </div>
 
-  <!-- kid view -->
-  <div id="kidView" hidden>
-    <div class="kid-top">
-      <span class="kid-title">⭐ Kid</span>
-    </div>
-    <div class="tabs">
-      <button class="tab active" id="kidTabToday">📋 Today</button>
-      <button class="tab" id="kidTabCountdown">⏳ Countdown</button>
-    </div>
-    <div class="card" id="kidCalCard">
-      <div class="cal-head">
-        <button id="kidPrevMonth" title="previous month">‹</button>
-        <span class="month-label" id="kidMonthLabel"></span>
-        <button id="kidNextMonth" title="next month">›</button>
-      </div>
-      <div class="cal-grid" id="kidCalGrid"></div>
-    </div>
-    <div class="kid-date" id="kidDate"></div>
-    <div class="done-summary" id="kidSummary"></div>
-    <div id="kidList"></div>
-    <div class="msg err" id="kidErr"></div>
-  </div>
 </div>
 
 <button id="fabAdd" title="Add task" hidden>＋</button>
@@ -350,16 +309,21 @@
     card.className = "card task-row" + (t.repeat === "once" && !t.done ? " urgent" : "");
     card.dataset.id = t.id;
     const minBadge = t.done && t.minutes > 0 ? `<span class="min">⏱ ${t.minutes}m</span>` : "";
+    const canDelete = role === "admin" || t.createdBy === "kid";
+    const ownerBadge = role === "kid"
+      ? (t.createdBy === "kid" ? '<span class="badge mine">👤 mine</span>' : '<span class="badge parent">👨‍👩‍👧</span>')
+      : "";
     card.innerHTML = `
       <div class="task">
         <span class="emoji">${t.emoji || "📝"}</span>
         <span class="title ${t.done ? "done" : ""}">${escapeHtml(t.title)}</span>
+        ${ownerBadge}
         ${repeatBadge(t)}
         ${minBadge}
         ${countdownBadge(t)}
         <input type="checkbox" ${t.done ? "checked" : ""} ${allowDone ? "" : "disabled"} title="${allowDone ? "done" : "view-only"}" />
         <button class="edit" title="edit">✏️</button>
-        <button class="del" title="delete">🗑️</button>
+        ${canDelete ? '<button class="del" title="delete">🗑️</button>' : ""}
       </div>`;
     card.querySelector("input[type=checkbox]").onchange = async () => {
       if (!t.done) {
@@ -373,11 +337,14 @@
         catch (e) { showErr(e.message); }
       }
     };
-    card.querySelector(".del").onclick = async () => {
-      if (!confirm(`Delete "${t.title}"?`)) return;
-      try { await api(`/api/tasks/${t.id}`, { method: "DELETE" }); await afterChange(); }
-      catch (e) { showErr(e.message); }
-    };
+    const delBtn = card.querySelector(".del");
+    if (delBtn) {
+      delBtn.onclick = async () => {
+        if (!confirm(`Delete "${t.title}"?`)) return;
+        try { await api(`/api/tasks/${t.id}`, { method: "DELETE" }); await afterChange(); }
+        catch (e) { showErr(e.message); }
+      };
+    }
     card.querySelector(".edit").onclick = () => { card.replaceWith(editRow(t)); };
     return card;
   }
@@ -526,22 +493,7 @@
     $("#pinGate").hidden = true;
     $("#logoutBtn").hidden = false;
     $("#fabAdd").hidden = false;
-    if (role === "kid") {
-      $("#main").hidden = true;
-      $("#kidView").hidden = false;
-      kidTab = "today";
-      const d = new Date();
-      kidViewYear = d.getFullYear(); kidViewMonth = d.getMonth();
-      $("#kidTabToday").onclick = () => setKidTab("today");
-      $("#kidTabCountdown").onclick = () => setKidTab("countdown");
-      $("#kidPrevMonth").onclick = () => { kidViewMonth--; if (kidViewMonth < 0) { kidViewMonth = 11; kidViewYear--; } refreshKidFlags(); };
-      $("#kidNextMonth").onclick = () => { kidViewMonth++; if (kidViewMonth > 11) { kidViewMonth = 0; kidViewYear++; } refreshKidFlags(); };
-      refreshKid();
-    } else {
-      $("#kidView").hidden = true;
-      $("#main").hidden = false;
-      showAdmin();
-    }
+    showAdmin();
   }
   function showAdmin() {
     const d = new Date();
@@ -552,106 +504,6 @@
     refreshDayFlags();
   }
 
-  // ---- kid view ---------------------------------------------------------
-  let kidTab = "today"; // "today" | "countdown"
-  let kidViewYear, kidViewMonth, kidDayFlags = {};
-
-  function setKidTab(t) {
-    kidTab = t;
-    $("#kidTabToday").classList.toggle("active", t === "today");
-    $("#kidTabCountdown").classList.toggle("active", t === "countdown");
-    $("#kidCalCard").hidden = t !== "today";
-    refreshKid();
-  }
-
-  async function refreshKid() {
-    try {
-      const type = kidTab === "countdown" ? "countdown" : "todo";
-      const data = await api(`/api/tasks?type=${type}`);
-      let list = data.tasks;
-      if (kidTab === "countdown") list = list.slice().sort((a, b) => (a.daysLeft ?? 999) - (b.daysLeft ?? 999));
-      $("#kidDate").textContent = prettyDate(data.today);
-      const done = list.filter((t) => t.done).length;
-      $("#kidSummary").textContent = kidTab === "countdown"
-        ? (list.length ? `${list.length} event${list.length > 1 ? "s" : ""}` : "")
-        : (list.length ? (done === list.length ? "🎉 All done! Great job!" : `${done} of ${list.length} done`) : "");
-      const el = $("#kidList");
-      el.innerHTML = "";
-      if (list.length) {
-        for (const t of list) el.appendChild(kidTaskRow(t));
-      } else {
-        el.innerHTML = kidTab === "countdown" ? '<div class="empty">No countdown events yet.</div>' : '<div class="empty">Nothing to do today! 🎉</div>';
-      }
-    } catch (e) { $("#kidErr").textContent = e.message; }
-    if (kidTab === "today") await refreshKidFlags();
-  }
-
-  function renderKidCalendar() {
-    const first = new Date(kidViewYear, kidViewMonth, 1);
-    const daysInMonth = new Date(kidViewYear, kidViewMonth + 1, 0).getDate();
-    const startDow = first.getDay();
-    const grid = $("#kidCalGrid");
-    grid.innerHTML = '<div class="cal-dow">S</div><div class="cal-dow">M</div><div class="cal-dow">T</div><div class="cal-dow">W</div><div class="cal-dow">T</div><div class="cal-dow">F</div><div class="cal-dow">S</div>';
-    for (let i = 0; i < startDow; i++) grid.insertAdjacentHTML("beforeend", '<div class="cal-day other"></div>');
-    for (let d = 1; d <= daysInMonth; d++) {
-      const iso = `${kidViewYear}-${String(kidViewMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-      const cls = ["cal-day"];
-      if (iso === todayStr()) cls.push("today");
-      const fl = kidDayFlags[iso];
-      const dots = [];
-      if (fl && fl.total > 0) dots.push(`<span class="dot ${fl.done === fl.total ? "full" : "part"}"></span>`);
-      if (fl && fl.events > 0) dots.push('<span class="dot event"></span>');
-      grid.insertAdjacentHTML("beforeend", `<div class="${cls.join(" ")}">${d}${dots.join("")}</div>`);
-    }
-    $("#kidMonthLabel").textContent = new Date(kidViewYear, kidViewMonth, 1).toLocaleDateString(undefined, { month:"long", year:"numeric" });
-  }
-
-  async function refreshKidFlags() {
-    kidDayFlags = await computeDayFlags(kidViewYear, kidViewMonth);
-    renderKidCalendar();
-  }
-
-  function kidTaskRow(t) {
-    const canToggle = kidTab === "today" || (t.daysLeft !== null && t.daysLeft <= 0);
-    const mine = t.createdBy === "kid";
-    const row = document.createElement("div");
-    row.className = "kid-task" + (t.done ? " done" : "") + (canToggle ? "" : " locked");
-    row.innerHTML = `
-      <span class="emoji">${t.emoji || "📝"}</span>
-      <span class="title">${escapeHtml(t.title)}</span>
-      ${mine ? '<span class="badge mine">👤 mine</span>' : '<span class="badge parent">👨‍👩‍👧</span>'}
-      ${repeatBadge(t)}
-      ${countdownBadge(t)}
-      ${t.done && t.minutes > 0 ? `<span class="min">⏱ ${t.minutes}m</span>` : ""}
-      ${mine ? '<button class="kid-del" title="delete">🗑️</button>' : ""}
-      <span class="check">✓</span>`;
-    const delBtn = row.querySelector(".kid-del");
-    if (delBtn) {
-      delBtn.onclick = async (e) => {
-        e.stopPropagation();
-        if (!confirm(`Delete "${t.title}"?`)) return;
-        try { await api(`/api/tasks/${t.id}`, { method: "DELETE" }); refreshKid(); }
-        catch (err) { $("#kidErr").textContent = err.message; }
-      };
-    }
-    row.onclick = async () => {
-      if (!canToggle) return;
-      row.classList.add("busy");
-      if (!t.done) {
-        const minutes = await askMinutes();
-        if (minutes === null) { row.classList.remove("busy"); return; }
-        try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: JSON.stringify({ minutes }) }); }
-        catch (e) { $("#kidErr").textContent = e.message; }
-      } else {
-        try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: "{}" }); }
-        catch (e) { $("#kidErr").textContent = e.message; }
-      }
-      row.classList.remove("busy");
-      refreshKid();
-    };
-    return row;
-  }
-
   $("#pinBtn").onclick = unlock;
   $("#pinInput").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
   $("#logoutBtn").onclick = () => {
@@ -659,7 +511,6 @@
     sessionStorage.removeItem("role");
     pin = ""; role = null;
     $("#main").hidden = true;
-    $("#kidView").hidden = true;
     $("#logoutBtn").hidden = true;
     $("#fabAdd").hidden = true;
     $("#pinGate").hidden = false;
@@ -708,8 +559,7 @@
         }),
       });
       $("#addDialog").close();
-      if (role === "kid") setKidTab(goesToCountdown ? "countdown" : "today");
-      else if (goesToCountdown) setTab("countdown");
+      if (goesToCountdown) setTab("countdown");
       else { refresh(); refreshDayFlags(); }
     } catch (e) { showErr(e.message); }
   };

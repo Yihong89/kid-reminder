@@ -243,9 +243,11 @@ const server = http.createServer(async (req, res) => {
         return sendJSON(result.status, result.json);
       }
 
-      // edit (parent)
+      // edit (admin or kid)
       if (method === "PATCH") {
-        if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+        const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+        const isKid = req.headers["x-kid-pin"] === KID_PIN;
+        if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
         const body = await readBody(req);
         const sets = [];
         const vals = [];

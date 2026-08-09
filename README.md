@@ -54,9 +54,9 @@ Behavior:
   date, or its creation date if no date is set).
 - **Rollover** — daily tasks not done stay in the list the next day.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
-- **Permissions** — admin actions require the admin PIN. The **kid PIN** (`KID_PIN`, default `0626`)
-  unlocks the kid view: mark tasks done (with time), add new tasks, and delete only tasks
-  they created. Parent-created tasks can't be deleted by the kid.
+- **Permissions** — the **admin PIN** unlocks full control; the **kid PIN** (`KID_PIN`, default `0626`)
+  unlocks the same interface but the kid can only delete tasks they created. Admin can edit
+  and delete everything; the kid can edit anything but not delete parent tasks.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots (green all done / amber partial)
@@ -69,10 +69,10 @@ Admin panel features:
 - **Add-task popup** — a **＋** button opens a form dialog: name, emoji, a **repeat**
   dropdown (Daily / Weekly / Bi-weekly / Monthly / Once), a **date** field, and a
   **countdown** checkbox that unlocks the days-before value.
-- **Kid mode** — logging in with the kid PIN shows a big, friendly view with **📋 Today**
-  (including a calendar with completion dots and countdown event markers) and **⏳ Countdown**
-  tabs. The kid can tap tasks done (with time), add tasks via **＋**, and delete only their own
-  tasks (parent tasks show no delete button). "All done! 🎉" when finished.
+- **Kid mode** — the kid sees the **exact same interface** as the parent (full calendar
+  with day navigation, Today/Countdown tabs, add/edit, minutes, countdown). The only
+  difference: the kid can delete only tasks they created — parent tasks show no delete
+  button (also enforced server-side with a 403).
 - **Countdown** — set a target date on a future task (e.g. an exam). Within the
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
   and `⏰ Nd ago` once passed. Future events can't be checked off until their day.

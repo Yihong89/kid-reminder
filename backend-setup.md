@@ -78,8 +78,8 @@ computed server-side relative to the requested `date`.
   `monthly` show only on scheduled days (anchored to the task's date or creation date).
 - **Rollover** — daily tasks not done stay in the list the next day.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
-- **Permissions** — parent actions require the admin PIN. The kid PIN unlocks a kid view that
-  can mark tasks done, add tasks, and delete only tasks it created (parent tasks are protected).
+- **Permissions** — admin and kid share the same interface. The only difference: the kid PIN
+  (`KID_PIN`) can delete only tasks it created (admin deletes everything); both can edit.
 - **LAN only** — bind to your private network; don't expose it to the internet (no TLS).
 
 The admin panel has two tabs: **📋 Today** (the daily checklist + month calendar) and
