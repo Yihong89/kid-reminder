@@ -3,6 +3,7 @@ import SwiftUI
 struct TodayView: View {
     @EnvironmentObject var settings: SettingsStore
     @State private var tasks: [KidTask] = []
+    @State private var upcoming: [KidTask] = []   // countdown events in the next 7 days
     @State private var error: String?
     @State private var busy = false
     @State private var refreshKey = 0
@@ -23,8 +24,17 @@ struct TodayView: View {
                     description: Text(error))
                 .toolbar { reloadToolbar }
             } else {
-                List(tasks) { task in taskRow(task) }
-                    .toolbar { reloadToolbar }
+                List {
+                    Section("Today") {
+                        ForEach(tasks) { task in taskRow(task) }
+                    }
+                    if !upcoming.isEmpty {
+                        Section("Next 7 days") {
+                            ForEach(upcoming) { ev in eventRow(ev) }
+                        }
+                    }
+                }
+                .toolbar { reloadToolbar }
             }
         }
         .navigationTitle("Today")
@@ -58,7 +68,13 @@ struct TodayView: View {
         busy = true
         defer { busy = false }
         do {
-            tasks = try await api.tasks(type: "todo")
+            async let t = api.tasks(type: "todo")
+            async let c = api.tasks(type: "countdown")
+            let (todo, cnt) = try await (t, c)
+            tasks = todo
+            upcoming = cnt
+                .filter { (0...7).contains($0.daysLeft ?? 999) }
+                .sorted { ($0.daysLeft ?? 999) < ($1.daysLeft ?? 999) }
             error = nil
         } catch let e {
             error = errorMessage(e)
@@ -88,6 +104,33 @@ struct TodayView: View {
                 .tint(task.done ? .gray : .green)
         }
         .padding(.vertical, 6)
+    }
+
+    /// Row for a countdown event in the "next 7 days" section, showing its date.
+    private func eventRow(_ ev: KidTask) -> some View {
+        HStack(spacing: 12) {
+            Text(ev.emoji.isEmpty ? "📝" : ev.emoji).font(.system(size: 24))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(ev.title)
+                if let iso = ev.targetDate {
+                    Text(formattedDate(iso)).font(.caption).foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            if let c = ev.countdownText { Text(c).font(.caption.bold()).foregroundStyle(.pink) }
+            if settings.canModify(ev) {
+                Button { delete(ev) } label: { Image(systemName: "trash") }
+                    .buttonStyle(.borderless)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func formattedDate(_ iso: String) -> String {
+        let f = DateFormatter()
+        f.dateFormat = "yyyy-MM-dd"
+        guard let d = f.date(from: iso) else { return iso }
+        return d.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())
     }
 
     private func complete(_ task: KidTask) {
