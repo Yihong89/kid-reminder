@@ -65,7 +65,7 @@ Base path `/api`:
 | `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (same fields as create) |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
 | `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
-| `POST /api/verify` | — | Check admin PIN |
+| `POST /api/verify` | — | Check a PIN, returns `{ role: "admin" }` or `{ role: "kid" }` |
 | `GET /`, `/admin` | — | Parent admin panel |
 
 Countdown: `targetDate` (YYYY-MM-DD) sets a future event; `countdownStart` (default 7)
@@ -89,4 +89,5 @@ Also includes an **emoji picker** dropdown, **time-spent** entry when checking o
 
 - `PORT` — listen port (default `2021`)
 - `ADMIN_PIN` — PIN for parent actions (default `1234` — **change it**)
+- `KID_PIN` — PIN that unlocks the read-only kid view (default `0626`)
 - `DB_PATH` — SQLite file location (default `kidreminder.db` next to the script)

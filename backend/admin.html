@@ -85,16 +85,37 @@
                    border:1px solid var(--border); border-radius:12px; }
   #pinGate button { margin-top:14px; }
   .hint { color:var(--muted); font-size:13px; margin-top:16px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  #logoutBtn { background:none; border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:13px; cursor:pointer; color:var(--muted); }
+  #logoutBtn:hover { color:var(--danger); border-color:var(--danger); }
+  .kid-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .kid-title { font-size:26px; font-weight:700; }
+  .kid-date { color:var(--muted); font-size:15px; margin-bottom:14px; }
+  .kid-task { display:flex; align-items:center; gap:14px; background:var(--card); border:2px solid var(--border);
+              border-radius:16px; padding:18px 16px; margin-bottom:12px; cursor:pointer; user-select:none; }
+  .kid-task:hover { border-color:var(--accent); }
+  .kid-task.busy { opacity:.6; }
+  .kid-task .emoji { font-size:34px; width:44px; text-align:center; }
+  .kid-task .title { flex:1; font-size:20px; font-weight:600; }
+  .kid-task .min { font-size:13px; color:var(--muted); background:var(--bg); border-radius:99px; padding:2px 8px; }
+  .kid-task .check { width:32px; height:32px; border-radius:50%; border:3px solid var(--border);
+                     display:flex; align-items:center; justify-content:center; font-size:20px; color:transparent; flex:none; }
+  .kid-task.done { background:#ecfdf5; border-color:var(--done); }
+  .kid-task.done .title { color:var(--muted); text-decoration:line-through; }
+  .kid-task.done .check { border-color:var(--done); background:var(--done); color:#fff; }
 </style>
 </head>
 <body>
 <div class="wrap" id="app">
-  <h1>✅ Kid's checklist</h1>
+  <div class="topbar">
+    <h1>✅ Kid's checklist</h1>
+    <button id="logoutBtn" hidden>Log out</button>
+  </div>
 
   <!-- PIN gate -->
   <div id="pinGate" class="card" hidden>
     <div style="font-size:40px">🔐</div>
-    <p>Enter admin PIN</p>
+    <p>Enter PIN</p>
     <div><input type="password" id="pinInput" inputmode="numeric" maxlength="8" /></div>
     <button class="primary" id="pinBtn">Unlock</button>
     <div class="msg err" id="pinErr"></div>
@@ -148,6 +169,17 @@
     </div>
     <p class="hint">PIN is only needed to add / edit / delete. Change it on the server with <code>ADMIN_PIN</code>.</p>
   </div>
+
+  <!-- kid view -->
+  <div id="kidView" hidden>
+    <div class="kid-top">
+      <span class="kid-title">⭐ Today</span>
+    </div>
+    <div class="kid-date" id="kidDate"></div>
+    <div class="done-summary" id="kidSummary"></div>
+    <div id="kidList"></div>
+    <div class="msg err" id="kidErr"></div>
+  </div>
 </div>
 
 <dialog id="minutesDialog">
@@ -163,6 +195,7 @@
 <script>
   const $ = (s) => document.querySelector(s);
   let pin = sessionStorage.getItem("pin") || "";
+  let role = sessionStorage.getItem("role") || null; // "admin" | "kid"
   let tasks = [];
   let selectedDate = todayStr();
   let viewYear, viewMonth;
@@ -406,9 +439,11 @@
     const value = $("#pinInput").value.trim();
     if (!value) return;
     try {
-      await api("/api/verify", { method: "POST", body: JSON.stringify({ pin: value }) });
+      const res = await api("/api/verify", { method: "POST", body: JSON.stringify({ pin: value }) });
       pin = value;
+      role = res.role; // "admin" | "kid"
       sessionStorage.setItem("pin", pin);
+      sessionStorage.setItem("role", role);
       $("#pinErr").textContent = "";
       showMain();
     } catch {
@@ -417,7 +452,18 @@
   }
   function showMain() {
     $("#pinGate").hidden = true;
-    $("#main").hidden = false;
+    $("#logoutBtn").hidden = false;
+    if (role === "kid") {
+      $("#main").hidden = true;
+      $("#kidView").hidden = false;
+      refreshKid();
+    } else {
+      $("#kidView").hidden = true;
+      $("#main").hidden = false;
+      showAdmin();
+    }
+  }
+  function showAdmin() {
     const d = new Date();
     viewYear = d.getFullYear(); viewMonth = d.getMonth();
     $("#newEmoji").innerHTML = emojiOptions("");
@@ -428,8 +474,61 @@
     refreshDayFlags();
   }
 
+  // ---- kid view ---------------------------------------------------------
+  async function refreshKid() {
+    try {
+      const data = await api("/api/tasks?type=todo");
+      const list = data.tasks;
+      $("#kidDate").textContent = prettyDate(data.today);
+      const done = list.filter((t) => t.done).length;
+      $("#kidSummary").textContent = list.length
+        ? (done === list.length ? "🎉 All done! Great job!" : `${done} of ${list.length} done`)
+        : "";
+      const el = $("#kidList");
+      el.innerHTML = "";
+      if (!list.length) { el.innerHTML = '<div class="empty">Nothing to do today! 🎉</div>'; return; }
+      for (const t of list) el.appendChild(kidRow(t));
+    } catch (e) { $("#kidErr").textContent = e.message; }
+  }
+
+  function kidRow(t) {
+    const row = document.createElement("div");
+    row.className = "kid-task" + (t.done ? " done" : "");
+    row.innerHTML = `
+      <span class="emoji">${t.emoji || "📝"}</span>
+      <span class="title">${escapeHtml(t.title)}</span>
+      ${t.done && t.minutes > 0 ? `<span class="min">⏱ ${t.minutes}m</span>` : ""}
+      <span class="check">✓</span>`;
+    row.onclick = async () => {
+      row.classList.add("busy");
+      if (!t.done) {
+        const minutes = await askMinutes();
+        if (minutes === null) { row.classList.remove("busy"); return; }
+        try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: JSON.stringify({ minutes }) }); }
+        catch (e) { $("#kidErr").textContent = e.message; }
+      } else {
+        try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: "{}" }); }
+        catch (e) { $("#kidErr").textContent = e.message; }
+      }
+      row.classList.remove("busy");
+      refreshKid();
+    };
+    return row;
+  }
+
   $("#pinBtn").onclick = unlock;
   $("#pinInput").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+  $("#logoutBtn").onclick = () => {
+    sessionStorage.removeItem("pin");
+    sessionStorage.removeItem("role");
+    pin = ""; role = null;
+    $("#main").hidden = true;
+    $("#kidView").hidden = true;
+    $("#logoutBtn").hidden = true;
+    $("#pinGate").hidden = false;
+    $("#pinInput").value = "";
+    $("#pinInput").focus();
+  };
   $("#todayBtn").onclick = () => {
     const d = new Date();
     viewYear = d.getFullYear(); viewMonth = d.getMonth();
@@ -462,7 +561,7 @@
   };
   $("#newTitle").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#addBtn").click(); });
 
-  if (pin) { showMain(); } else { $("#pinGate").hidden = false; }
+  if (pin && role) { showMain(); } else { $("#pinGate").hidden = false; }
 </script>
 </body>
 </html>

@@ -21,6 +21,7 @@ const { DatabaseSync } = require("node:sqlite");
 
 const PORT = parseInt(process.env.PORT || "2021", 10);
 const ADMIN_PIN = process.env.ADMIN_PIN || "1234";
+const KID_PIN = process.env.KID_PIN || "0626"; // unlocks the read-only kid view
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, "kidreminder.db");
 const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 
@@ -163,10 +164,12 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { ok: true, today: today() });
     }
 
-    // --- verify admin PIN ----------------------------------------------
+    // --- verify PIN (admin or kid) -------------------------------------
     if (method === "POST" && pathname === "/api/verify") {
       const body = await readBody(req);
-      return sendJSON(body.pin === ADMIN_PIN ? 200 : 401, body.pin === ADMIN_PIN ? { ok: true } : { error: "wrong pin" });
+      if (body.pin === ADMIN_PIN) return sendJSON(200, { ok: true, role: "admin" });
+      if (body.pin === KID_PIN) return sendJSON(200, { ok: true, role: "kid" });
+      return sendJSON(401, { error: "wrong pin" });
     }
 
     // --- tasks list (open) ---------------------------------------------

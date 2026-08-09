@@ -50,7 +50,8 @@ Behavior:
 - **Rollover** — tasks not done stay in the list the next day.
 - **Recurring** — `recurring: true` shows every day; `recurring: false` (one-off) hides the day after it's completed.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
-- **Permissions** — parent actions require the admin PIN; the kid's app has no edit/delete controls.
+- **Permissions** — admin actions require the admin PIN. The **kid PIN** (`KID_PIN`, default `0626`)
+  unlocks a read-only kid view: mark tasks done (with time) only — no add/edit/delete, no admin panels.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots; click any day to inspect it.
@@ -59,6 +60,8 @@ Admin panel features:
 - **Red highlight** — unfinished one-off tasks are shown in red.
 - **Two panels** — the **📋 Today** tab is the daily checklist (plus the calendar);
   future-dated tasks live in a separate **⏳ Countdown** tab.
+- **Kid mode** — logging in with the kid PIN shows a big, friendly, read-only
+  checklist: tap a task, enter minutes, done. "All done! 🎉" when finished.
 - **Countdown** — set a target date on a future task (e.g. an exam). Within the
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
   and `⏰ Nd ago` once passed. Future events can't be checked off until their day.
