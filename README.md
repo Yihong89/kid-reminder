@@ -94,9 +94,15 @@ Grab the latest release from the **Releases** page:
 <https://github.com/Yihong89/kid-reminder/releases>
 
 `KidReminder.zip` is a **universal build** (Apple Silicon + Intel). Unzip, move
-`KidReminder.app` to Applications, and on first launch **right-click → Open**
-(it's ad-hoc signed, so macOS shows a warning once). Then open **Settings** and
-enter the server IP, port, and PIN.
+`KidReminder.app` to Applications, and open **Settings** to enter the server IP,
+port, and PIN.
+
+Because the app is **ad-hoc signed** (not notarized), macOS Gatekeeper blocks the
+first launch. Allow it once with any of these:
+
+- **Right-click → Open** on `KidReminder.app`, then click **Open**
+- Or: System Settings → Privacy & Security → scroll down → click **Open Anyway** next to Kid Reminder
+- Or in Terminal: `xattr -d com.apple.quarantine /path/to/KidReminder.app`
 
 **Updates are automatic:** the app checks GitHub for a newer release on launch;
 in **Settings → Updates** a **Download & Update** button fetches and installs the
