@@ -28,12 +28,12 @@ if [ -f "Resources/AppIcon.svg" ]; then
   WORK=$(mktemp -d)
   CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
   if [ -x "$CHROME" ]; then
-    # Chrome preserves the SVG's transparent corners (Quick Look fills them white)
-    cat > "$WORK/icon.html" <<HTML
-<!doctype html><html><head><style>html,body{margin:0;padding:0;background:transparent;width:1024px;height:1024px;}</style></head><body><img src="$(pwd)/Resources/AppIcon.svg" width="1024" height="1024"></body></html>
-HTML
-    "$CHROME" --headless --disable-gpu --screenshot="$WORK/AppIcon.svg.png" \
-      --window-size=1024,1024 --default-background-color=00000000 "file://$WORK/icon.html" >/dev/null 2>&1
+    # Render the SVG directly. (An HTML <img> wrapper makes Chrome's screenshot
+    # paint a gray border on the bottom/right edges — a rendering artifact.)
+    # guard against headless Chrome hanging: run under a 20s alarm (perl's alarm)
+    perl -e 'alarm shift; exec @ARGV' 20 \
+      "$CHROME" --headless --disable-gpu --screenshot="$WORK/AppIcon.svg.png" \
+      --window-size=1024,1024 --default-background-color=00000000 "file://$(pwd)/Resources/AppIcon.svg" >/dev/null 2>&1 || true
     SRC="$WORK/AppIcon.svg.png"
   else
     qlmanage -t -s 1024 -o "$WORK" "Resources/AppIcon.svg" >/dev/null 2>&1
@@ -63,7 +63,7 @@ cat > "$BUNDLE/Contents/Info.plist" <<PLIST
     <key>CFBundleDisplayName</key><string>Kid Reminder</string>
     <key>CFBundleIdentifier</key><string>com.kidreminder.mac</string>
     <key>CFBundleVersion</key><string>1</string>
-    <key>CFBundleShortVersionString</key><string>1.1.5</string>
+    <key>CFBundleShortVersionString</key><string>1.1.6</string>
     <key>CFBundleExecutable</key><string>$APP_NAME</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
