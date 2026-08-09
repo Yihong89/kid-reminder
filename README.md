@@ -49,9 +49,9 @@ the countdown; `countdownStart` (default 7) is the days-remaining threshold wher
 becomes active. `daysLeft` is computed server-side relative to the requested `date`.
 
 Behavior:
-- **Repeat** — `daily` shows every day; `once` hides after it's completed; `weekly`,
-  `biweekly`, and `monthly` show only on their scheduled days (anchored to the task's
-  date, or its creation date if no date is set).
+- **Repeat** — `daily` shows every day; `once` with a **date** appears only on that date,
+  `once` without a date hides after it's completed; `weekly`, `biweekly`, and `monthly`
+  show only on their scheduled days (anchored to the task's date, or its creation date if no date is set).
 - **Rollover** — daily tasks not done stay in the list the next day.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
 - **Permissions** — the **admin PIN** unlocks full control; the **kid PIN** (`KID_PIN`, default `0626`)

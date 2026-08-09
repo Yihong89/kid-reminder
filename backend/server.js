@@ -112,7 +112,10 @@ function listTasks(dateStr, type) {
   for (const task of tasks) {
     if (String(task.created_at).slice(0, 10) > d) continue; // not created yet on that date
     const repeat = task.repeat || "daily";
-    if (repeat === "once" && doneBefore.has(task.id)) continue; // one-off done on an earlier day
+    if (repeat === "once") {
+      if (doneBefore.has(task.id)) continue; // completed on an earlier day
+      if (task.target_date && d !== task.target_date) continue; // dated one-off: only on its day
+    }
     const anchor = task.target_date || String(task.created_at).slice(0, 10);
     if (repeat !== "daily" && repeat !== "once" && !scheduledOn(repeat, anchor, d)) continue; // off-schedule
     result.push({
