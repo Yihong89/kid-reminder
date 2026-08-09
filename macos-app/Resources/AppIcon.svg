@@ -10,22 +10,22 @@
     </linearGradient>
   </defs>
 
-  <!-- rounded squircle with a small margin; the corners stay transparent -->
-  <rect x="56" y="56" width="912" height="912" rx="205" fill="url(#bg)"/>
+  <!-- full-bleed background: macOS applies the rounded-corner mask itself -->
+  <rect width="1024" height="1024" fill="url(#bg)"/>
 
   <!-- calendar header strip -->
-  <rect x="220" y="200" width="584" height="150" rx="52" fill="url(#header)"/>
-  <circle cx="336" cy="275" r="18" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="512" cy="275" r="18" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="688" cy="275" r="18" fill="rgba(255,255,255,0.9)"/>
+  <rect x="190" y="180" width="644" height="150" rx="52" fill="url(#header)"/>
+  <circle cx="310" cy="255" r="18" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="512" cy="255" r="18" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="714" cy="255" r="18" fill="rgba(255,255,255,0.9)"/>
 
   <!-- white check circle -->
-  <circle cx="512" cy="590" r="250" fill="#ffffff"/>
+  <circle cx="512" cy="600" r="245" fill="#ffffff"/>
 
   <!-- big green check -->
-  <path d="M390 590 L475 676 L645 502" stroke="#10b981" stroke-width="72"
+  <path d="M398 600 L478 682 L642 514" stroke="#10b981" stroke-width="72"
         stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 
   <!-- sparkle -->
-  <path d="M790 330 l24 56 56 24 -56 24 -24 56 -24 -56 -56 -24 56 -24 z" fill="#fde047"/>
+  <path d="M812 330 l24 56 56 24 -56 24 -24 56 -24 -56 -56 -24 56 -24 z" fill="#fde047"/>
 </svg>
