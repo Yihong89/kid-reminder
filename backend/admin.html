@@ -210,7 +210,7 @@
   <div class="cnt-row">
     <label>Date <input type="date" id="dlgTarget" /></label>
     <label><input type="checkbox" id="dlgCountdown" /> countdown
-      <input type="number" id="dlgCountdownDays" min="1" max="30" value="7" style="width:70px" disabled /> days before</label>
+      <span id="dlgDaysWrap" hidden><input type="number" id="dlgCountdownDays" min="1" max="30" value="7" style="width:70px" /> days before</span></label>
   </div>
   <div class="row">
     <button class="ghost" id="dlgCancel">Cancel</button>
@@ -384,9 +384,9 @@
       <div class="cnt-row">
         <label>Date <input type="date" class="target-in" value="${t.targetDate || ""}" /></label>
         <label><input type="checkbox" class="cnt-en" ${t.countdownEnabled ? "checked" : ""} /> countdown
-          <input type="number" class="cnt-in" min="1" max="30" value="${t.countdownStart || 7}" style="width:70px" ${t.countdownEnabled ? "" : "disabled"} /> days before</label>
+          <span class="cnt-days-wrap" ${t.countdownEnabled ? "" : "hidden"}><input type="number" class="cnt-in" min="1" max="30" value="${t.countdownStart || 7}" style="width:70px" /> days before</span></label>
       </div>`;
-    const syncCnt = () => { card.querySelector(".cnt-in").disabled = !card.querySelector(".cnt-en").checked; };
+    const syncCnt = () => { card.querySelector(".cnt-days-wrap").hidden = !card.querySelector(".cnt-en").checked; };
     card.querySelector(".cnt-en").onchange = syncCnt;
     card.querySelector(".save").onclick = async () => {
       const emoji = card.querySelector(".emoji-in").value;
@@ -631,13 +631,13 @@
     $("#dlgRepeat").value = "daily";
     $("#dlgTarget").value = "";
     $("#dlgCountdown").checked = false;
-    $("#dlgCountdownDays").disabled = true;
+    $("#dlgDaysWrap").hidden = true;
     $("#dlgCountdownDays").value = 7;
     $("#addDialog").showModal();
     $("#dlgTitle").focus();
   }
   $("#fabAdd").onclick = openAddDialog;
-  $("#dlgCountdown").onchange = () => { $("#dlgCountdownDays").disabled = !$("#dlgCountdown").checked; };
+  $("#dlgCountdown").onchange = () => { $("#dlgDaysWrap").hidden = !$("#dlgCountdown").checked; };
   $("#dlgCancel").onclick = () => $("#addDialog").close();
   $("#dlgCreate").onclick = async () => {
     const title = $("#dlgTitle").value.trim();
