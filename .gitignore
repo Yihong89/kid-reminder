@@ -15,4 +15,5 @@ backend-setup.local.md
 
 # Swift build output (macOS app)
 .build/
+build/
 *.xcodeproj/xcuserdata/

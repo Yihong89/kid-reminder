@@ -37,7 +37,7 @@ struct CountdownView: View {
                 Task {
                     busy = true
                     do { try await api.toggle(id: task.id, minutes: minutes); await load() }
-                    catch { error = errorMessage(error) }
+                    catch let e { error = errorMessage(e) }
                     busy = false
                 }
             }
@@ -64,8 +64,8 @@ struct CountdownView: View {
                 ($0.daysLeft ?? .max) < ($1.daysLeft ?? .max)
             }
             error = nil
-        } catch {
-            error = errorMessage(error)
+        } catch let e {
+            error = errorMessage(e)
         }
     }
 
@@ -102,14 +102,14 @@ struct CountdownView: View {
 
     private func complete(_ event: KidTask) {
         if event.done {
-            Task { busy = true; do { try await api.toggle(id: event.id, minutes: nil); await load() } catch { error = errorMessage(error) }; busy = false }
+            Task { busy = true; do { try await api.toggle(id: event.id, minutes: nil); await load() } catch let e { error = errorMessage(e) }; busy = false }
         } else {
             minutesTask = event
         }
     }
 
     private func delete(_ event: KidTask) {
-        Task { busy = true; do { try await api.delete(id: event.id); await load() } catch { error = errorMessage(error) }; busy = false }
+        Task { busy = true; do { try await api.delete(id: event.id); await load() } catch let e { error = errorMessage(e) }; busy = false }
     }
 
     private func errorMessage(_ e: Error) -> String { (e as? LocalizedError)?.errorDescription ?? e.localizedDescription }

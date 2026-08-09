@@ -34,7 +34,7 @@ struct TodayView: View {
                 Task {
                     busy = true
                     do { try await api.toggle(id: task.id, minutes: minutes); await load() }
-                    catch { error = errorMessage(error) }
+                    catch let e { error = errorMessage(e) }
                     busy = false
                 }
             }
@@ -60,8 +60,8 @@ struct TodayView: View {
         do {
             tasks = try await api.tasks(type: "todo")
             error = nil
-        } catch {
-            error = errorMessage(error)
+        } catch let e {
+            error = errorMessage(e)
         }
     }
 
@@ -92,14 +92,14 @@ struct TodayView: View {
 
     private func complete(_ task: KidTask) {
         if task.done {
-            Task { busy = true; do { try await api.toggle(id: task.id, minutes: nil); await load() } catch { error = errorMessage(error) }; busy = false }
+            Task { busy = true; do { try await api.toggle(id: task.id, minutes: nil); await load() } catch let e { error = errorMessage(e) }; busy = false }
         } else {
             minutesTask = task
         }
     }
 
     private func delete(_ task: KidTask) {
-        Task { busy = true; do { try await api.delete(id: task.id); await load() } catch { error = errorMessage(error) }; busy = false }
+        Task { busy = true; do { try await api.delete(id: task.id); await load() } catch let e { error = errorMessage(e) }; busy = false }
     }
 
     private func errorMessage(_ e: Error) -> String { (e as? LocalizedError)?.errorDescription ?? e.localizedDescription }

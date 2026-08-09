@@ -60,8 +60,8 @@ struct AddTaskView: View {
                     repeatType: repeatType)
                 dismiss()
                 onSaved()
-            } catch {
-                error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            } catch let e {
+                error = (e as? LocalizedError)?.errorDescription ?? e.localizedDescription
             }
         }
     }
