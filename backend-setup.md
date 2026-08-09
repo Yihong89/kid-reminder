@@ -60,7 +60,7 @@ Base path `/api`:
 
 | Endpoint | Auth | Description |
 |---|---|---|
-| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes,targetDate,countdownStart,daysLeft}] }` |
+| `GET /api/tasks?date=YYYY-MM-DD&type=todo\|countdown` | — | Task list for a date (default today). `type=todo` = daily checklist only; `type=countdown` = future-dated events only. |
 | `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }` |
 | `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (same fields as create) |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
@@ -80,9 +80,10 @@ computed server-side relative to the requested `date`.
 - **Permissions** — parent actions require the admin PIN; the kid's app has no edit/delete controls.
 - **LAN only** — bind to your private network; don't expose it to the internet (no TLS).
 
-The admin panel includes a month **calendar** (click any day), an **emoji picker** dropdown,
-**time-spent** entry when checking off, a **red highlight** on unfinished one-off tasks,
-and a **countdown** on future-dated tasks (`⏳ Nd` within the window, `📅 Today!`, `⏰ Nd ago`).
+The admin panel has two tabs: **📋 Today** (the daily checklist + month calendar) and
+**⏳ Countdown** (future-dated events with `⏳ Nd` countdowns, `📅 Today!`, `⏰ Nd ago`).
+Also includes an **emoji picker** dropdown, **time-spent** entry when checking off, and a
+**red highlight** on unfinished one-off tasks.
 
 ## Env vars
 

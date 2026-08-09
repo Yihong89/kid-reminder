@@ -70,9 +70,13 @@ function daysBetween(from, to) {
 // listTasks(dateStr): tasks as-of a given date (default today).
 //   recurring tasks appear every day; a one-off task appears until the day it
 //   is completed (then hides the next day). "done" reflects that date's record.
-function listTasks(dateStr) {
+function listTasks(dateStr, type) {
   const d = dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr) ? dateStr : today();
-  const tasks = db.prepare("SELECT * FROM tasks WHERE active = 1 ORDER BY sort, id").all();
+  let sql = "SELECT * FROM tasks WHERE active = 1";
+  if (type === "todo") sql += " AND target_date IS NULL";      // today's checklist
+  if (type === "countdown") sql += " AND target_date IS NOT NULL"; // future events
+  sql += " ORDER BY sort, id";
+  const tasks = db.prepare(sql).all();
   const doneOn = new Map(
     db.prepare("SELECT task_id, minutes FROM completions WHERE date = ?").all(d).map((r) => [r.task_id, r.minutes])
   );
@@ -168,8 +172,9 @@ const server = http.createServer(async (req, res) => {
     // --- tasks list (open) ---------------------------------------------
     if (method === "GET" && pathname === "/api/tasks") {
       const reqDate = url.searchParams.get("date") || "";
+      const type = url.searchParams.get("type") || ""; // "todo" | "countdown" | "" (all)
       const date = /^\d{4}-\d{2}-\d{2}$/.test(reqDate) ? reqDate : today();
-      return sendJSON(200, { today: today(), date, tasks: listTasks(date) });
+      return sendJSON(200, { today: today(), date, type, tasks: listTasks(date, type) });
     }
 
     // --- create task (parent) ------------------------------------------

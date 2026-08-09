@@ -34,7 +34,7 @@ node server.js        # PORT=2021, ADMIN_PIN=1234 (env-overridable)
 
 | Endpoint | Auth | Description |
 |---|---|---|
-| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes,targetDate,countdownStart,daysLeft}] }` |
+| `GET /api/tasks?date=YYYY-MM-DD&type=todo\|countdown` | — | Task list for a date (default today). `type=todo` = daily checklist only; `type=countdown` = future-dated events only. `{ today, date, type, tasks: [{id,title,emoji,recurring,done,minutes,targetDate,countdownStart,daysLeft}] }` |
 | `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }` |
 | `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (same fields as create) |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
@@ -57,9 +57,11 @@ Admin panel features:
 - **Emoji picker** — choose from a curated dropdown instead of typing.
 - **Time spent** — when marking a task done, enter the minutes; shown as `⏱ Nm`.
 - **Red highlight** — unfinished one-off tasks are shown in red.
+- **Two panels** — the **📋 Today** tab is the daily checklist (plus the calendar);
+  future-dated tasks live in a separate **⏳ Countdown** tab.
 - **Countdown** — set a target date on a future task (e.g. an exam). Within the
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
-  and `⏰ Nd ago` once passed.
+  and `⏰ Nd ago` once passed. Future events can't be checked off until their day.
 
 ## macOS app (planned)
 
