@@ -49,7 +49,7 @@ final class AppUpdater: ObservableObject {
             let release = try JSONDecoder().decode(ReleaseInfo.self, from: data)
             state = isNewer(release.tagName, than: currentVersion) ? .available(release) : .upToDate
         } catch {
-            state = .failed(error.localizedDescription)
+            state = .failed("Couldn't check for updates — check your internet connection and try again.")
         }
     }
 
@@ -75,7 +75,7 @@ final class AppUpdater: ObservableObject {
             state = .installing
             try install(newApp)
         } catch {
-            state = .failed(error.localizedDescription)
+            state = .failed("Update failed: \(error.localizedDescription)")
         }
     }
 

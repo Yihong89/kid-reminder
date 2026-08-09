@@ -61,7 +61,8 @@ struct SettingsView: View {
                 case .upToDate:
                     Text("You're up to date ✓").foregroundStyle(.secondary)
                 case .failed(let msg):
-                    Text(msg).foregroundStyle(.red).font(.callout)
+                    Text(msg).foregroundStyle(.secondary).font(.callout)
+                    Button("Try again") { Task { await updater.check() } }
                 }
             }
         }
