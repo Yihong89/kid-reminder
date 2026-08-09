@@ -60,13 +60,17 @@ Base path `/api`:
 
 | Endpoint | Auth | Description |
 |---|---|---|
-| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes}] }` |
-| `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring }` |
-| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task |
+| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes,targetDate,countdownStart,daysLeft}] }` |
+| `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }` |
+| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (same fields as create) |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
 | `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
 | `POST /api/verify` | — | Check admin PIN |
 | `GET /`, `/admin` | — | Parent admin panel |
+
+Countdown: `targetDate` (YYYY-MM-DD) sets a future event; `countdownStart` (default 7)
+is the days-remaining threshold where the countdown becomes active. `daysLeft` is
+computed server-side relative to the requested `date`.
 
 ## Behavior
 
@@ -77,7 +81,8 @@ Base path `/api`:
 - **LAN only** — bind to your private network; don't expose it to the internet (no TLS).
 
 The admin panel includes a month **calendar** (click any day), an **emoji picker** dropdown,
-**time-spent** entry when checking off, and a **red highlight** on unfinished one-off tasks.
+**time-spent** entry when checking off, a **red highlight** on unfinished one-off tasks,
+and a **countdown** on future-dated tasks (`⏳ Nd` within the window, `📅 Today!`, `⏰ Nd ago`).
 
 ## Env vars
 

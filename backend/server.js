@@ -28,13 +28,15 @@ const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 const db = new DatabaseSync(DB_PATH);
 db.exec(`
   CREATE TABLE IF NOT EXISTS tasks (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    title      TEXT NOT NULL,
-    emoji      TEXT NOT NULL DEFAULT '',
-    recurring  INTEGER NOT NULL DEFAULT 1,   -- 1: shows every day, 0: one-off (hides once done)
-    active     INTEGER NOT NULL DEFAULT 1,
-    sort       INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    title           TEXT NOT NULL,
+    emoji           TEXT NOT NULL DEFAULT '',
+    recurring       INTEGER NOT NULL DEFAULT 1,   -- 1: shows every day, 0: one-off (hides once done)
+    active          INTEGER NOT NULL DEFAULT 1,
+    sort            INTEGER NOT NULL DEFAULT 0,
+    target_date     TEXT,                          -- YYYY-MM-DD optional future event (countdown)
+    countdown_start INTEGER NOT NULL DEFAULT 7,    -- show countdown when this many days remain
+    created_at      TEXT NOT NULL DEFAULT (datetime('now'))
   );
   CREATE TABLE IF NOT EXISTS completions (
     task_id      INTEGER NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
@@ -44,18 +46,25 @@ db.exec(`
     PRIMARY KEY (task_id, date)
   );
 `);
-// migrate older databases that predate the `minutes` column
-try {
-  db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0");
-} catch {
-  /* column already exists */
-}
+// migrate older databases that predate newer columns
+try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE tasks ADD COLUMN target_date TEXT"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE tasks ADD COLUMN countdown_start INTEGER NOT NULL DEFAULT 7"); } catch { /* exists */ }
 console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 
 // ---------------------------------------------------------------- helpers
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+// daysBetween(from, to): whole days from "YYYY-MM-DD" to "YYYY-MM-DD" (can be negative)
+function daysBetween(from, to) {
+  const [y1, m1, d1] = from.split("-").map(Number);
+  const [y2, m2, d2] = to.split("-").map(Number);
+  const a = Date.UTC(y1, m1 - 1, d1);
+  const b = Date.UTC(y2, m2 - 1, d2);
+  return Math.round((b - a) / 86400000);
 }
 
 // listTasks(dateStr): tasks as-of a given date (default today).
@@ -81,6 +90,9 @@ function listTasks(dateStr) {
       recurring: !!task.recurring,
       done: doneOn.has(task.id),
       minutes: doneOn.get(task.id) || 0,
+      targetDate: task.target_date || null,
+      countdownStart: task.countdown_start,
+      daysLeft: task.target_date ? daysBetween(d, task.target_date) : null,
     });
   }
   return result;
@@ -166,9 +178,11 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const title = (body.title || "").trim();
       if (!title) return sendJSON(400, { error: "title is required" });
+      const targetDate = /^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null;
+      const countdownStart = Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)));
       const info = db
-        .prepare("INSERT INTO tasks (title, emoji, recurring) VALUES (?, ?, ?)")
-        .run(title, String(body.emoji || "").slice(0, 8), body.recurring === false ? 0 : 1);
+        .prepare("INSERT INTO tasks (title, emoji, recurring, target_date, countdown_start) VALUES (?, ?, ?, ?, ?)")
+        .run(title, String(body.emoji || "").slice(0, 8), body.recurring === false ? 0 : 1, targetDate, countdownStart);
       return sendJSON(201, { id: Number(info.lastInsertRowid) });
     }
 
@@ -195,6 +209,8 @@ const server = http.createServer(async (req, res) => {
         if (body.emoji !== undefined) { sets.push("emoji = ?"); vals.push(String(body.emoji).slice(0, 8)); }
         if (body.recurring !== undefined) { sets.push("recurring = ?"); vals.push(body.recurring ? 1 : 0); }
         if (body.active !== undefined) { sets.push("active = ?"); vals.push(body.active ? 1 : 0); }
+        if (body.targetDate !== undefined) { sets.push("target_date = ?"); vals.push(/^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null); }
+        if (body.countdownStart !== undefined) { sets.push("countdown_start = ?"); vals.push(Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)))); }
         if (!sets.length) return sendJSON(400, { error: "nothing to update" });
         vals.push(id);
         const info = db.prepare(`UPDATE tasks SET ${sets.join(", ")} WHERE id = ?`).run(...vals);

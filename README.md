@@ -34,13 +34,17 @@ node server.js        # PORT=2021, ADMIN_PIN=1234 (env-overridable)
 
 | Endpoint | Auth | Description |
 |---|---|---|
-| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes}] }` |
-| `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring }` |
-| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task |
+| `GET /api/tasks?date=YYYY-MM-DD` | — | Task list for a date (default today) `{ today, date, tasks: [{id,title,emoji,recurring,done,minutes,targetDate,countdownStart,daysLeft}] }` |
+| `POST /api/tasks` | `X-Admin-Pin` | Create task `{ title, emoji, recurring, targetDate?, countdownStart? }` |
+| `PATCH /api/tasks/:id` | `X-Admin-Pin` | Edit task (same fields as create) |
 | `DELETE /api/tasks/:id` | `X-Admin-Pin` | Delete task |
 | `POST /api/tasks/:id/toggle` | — | Mark done / not done; `{ minutes }` = time spent, stored on the day's completion |
 | `POST /api/verify` | — | Check admin PIN |
-| `GET /` , `/admin` | — | Parent admin panel |
+| `GET /`, `/admin` | — | Parent admin panel |
+
+Countdown fields: `targetDate` (YYYY-MM-DD) sets a future event; `countdownStart`
+(default 7) is the number of days remaining at which the countdown becomes active.
+`daysLeft` is computed server-side relative to the requested `date`.
 
 Behavior:
 - **Rollover** — tasks not done stay in the list the next day.
@@ -53,6 +57,9 @@ Admin panel features:
 - **Emoji picker** — choose from a curated dropdown instead of typing.
 - **Time spent** — when marking a task done, enter the minutes; shown as `⏱ Nm`.
 - **Red highlight** — unfinished one-off tasks are shown in red.
+- **Countdown** — set a target date on a future task (e.g. an exam). Within the
+  `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
+  and `⏰ Nd ago` once passed.
 
 ## macOS app (planned)
 
