@@ -445,8 +445,13 @@
 
   async function refresh() {
     try {
-      const data = await api(`/api/tasks?date=${selectedDate}&type=todo`);
-      tasks = data.tasks;
+      const [todo, cnt] = await Promise.all([
+        api(`/api/tasks?date=${selectedDate}&type=todo`),
+        api(`/api/tasks?date=${selectedDate}&type=countdown`),
+      ]);
+      // also list countdown events that happen on this day
+      const events = cnt.tasks.filter((t) => t.targetDate === selectedDate);
+      tasks = todo.tasks.concat(events);
       $("#date").textContent = prettyDate(selectedDate);
       render();
     } catch (e) { showErr(e.message); }
