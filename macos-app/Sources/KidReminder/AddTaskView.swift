@@ -7,7 +7,7 @@ struct AddTaskView: View {
 
     @State private var title = ""
     @State private var emoji = ""
-    @State private var repeatType = "daily"
+    @State private var repeatType = "once"
     @State private var busy = false
     @State private var error: String?
 

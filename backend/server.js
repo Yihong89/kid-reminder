@@ -224,7 +224,7 @@ const server = http.createServer(async (req, res) => {
       if (!title) return sendJSON(400, { error: "title is required" });
       const repeat = ["daily", "weekly", "biweekly", "monthly", "once"].includes(body.repeat)
         ? body.repeat
-        : (body.recurring === false ? "once" : "daily"); // backward compat
+        : (typeof body.recurring === "boolean" ? (body.recurring ? "daily" : "once") : "once"); // default: once
       const targetDate = /^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null;
       const countdownEnabled = body.countdownEnabled ? 1 : 0;
       const countdownStart = Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)));
@@ -263,7 +263,7 @@ const server = http.createServer(async (req, res) => {
         const vals = [];
         if (body.title !== undefined) { sets.push("title = ?"); vals.push(String(body.title).trim()); }
         if (body.emoji !== undefined) { sets.push("emoji = ?"); vals.push(String(body.emoji).slice(0, 8)); }
-        if (body.repeat !== undefined) { sets.push("repeat = ?"); vals.push(["daily","weekly","biweekly","monthly","once"].includes(body.repeat) ? body.repeat : "daily"); }
+        if (body.repeat !== undefined) { sets.push("repeat = ?"); vals.push(["daily","weekly","biweekly","monthly","once"].includes(body.repeat) ? body.repeat : "once"); }
         else if (body.recurring !== undefined) { sets.push("repeat = ?"); vals.push(body.recurring ? "daily" : "once"); }
         if (body.active !== undefined) { sets.push("active = ?"); vals.push(body.active ? 1 : 0); }
         if (body.targetDate !== undefined) { sets.push("target_date = ?"); vals.push(/^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null); }
