@@ -92,5 +92,5 @@ Also includes an **emoji picker** dropdown, **time-spent** entry when checking o
 
 - `PORT` — listen port (default `2021`)
 - `ADMIN_PIN` — PIN for parent actions (default `1234` — **change it**)
-- `KID_PIN` — PIN that unlocks the read-only kid view (default `0626`)
+- `KID_PIN` — PIN that unlocks the read-only kid view (default `4321` — **change it**)
 - `DB_PATH` — SQLite file location (default `kidreminder.db` next to the script)

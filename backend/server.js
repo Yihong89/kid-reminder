@@ -21,7 +21,7 @@ const { DatabaseSync } = require("node:sqlite");
 
 const PORT = parseInt(process.env.PORT || "2021", 10);
 const ADMIN_PIN = process.env.ADMIN_PIN || "1234";
-const KID_PIN = process.env.KID_PIN || "0626"; // unlocks the read-only kid view
+const KID_PIN = process.env.KID_PIN || "4321"; // unlock the kid view (change before deploying)
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, "kidreminder.db");
 const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 

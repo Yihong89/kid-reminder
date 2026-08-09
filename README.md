@@ -56,7 +56,7 @@ Behavior:
   date if no date is set).
 - **Rollover** — daily tasks not done stay in the list the next day.
 - **Any date** — `?date=` returns that day's view: history shows what was done that day (with `minutes`); future shows the plan.
-- **Permissions** — the **admin PIN** unlocks full control; the **kid PIN** (`KID_PIN`, default `0626`)
+- **Permissions** — the **admin PIN** unlocks full control; a separate **kid PIN** (`KID_PIN`)
   unlocks the same interface, but the kid can only **edit or delete tasks they created**.
   Parent-created tasks are locked for the kid (no edit/delete buttons, and the server rejects
   them with 403). Both roles can add tasks and mark tasks done.
@@ -88,7 +88,17 @@ its tasks), **Countdown** panel, and a **Settings** view where the server IP,
 port, and PIN are configured — changes apply immediately (no restart needed).
 The build produces a signed `.app` with a custom icon (from `Resources/AppIcon.svg`).
 
-Build it (no Xcode required, just Command Line Tools + Swift):
+### Download the app
+
+Grab the latest release from the **Releases** page:
+<https://github.com/Yihong89/kid-reminder/releases>
+
+`KidReminder.zip` is a **universal build** (Apple Silicon + Intel). Unzip, move
+`KidReminder.app` to Applications, and on first launch **right-click → Open**
+(it's ad-hoc signed, so macOS shows a warning once). Then open **Settings** and
+enter the server IP, port, and PIN.
+
+### Build from source (no Xcode needed, just Command Line Tools + Swift)
 
 ```bash
 cd macos-app
