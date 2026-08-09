@@ -10,14 +10,14 @@
     </linearGradient>
   </defs>
 
-  <!-- full-bleed background (no transparent margins so no white border) -->
-  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- rounded squircle with a small margin; the corners stay transparent -->
+  <rect x="56" y="56" width="912" height="912" rx="205" fill="url(#bg)"/>
 
   <!-- calendar header strip -->
-  <rect x="176" y="176" width="672" height="150" rx="52" fill="url(#header)"/>
-  <circle cx="300" cy="252" r="18" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="512" cy="252" r="18" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="724" cy="252" r="18" fill="rgba(255,255,255,0.9)"/>
+  <rect x="220" y="200" width="584" height="150" rx="52" fill="url(#header)"/>
+  <circle cx="336" cy="275" r="18" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="512" cy="275" r="18" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="688" cy="275" r="18" fill="rgba(255,255,255,0.9)"/>
 
   <!-- white check circle -->
   <circle cx="512" cy="590" r="250" fill="#ffffff"/>
@@ -27,5 +27,5 @@
         stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 
   <!-- sparkle -->
-  <path d="M820 300 l26 62 62 26 -62 26 -26 62 -26 -62 -62 -26 62 -26 z" fill="#fde047"/>
+  <path d="M790 330 l24 56 56 24 -56 24 -24 56 -24 -56 -56 -24 56 -24 z" fill="#fde047"/>
 </svg>
