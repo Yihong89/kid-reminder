@@ -162,6 +162,7 @@ struct CalendarView: View {
             Text(task.title)
                 .strikethrough(task.done)
                 .foregroundStyle(task.done ? .secondary : .primary)
+            RepeatBadge(task: task)
             Spacer()
             if let c = task.countdownText { Text(c).font(.caption.bold()).foregroundStyle(.pink) }
             if settings.canModify(task) {

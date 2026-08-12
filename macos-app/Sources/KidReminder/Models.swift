@@ -26,6 +26,11 @@ struct KidTask: Identifiable, Codable, Equatable {
         if d <= countdownStart { return "⏳ \(d)d" }
         return "📅 in \(d)d"
     }
+
+    /// Repeat badge label, mirroring the web panel (nil for the default "daily").
+    var repeatBadge: String? {
+        repeatType == "daily" ? nil : repeatType
+    }
 }
 
 struct TasksResponse: Codable {

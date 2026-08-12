@@ -80,6 +80,7 @@ struct CountdownView: View {
                     Text(c).font(.caption.bold()).foregroundStyle(countdownColor(event.daysLeft ?? 0))
                 }
             }
+            RepeatBadge(task: event)
             Spacer()
             if settings.canModify(event) {
                 Button { delete(event) } label: { Image(systemName: "trash") }

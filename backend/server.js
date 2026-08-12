@@ -113,11 +113,14 @@ function listTasks(dateStr, type) {
     if (String(task.created_at).slice(0, 10) > d) continue; // not created yet on that date
     const repeat = task.repeat || "daily";
     if (repeat === "once") {
-      if (doneBefore.has(task.id)) continue; // completed on an earlier day
-      // a non-countdown one-off shows only on its own day (its date, or the day
-      // it was created) and never rolls over; countdown events stay visible
-      // every day so the countdown panel can count down.
-      if (!task.countdown_enabled) {
+      if (task.countdown_enabled) {
+        // countdown event: hide once it has any completion (today or earlier),
+        // so a finished event never reappears in the countdown panel.
+        if (doneBefore.has(task.id) || doneOn.has(task.id)) continue;
+      } else {
+        // a non-countdown one-off shows only on its own day (its date, or the
+        // day it was created) and never rolls over.
+        if (doneBefore.has(task.id)) continue;
         const onceDate = task.target_date || String(task.created_at).slice(0, 10);
         if (d !== onceDate) continue;
       }

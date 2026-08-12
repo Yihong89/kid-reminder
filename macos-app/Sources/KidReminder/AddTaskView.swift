@@ -77,7 +77,7 @@ struct AddTaskView: View {
                     title: title.trimmingCharacters(in: .whitespaces),
                     emoji: emoji.trimmingCharacters(in: .whitespaces),
                     repeatType: repeatType,
-                    targetDate: countdownEnabled ? Self.iso(date) : nil,
+                    targetDate: Self.iso(date), // always send the picked date (anchors recurring schedules)
                     countdownEnabled: countdownEnabled,
                     countdownStart: countdownDays)
                 dismiss()

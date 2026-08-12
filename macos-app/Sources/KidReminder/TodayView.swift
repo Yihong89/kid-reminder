@@ -93,6 +93,7 @@ struct TodayView: View {
                     Text("⏱ \(task.minutes)m").font(.caption).foregroundStyle(.secondary)
                 }
             }
+            RepeatBadge(task: task)
             Spacer()
             if settings.canModify(task) {
                 Button { delete(task) } label: { Image(systemName: "trash") }
@@ -116,6 +117,7 @@ struct TodayView: View {
                     Text(formattedDate(iso)).font(.caption).foregroundStyle(.secondary)
                 }
             }
+            RepeatBadge(task: ev)
             Spacer()
             if let c = ev.countdownText { Text(c).font(.caption.bold()).foregroundStyle(.pink) }
             if settings.canModify(ev) {
