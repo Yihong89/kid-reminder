@@ -127,3 +127,19 @@ The app reads the connection settings on every request, so edits apply instantly
 - Server auto-starts via launchd (`com.kidreminder.server`).
 - LAN-only; set a DHCP reservation for the Mac Mini so its IP stays stable.
 - Full setup guide: [backend-setup.md](backend-setup.md)
+
+## Roadmap (planned)
+
+Ideas we want to build next:
+
+1. **Achievement / sticker system** 🏅
+   - When the kid finishes all of today's tasks, the parent can award a **stamp**.
+   - Stamps show up on the **calendar** as per-day markers.
+   - Collecting enough stamps **levels the kid up** and **unlocks Pokémon stickers** in the app UI.
+
+2. **Multi-kid support** 👨‍👧‍👦
+   - One parent account can link to **many kid accounts**.
+   - The parent manages **each kid's tasks separately** and awards stamps to each kid individually.
+
+3. **Parent-only tasks** 🔒
+   - Some tasks are visible and manageable **only by the parent** — the kid can't see them.
