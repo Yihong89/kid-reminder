@@ -55,6 +55,7 @@ try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAU
 try { db.exec("ALTER TABLE tasks ADD COLUMN target_date TEXT"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE tasks ADD COLUMN countdown_start INTEGER NOT NULL DEFAULT 7"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE tasks ADD COLUMN created_by TEXT NOT NULL DEFAULT 'admin'"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE tasks ADD COLUMN parent_only INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ } // 1 = only the parent sees/manages it
 try {
   db.exec("ALTER TABLE tasks ADD COLUMN repeat TEXT NOT NULL DEFAULT 'daily'");
   db.exec("UPDATE tasks SET repeat = 'once' WHERE recurring = 0"); // migrate legacy one-offs
@@ -139,6 +140,7 @@ function listTasks(dateStr, type) {
       countdownStart: task.countdown_start,
       daysLeft: task.target_date ? daysBetween(d, task.target_date) : null,
       createdBy: task.created_by,
+      parentOnly: !!task.parent_only,
     });
   }
   return result;
@@ -213,12 +215,14 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(401, { error: "wrong pin" });
     }
 
-    // --- tasks list (open) ---------------------------------------------
+    // --- tasks list (open; parent-only hidden unless admin) -------------
     if (method === "GET" && pathname === "/api/tasks") {
       const reqDate = url.searchParams.get("date") || "";
       const type = url.searchParams.get("type") || ""; // "todo" | "countdown" | "" (all)
       const date = /^\d{4}-\d{2}-\d{2}$/.test(reqDate) ? reqDate : today();
-      return sendJSON(200, { today: today(), date, type, tasks: listTasks(date, type) });
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const tasks = listTasks(date, type).filter((t) => isAdmin || !t.parentOnly);
+      return sendJSON(200, { today: today(), date, type, tasks });
     }
 
     // --- create task (admin or kid) ------------------------------------
@@ -235,10 +239,12 @@ const server = http.createServer(async (req, res) => {
       const targetDate = /^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null;
       const countdownEnabled = body.countdownEnabled ? 1 : 0;
       const countdownStart = Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)));
+      const parentOnly = !!body.parentOnly;
+      if (parentOnly && !isAdmin) return sendJSON(403, { error: "only the parent can create parent-only tasks" });
       const createdBy = isAdmin ? "admin" : "kid";
       const info = db
-        .prepare("INSERT INTO tasks (title, emoji, repeat, target_date, countdown_enabled, countdown_start, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)")
-        .run(title, String(body.emoji || "").slice(0, 8), repeat, targetDate, countdownEnabled, countdownStart, createdBy);
+        .prepare("INSERT INTO tasks (title, emoji, repeat, target_date, countdown_enabled, countdown_start, created_by, parent_only) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+        .run(title, String(body.emoji || "").slice(0, 8), repeat, targetDate, countdownEnabled, countdownStart, createdBy, parentOnly ? 1 : 0);
       return sendJSON(201, { id: Number(info.lastInsertRowid), createdBy });
     }
 
@@ -248,8 +254,14 @@ const server = http.createServer(async (req, res) => {
       const id = Number(taskMatch[1]);
       const isToggle = !!taskMatch[2];
 
-      // toggle done (kid's app, open)
+      // toggle done (kid's app, open; parent-only locked for kid)
       if (method === "POST" && isToggle) {
+        const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+        const isKid = req.headers["x-kid-pin"] === KID_PIN;
+        if (isKid && !isAdmin) {
+          const t = db.prepare("SELECT parent_only FROM tasks WHERE id = ?").get(id);
+          if (t && t.parent_only) return sendJSON(403, { error: "parent-only tasks are locked for the kid" });
+        }
         const body = await readBody(req);
         const result = toggleTask(id, body.minutes);
         return sendJSON(result.status, result.json);
@@ -260,12 +272,14 @@ const server = http.createServer(async (req, res) => {
         const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
         const isKid = req.headers["x-kid-pin"] === KID_PIN;
         if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+        const task = db.prepare("SELECT created_by, parent_only FROM tasks WHERE id = ?").get(id);
+        if (!task) return sendJSON(404, { error: "task not found" });
         if (isKid) {
-          const task = db.prepare("SELECT created_by FROM tasks WHERE id = ?").get(id);
-          if (!task) return sendJSON(404, { error: "task not found" });
+          if (task.parent_only) return sendJSON(403, { error: "parent-only tasks are locked for the kid" });
           if (task.created_by !== "kid") return sendJSON(403, { error: "kids can only edit their own tasks" });
         }
         const body = await readBody(req);
+        if (body.parentOnly !== undefined && !isAdmin) return sendJSON(403, { error: "only the parent can change parent-only" });
         const sets = [];
         const vals = [];
         if (body.title !== undefined) { sets.push("title = ?"); vals.push(String(body.title).trim()); }
@@ -276,6 +290,7 @@ const server = http.createServer(async (req, res) => {
         if (body.targetDate !== undefined) { sets.push("target_date = ?"); vals.push(/^\d{4}-\d{2}-\d{2}$/.test(body.targetDate || "") ? body.targetDate : null); }
         if (body.countdownEnabled !== undefined) { sets.push("countdown_enabled = ?"); vals.push(body.countdownEnabled ? 1 : 0); }
         if (body.countdownStart !== undefined) { sets.push("countdown_start = ?"); vals.push(Math.max(1, Math.min(30, Math.round(Number(body.countdownStart) || 7)))); }
+        if (body.parentOnly !== undefined) { sets.push("parent_only = ?"); vals.push(body.parentOnly ? 1 : 0); }
         if (!sets.length) return sendJSON(400, { error: "nothing to update" });
         vals.push(id);
         const info = db.prepare(`UPDATE tasks SET ${sets.join(", ")} WHERE id = ?`).run(...vals);
@@ -288,9 +303,9 @@ const server = http.createServer(async (req, res) => {
         const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
         const isKid = req.headers["x-kid-pin"] === KID_PIN;
         if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
-        const task = db.prepare("SELECT created_by FROM tasks WHERE id = ?").get(id);
+        const task = db.prepare("SELECT created_by, parent_only FROM tasks WHERE id = ?").get(id);
         if (!task) return sendJSON(404, { error: "task not found" });
-        if (!isAdmin && task.created_by !== "kid") return sendJSON(403, { error: "kids can only delete their own tasks" });
+        if (!isAdmin && (task.parent_only || task.created_by !== "kid")) return sendJSON(403, { error: "kids can only delete their own tasks" });
         db.prepare("DELETE FROM tasks WHERE id = ?").run(id);
         return sendJSON(200, { ok: true });
       }

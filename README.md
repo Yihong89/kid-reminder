@@ -62,6 +62,10 @@ Behavior:
   unlocks the same interface, but the kid can only **edit or delete tasks they created**.
   Parent-created tasks are locked for the kid (no edit/delete buttons, and the server rejects
   them with 403). Both roles can add tasks and mark tasks done.
+- **Parent-only tasks** 🔒 — when adding/editing a task, the parent can tick **🔒 parent only**.
+  Those tasks are **hidden from the kid entirely** (the server filters them out of every list,
+  and the kid gets a 403 on toggle/edit/delete attempts). The parent sees a 🔒 badge and keeps
+  full access — toggle, edit, delete — on both parent-only and kid-created tasks.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots (green all done / amber partial)
@@ -140,6 +144,3 @@ Ideas we want to build next:
 2. **Multi-kid support** 👨‍👧‍👦
    - One parent account can link to **many kid accounts**.
    - The parent manages **each kid's tasks separately** and awards stamps to each kid individually.
-
-3. **Parent-only tasks** 🔒
-   - Some tasks are visible and manageable **only by the parent** — the kid can't see them.

@@ -180,6 +180,9 @@
     <label><input type="checkbox" id="dlgCountdown" /> countdown
       <span id="dlgDaysWrap" hidden><input type="number" id="dlgCountdownDays" min="1" max="30" value="7" style="width:70px" /> days before</span></label>
   </div>
+  <div class="cnt-row">
+    <label id="dlgParentOnlyWrap"><input type="checkbox" id="dlgParentOnly" /> 🔒 parent only <span style="color:var(--muted);font-size:12px">(hidden from the kid)</span></label>
+  </div>
   <div class="row">
     <button class="ghost" id="dlgCancel">Cancel</button>
     <button class="primary" id="dlgCreate">Create</button>
@@ -308,6 +311,7 @@
     card.dataset.id = t.id;
     const minBadge = t.done && t.minutes > 0 ? `<span class="min">⏱ ${t.minutes}m</span>` : "";
     const canModify = role === "admin" || t.createdBy === "kid"; // kid edits/deletes only their own
+    const lockBadge = t.parentOnly ? '<span class="badge" title="Parent only — hidden from the kid">🔒</span>' : "";
     const ownerBadge = role === "kid"
       ? (t.createdBy === "kid" ? '<span class="badge mine">👤 mine</span>' : '<span class="badge parent">👨‍👩‍👧</span>')
       : "";
@@ -316,6 +320,7 @@
         <span class="emoji">${t.emoji || "📝"}</span>
         <span class="title ${t.done ? "done" : ""}">${escapeHtml(t.title)}</span>
         ${ownerBadge}
+        ${lockBadge}
         ${repeatBadge(t)}
         ${minBadge}
         ${countdownBadge(t)}
@@ -369,6 +374,7 @@
         <label>Date <input type="date" class="target-in" value="${t.targetDate || ""}" /></label>
         <label><input type="checkbox" class="cnt-en" ${t.countdownEnabled ? "checked" : ""} /> countdown
           <span class="cnt-days-wrap" ${t.countdownEnabled ? "" : "hidden"}><input type="number" class="cnt-in" min="1" max="30" value="${t.countdownStart || 7}" style="width:70px" /> days before</span></label>
+        ${role === "admin" ? '<label><input type="checkbox" class="parent-only-in" ${t.parentOnly ? "checked" : ""} /> 🔒 parent only</label>' : ""}
       </div>`;
     const syncCnt = () => { card.querySelector(".cnt-days-wrap").hidden = !card.querySelector(".cnt-en").checked; };
     card.querySelector(".cnt-en").onchange = syncCnt;
@@ -387,6 +393,7 @@
             targetDate: card.querySelector(".target-in").value,
             countdownEnabled,
             countdownStart: Number(card.querySelector(".cnt-in").value) || 7,
+            parentOnly: role === "admin" && card.querySelector(".parent-only-in")?.checked,
           }),
         });
         setTab(countdownEnabled && willHaveTarget ? "countdown" : "today");
@@ -539,6 +546,8 @@
     $("#dlgCountdown").checked = false;
     $("#dlgDaysWrap").hidden = true;
     $("#dlgCountdownDays").value = 7;
+    $("#dlgParentOnly").checked = false;
+    $("#dlgParentOnlyWrap").hidden = role !== "admin"; // parent-only tasks: admin only
     $("#addDialog").showModal();
     $("#dlgTitle").focus();
   }
@@ -561,6 +570,7 @@
           targetDate: $("#dlgTarget").value,
           countdownEnabled,
           countdownStart: Number($("#dlgCountdownDays").value) || 7,
+          parentOnly: $("#dlgParentOnly").checked,
         }),
       });
       $("#addDialog").close();
