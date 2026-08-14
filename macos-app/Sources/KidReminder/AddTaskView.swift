@@ -11,6 +11,7 @@ struct AddTaskView: View {
     @State private var date = Date()
     @State private var countdownEnabled = false
     @State private var countdownDays = 7
+    @State private var parentOnly = false
     @State private var busy = false
     @State private var error: String?
 
@@ -52,6 +53,14 @@ struct AddTaskView: View {
             }
             .frame(maxWidth: 340)
 
+            if settings.isAdmin {
+                Toggle(isOn: $parentOnly) {
+                    Label("🔒 Parent only (hidden from the kid)", systemImage: "lock.fill")
+                }
+                .toggleStyle(.checkbox)
+                .help("Only the parent sees and manages this task")
+            }
+
             if let error {
                 Text(error).foregroundStyle(.red).font(.callout)
             }
@@ -79,7 +88,8 @@ struct AddTaskView: View {
                     repeatType: repeatType,
                     targetDate: Self.iso(date), // always send the picked date (anchors recurring schedules)
                     countdownEnabled: countdownEnabled,
-                    countdownStart: countdownDays)
+                    countdownStart: countdownDays,
+                    parentOnly: parentOnly)
                 dismiss()
                 onSaved()
             } catch let e {

@@ -86,9 +86,15 @@ struct TodayView: View {
             Text(task.emoji.isEmpty ? "📝" : task.emoji)
                 .font(.system(size: 26))
             VStack(alignment: .leading, spacing: 2) {
-                Text(task.title)
-                    .strikethrough(task.done)
-                    .foregroundStyle(task.done ? .secondary : .primary)
+                HStack(spacing: 4) {
+                    Text(task.title)
+                        .strikethrough(task.done)
+                        .foregroundStyle(task.done ? .secondary : .primary)
+                    if task.isParentOnly {
+                        Image(systemName: "lock.fill").font(.caption2).foregroundStyle(.secondary)
+                            .help("Parent only — hidden from the kid")
+                    }
+                }
                 if task.done && task.minutes > 0 {
                     Text("⏱ \(task.minutes)m").font(.caption).foregroundStyle(.secondary)
                 }
@@ -112,7 +118,13 @@ struct TodayView: View {
         HStack(spacing: 12) {
             Text(ev.emoji.isEmpty ? "📝" : ev.emoji).font(.system(size: 24))
             VStack(alignment: .leading, spacing: 2) {
-                Text(ev.title)
+                HStack(spacing: 4) {
+                    Text(ev.title)
+                    if ev.isParentOnly {
+                        Image(systemName: "lock.fill").font(.caption2).foregroundStyle(.secondary)
+                            .help("Parent only — hidden from the kid")
+                    }
+                }
                 if let iso = ev.targetDate {
                     Text(formattedDate(iso)).font(.caption).foregroundStyle(.secondary)
                 }

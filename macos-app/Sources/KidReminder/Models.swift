@@ -12,11 +12,15 @@ struct KidTask: Identifiable, Codable, Equatable {
     let countdownStart: Int
     let daysLeft: Int?
     let createdBy: String
+    let parentOnly: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case id, title, emoji, done, minutes, targetDate, countdownEnabled, countdownStart, daysLeft, createdBy
+        case id, title, emoji, done, minutes, targetDate, countdownEnabled, countdownStart, daysLeft, createdBy, parentOnly
         case repeatType = "repeat"
     }
+
+    /// True when the task is 🔒 parent-only (hidden from the kid).
+    var isParentOnly: Bool { parentOnly == true }
 
     /// Human-friendly countdown label, mirroring the web panel.
     var countdownText: String? {

@@ -83,7 +83,8 @@ final class APIClient {
     }
 
     func addTask(title: String, emoji: String, repeatType: String,
-                 targetDate: String?, countdownEnabled: Bool, countdownStart: Int) async throws {
+                 targetDate: String?, countdownEnabled: Bool, countdownStart: Int,
+                 parentOnly: Bool = false) async throws {
         struct NewTask: Encodable {
             let title: String
             let emoji: String
@@ -91,14 +92,15 @@ final class APIClient {
             let targetDate: String?
             let countdownEnabled: Bool
             let countdownStart: Int
+            let parentOnly: Bool
             enum CodingKeys: String, CodingKey {
-                case title, emoji, targetDate, countdownEnabled, countdownStart
+                case title, emoji, targetDate, countdownEnabled, countdownStart, parentOnly
                 case repeatType = "repeat"
             }
         }
         let payload = NewTask(title: title, emoji: emoji, repeatType: repeatType,
                               targetDate: targetDate, countdownEnabled: countdownEnabled,
-                              countdownStart: countdownStart)
+                              countdownStart: countdownStart, parentOnly: parentOnly)
         let body = try JSONEncoder().encode(payload)
         _ = try await request("/api/tasks", method: "POST", body: body)
     }

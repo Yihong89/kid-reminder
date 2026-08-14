@@ -159,9 +159,15 @@ struct CalendarView: View {
     private func taskRow(_ task: KidTask) -> some View {
         HStack(spacing: 12) {
             Text(task.emoji.isEmpty ? "📝" : task.emoji).font(.system(size: 24))
-            Text(task.title)
-                .strikethrough(task.done)
-                .foregroundStyle(task.done ? .secondary : .primary)
+            HStack(spacing: 4) {
+                Text(task.title)
+                    .strikethrough(task.done)
+                    .foregroundStyle(task.done ? .secondary : .primary)
+                if task.isParentOnly {
+                    Image(systemName: "lock.fill").font(.caption2).foregroundStyle(.secondary)
+                        .help("Parent only — hidden from the kid")
+                }
+            }
             RepeatBadge(task: task)
             Spacer()
             if let c = task.countdownText { Text(c).font(.caption.bold()).foregroundStyle(.pink) }
