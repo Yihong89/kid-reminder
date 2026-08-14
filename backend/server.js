@@ -26,10 +26,14 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, "kidreminder.db");
 const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 const SPRITES_DIR = path.join(__dirname, "sprites");
 
-// Pokémon collection: 151 Kanto dex entries. The kid spends stamps to randomly
-// unlock sprites (served from sprites/<dex>.png). Non-commercial private use of
+// Pokémon collection: 9 generations (Kanto..Paldea). The kid spends stamps to
+// randomly unlock sprites (served from sprites/<dex>.png). A generation becomes
+// available once the previous one is fully caught. Non-commercial private use of
 // public PokéAPI sprite art. info.json = { "<dex>": {name, types} }.
-const POKEDEX_COUNT = 151;
+const GENERATIONS = [
+  { name: "Kanto",   start: 1,   end: 151 },
+  { name: "Johto",   start: 152, end: 251 },
+];
 const POKEDEX_INFO = (() => {
   try { return JSON.parse(fs.readFileSync(path.join(__dirname, "sprites", "info.json"), "utf8")); }
   catch { return {}; }
@@ -39,6 +43,29 @@ function pokemonInfo(dex) {
   const info = POKEDEX_INFO[String(dex)] || {};
   const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "???");
   return { dex, name: cap(info.name || "Pokémon #" + dex), types: info.types || [] };
+}
+
+// generation index for a dex number (0-based), or null
+function generationOf(dex) {
+  return GENERATIONS.findIndex((g) => dex >= g.start && dex <= g.end);
+}
+
+// all dex numbers in a generation
+function generationDexes(genIdx) {
+  const g = GENERATIONS[genIdx];
+  const out = [];
+  for (let dex = g.start; dex <= g.end; dex++) out.push(dex);
+  return out;
+}
+
+// which generations are playable: gen 0 always; gen N when gen N-1 fully caught
+function generationAvailability(caughtSet) {
+  const available = [];
+  for (let i = 0; i < GENERATIONS.length; i++) {
+    const prevDone = i === 0 || generationDexes(i - 1).every((dex) => caughtSet.has(dex));
+    available.push(prevDone);
+  }
+  return available;
 }
 
 // ---------------------------------------------------------------- database
@@ -288,10 +315,20 @@ const server = http.createServer(async (req, res) => {
       const earned = db.prepare("SELECT COUNT(*) n FROM stamps").get().n;
       const caught = db.prepare("SELECT dex FROM unlocks ORDER BY dex").all().map((r) => r.dex);
       const available = Math.max(0, earned - caught.length); // each unlock spends one stamp
-      const collection = caught.map(pokemonInfo);
+      const caughtSet = new Set(caught);
+      const availability = generationAvailability(caughtSet);
+      const generations = GENERATIONS.map((g, i) => ({
+        name: g.name,
+        start: g.start,
+        end: g.end,
+        total: g.end - g.start + 1,
+        caught: generationDexes(i).filter((dex) => caughtSet.has(dex)).length,
+        unlocked: availability[i],
+        complete: generationDexes(i).every((dex) => caughtSet.has(dex)),
+      }));
       return sendJSON(200, {
         stamps: { earned, spent: caught.length, available },
-        collection: { total: POKEDEX_COUNT, caught: collection },
+        collection: { caught: caught.map(pokemonInfo), generations },
       });
     }
 
@@ -300,17 +337,32 @@ const server = http.createServer(async (req, res) => {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       const isKid = req.headers["x-kid-pin"] === KID_PIN;
       if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const genIdx = Math.max(0, Math.min(GENERATIONS.length - 1, parseInt(url.searchParams.get("gen") || "0", 10) || 0));
       const caught = new Set(db.prepare("SELECT dex FROM unlocks").all().map((r) => r.dex));
-      if (caught.size >= POKEDEX_COUNT) return sendJSON(400, { error: "collection complete!" });
+      const availability = generationAvailability(caught);
+      if (!availability[genIdx]) return sendJSON(400, { error: "finish the previous generation first!" });
+      const pool = generationDexes(genIdx).filter((dex) => !caught.has(dex));
+      if (pool.length === 0) return sendJSON(400, { error: "this generation is complete!" });
       const earned = db.prepare("SELECT COUNT(*) n FROM stamps").get().n;
       const available = earned - caught.size;
       if (available <= 0) return sendJSON(400, { error: "no stamps to spend — earn one by finishing all tasks!" });
-      // random among the uncaught dexes
-      const pool = [];
-      for (let dex = 1; dex <= POKEDEX_COUNT; dex++) if (!caught.has(dex)) pool.push(dex);
+      // random among the uncaught dexes of this generation
       const dex = pool[Math.floor(Math.random() * pool.length)];
       db.prepare("INSERT INTO unlocks (dex) VALUES (?)").run(dex);
-      return sendJSON(201, { ok: true, pokemon: pokemonInfo(dex), available: available - 1, caught: caught.size + 1, total: POKEDEX_COUNT });
+      const genComplete = generationDexes(genIdx).every((d) => caught.has(d) || d === dex);
+      const nextGen = genComplete && genIdx + 1 < GENERATIONS.length
+        ? { name: GENERATIONS[genIdx + 1].name, available: true }
+        : null;
+      return sendJSON(201, {
+        ok: true,
+        pokemon: pokemonInfo(dex),
+        generation: GENERATIONS[genIdx].name,
+        generationComplete: genComplete,
+        nextGeneration: nextGen,
+        available: available - 1,
+        caught: caught.size + 1,
+        total: GENERATIONS.reduce((sum, g) => sum + (g.end - g.start + 1), 0),
+      });
     }
 
     // --- award a stamp (admin only; server verifies all-done) -------------

@@ -175,6 +175,7 @@
         <div style="flex:1"></div>
         <button class="primary" id="unlockBtn" hidden>⭐ Unlock a Pokémon (1 stamp)</button>
       </div>
+      <div class="card" id="genTabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
       <div class="card">
         <div class="pokedex-grid" id="pokedexGrid"></div>
       </div>
@@ -518,24 +519,30 @@
     else { await loadPokedex(); }
   }
 
-  // ⚡ Pokémon collection: stamp balance + 151-slot grid (locked = ?)
+  // ⚡ Pokémon collection: per-generation grid (locked = ?), gen tabs
   let pokedexStats = null;
+  let currentGen = 0;
 
   async function loadPokedex() {
     try {
       const s = await api("/api/stats");
       pokedexStats = s;
-      const caught = s.collection.caught;
-      const caughtSet = new Set(caught.map((p) => p.dex));
-      $("#pokedexTitle").textContent = "⚡ Pokémon collection";
-      $("#pokedexStats").innerHTML = `<b>${caught.length}</b>/${s.collection.total} caught · ⭐ <b>${s.stamps.available}</b> stamps to spend`;
-      $("#unlockBtn").hidden = s.stamps.available <= 0;
+      renderGenTabs(s);
+      if (currentGen >= s.collection.generations.length) currentGen = s.collection.generations.length - 1;
+      const gen = s.collection.generations[currentGen];
+      const caughtSet = new Set(s.collection.caught.map((p) => p.dex));
+      const caughtHere = s.collection.caught.filter((p) => p.dex >= gen.start && p.dex <= gen.end);
+      $("#pokedexTitle").textContent = `⚡ ${gen.name} — ${gen.caught}/${gen.total} caught`;
+      $("#pokedexStats").innerHTML = gen.unlocked
+        ? (gen.complete ? `🎉 ${gen.name} complete!` : `⭐ <b>${s.stamps.available}</b> stamps to spend`)
+        : `🔒 Finish the previous generation to unlock ${gen.name}!`;
+      $("#unlockBtn").hidden = !gen.unlocked || gen.complete || s.stamps.available <= 0;
       const grid = $("#pokedexGrid");
       grid.innerHTML = "";
-      for (let dex = 1; dex <= s.collection.total; dex++) {
+      for (let dex = gen.start; dex <= gen.end; dex++) {
         const el = document.createElement("div");
         if (caughtSet.has(dex)) {
-          const p = caught.find((c) => c.dex === dex);
+          const p = caughtHere.find((c) => c.dex === dex);
           el.className = "pkmn";
           el.innerHTML = `<span class="num">#${dex}</span><img src="/sprites/${dex}.png" alt="${p.name}" loading="lazy" />`;
           el.title = p.name;
@@ -543,19 +550,33 @@
         } else {
           el.className = "pkmn locked";
           el.innerHTML = `<span class="num">#${dex}</span><span class="q">?</span>`;
-          el.title = "Locked — spend a stamp to unlock";
+          el.title = gen.unlocked ? "Locked — spend a stamp to unlock" : "Generation locked";
         }
         grid.appendChild(el);
       }
     } catch (e) { showErr(e.message); }
   }
 
-  // ✨ unlock: spend a stamp, random Pokémon, fanfare + reveal
+  // generation tabs; the next generation tab appears once the previous is complete
+  function renderGenTabs(s) {
+    const tabs = $("#genTabs");
+    tabs.innerHTML = "";
+    s.collection.generations.forEach((g, i) => {
+      const btn = document.createElement("button");
+      btn.className = "tab" + (i === currentGen ? " active" : "") + (g.complete ? "" : "");
+      btn.textContent = g.complete ? `✅ ${g.name}` : `${g.name} (${g.caught}/${g.total})`;
+      if (!g.unlocked) { btn.disabled = true; btn.style.opacity = .45; }
+      btn.onclick = () => { currentGen = i; loadPokedex(); };
+      tabs.appendChild(btn);
+    });
+  }
+
+  // ✨ unlock: spend a stamp, random Pokémon of the current generation, fanfare + reveal
   async function unlockPokemon() {
     const btn = $("#unlockBtn");
     btn.disabled = true;
     try {
-      const r = await api("/api/unlock", { method: "POST", body: "{}" });
+      const r = await api(`/api/unlock?gen=${currentGen}`, { method: "POST", body: "{}" });
       playFanfare();
       showReveal(r.pokemon);
       await loadPokedex();

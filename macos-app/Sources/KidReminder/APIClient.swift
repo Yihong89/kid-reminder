@@ -120,10 +120,10 @@ final class APIClient {
         return try JSONDecoder().decode(StatsInfo.self, from: data)
     }
 
-    /// Spend one stamp to randomly unlock a Pokémon.
-    func unlock() async throws -> UnlockResponse {
+    /// Spend one stamp to randomly unlock a Pokémon in the given generation (0-based).
+    func unlock(generation: Int) async throws -> UnlockResponse {
         let body = Data("{}".utf8)
-        let data = try await request("/api/unlock", method: "POST", body: body)
+        let data = try await request("/api/unlock?gen=\(generation)", method: "POST", body: body)
         return try JSONDecoder().decode(UnlockResponse.self, from: data)
     }
 

@@ -64,12 +64,23 @@ struct StatsInfo: Codable {
     let stamps: StampBalance
     let collection: CollectionInfo
     struct StampBalance: Codable { let earned: Int; let spent: Int; let available: Int }
-    struct CollectionInfo: Codable { let total: Int; let caught: [PokemonInfo] }
+    struct CollectionInfo: Codable { let total: Int; let caught: [PokemonInfo]; let generations: [GenerationInfo] }
+    struct GenerationInfo: Codable {
+        let name: String
+        let start: Int
+        let end: Int
+        let total: Int
+        let caught: Int
+        let unlocked: Bool
+        let complete: Bool
+    }
 }
 
 struct UnlockResponse: Codable {
     let ok: Bool
     let pokemon: PokemonInfo
+    let generation: String?
+    let generationComplete: Bool?
     let available: Int
     let caught: Int
     let total: Int

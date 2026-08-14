@@ -10,6 +10,7 @@ struct StickersView: View {
     @State private var revealing: PokemonInfo?
     @State private var popup: PokemonInfo?
     @State private var busy = false
+    @State private var currentGen = 0
     @State private var refreshKey = 0
 
     private var api: APIClient { APIClient(settings: settings) }
@@ -44,9 +45,10 @@ struct StickersView: View {
         } else if let stats {
             VStack(alignment: .leading, spacing: 12) {
                 header(stats)
+                generationPicker(stats)
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(1...stats.collection.total, id: \.self) { dex in
+                        ForEach(activeDexes(stats), id: \.self) { dex in
                             slot(dex)
                         }
                     }
@@ -59,26 +61,54 @@ struct StickersView: View {
     }
 
     private func header(_ stats: StatsInfo) -> some View {
-        HStack(spacing: 14) {
+        let gen = activeGen(stats)
+        return HStack(spacing: 14) {
             Text("⚡").font(.system(size: 34))
             VStack(alignment: .leading, spacing: 2) {
-                Text("\(stats.collection.caught.count)/\(stats.collection.total) caught")
+                Text("\(gen.caught)/\(gen.total) \(gen.name) caught")
                     .font(.title3.bold())
-                Text("⭐ \(stats.stamps.available) stamps to spend — each unlock costs 1")
+                Text(gen.unlocked
+                    ? (gen.complete ? "🎉 \(gen.name) complete!" : "⭐ \(stats.stamps.available) stamps to spend")
+                    : "🔒 Finish the previous generation to unlock \(gen.name)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Button {
-                unlock()
-            } label: {
-                Label("Unlock (1 ⭐)", systemImage: "sparkles")
+            if gen.unlocked && !gen.complete {
+                Button {
+                    unlock()
+                } label: {
+                    Label("Unlock (1 ⭐)", systemImage: "sparkles")
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(busy || stats.stamps.available <= 0)
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(busy || stats.stamps.available <= 0)
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
+    }
+
+    @ViewBuilder
+    private func generationPicker(_ stats: StatsInfo) -> some View {
+        if stats.collection.generations.count > 1 {
+            Picker("Generation", selection: $currentGen) {
+                ForEach(Array(stats.collection.generations.enumerated()), id: \.element.name) { idx, g in
+                    Text(g.complete ? "✅ \(g.name)" : "\(g.name) (\(g.caught)/\(g.total))").tag(idx)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private func activeGen(_ stats: StatsInfo) -> StatsInfo.GenerationInfo {
+        let i = min(currentGen, stats.collection.generations.count - 1)
+        return stats.collection.generations[i]
+    }
+
+    private func activeDexes(_ stats: StatsInfo) -> [Int] {
+        let gen = activeGen(stats)
+        return Array(gen.start...gen.end)
     }
 
     @ViewBuilder
@@ -116,7 +146,7 @@ struct StickersView: View {
             busy = true
             defer { busy = false }
             do {
-                let r = try await api.unlock()
+                let r = try await api.unlock(generation: currentGen)
                 playFanfare()
                 revealing = r.pokemon
             } catch let e {
