@@ -4,6 +4,8 @@ struct TodayView: View {
     @EnvironmentObject var settings: SettingsStore
     @State private var tasks: [KidTask] = []
     @State private var upcoming: [KidTask] = []   // countdown events in the next 7 days
+    @State private var allDone = false
+    @State private var stamped = false
     @State private var error: String?
     @State private var busy = false
     @State private var refreshKey = 0
@@ -24,13 +26,18 @@ struct TodayView: View {
                     description: Text(error))
                 .toolbar { reloadToolbar }
             } else {
-                List {
-                    Section("Today") {
-                        ForEach(tasks) { task in taskRow(task) }
+                VStack(spacing: 0) {
+                    if allDone {
+                        banner
                     }
-                    if !upcoming.isEmpty {
-                        Section("Next 7 days") {
-                            ForEach(upcoming) { ev in eventRow(ev) }
+                    List {
+                        Section("Today") {
+                            ForEach(tasks) { task in taskRow(task) }
+                        }
+                        if !upcoming.isEmpty {
+                            Section("Next 7 days") {
+                                ForEach(upcoming) { ev in eventRow(ev) }
+                            }
                         }
                     }
                 }
@@ -68,10 +75,12 @@ struct TodayView: View {
         busy = true
         defer { busy = false }
         do {
-            async let t = api.tasks(type: "todo")
+            async let t = api.tasksResponse(type: "todo")
             async let c = api.tasks(type: "countdown")
-            let (todo, cnt) = try await (t, c)
-            tasks = todo
+            let (todoResp, cnt) = try await (t, c)
+            tasks = todoResp.tasks
+            allDone = todoResp.allDone == true && todoResp.tasks.count > 0
+            stamped = todoResp.stamped == true
             upcoming = cnt
                 .filter { (0...7).contains($0.daysLeft ?? 999) }
                 .sorted { ($0.daysLeft ?? 999) < ($1.daysLeft ?? 999) }
@@ -79,6 +88,21 @@ struct TodayView: View {
         } catch let e {
             error = errorMessage(e)
         }
+    }
+
+    /// 🎉 celebration banner when all of today's tasks are done
+    private var banner: some View {
+        HStack(spacing: 10) {
+            Text(stamped ? "⭐ Stamp earned!" : "🎉 All done! Ask Mom or Dad for a stamp")
+                .font(.callout.bold())
+            Spacer()
+            if stamped { Text("⭐").font(.title2) } else { Text("🎉").font(.title2) }
+        }
+        .padding(12)
+        .background(Color.orange.opacity(0.12))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal, 12)
+        .padding(.top, 8)
     }
 
     private func taskRow(_ task: KidTask) -> some View {

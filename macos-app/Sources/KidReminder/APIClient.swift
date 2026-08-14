@@ -62,6 +62,11 @@ final class APIClient {
     }
 
     func tasks(type: String?, date: String? = nil) async throws -> [KidTask] {
+        try await tasksResponse(type: type, date: date).tasks
+    }
+
+    /// Full /api/tasks response (tasks + allDone + stamped) — used for achievements.
+    func tasksResponse(type: String?, date: String? = nil) async throws -> TasksResponse {
         var items: [URLQueryItem] = []
         if let type = type { items.append(URLQueryItem(name: "type", value: type)) }
         if let date = date { items.append(URLQueryItem(name: "date", value: date)) }
@@ -69,7 +74,7 @@ final class APIClient {
         comps.queryItems = items
         let path = "/api/tasks" + (comps.percentEncodedQuery.map { "?\($0)" } ?? "")
         let data = try await request(path)
-        return try JSONDecoder().decode(TasksResponse.self, from: data).tasks
+        return try JSONDecoder().decode(TasksResponse.self, from: data)
     }
 
     func toggle(id: Int, minutes: Int?) async throws {
@@ -107,5 +112,21 @@ final class APIClient {
 
     func delete(id: Int) async throws {
         _ = try await request("/api/tasks/\(id)", method: "DELETE")
+    }
+
+    /// 🏅 achievement stats (stamps, level, stickers)
+    func stats() async throws -> StatsInfo {
+        let data = try await request("/api/stats")
+        return try JSONDecoder().decode(StatsInfo.self, from: data)
+    }
+
+    /// URL for a sticker sprite served by the backend (/sprites/<dex>.png)
+    func spriteURL(dex: Int) -> URL? {
+        var comps = URLComponents()
+        comps.scheme = "http"
+        comps.host = settings.host
+        comps.port = settings.port
+        comps.path = "/sprites/\(dex).png"
+        return comps.url
     }
 }

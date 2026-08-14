@@ -36,6 +36,16 @@
   .cal-day .dot.full { background:var(--done); }
   .cal-day .dot.part { background:#f59e0b; }
   .cal-day .dot.event { background:#ec4899; }
+  .cal-day .dot.stamp { background:#f59e0b; box-shadow:0 0 0 2px #fde68a; } /* gold ring = stamped day */
+  .sticker-grid { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+  .sticker { width:76px; text-align:center; padding:8px 4px; border-radius:12px; border:1px solid var(--border); background:var(--card); }
+  .sticker img { width:60px; height:60px; object-fit:contain; }
+  .sticker .s-name { font-size:11px; color:var(--muted); margin-top:2px; }
+  .sticker.locked { opacity:.35; filter:grayscale(1); }
+  .sticker.locked::after { content:"🔒"; position:absolute; }
+  .sticker { position:relative; }
+  .ach-bar { height:8px; border-radius:99px; background:var(--bg); overflow:hidden; margin:6px 0 10px; }
+  .ach-bar > div { height:100%; background:linear-gradient(90deg,#f59e0b,#fbbf24); border-radius:99px; transition:width .3s; }
   /* task row */
   .task { display:flex; align-items:center; gap:12px; }
   .task-row.urgent { background:var(--urgent-bg); border-color:var(--urgent-bd); }
@@ -130,6 +140,12 @@
         <span class="date" id="date"></span>
         <button id="todayBtn">Today</button>
       </div>
+      <div class="card" id="achCard" hidden>
+        <div style="font-weight:600;font-size:15px">🏅 Achievements</div>
+        <div id="achStats"></div>
+        <div class="ach-bar"><div id="achBar" style="width:0%"></div></div>
+        <div class="sticker-grid" id="stickerGrid"></div>
+      </div>
       <div class="card">
         <div class="cal-head">
           <button id="prevMonth" title="previous month">‹</button>
@@ -140,6 +156,7 @@
       </div>
       <div class="done-summary" id="summary"></div>
       <div id="list"></div>
+      <div id="stampBar" style="margin-top:10px"></div>
       <div class="ro-note" id="roNote" hidden>Showing a past/future day — only today's tasks can be checked off.</div>
     </div>
 
@@ -256,6 +273,7 @@
       const dots = [];
       if (fl && fl.total > 0) dots.push(`<span class="dot ${fl.done === fl.total ? "full" : "part"}"></span>`);
       if (fl && fl.events > 0) dots.push('<span class="dot event"></span>');
+      if (fl && fl.stamped) dots.push('<span class="dot stamp" title="⭐ earned"></span>');
       grid.insertAdjacentHTML("beforeend", `<div class="${cls.join(" ")}" data-date="${iso}">${d}${dots.join("")}</div>`);
     }
     $("#monthLabel").textContent = new Date(viewYear, viewMonth, 1).toLocaleDateString(undefined, { month:"long", year:"numeric" });
@@ -277,13 +295,14 @@
       const todo = data.tasks.filter((t) => !t.countdownEnabled);
       const done = todo.filter((t) => t.done).length;
       const events = data.tasks.filter((t) => t.countdownEnabled && t.targetDate === dates[i]).length;
-      flags[dates[i]] = { total: todo.length, done, events };
+      flags[dates[i]] = { total: todo.length, done, events, stamped: !!data.stamped, allDone: !!data.allDone };
     });
     return flags;
   }
   async function refreshDayFlags() {
     dayFlags = await computeDayFlags(viewYear, viewMonth);
     renderCalendar();
+    renderStampBar(); // flags drive the award/revoke bar — re-render after they load
   }
 
   // ---- list ---------------------------------------------------------------
@@ -296,6 +315,34 @@
     list.innerHTML = "";
     if (!tasks.length) { list.innerHTML = '<div class="empty">No tasks for this day.</div>'; return; }
     for (const t of tasks) list.appendChild(taskRow(t, allowDoneFor(t)));
+    renderStampBar();
+  }
+
+  // stamp award / revoke bar under the day list (admin can award or revoke)
+  function renderStampBar() {
+    const bar = $("#stampBar");
+    if (!bar) return;
+    const day = selectedDate;
+    const fl = dayFlags[day];
+    const allDone = fl ? fl.allDone : false;
+    const stamped = fl ? fl.stamped : false;
+    if (stamped) {
+      bar.innerHTML = `<span style="color:#b45309">⭐ Stamp earned for ${day}!</span>
+        ${role === "admin" ? '<button class="ghost" id="revokeStamp">Revoke</button>' : ""}`;
+      const b = $("#revokeStamp");
+      if (b) b.onclick = async () => {
+        try { await api(`/api/stamps/${day}`, { method: "DELETE" }); await afterChange(); }
+        catch (e) { showErr(e.message); }
+      };
+    } else if (role === "admin" && allDone) {
+      bar.innerHTML = `🎉 All done for ${day}! <button class="primary" id="awardStamp">⭐ Award stamp</button>`;
+      $("#awardStamp").onclick = async () => {
+        try { await api("/api/stamps", { method: "POST", body: JSON.stringify({ date: day }) }); await afterChange(); }
+        catch (e) { showErr(e.message); }
+      };
+    } else {
+      bar.innerHTML = "";
+    }
   }
 
   // can this task be checked off right now? (today's checklist: only today;
@@ -440,6 +487,26 @@
   async function afterChange() {
     if (tab === "today") { await refresh(); await refreshDayFlags(); }
     else { await refreshCountdown(); }
+    loadAchievements();
+  }
+
+  // 🏅 achievements: stamp count, level, progress, unlocked stickers
+  async function loadAchievements() {
+    try {
+      const s = await api("/api/stats");
+      const card = $("#achCard");
+      card.hidden = false;
+      const pct = s.stampsForNext
+        ? Math.min(100, Math.round(((s.totalStamps % 5) / 5) * 100))
+        : 100;
+      $("#achStats").innerHTML = `Level <b>${s.level}</b> · ⭐ <b>${s.totalStamps}</b> stamps${s.stampsForNext ? ` · ${s.stampsForNext - s.totalStamps} to next level` : " · max level!"}`;
+      $("#achBar").style.width = pct + "%";
+      $("#stickerGrid").innerHTML = s.stickers.map((st) => `
+        <div class="sticker ${st.unlocked ? "" : "locked"}">
+          <img src="/sprites/${st.dex}.png" alt="${st.name}" loading="lazy" />
+          <div class="s-name">${st.unlocked ? st.name : "Lv " + st.level + " 🔒"}</div>
+        </div>`).join("");
+    } catch { /* achievements optional */ }
   }
 
   function setTab(t) {
@@ -517,6 +584,7 @@
     $("#tabCountdown").onclick = () => setTab("countdown");
     refresh();
     refreshDayFlags();
+    loadAchievements();
   }
 
   $("#pinBtn").onclick = unlock;

@@ -41,6 +41,8 @@ struct TasksResponse: Codable {
     let today: String
     let date: String
     let tasks: [KidTask]
+    let allDone: Bool?
+    let stamped: Bool?
 }
 
 /// Curated emoji choices for the add-task form (matches the web panel).

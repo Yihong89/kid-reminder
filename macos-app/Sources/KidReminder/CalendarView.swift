@@ -5,6 +5,7 @@ struct DayFlag {
     let total: Int
     let done: Int
     let events: Int
+    let stamped: Bool
 }
 
 struct CalendarView: View {
@@ -129,6 +130,10 @@ struct CalendarView: View {
                     if let fl, fl.events > 0 {
                         Circle().fill(Color.pink).frame(width: 5, height: 5)
                     }
+                    if let fl, fl.stamped {
+                        Circle().fill(Color.orange).frame(width: 5, height: 5)
+                            .overlay(Circle().stroke(Color.yellow, lineWidth: 1.5)) // gold ring = stamped
+                    }
                 }
                 .frame(height: 6)
             }
@@ -212,11 +217,11 @@ struct CalendarView: View {
         let dates = (1...days).map { String(format: "%04d-%02d-%02d", viewYear, viewMonth, $0) }
         var newFlags: [String: DayFlag] = [:]
         for iso in dates {
-            if let all = try? await api.tasks(type: nil, date: iso) {
-                let todo = all.filter { !$0.countdownEnabled }
+            if let all = try? await api.tasksResponse(type: nil, date: iso) {
+                let todo = all.tasks.filter { !$0.countdownEnabled }
                 let done = todo.filter { $0.done }.count
-                let events = all.filter { $0.countdownEnabled && $0.targetDate == iso }.count
-                newFlags[iso] = DayFlag(total: todo.count, done: done, events: events)
+                let events = all.tasks.filter { $0.countdownEnabled && $0.targetDate == iso }.count
+                newFlags[iso] = DayFlag(total: todo.count, done: done, events: events, stamped: all.stamped == true)
             }
         }
         dayFlags = newFlags

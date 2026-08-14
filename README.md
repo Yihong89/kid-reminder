@@ -66,6 +66,11 @@ Behavior:
   Those tasks are **hidden from the kid entirely** (the server filters them out of every list,
   and the kid gets a 403 on toggle/edit/delete attempts). The parent sees a 🔒 badge and keeps
   full access — toggle, edit, delete — on both parent-only and kid-created tasks.
+- **Achievements & stickers** 🏅 — when the kid finishes **all** of today's tasks, the parent can
+  award a **⭐ stamp**. Stamps show up on the **calendar** as gold markers. Every **5 stamps** the
+  kid **levels up** and **unlocks a Pokémon sticker** (Pikachu → Bulbasaur → … → Mew) shown in the
+  **Stickers** panel (web + macOS app). Sprites are served from the backend (`/sprites/`) —
+  non-commercial, private family use of the public PokéAPI sprite art.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots (green all done / amber partial)
@@ -136,11 +141,6 @@ The app reads the connection settings on every request, so edits apply instantly
 
 Ideas we want to build next:
 
-1. **Achievement / sticker system** 🏅
-   - When the kid finishes all of today's tasks, the parent can award a **stamp**.
-   - Stamps show up on the **calendar** as per-day markers.
-   - Collecting enough stamps **levels the kid up** and **unlocks Pokémon stickers** in the app UI.
-
-2. **Multi-kid support** 👨‍👧‍👦
+1. **Multi-kid support** 👨‍👧‍👦
    - One parent account can link to **many kid accounts**.
    - The parent manages **each kid's tasks separately** and awards stamps to each kid individually.
