@@ -52,3 +52,25 @@ let EmojiChoices: [(String, String)] = [
     ("🎨", "art"), ("🎹", "piano"), ("🎸", "guitar"), ("🎤", "singing"), ("🎭", "drama"), ("🏊", "swimming"), ("⚽", "sports"),
     ("🧠", "focus"), ("⭐", "star"), ("📅", "deadline"), ("⏰", "time"),
 ]
+
+struct PokemonInfo: Codable, Identifiable {
+    let dex: Int
+    let name: String
+    let types: [String]
+    var id: Int { dex }
+}
+
+struct StatsInfo: Codable {
+    let stamps: StampBalance
+    let collection: CollectionInfo
+    struct StampBalance: Codable { let earned: Int; let spent: Int; let available: Int }
+    struct CollectionInfo: Codable { let total: Int; let caught: [PokemonInfo] }
+}
+
+struct UnlockResponse: Codable {
+    let ok: Bool
+    let pokemon: PokemonInfo
+    let available: Int
+    let caught: Int
+    let total: Int
+}

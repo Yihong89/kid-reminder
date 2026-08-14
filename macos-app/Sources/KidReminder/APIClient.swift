@@ -114,19 +114,36 @@ final class APIClient {
         _ = try await request("/api/tasks/\(id)", method: "DELETE")
     }
 
-    /// 🏅 achievement stats (stamps, level, stickers)
+    /// ⚡ collection stats (stamp balance + caught Pokémon)
     func stats() async throws -> StatsInfo {
         let data = try await request("/api/stats")
         return try JSONDecoder().decode(StatsInfo.self, from: data)
     }
 
-    /// URL for a sticker sprite served by the backend (/sprites/<dex>.png)
+    /// Spend one stamp to randomly unlock a Pokémon.
+    func unlock() async throws -> UnlockResponse {
+        let body = Data("{}".utf8)
+        let data = try await request("/api/unlock", method: "POST", body: body)
+        return try JSONDecoder().decode(UnlockResponse.self, from: data)
+    }
+
+    /// URL for a Pokémon sprite served by the backend (/sprites/<dex>.png)
     func spriteURL(dex: Int) -> URL? {
         var comps = URLComponents()
         comps.scheme = "http"
         comps.host = settings.host
         comps.port = settings.port
         comps.path = "/sprites/\(dex).png"
+        return comps.url
+    }
+
+    /// URL for the unlock fanfare served by the backend (/sounds/fanfare.wav)
+    func soundURL() -> URL? {
+        var comps = URLComponents()
+        comps.scheme = "http"
+        comps.host = settings.host
+        comps.port = settings.port
+        comps.path = "/sounds/fanfare.wav"
         return comps.url
     }
 }

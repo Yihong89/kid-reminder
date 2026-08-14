@@ -37,15 +37,18 @@
   .cal-day .dot.part { background:#f59e0b; }
   .cal-day .dot.event { background:#ec4899; }
   .cal-day .dot.stamp { background:#f59e0b; box-shadow:0 0 0 2px #fde68a; } /* gold ring = stamped day */
-  .sticker-grid { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
-  .sticker { width:76px; text-align:center; padding:8px 4px; border-radius:12px; border:1px solid var(--border); background:var(--card); }
-  .sticker img { width:60px; height:60px; object-fit:contain; }
-  .sticker .s-name { font-size:11px; color:var(--muted); margin-top:2px; }
-  .sticker.locked { opacity:.35; filter:grayscale(1); }
-  .sticker.locked::after { content:"🔒"; position:absolute; }
-  .sticker { position:relative; }
-  .ach-bar { height:8px; border-radius:99px; background:var(--bg); overflow:hidden; margin:6px 0 10px; }
-  .ach-bar > div { height:100%; background:linear-gradient(90deg,#f59e0b,#fbbf24); border-radius:99px; transition:width .3s; }
+  .pokedex-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(84px,1fr)); gap:8px; }
+  .pkmn { position:relative; aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+          border:1px solid var(--border); border-radius:12px; background:var(--card); cursor:pointer; }
+  .pkmn:hover { border-color:var(--accent); transform:translateY(-2px); }
+  .pkmn img { width:64px; height:64px; object-fit:contain; }
+  .pkmn.locked { background:var(--bg); cursor:default; }
+  .pkmn.locked .q { font-size:30px; color:#cbd5e1; }
+  .pkmn .num { position:absolute; top:3px; left:6px; font-size:9px; color:var(--muted); }
+  .pkmn.new { animation:pop .5s ease; border-color:#f59e0b; box-shadow:0 0 0 3px #fde68a; }
+  @keyframes pop { 0%{transform:scale(.4);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+  .type-badge { display:inline-block; font-size:11px; padding:1px 8px; border-radius:99px; margin:0 2px;
+                background:var(--bg); border:1px solid var(--border); }
   /* task row */
   .task { display:flex; align-items:center; gap:12px; }
   .task-row.urgent { background:var(--urgent-bg); border-color:var(--urgent-bd); }
@@ -132,6 +135,7 @@
     <div class="tabs">
       <button class="tab active" id="tabToday">📋 Today</button>
       <button class="tab" id="tabCountdown">⏳ Countdown</button>
+      <button class="tab" id="tabPokedex">⚡ Pokémon</button>
     </div>
 
     <!-- Today view -->
@@ -139,12 +143,6 @@
       <div class="date-line">
         <span class="date" id="date"></span>
         <button id="todayBtn">Today</button>
-      </div>
-      <div class="card" id="achCard" hidden>
-        <div style="font-weight:600;font-size:15px">🏅 Achievements</div>
-        <div id="achStats"></div>
-        <div class="ach-bar"><div id="achBar" style="width:0%"></div></div>
-        <div class="sticker-grid" id="stickerGrid"></div>
       </div>
       <div class="card">
         <div class="cal-head">
@@ -165,6 +163,36 @@
       <div class="done-summary" id="cntSummary"></div>
       <div id="cntList"></div>
     </div>
+
+    <!-- Pokémon collection view -->
+    <div id="pokedexView" hidden>
+      <div class="card" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="font-size:40px">⚡</div>
+        <div>
+          <div style="font-weight:600;font-size:16px" id="pokedexTitle">Pokémon collection</div>
+          <div style="color:var(--muted);font-size:13px" id="pokedexStats"></div>
+        </div>
+        <div style="flex:1"></div>
+        <button class="primary" id="unlockBtn" hidden>⭐ Unlock a Pokémon (1 stamp)</button>
+      </div>
+      <div class="card">
+        <div class="pokedex-grid" id="pokedexGrid"></div>
+      </div>
+    </div>
+
+    <!-- unlock reveal modal -->
+    <dialog id="revealDialog">
+      <div style="text-align:center">
+        <div id="revealTitle" style="font-size:18px;font-weight:600;margin-bottom:8px"></div>
+        <div id="revealImgWrap" style="position:relative;display:inline-block">
+          <img id="revealImg" style="width:220px;height:220px;object-fit:contain" alt="" />
+        </div>
+        <div id="revealTypes" style="color:var(--muted);font-size:14px;margin-top:6px"></div>
+        <div class="row" style="justify-content:center;margin-top:14px">
+          <button class="primary" id="revealOk">Awesome!</button>
+        </div>
+      </div>
+    </dialog>
 
     <div class="msg err" id="err"></div>
 
@@ -486,36 +514,91 @@
 
   async function afterChange() {
     if (tab === "today") { await refresh(); await refreshDayFlags(); }
-    else { await refreshCountdown(); }
-    loadAchievements();
+    else if (tab === "countdown") { await refreshCountdown(); }
+    else { await loadPokedex(); }
   }
 
-  // 🏅 achievements: stamp count, level, progress, unlocked stickers
-  async function loadAchievements() {
+  // ⚡ Pokémon collection: stamp balance + 151-slot grid (locked = ?)
+  let pokedexStats = null;
+
+  async function loadPokedex() {
     try {
       const s = await api("/api/stats");
-      const card = $("#achCard");
-      card.hidden = false;
-      const pct = s.stampsForNext
-        ? Math.min(100, Math.round(((s.totalStamps % 5) / 5) * 100))
-        : 100;
-      $("#achStats").innerHTML = `Level <b>${s.level}</b> · ⭐ <b>${s.totalStamps}</b> stamps${s.stampsForNext ? ` · ${s.stampsForNext - s.totalStamps} to next level` : " · max level!"}`;
-      $("#achBar").style.width = pct + "%";
-      $("#stickerGrid").innerHTML = s.stickers.map((st) => `
-        <div class="sticker ${st.unlocked ? "" : "locked"}">
-          <img src="/sprites/${st.dex}.png" alt="${st.name}" loading="lazy" />
-          <div class="s-name">${st.unlocked ? st.name : "Lv " + st.level + " 🔒"}</div>
-        </div>`).join("");
-    } catch { /* achievements optional */ }
+      pokedexStats = s;
+      const caught = s.collection.caught;
+      const caughtSet = new Set(caught.map((p) => p.dex));
+      $("#pokedexTitle").textContent = "⚡ Pokémon collection";
+      $("#pokedexStats").innerHTML = `<b>${caught.length}</b>/${s.collection.total} caught · ⭐ <b>${s.stamps.available}</b> stamps to spend`;
+      $("#unlockBtn").hidden = s.stamps.available <= 0;
+      const grid = $("#pokedexGrid");
+      grid.innerHTML = "";
+      for (let dex = 1; dex <= s.collection.total; dex++) {
+        const el = document.createElement("div");
+        if (caughtSet.has(dex)) {
+          const p = caught.find((c) => c.dex === dex);
+          el.className = "pkmn";
+          el.innerHTML = `<span class="num">#${dex}</span><img src="/sprites/${dex}.png" alt="${p.name}" loading="lazy" />`;
+          el.title = p.name;
+          el.onclick = () => showPkmnPopup(p);
+        } else {
+          el.className = "pkmn locked";
+          el.innerHTML = `<span class="num">#${dex}</span><span class="q">?</span>`;
+          el.title = "Locked — spend a stamp to unlock";
+        }
+        grid.appendChild(el);
+      }
+    } catch (e) { showErr(e.message); }
+  }
+
+  // ✨ unlock: spend a stamp, random Pokémon, fanfare + reveal
+  async function unlockPokemon() {
+    const btn = $("#unlockBtn");
+    btn.disabled = true;
+    try {
+      const r = await api("/api/unlock", { method: "POST", body: "{}" });
+      playFanfare();
+      showReveal(r.pokemon);
+      await loadPokedex();
+    } catch (e) { showErr(e.message); }
+    btn.disabled = false;
+  }
+
+  function playFanfare() {
+    try {
+      const a = new Audio("/sounds/fanfare.wav");
+      a.volume = 0.8;
+      a.play().catch(() => {});
+    } catch { /* audio optional */ }
+  }
+
+  function showReveal(p) {
+    $("#revealTitle").textContent = `✨ You got ${p.name}!`;
+    $("#revealImg").src = "/sprites/" + p.dex + ".png";
+    $("#revealImg").alt = p.name;
+    $("#revealTypes").innerHTML = p.types.map((t) => `<span class="type-badge">${t}</span>`).join(" ");
+    $("#revealDialog").showModal();
+  }
+
+  // 🔍 click an unlocked Pokémon -> bigger popup with details
+  function showPkmnPopup(p) {
+    $("#revealTitle").textContent = `${p.name}  #${p.dex}`;
+    $("#revealImg").src = "/sprites/" + p.dex + ".png";
+    $("#revealImg").alt = p.name;
+    $("#revealTypes").innerHTML = p.types.map((t) => `<span class="type-badge">${t}</span>`).join(" ") + ` <span class="type-badge">⭐ in collection</span>`;
+    $("#revealDialog").showModal();
   }
 
   function setTab(t) {
     tab = t;
     $("#tabToday").classList.toggle("active", t === "today");
     $("#tabCountdown").classList.toggle("active", t === "countdown");
+    $("#tabPokedex").classList.toggle("active", t === "pokedex");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
-    if (t === "today") { refresh(); refreshDayFlags(); } else { refreshCountdown(); }
+    $("#pokedexView").hidden = t !== "pokedex";
+    if (t === "today") { refresh(); refreshDayFlags(); }
+    else if (t === "countdown") { refreshCountdown(); }
+    else { loadPokedex(); }
   }
 
   async function refresh() {
@@ -582,9 +665,11 @@
     viewYear = d.getFullYear(); viewMonth = d.getMonth();
     $("#tabToday").onclick = () => setTab("today");
     $("#tabCountdown").onclick = () => setTab("countdown");
+    $("#tabPokedex").onclick = () => setTab("pokedex");
+    $("#unlockBtn").onclick = unlockPokemon;
+    $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();
     refreshDayFlags();
-    loadAchievements();
   }
 
   $("#pinBtn").onclick = unlock;

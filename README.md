@@ -66,11 +66,13 @@ Behavior:
   Those tasks are **hidden from the kid entirely** (the server filters them out of every list,
   and the kid gets a 403 on toggle/edit/delete attempts). The parent sees a 🔒 badge and keeps
   full access — toggle, edit, delete — on both parent-only and kid-created tasks.
-- **Achievements & stickers** 🏅 — when the kid finishes **all** of today's tasks, the parent can
-  award a **⭐ stamp**. Stamps show up on the **calendar** as gold markers. Every **5 stamps** the
-  kid **levels up** and **unlocks a Pokémon sticker** (Pikachu → Bulbasaur → … → Mew) shown in the
-  **Stickers** panel (web + macOS app). Sprites are served from the backend (`/sprites/`) —
-  non-commercial, private family use of the public PokéAPI sprite art.
+- **Pokémon collection** ⚡ — when the kid finishes **all** of today's tasks, the parent can
+  award a **⭐ stamp** (gold markers on the calendar). On the **⚡ Pokémon** panel, the kid can
+  **spend a stamp to randomly unlock a Pokémon** from the full 151-entry Kanto Pokédex — locked
+  slots show a **?**. Each unlock plays a **fanfare** and reveals the Pokémon; clicking an unlocked
+  one pops up a **bigger sprite with details** (name, types). Sprites + fanfare are served from the
+  backend (`/sprites/`, `/sounds/`) — non-commercial, private family use of the public PokéAPI
+  sprite art.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots (green all done / amber partial)

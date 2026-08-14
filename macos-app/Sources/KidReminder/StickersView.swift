@@ -1,89 +1,138 @@
 import SwiftUI
+import AVFoundation
 
-struct StickerInfo: Codable, Identifiable {
-    let level: Int
-    let dex: Int
-    let name: String
-    let unlocked: Bool
-    var id: Int { level }
-}
-
-struct StatsInfo: Codable {
-    let totalStamps: Int
-    let level: Int
-    let stampsForNext: Int?
-    let stickers: [StickerInfo]
-}
-
-/// 🏅 Achievements: stamp count, level progress, and the unlocked sticker wall.
+/// ⚡ Pokémon collection — locked slots show ?, spend a stamp to randomly
+/// unlock a Pokémon (fanfare plays), click an unlocked one for a big popup.
 struct StickersView: View {
     @EnvironmentObject var settings: SettingsStore
     @State private var stats: StatsInfo?
     @State private var error: String?
+    @State private var revealing: PokemonInfo?
+    @State private var popup: PokemonInfo?
+    @State private var busy = false
+    @State private var refreshKey = 0
 
     private var api: APIClient { APIClient(settings: settings) }
-    private let stampsPerLevel = 5
+    private let columns = [GridItem(.adaptive(minimum: 72), spacing: 8)]
 
     var body: some View {
-        Group {
-            if settings.host.isEmpty || settings.pin.isEmpty {
-                ContentUnavailableView("Not connected",
-                    systemImage: "antenna.radiowaves.left.and.right.slash",
-                    description: Text("Enter the server address and PIN in Settings."))
-            } else if let error {
-                ContentUnavailableView("Can't load achievements",
-                    systemImage: "wifi.exclamationmark",
-                    description: Text(error))
-            } else if let stats {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack(spacing: 12) {
-                            Text("🏅").font(.system(size: 40))
-                            VStack(alignment: .leading) {
-                                Text("Level \(stats.level)")
-                                    .font(.title2.bold())
-                                Text("\(stats.totalStamps) stamps\(stats.stampsForNext.map { " · \($0 - stats.totalStamps) to next level" } ?? " · max level!")")
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        ProgressView(value: progress)
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 5), spacing: 12) {
-                            ForEach(stats.stickers) { s in
-                                VStack(spacing: 4) {
-                                    AsyncImage(url: api.spriteURL(dex: s.dex)) { img in
-                                        img.resizable().scaledToFit()
-                                    } placeholder: {
-                                        Color.gray.opacity(0.15)
-                                    }
-                                    .frame(width: 56, height: 56)
-                                    .grayscale(s.unlocked ? 0 : 1)
-                                    .opacity(s.unlocked ? 1 : 0.35)
-                                    Text(s.unlocked ? s.name : "🔒 Lv \(s.level)")
-                                        .font(.caption2)
-                                        .foregroundStyle(.secondary)
-                                }
-                            }
-                        }
-                    }
-                    .padding(20)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            } else {
-                ProgressView("Loading…").padding()
+        content
+            .navigationTitle("Pokémon")
+            .task(id: refreshKey) { await load() }
+            .onChange(of: settings.host) { _, _ in refreshKey += 1 }
+            .onChange(of: settings.port) { _, _ in refreshKey += 1 }
+            .onChange(of: settings.pin) { _, _ in refreshKey += 1 }
+            .onChange(of: settings.role) { _, _ in refreshKey += 1 }
+            .sheet(item: $revealing) { p in
+                RevealView(pokemon: p) { Task { await load() } }
             }
-        }
-        .navigationTitle("Stickers")
-        .task { await load() }
-        .onChange(of: settings.host) { _, _ in Task { await load() } }
-        .onChange(of: settings.port) { _, _ in Task { await load() } }
-        .onChange(of: settings.pin) { _, _ in Task { await load() } }
-        .onChange(of: settings.role) { _, _ in Task { await load() } }
+            .sheet(item: $popup) { p in
+                DetailPopup(pokemon: p)
+            }
     }
 
-    private var progress: Double {
-        guard let stats, stats.stampsForNext != nil else { return 1 }
-        let into = Double(stats.totalStamps % stampsPerLevel)
-        return min(1, into / Double(stampsPerLevel))
+    @ViewBuilder
+    private var content: some View {
+        if settings.host.isEmpty || settings.pin.isEmpty {
+            ContentUnavailableView("Not connected",
+                systemImage: "antenna.radiowaves.left.and.right.slash",
+                description: Text("Enter the server address and PIN in Settings."))
+        } else if let error {
+            ContentUnavailableView("Can't load collection",
+                systemImage: "wifi.exclamationmark",
+                description: Text(error))
+        } else if let stats {
+            VStack(alignment: .leading, spacing: 12) {
+                header(stats)
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 8) {
+                        ForEach(1...stats.collection.total, id: \.self) { dex in
+                            slot(dex)
+                        }
+                    }
+                    .padding(16)
+                }
+            }
+        } else {
+            ProgressView("Loading…").padding()
+        }
+    }
+
+    private func header(_ stats: StatsInfo) -> some View {
+        HStack(spacing: 14) {
+            Text("⚡").font(.system(size: 34))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(stats.collection.caught.count)/\(stats.collection.total) caught")
+                    .font(.title3.bold())
+                Text("⭐ \(stats.stamps.available) stamps to spend — each unlock costs 1")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button {
+                unlock()
+            } label: {
+                Label("Unlock (1 ⭐)", systemImage: "sparkles")
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(busy || stats.stamps.available <= 0)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+    }
+
+    @ViewBuilder
+    private func slot(_ dex: Int) -> some View {
+        if let caught = stats?.collection.caught.first(where: { $0.dex == dex }) {
+            Button { popup = caught } label: {
+                VStack(spacing: 2) {
+                    AsyncImage(url: api.spriteURL(dex: dex)) { img in
+                        img.resizable().scaledToFit()
+                    } placeholder: {
+                        Color.gray.opacity(0.12)
+                    }
+                    .frame(width: 56, height: 56)
+                    Text(caught.name).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(6)
+                .background(Color.primary.opacity(0.04))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+            .buttonStyle(.plain)
+        } else {
+            VStack(spacing: 2) {
+                Text("?").font(.system(size: 34, weight: .bold)).foregroundStyle(.tertiary)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 68)
+            .background(Color.primary.opacity(0.03))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+    }
+
+    private func unlock() {
+        Task {
+            busy = true
+            defer { busy = false }
+            do {
+                let r = try await api.unlock()
+                playFanfare()
+                revealing = r.pokemon
+            } catch let e {
+                error = (e as? LocalizedError)?.errorDescription ?? e.localizedDescription
+            }
+        }
+    }
+
+    private func playFanfare() {
+        guard let url = api.soundURL() else { return }
+        Task {
+            let player = try? AVAudioPlayer(contentsOf: url)
+            player?.volume = 0.8
+            player?.play()
+            try? await Task.sleep(for: .seconds(2.8))
+        }
     }
 
     private func load() async {
@@ -92,6 +141,71 @@ struct StickersView: View {
             error = nil
         } catch let e {
             error = (e as? LocalizedError)?.errorDescription ?? e.localizedDescription
+        }
+    }
+}
+
+/// ✨ full-screen reveal after unlocking (plays fanfare from the server)
+struct RevealView: View {
+    let pokemon: PokemonInfo
+    let onDone: () -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 18) {
+            Text("\(pokemon.name)!")
+                .font(.largeTitle.bold())
+            StickerImage(dex: pokemon.dex)
+                .frame(width: 200, height: 200)
+            HStack {
+                ForEach(pokemon.types, id: \.self) { t in
+                    Text(t).font(.callout).padding(.horizontal, 10).padding(.vertical, 3)
+                        .background(Color.secondary.opacity(0.15)).clipShape(Capsule())
+                }
+            }
+            Button("Awesome!") { dismiss(); onDone() }
+                .buttonStyle(.borderedProminent)
+        }
+        .padding(40)
+    }
+}
+
+/// 🔍 bigger popup with details when clicking an unlocked Pokémon
+struct DetailPopup: View {
+    let pokemon: PokemonInfo
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("\(pokemon.name)  #\(pokemon.dex)")
+                .font(.title2.bold())
+            StickerImage(dex: pokemon.dex)
+                .frame(width: 220, height: 220)
+            HStack {
+                ForEach(pokemon.types, id: \.self) { t in
+                    Text(t).font(.callout).padding(.horizontal, 10).padding(.vertical, 3)
+                        .background(Color.secondary.opacity(0.15)).clipShape(Capsule())
+                }
+            }
+            Text("⭐ Caught — part of your collection")
+                .font(.caption).foregroundStyle(.secondary)
+            Button("Close") { dismiss() }
+                .buttonStyle(.borderedProminent)
+        }
+        .padding(40)
+    }
+}
+
+/// Async image for a sprite, given dex (uses the server URL via APIClient).
+struct StickerImage: View {
+    @EnvironmentObject var settings: SettingsStore
+    let dex: Int
+    var body: some View {
+        let api = APIClient(settings: settings)
+        AsyncImage(url: api.spriteURL(dex: dex)) { img in
+            img.resizable().scaledToFit()
+        } placeholder: {
+            Color.gray.opacity(0.12)
         }
     }
 }

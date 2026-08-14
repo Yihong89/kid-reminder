@@ -26,24 +26,19 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, "kidreminder.db");
 const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 const SPRITES_DIR = path.join(__dirname, "sprites");
 
-// Achievement stickers: one Pokémon per level, unlocked by collecting stamps.
-// level N unlocks STICKERS[N-1] (dex number + name). Non-commercial private use.
-const STICKERS = [
-  { level: 1,  dex: 25,  name: "Pikachu" },
-  { level: 2,  dex: 1,   name: "Bulbasaur" },
-  { level: 3,  dex: 4,   name: "Charmander" },
-  { level: 4,  dex: 7,   name: "Squirtle" },
-  { level: 5,  dex: 133, name: "Eevee" },
-  { level: 6,  dex: 37,  name: "Vulpix" },
-  { level: 7,  dex: 39,  name: "Jigglypuff" },
-  { level: 8,  dex: 143, name: "Snorlax" },
-  { level: 9,  dex: 149, name: "Dragonite" },
-  { level: 10, dex: 151, name: "Mew" },
-];
-const STAMPS_PER_LEVEL = 5; // one level up per 5 stamps
+// Pokémon collection: 151 Kanto dex entries. The kid spends stamps to randomly
+// unlock sprites (served from sprites/<dex>.png). Non-commercial private use of
+// public PokéAPI sprite art. info.json = { "<dex>": {name, types} }.
+const POKEDEX_COUNT = 151;
+const POKEDEX_INFO = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, "sprites", "info.json"), "utf8")); }
+  catch { return {}; }
+})();
 
-function levelFor(stamps) {
-  return Math.min(STICKERS.length, Math.floor(stamps / STAMPS_PER_LEVEL) + 1);
+function pokemonInfo(dex) {
+  const info = POKEDEX_INFO[String(dex)] || {};
+  const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "???");
+  return { dex, name: cap(info.name || "Pokémon #" + dex), types: info.types || [] };
 }
 
 // ---------------------------------------------------------------- database
@@ -74,6 +69,10 @@ db.exec(`
     date         TEXT PRIMARY KEY,           -- YYYY-MM-DD (one stamp per day)
     note         TEXT NOT NULL DEFAULT '',   -- e.g. "All tasks done!"
     created_at   TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS unlocks (
+    dex          INTEGER PRIMARY KEY,        -- 1..151 which Pokémon was unlocked
+    unlocked_at  TEXT NOT NULL DEFAULT (datetime('now'))
   );
 `);
 // migrate older databases that predate newer columns
@@ -228,7 +227,7 @@ const server = http.createServer(async (req, res) => {
       return res.writeHead(204).end();
     }
 
-    // --- achievement stickers (PNG images served from sprites/) -----------
+    // --- Pokémon sprites (PNG images served from sprites/) ----------------
     if (method === "GET" && pathname.startsWith("/sprites/")) {
       const file = path.basename(pathname); // guard against ../ traversal
       const full = path.join(SPRITES_DIR, file);
@@ -237,6 +236,15 @@ const server = http.createServer(async (req, res) => {
       }
       const data = fs.readFileSync(full);
       res.writeHead(200, { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400" });
+      return res.end(data);
+    }
+
+    // --- unlock fanfare (WAV served from sounds/) --------------------------
+    if (method === "GET" && pathname === "/sounds/fanfare.wav") {
+      const full = path.join(__dirname, "sounds", "fanfare.wav");
+      if (!fs.existsSync(full)) return sendJSON(404, { error: "sound not found" });
+      const data = fs.readFileSync(full);
+      res.writeHead(200, { "Content-Type": "audio/wav", "Cache-Control": "public, max-age=86400" });
       return res.end(data);
     }
 
@@ -275,13 +283,34 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { stamps: rows.map((r) => r.date) });
     }
 
-    // --- stats: level + unlocked stickers (open) --------------------------
+    // --- stats: stamp balance + collection progress (open) ---------------
     if (method === "GET" && pathname === "/api/stats") {
-      const total = db.prepare("SELECT COUNT(*) n FROM stamps").get().n;
-      const level = levelFor(total);
-      const next = level < STICKERS.length ? level * STAMPS_PER_LEVEL : null; // stamps needed for next level
-      const stickers = STICKERS.map((s) => ({ level: s.level, dex: s.dex, name: s.name, unlocked: s.level <= level }));
-      return sendJSON(200, { totalStamps: total, level, stampsForNext: next, stickers });
+      const earned = db.prepare("SELECT COUNT(*) n FROM stamps").get().n;
+      const caught = db.prepare("SELECT dex FROM unlocks ORDER BY dex").all().map((r) => r.dex);
+      const available = Math.max(0, earned - caught.length); // each unlock spends one stamp
+      const collection = caught.map(pokemonInfo);
+      return sendJSON(200, {
+        stamps: { earned, spent: caught.length, available },
+        collection: { total: POKEDEX_COUNT, caught: collection },
+      });
+    }
+
+    // --- spend a stamp to randomly unlock a Pokémon (kid or admin) --------
+    if (method === "POST" && pathname === "/api/unlock") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const caught = new Set(db.prepare("SELECT dex FROM unlocks").all().map((r) => r.dex));
+      if (caught.size >= POKEDEX_COUNT) return sendJSON(400, { error: "collection complete!" });
+      const earned = db.prepare("SELECT COUNT(*) n FROM stamps").get().n;
+      const available = earned - caught.size;
+      if (available <= 0) return sendJSON(400, { error: "no stamps to spend — earn one by finishing all tasks!" });
+      // random among the uncaught dexes
+      const pool = [];
+      for (let dex = 1; dex <= POKEDEX_COUNT; dex++) if (!caught.has(dex)) pool.push(dex);
+      const dex = pool[Math.floor(Math.random() * pool.length)];
+      db.prepare("INSERT INTO unlocks (dex) VALUES (?)").run(dex);
+      return sendJSON(201, { ok: true, pokemon: pokemonInfo(dex), available: available - 1, caught: caught.size + 1, total: POKEDEX_COUNT });
     }
 
     // --- award a stamp (admin only; server verifies all-done) -------------
