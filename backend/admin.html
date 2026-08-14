@@ -356,6 +356,9 @@
   function editRow(t) {
     const card = document.createElement("div");
     card.className = "card edit";
+    const parentOnlyInput = role === "admin"
+      ? `<label><input type="checkbox" class="parent-only-in" ${t.parentOnly ? "checked" : ""} /> 🔒 parent only</label>`
+      : "";
     card.innerHTML = `
       <div class="task">
         <select class="emoji-in">${emojiOptions(t.emoji)}</select>
@@ -374,7 +377,7 @@
         <label>Date <input type="date" class="target-in" value="${t.targetDate || ""}" /></label>
         <label><input type="checkbox" class="cnt-en" ${t.countdownEnabled ? "checked" : ""} /> countdown
           <span class="cnt-days-wrap" ${t.countdownEnabled ? "" : "hidden"}><input type="number" class="cnt-in" min="1" max="30" value="${t.countdownStart || 7}" style="width:70px" /> days before</span></label>
-        ${role === "admin" ? '<label><input type="checkbox" class="parent-only-in" ${t.parentOnly ? "checked" : ""} /> 🔒 parent only</label>' : ""}
+        ${parentOnlyInput}
       </div>`;
     const syncCnt = () => { card.querySelector(".cnt-days-wrap").hidden = !card.querySelector(".cnt-en").checked; };
     card.querySelector(".cnt-en").onchange = syncCnt;
