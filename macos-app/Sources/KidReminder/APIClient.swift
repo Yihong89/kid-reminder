@@ -139,11 +139,20 @@ final class APIClient {
 
     /// URL for the unlock fanfare served by the backend (/sounds/fanfare.wav)
     func soundURL() -> URL? {
+        soundURL(named: "fanfare.wav")
+    }
+
+    /// URL for the task-complete chime served by the backend (/sounds/done.wav)
+    func doneSoundURL() -> URL? {
+        soundURL(named: "done.wav")
+    }
+
+    private func soundURL(named file: String) -> URL? {
         var comps = URLComponents()
         comps.scheme = "http"
         comps.host = settings.host
         comps.port = settings.port
-        comps.path = "/sounds/fanfare.wav"
+        comps.path = "/sounds/\(file)"
         return comps.url
     }
 }

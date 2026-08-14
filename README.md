@@ -67,12 +67,13 @@ Behavior:
   and the kid gets a 403 on toggle/edit/delete attempts). The parent sees a 🔒 badge and keeps
   full access — toggle, edit, delete — on both parent-only and kid-created tasks.
 - **Pokémon collection** ⚡ — when the kid finishes **all** of today's tasks, the parent can
-  award a **⭐ stamp** (gold markers on the calendar). On the **⚡ Pokémon** panel, the kid can
-  **spend a stamp to randomly unlock a Pokémon** — **Kanto (151)** first, and once it's fully
-  caught, **Johto (100)** unlocks automatically as a second generation. Locked slots show a **?**.
-  Each unlock plays a **fanfare** and reveals the Pokémon; clicking an unlocked one pops up a
-  **bigger sprite with details** (name, types). Sprites + fanfare are served from the backend
-  (`/sprites/`, `/sounds/`) — non-commercial, private family use of the public PokéAPI sprite art.
+  award a **⭐ stamp** (gold markers on the calendar). Every time the kid checks off a task, a
+  cheerful **chime** plays 🎵. On the **⚡ Pokémon** panel, the kid can **spend a stamp to randomly
+  unlock a Pokémon** — **Kanto (151)** first, and once it's fully caught, **Johto (100)** unlocks
+  automatically as a second generation. Locked slots show a **?**. Each unlock plays a **fanfare**
+  and reveals the Pokémon; clicking an unlocked one pops up a **bigger sprite with details** (name,
+  types). Sprites + sounds are served from the backend (`/sprites/`, `/sounds/`) —
+  non-commercial, private family use of the public PokéAPI sprite art.
 
 Admin panel features:
 - **Calendar** — month view with per-day completion dots (green all done / amber partial)

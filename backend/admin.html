@@ -409,7 +409,11 @@
         // marking done -> ask for minutes
         const minutes = await askMinutes();
         if (minutes === null) { render(); return; } // cancelled
-        try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: JSON.stringify({ minutes }) }); await afterChange(); }
+        try {
+          await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: JSON.stringify({ minutes }) });
+          playDoneChime();
+          await afterChange();
+        }
         catch (e) { showErr(e.message); }
       } else {
         try { await api(`/api/tasks/${t.id}/toggle`, { method: "POST", body: "{}" }); await afterChange(); }
@@ -587,6 +591,15 @@
   function playFanfare() {
     try {
       const a = new Audio("/sounds/fanfare.wav");
+      a.volume = 0.8;
+      a.play().catch(() => {});
+    } catch { /* audio optional */ }
+  }
+
+  // 🎵 cheerful chime when a task is marked done
+  function playDoneChime() {
+    try {
+      const a = new Audio("/sounds/done.wav");
       a.volume = 0.8;
       a.play().catch(() => {});
     } catch { /* audio optional */ }

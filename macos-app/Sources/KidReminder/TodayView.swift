@@ -50,7 +50,11 @@ struct TodayView: View {
             MinutesSheet(task: task) { minutes in
                 Task {
                     busy = true
-                    do { try await api.toggle(id: task.id, minutes: minutes); await load() }
+                    do {
+                        try await api.toggle(id: task.id, minutes: minutes)
+                        SoundEffects.playDone(host: settings.host, port: settings.port)
+                        await load()
+                    }
                     catch let e { error = errorMessage(e) }
                     busy = false
                 }

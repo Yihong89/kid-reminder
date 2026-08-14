@@ -156,13 +156,7 @@ struct StickersView: View {
     }
 
     private func playFanfare() {
-        guard let url = api.soundURL() else { return }
-        Task {
-            let player = try? AVAudioPlayer(contentsOf: url)
-            player?.volume = 0.8
-            player?.play()
-            try? await Task.sleep(for: .seconds(2.8))
-        }
+        SoundEffects.playFanfare(host: settings.host, port: settings.port)
     }
 
     private func load() async {

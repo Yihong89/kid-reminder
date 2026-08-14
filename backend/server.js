@@ -266,10 +266,13 @@ const server = http.createServer(async (req, res) => {
       return res.end(data);
     }
 
-    // --- unlock fanfare (WAV served from sounds/) --------------------------
-    if (method === "GET" && pathname === "/sounds/fanfare.wav") {
-      const full = path.join(__dirname, "sounds", "fanfare.wav");
-      if (!fs.existsSync(full)) return sendJSON(404, { error: "sound not found" });
+    // --- sound effects (WAV served from sounds/) ---------------------------
+    if (method === "GET" && pathname.startsWith("/sounds/") && pathname.endsWith(".wav")) {
+      const file = path.basename(pathname); // guard against ../ traversal
+      const full = path.join(__dirname, "sounds", file);
+      if (!full.startsWith(path.join(__dirname, "sounds")) || !fs.existsSync(full)) {
+        return sendJSON(404, { error: "sound not found" });
+      }
       const data = fs.readFileSync(full);
       res.writeHead(200, { "Content-Type": "audio/wav", "Cache-Control": "public, max-age=86400" });
       return res.end(data);
