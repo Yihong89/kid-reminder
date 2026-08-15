@@ -331,7 +331,11 @@ const server = http.createServer(async (req, res) => {
       }));
       return sendJSON(200, {
         stamps: { earned, spent: caught.length, available },
-        collection: { caught: caught.map(pokemonInfo), generations },
+        collection: {
+          total: GENERATIONS.reduce((sum, g) => sum + (g.end - g.start + 1), 0),
+          caught: caught.map(pokemonInfo),
+          generations,
+        },
       });
     }
 
