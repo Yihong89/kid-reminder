@@ -19,8 +19,18 @@
 //   POST /api/dictation/sessions/:id/complete -> kid finished, awaiting grading
 //   GET  /api/dictation/sessions          -> list sessions (?status=)        [X-Admin-Pin]
 //   GET  /api/dictation/sessions/:id      -> session detail w/ answers       [X-Admin-Pin]
+//   DELETE /api/dictation/sessions/:id    -> delete a session (any status)   [X-Admin-Pin]
 //   POST /api/dictation/sessions/:id/grade -> submit ✓/✗ per item            [X-Admin-Pin]
 //   GET  /dictation-audio/:id.wav         -> TTS audio for a word (dsh-sister Qwen3-TTS, cached)
+//   GET  /api/english/questions           -> search/list question bank        [X-Admin-Pin]
+//   POST /api/english/questions           -> add a question (app or web)      [X-Admin-Pin or X-Kid-Pin]
+//   PATCH /api/english/questions/:id      -> edit a question                  [X-Admin-Pin]
+//   DELETE /api/english/questions/:id     -> delete a question                [X-Admin-Pin]
+//   POST /api/english/sessions            -> generate a practice set          (kid app)
+//   POST /api/english/sessions/:id/items/:itemId/submit   -> auto-graded answer
+//   POST /api/english/sessions/:id/items/:itemId/override -> flip a verdict once
+//   POST /api/english/sessions/:id/complete -> mark a practice set finished
+//   GET  /english-audio/:id.wav           -> TTS audio for a spelling question (cached)
 //
 // Env vars: PORT (default 2021), ADMIN_PIN (default 1234), DB_PATH,
 //           TTS_SERVICE_URL (default http://127.0.0.1:3091), TTS_INSTRUCT (voice style)
@@ -37,7 +47,9 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, "kidreminder.db");
 const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 const SPRITES_DIR = path.join(__dirname, "sprites");
 const DICTATION_AUDIO_DIR = path.join(__dirname, "dictation-audio");
+const ENGLISH_AUDIO_DIR = path.join(__dirname, "english-audio");
 fs.mkdirSync(DICTATION_AUDIO_DIR, { recursive: true });
+fs.mkdirSync(ENGLISH_AUDIO_DIR, { recursive: true });
 
 // ---------------------------------------------------------------- TTS (dsh-sister's Qwen3-TTS, loopback-only)
 // Reuses the existing dsh-sister-tts service (Qwen3-TTS-VoiceDesign on MLX) rather than
@@ -51,6 +63,9 @@ const TTS_SERVICE_URL = process.env.TTS_SERVICE_URL || "http://127.0.0.1:3091";
 const TTS_INSTRUCT = process.env.TTS_INSTRUCT ||
   "温柔知性、成熟大方的大姐姐嗓音，语速适中、吐字清晰标准，语气温暖有耐心，" +
   "像在陪伴弟弟妹妹认真学习时耐心引导、适时给予鼓励的感觉，不要撒娇卖萌。";
+const TTS_INSTRUCT_EN = process.env.TTS_INSTRUCT_EN ||
+  "清晰标准的英语女声朗读，语速适中偏慢、发音清楚、每个单词吐字分明，" +
+  "像老师在念听写单词和例句一样，方便孩子听音辨词、练习拼写。";
 
 // Minimal canonical-PCM-WAV reader. The TTS service writes plain libsndfile PCM_16 WAVs
 // (no exotic chunks), so a straightforward RIFF walk is enough — no library needed.
@@ -97,8 +112,8 @@ function buildWav({ sampleRate, channels, bitsPerSample, data }) {
 
 // Calls /tts-stream (Server-Sent Events: `data: {"audio": "<base64 wav segment>", "isFinal": bool}`
 // per ~2s segment) and stitches the segments back into one complete WAV.
-async function synthesizeSpeech(text) {
-  const url = `${TTS_SERVICE_URL}/tts-stream?${new URLSearchParams({ text, instruct: TTS_INSTRUCT })}`;
+async function synthesizeSpeech(text, instruct = TTS_INSTRUCT) {
+  const url = `${TTS_SERVICE_URL}/tts-stream?${new URLSearchParams({ text, instruct })}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`tts service HTTP ${res.status}`);
   const reader = res.body.getReader();
@@ -150,6 +165,42 @@ async function ensureDictationAudio(wordId, word, sentence) {
 }
 function deleteDictationAudio(wordId) {
   try { fs.unlinkSync(path.join(DICTATION_AUDIO_DIR, `${wordId}.wav`)); } catch { /* no cache yet */ }
+}
+
+// Fills a fill_blank prompt's blank marker with the correct answer, for the 🔊
+// replay-sentence button on spelling items. The source data uses a few different
+// blank-marker conventions (bold parenthetical, escaped underscores, plain
+// underscores) — try each in turn; if none match, just read prompt + answer.
+// Markdown bold markers are stripped afterwards so TTS doesn't read "asterisk".
+function fillBlankSentence(prompt, correctAnswer) {
+  const answer = correctAnswer.split("/")[0].trim(); // first alternative only
+  const blankPatterns = [/\*\*\([^)]*\)\*\*/, /\*\*\\_+\*\*/, /\\_+/, /\*\*_+\*\*/, /_{2,}/];
+  let sentence = null;
+  for (const p of blankPatterns) {
+    if (p.test(prompt)) { sentence = prompt.replace(p, answer); break; }
+  }
+  if (!sentence) sentence = `${prompt} — ${answer}`;
+  return sentence.replace(/\*\*/g, "");
+}
+
+// 英语错题练习：拼写题的🔊按钮朗读"填对后的完整句子"。缓存规则和听写一样，按
+// question_id 存一次；题目文字被编辑/删除时缓存会被清掉，下次用到再重新生成。
+async function ensureEnglishAudio(questionId, prompt, correctAnswer) {
+  const file = path.join(ENGLISH_AUDIO_DIR, `${questionId}.wav`);
+  if (fs.existsSync(file)) return file;
+  const text = fillBlankSentence(prompt, correctAnswer);
+  let wavBuffer;
+  try {
+    wavBuffer = await synthesizeSpeech(text, TTS_INSTRUCT_EN);
+  } catch (err) {
+    await new Promise((r) => setTimeout(r, 2000));
+    wavBuffer = await synthesizeSpeech(text, TTS_INSTRUCT_EN);
+  }
+  fs.writeFileSync(file, wavBuffer);
+  return file;
+}
+function deleteEnglishAudio(questionId) {
+  try { fs.unlinkSync(path.join(ENGLISH_AUDIO_DIR, `${questionId}.wav`)); } catch { /* no cache yet */ }
 }
 
 // Pokémon collection: 9 generations (Kanto..Paldea). The kid spends stamps to
@@ -257,6 +308,35 @@ db.exec(`
     word_id    INTEGER NOT NULL REFERENCES vocab_words(id),
     seq        INTEGER NOT NULL,      -- 1..N, the order it was/will be dictated in
     result     TEXT                    -- NULL (ungraded) | 'correct' | 'incorrect'
+  );
+  CREATE TABLE IF NOT EXISTS english_questions (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    type           TEXT NOT NULL,                -- 'fill_blank' | 'mcq' | 'sentence_transform'
+    topic          TEXT NOT NULL DEFAULT '',      -- e.g. "Grammar: Verb Tenses", "Spelling Errors"
+    prompt         TEXT NOT NULL,                 -- the question sentence, with a blank
+    options        TEXT,                          -- JSON array of 4 strings, mcq only; NULL otherwise
+    correct_answer TEXT NOT NULL,                 -- may contain "alt1 / alt2 / alt3" — any counts as correct
+    explanation    TEXT NOT NULL DEFAULT '',       -- shown after answering, regardless of right/wrong
+    needs_audio    INTEGER NOT NULL DEFAULT 0,    -- 1 = show a 🔊 replay-sentence button (spelling items)
+    correct_count  INTEGER NOT NULL DEFAULT 0,    -- answer +1 / wrong -1, floored at 0 — same as vocab_words
+    source_number  INTEGER,                        -- original wrong-answers.md question number, if imported
+    source         TEXT NOT NULL DEFAULT 'manual', -- 'wrong-answers-import' | 'manual'
+    created_at     TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS english_quiz_sessions (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    status       TEXT NOT NULL DEFAULT 'in_progress', -- in_progress | completed
+    created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    completed_at TEXT
+  );
+  CREATE TABLE IF NOT EXISTS english_quiz_items (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id  INTEGER NOT NULL REFERENCES english_quiz_sessions(id),
+    question_id INTEGER NOT NULL REFERENCES english_questions(id),
+    seq         INTEGER NOT NULL,
+    answer      TEXT,                 -- what the kid typed/picked
+    result      TEXT,                 -- NULL (not yet answered) | 'correct' | 'incorrect'
+    overridden  INTEGER NOT NULL DEFAULT 0  -- 1 if the kid flipped an auto-grade via self-override
   );
 `);
 // migrate older databases that predate newer columns
@@ -387,6 +467,12 @@ function readBody(req) {
     });
     req.on("error", reject);
   });
+}
+
+// normalizes a typed English answer for lenient comparison against correct_answer
+// (case/whitespace/punctuation-insensitive) — used by /api/english/sessions/*/submit
+function normalizeEnglishAnswer(s) {
+  return String(s || "").trim().toLowerCase().replace(/\s+/g, " ").replace(/[.,!?;:"'()]/g, "").trim();
 }
 
 // ---------------------------------------------------------------- http server
@@ -804,7 +890,7 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { ok: true });
     }
 
-    // --- list sessions awaiting grading (admin only) ---
+    // --- list sessions: all history by default, or filter by ?status= (admin only) ---
     if (method === "GET" && pathname === "/api/dictation/sessions") {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
@@ -812,7 +898,10 @@ const server = http.createServer(async (req, res) => {
       const where = status ? "WHERE status = ?" : "";
       const rows = db
         .prepare(
-          `SELECT s.id, s.status, s.created_at, s.completed_at, s.graded_at, COUNT(i.id) itemCount
+          `SELECT s.id, s.status, s.created_at, s.completed_at, s.graded_at,
+                  COUNT(i.id) itemCount,
+                  SUM(CASE WHEN i.result = 'correct' THEN 1 ELSE 0 END) correctCount,
+                  SUM(CASE WHEN i.result = 'incorrect' THEN 1 ELSE 0 END) incorrectCount
            FROM dictation_sessions s LEFT JOIN dictation_items i ON i.session_id = s.id
            ${where} GROUP BY s.id ORDER BY s.created_at DESC`
         )
@@ -836,6 +925,20 @@ const server = http.createServer(async (req, res) => {
         )
         .all(id);
       return sendJSON(200, { session, items });
+    }
+
+    // --- delete a session (any status — e.g. an abandoned "in_progress" one the kid
+    // never finished, or just old history the parent wants to tidy up) (admin only) ---
+    if (sessDetailMatch && method === "DELETE") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const id = Number(sessDetailMatch[1]);
+      // ON DELETE CASCADE in the schema isn't actually enforced (foreign_keys pragma is off,
+      // as it is for the whole db), so delete dictation_items ourselves first.
+      db.prepare("DELETE FROM dictation_items WHERE session_id = ?").run(id);
+      const info = db.prepare("DELETE FROM dictation_sessions WHERE id = ?").run(id);
+      if (!info.changes) return sendJSON(404, { error: "session not found" });
+      return sendJSON(200, { ok: true });
     }
 
     // --- submit grading: per-item correct/incorrect, updates correct_count (admin only) ---
@@ -870,6 +973,215 @@ const server = http.createServer(async (req, res) => {
         db.exec("ROLLBACK");
         throw err;
       }
+      return sendJSON(200, { ok: true });
+    }
+
+    // --- English wrong-answer practice: question bank CRUD -----------------
+    if (method === "GET" && pathname === "/api/english/questions") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const search = (url.searchParams.get("search") || "").trim();
+      const type = url.searchParams.get("type") || "";
+      const topic = url.searchParams.get("topic") || "";
+      const limit = Math.max(1, Math.min(200, parseInt(url.searchParams.get("limit") || "50", 10) || 50));
+      const offset = Math.max(0, parseInt(url.searchParams.get("offset") || "0", 10) || 0);
+
+      const where = [];
+      const params = [];
+      if (search) {
+        where.push("(prompt LIKE ? OR correct_answer LIKE ? OR explanation LIKE ? OR topic LIKE ?)");
+        const like = `%${search}%`;
+        params.push(like, like, like, like);
+      }
+      if (type) { where.push("type = ?"); params.push(type); }
+      if (topic) { where.push("topic = ?"); params.push(topic); }
+      const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+      const total = db.prepare(`SELECT COUNT(*) n FROM english_questions ${whereSql}`).get(...params).n;
+      const rows = db
+        .prepare(`SELECT * FROM english_questions ${whereSql} ORDER BY id DESC LIMIT ? OFFSET ?`)
+        .all(...params, limit, offset);
+      const questions = rows.map((r) => ({ ...r, options: r.options ? JSON.parse(r.options) : null }));
+      return sendJSON(200, { total, limit, offset, questions });
+    }
+
+    // create (admin or kid — the macOS app's "add a mistake" form uses this too)
+    if (method === "POST" && pathname === "/api/english/questions") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const body = await readBody(req);
+      const type = ["fill_blank", "mcq", "sentence_transform"].includes(body.type) ? body.type : null;
+      const prompt = String(body.prompt || "").trim();
+      const correctAnswer = String(body.correctAnswer || "").trim();
+      if (!type || !prompt || !correctAnswer) {
+        return sendJSON(400, { error: "type, prompt, correctAnswer are required" });
+      }
+      let options = null;
+      if (type === "mcq") {
+        if (!Array.isArray(body.options) || body.options.length < 2) {
+          return sendJSON(400, { error: "mcq questions need an options array (2+ choices)" });
+        }
+        options = JSON.stringify(body.options.map((o) => String(o).trim()));
+      }
+      const topic = String(body.topic || "").trim();
+      const explanation = String(body.explanation || "").trim();
+      const needsAudio = type === "fill_blank" && !!body.needsAudio;
+      const info = db
+        .prepare(
+          `INSERT INTO english_questions (type, topic, prompt, options, correct_answer, explanation, needs_audio, source)
+           VALUES (?, ?, ?, ?, ?, ?, ?, 'manual')`
+        )
+        .run(type, topic, prompt, options, correctAnswer, explanation, needsAudio ? 1 : 0);
+      return sendJSON(201, { id: Number(info.lastInsertRowid) });
+    }
+
+    const engQMatch = pathname.match(/^\/api\/english\/questions\/(\d+)$/);
+    if (engQMatch) {
+      const id = Number(engQMatch[1]);
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+
+      if (method === "PATCH") {
+        const body = await readBody(req);
+        const sets = [];
+        const vals = [];
+        if (body.type !== undefined && ["fill_blank", "mcq", "sentence_transform"].includes(body.type)) {
+          sets.push("type = ?"); vals.push(body.type);
+        }
+        const strField = (key, col) => { if (body[key] !== undefined) { sets.push(`${col} = ?`); vals.push(String(body[key]).trim()); } };
+        strField("topic", "topic");
+        strField("prompt", "prompt");
+        strField("correctAnswer", "correct_answer");
+        strField("explanation", "explanation");
+        if (body.options !== undefined) { sets.push("options = ?"); vals.push(Array.isArray(body.options) ? JSON.stringify(body.options.map((o) => String(o).trim())) : null); }
+        if (body.needsAudio !== undefined) { sets.push("needs_audio = ?"); vals.push(body.needsAudio ? 1 : 0); }
+        if (body.correctCount !== undefined) { sets.push("correct_count = ?"); vals.push(Math.round(Number(body.correctCount)) || 0); }
+        if (!sets.length) return sendJSON(400, { error: "nothing to update" });
+        vals.push(id);
+        const info = db.prepare(`UPDATE english_questions SET ${sets.join(", ")} WHERE id = ?`).run(...vals);
+        if (!info.changes) return sendJSON(404, { error: "question not found" });
+        // text changed -> stale cached audio, regenerate lazily next time it's needed
+        if (body.prompt !== undefined || body.correctAnswer !== undefined) deleteEnglishAudio(id);
+        return sendJSON(200, { ok: true });
+      }
+
+      if (method === "DELETE") {
+        const info = db.prepare("DELETE FROM english_questions WHERE id = ?").run(id);
+        if (!info.changes) return sendJSON(404, { error: "question not found" });
+        deleteEnglishAudio(id);
+        return sendJSON(200, { ok: true });
+      }
+    }
+
+    // --- English audio: lazily synthesized + cached "sentence with blank filled in" ---
+    if (method === "GET" && pathname.startsWith("/english-audio/")) {
+      const file = path.basename(pathname);
+      const m = file.match(/^(\d+)\.wav$/);
+      if (!m) return sendJSON(404, { error: "not found" });
+      const questionId = Number(m[1]);
+      const q = db.prepare("SELECT prompt, correct_answer FROM english_questions WHERE id = ?").get(questionId);
+      if (!q) return sendJSON(404, { error: "question not found" });
+      let filePath;
+      try {
+        filePath = await ensureEnglishAudio(questionId, q.prompt, q.correct_answer);
+      } catch (err) {
+        console.error(`[kid-reminder] English TTS failed for question ${questionId}: ${err.message}`);
+        return sendJSON(502, { error: "TTS service unavailable, try again shortly" });
+      }
+      const data = fs.readFileSync(filePath);
+      res.writeHead(200, { "Content-Type": "audio/wav", "Cache-Control": "public, max-age=31536000" });
+      return res.end(data);
+    }
+
+    // --- English practice sessions: weakest-first, self-graded (open; kid app calls these) ---
+    if (method === "POST" && pathname === "/api/english/sessions") {
+      const pool = db.prepare(`SELECT id FROM english_questions ORDER BY correct_count ASC LIMIT 60`).all();
+      if (pool.length === 0) return sendJSON(400, { error: "question bank is empty" });
+      const ids = pool.map((r) => r.id);
+      for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }
+      const chosen = ids.slice(0, Math.min(10, ids.length));
+
+      const info = db.prepare("INSERT INTO english_quiz_sessions DEFAULT VALUES").run();
+      const sessionId = Number(info.lastInsertRowid);
+      const insertItem = db.prepare("INSERT INTO english_quiz_items (session_id, question_id, seq) VALUES (?, ?, ?)");
+      const getQ = db.prepare("SELECT id, type, topic, prompt, options, needs_audio FROM english_questions WHERE id = ?");
+      const items = chosen.map((qid, i) => {
+        const info2 = insertItem.run(sessionId, qid, i + 1);
+        const q = getQ.get(qid);
+        return {
+          itemId: Number(info2.lastInsertRowid),
+          seq: i + 1,
+          questionId: q.id,
+          type: q.type,
+          topic: q.topic,
+          prompt: q.prompt,
+          options: q.options ? JSON.parse(q.options) : null,
+          needsAudio: !!q.needs_audio,
+        };
+      });
+      return sendJSON(201, { sessionId, items });
+    }
+
+    const engSubmitMatch = pathname.match(/^\/api\/english\/sessions\/(\d+)\/items\/(\d+)\/submit$/);
+    if (engSubmitMatch && method === "POST") {
+      const sessionId = Number(engSubmitMatch[1]);
+      const itemId = Number(engSubmitMatch[2]);
+      const item = db
+        .prepare(
+          `SELECT i.id, i.result, i.question_id, q.correct_answer, q.explanation
+           FROM english_quiz_items i JOIN english_questions q ON q.id = i.question_id
+           WHERE i.id = ? AND i.session_id = ?`
+        )
+        .get(itemId, sessionId);
+      if (!item) return sendJSON(404, { error: "item not found" });
+      const body = await readBody(req);
+      const answer = String(body.answer || "");
+      if (item.result === null) {
+        const alts = item.correct_answer.split("/").map((a) => normalizeEnglishAnswer(a));
+        const isCorrect = alts.includes(normalizeEnglishAnswer(answer));
+        const result = isCorrect ? "correct" : "incorrect";
+        db.prepare("UPDATE english_quiz_items SET answer = ?, result = ? WHERE id = ?").run(answer, result, itemId);
+        db.prepare(
+          `UPDATE english_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?`
+        ).run(isCorrect ? 1 : -1, item.question_id);
+        item.result = result; // reflect below
+      }
+      return sendJSON(200, {
+        correct: item.result === "correct",
+        correctAnswer: item.correct_answer,
+        explanation: item.explanation,
+      });
+    }
+
+    // self-override: for sentence-transform items where auto-grading may be too strict —
+    // the kid/parent can flip the verdict once after seeing the correct answer.
+    const engOverrideMatch = pathname.match(/^\/api\/english\/sessions\/(\d+)\/items\/(\d+)\/override$/);
+    if (engOverrideMatch && method === "POST") {
+      const sessionId = Number(engOverrideMatch[1]);
+      const itemId = Number(engOverrideMatch[2]);
+      const item = db
+        .prepare("SELECT id, result, overridden, question_id FROM english_quiz_items WHERE id = ? AND session_id = ?")
+        .get(itemId, sessionId);
+      if (!item) return sendJSON(404, { error: "item not found" });
+      if (item.result === null) return sendJSON(400, { error: "item hasn't been answered yet" });
+      if (item.overridden) return sendJSON(409, { error: "already overridden once" });
+      const body = await readBody(req);
+      const newResult = body.correct ? "correct" : "incorrect";
+      if (newResult !== item.result) {
+        // reverse the original delta, then apply the new one (net ±2)
+        const delta = newResult === "correct" ? 2 : -2;
+        db.prepare("UPDATE english_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?").run(delta, item.question_id);
+      }
+      db.prepare("UPDATE english_quiz_items SET result = ?, overridden = 1 WHERE id = ?").run(newResult, itemId);
+      return sendJSON(200, { ok: true });
+    }
+
+    const engCompleteMatch = pathname.match(/^\/api\/english\/sessions\/(\d+)\/complete$/);
+    if (engCompleteMatch && method === "POST") {
+      const id = Number(engCompleteMatch[1]);
+      const info = db.prepare("UPDATE english_quiz_sessions SET status = 'completed', completed_at = datetime('now') WHERE id = ?").run(id);
+      if (!info.changes) return sendJSON(404, { error: "session not found" });
       return sendJSON(200, { ok: true });
     }
 
