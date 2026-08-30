@@ -24,6 +24,29 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
     private var player: AVAudioPlayer?
     private var onFinish: (() -> Void)?
     private var playToken = 0 // invalidates stale completions from a superseded play()/stop()
+    private var activityToken: NSObjectProtocol? // see beginActivity below
+
+    // Dev-log evidence from a real stuck report: a plain 6s Task.sleep (recovery-hint
+    // timer, no relation to audio at all) and AVAudioPlayer's own finish delegate both
+    // fired several seconds late — *at the same instant*, well after either was actually
+    // due. Two unrelated timers landing together like that means neither timer itself is
+    // broken; something paused all of the app's scheduled work for a few seconds and then
+    // let it all run at once. The dictation screen is "listen and write on paper" by
+    // design, so the kid isn't touching the app while a clip plays — exactly the profile
+    // macOS's App Nap targets for throttling. Hold off App Nap/idle sleep for the
+    // duration of playback so its timers (and the delegate callback) aren't delayed.
+    private func beginActivity() {
+        guard activityToken == nil else { return }
+        activityToken = ProcessInfo.processInfo.beginActivity(
+            options: [.userInitiated, .idleSystemSleepDisabled],
+            reason: "听写朗读播放中"
+        )
+    }
+    private func endActivity() {
+        guard let token = activityToken else { return }
+        ProcessInfo.processInfo.endActivity(token)
+        activityToken = nil
+    }
 
     func play(url: URL, onFinish: (() -> Void)? = nil) {
         stop()
@@ -31,6 +54,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         let token = playToken
         self.onFinish = onFinish
         isLoading = true
+        beginActivity()
         DevLog.log("play() token=\(token) url=\(url.lastPathComponent)")
         Task {
             do {
@@ -100,6 +124,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         player = nil
         isLoading = false
         isPlaying = false
+        endActivity()
     }
 
     nonisolated func audioPlayerDidFinishPlaying(_ finishedPlayer: AVAudioPlayer, successfully flag: Bool) {
@@ -115,6 +140,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         DevLog.log("finish() token=\(playToken)")
         isPlaying = false
         isLoading = false
+        endActivity()
         let cb = onFinish
         onFinish = nil
         cb?()

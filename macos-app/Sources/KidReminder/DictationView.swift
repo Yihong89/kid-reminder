@@ -111,6 +111,12 @@ struct DictationView: View {
             }
         }
         .task(id: index) { if index == 0 { playCurrent(index: index) } }
+        .onChange(of: player.isBusy) { _, busy in
+            // The recovery hint can appear while genuinely still playing a long clip
+            // (isBusy > 6s isn't itself abnormal) — once playback actually wraps up,
+            // by whatever path, hide it again instead of leaving it stuck showing.
+            if !busy { showRecoveryHint = false }
+        }
     }
 
     private var doneView: some View {
