@@ -33,11 +33,14 @@
 //   GET  /english-audio/:id.wav           -> TTS audio for a spelling question (cached)
 //
 // Env vars: PORT (default 2021), ADMIN_PIN (default 1234), DB_PATH,
-//           TTS_SERVICE_URL (default http://127.0.0.1:3091), TTS_INSTRUCT (voice style)
+//           TTS_SERVICE_URL (default http://127.0.0.1:3091), TTS_INSTRUCT (voice style),
+//           SAY_VOICE_ZH / SAY_VOICE_EN (macOS `say` fallback voices, used when the
+//           Qwen3 TTS service is busy/unavailable after one retry)
 
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
+const { execFileSync } = require("node:child_process");
 const { DatabaseSync } = require("node:sqlite");
 
 const PORT = parseInt(process.env.PORT || "2021", 10);
@@ -66,6 +69,33 @@ const TTS_INSTRUCT = process.env.TTS_INSTRUCT ||
 const TTS_INSTRUCT_EN = process.env.TTS_INSTRUCT_EN ||
   "清晰标准的英语女声朗读，语速适中偏慢、发音清楚、每个单词吐字分明，" +
   "像老师在念听写单词和例句一样，方便孩子听音辨词、练习拼写。";
+
+// Fallback when the Qwen3 service is unavailable/backlogged (shared with dsh-sister,
+// so it does get busy): macOS's built-in `say` — much lower quality, but instant and
+// always available, so the kid gets *some* audio instead of a dead 🔊 button.
+const SAY_VOICE_ZH = process.env.SAY_VOICE_ZH || "Tingting"; // built-in zh_CN voice
+const SAY_VOICE_EN = process.env.SAY_VOICE_EN || "Samantha"; // built-in en_US voice
+function synthesizeWithSay(text, voice, outFile) {
+  execFileSync("say", ["-v", voice, "-o", outFile, "--file-format=WAVE", "--data-format=LEI16@22050", text], {
+    timeout: 15000,
+  });
+}
+
+// Tries the Qwen3 service (with one retry after a brief pause), falling back to `say`
+// if both attempts fail — so a busy/unavailable TTS backend still yields *some* audio
+// for the 🔊 button instead of a dead one. Writes the result straight to `file`.
+async function synthesizeToFile(file, text, instruct, sayVoice) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      fs.writeFileSync(file, await synthesizeSpeech(text, instruct));
+      return;
+    } catch (err) {
+      if (attempt === 0) await new Promise((r) => setTimeout(r, 2000));
+      else console.error(`[kid-reminder] Qwen3 TTS failed twice (${err.message}), falling back to say`);
+    }
+  }
+  synthesizeWithSay(text, sayVoice, file);
+}
 
 // Minimal canonical-PCM-WAV reader. The TTS service writes plain libsndfile PCM_16 WAVs
 // (no exotic chunks), so a straightforward RIFF walk is enough — no library needed.
@@ -148,19 +178,13 @@ async function synthesizeSpeech(text, instruct = TTS_INSTRUCT) {
 // 听写：生成/缓存一个词的朗读音频（词语 + 例句）。每个 word_id 只合成一次，缓存成
 // dictation-audio/<id>.wav；vocab_words 的文字被编辑或删除时，对应缓存会被清掉
 // （见 /api/vocab 的 PATCH/DELETE），下次用到再重新生成。一次重试：TTS 服务和
-// dsh-sister 共用同一条生成队列，偶尔会因为并发繁忙短暂 503，等一下再试一次。
+// dsh-sister 共用同一条生成队列，偶尔会因为并发繁忙短暂 503，等一下再试一次；两次都
+// 失败就退回本机自带的 say 朗读（音质差很多，但总比按了🔊没反应强）。
 async function ensureDictationAudio(wordId, word, sentence) {
   const file = path.join(DICTATION_AUDIO_DIR, `${wordId}.wav`);
   if (fs.existsSync(file)) return file;
   const text = `${word}。${sentence}`;
-  let wavBuffer;
-  try {
-    wavBuffer = await synthesizeSpeech(text);
-  } catch (err) {
-    await new Promise((r) => setTimeout(r, 2000));
-    wavBuffer = await synthesizeSpeech(text);
-  }
-  fs.writeFileSync(file, wavBuffer);
+  await synthesizeToFile(file, text, TTS_INSTRUCT, SAY_VOICE_ZH);
   return file;
 }
 function deleteDictationAudio(wordId) {
@@ -184,19 +208,13 @@ function fillBlankSentence(prompt, correctAnswer) {
 }
 
 // 英语错题练习：拼写题的🔊按钮朗读"填对后的完整句子"。缓存规则和听写一样，按
-// question_id 存一次；题目文字被编辑/删除时缓存会被清掉，下次用到再重新生成。
+// question_id 存一次；题目文字被编辑/删除时缓存会被清掉，下次用到再重新生成。同样在
+// Qwen3 两次都失败后退回本机 say。
 async function ensureEnglishAudio(questionId, prompt, correctAnswer) {
   const file = path.join(ENGLISH_AUDIO_DIR, `${questionId}.wav`);
   if (fs.existsSync(file)) return file;
   const text = fillBlankSentence(prompt, correctAnswer);
-  let wavBuffer;
-  try {
-    wavBuffer = await synthesizeSpeech(text, TTS_INSTRUCT_EN);
-  } catch (err) {
-    await new Promise((r) => setTimeout(r, 2000));
-    wavBuffer = await synthesizeSpeech(text, TTS_INSTRUCT_EN);
-  }
-  fs.writeFileSync(file, wavBuffer);
+  await synthesizeToFile(file, text, TTS_INSTRUCT_EN, SAY_VOICE_EN);
   return file;
 }
 function deleteEnglishAudio(questionId) {
