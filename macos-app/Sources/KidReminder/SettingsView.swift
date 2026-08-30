@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct SettingsView: View {
@@ -8,6 +9,7 @@ struct SettingsView: View {
     @State private var pin = ""
     @State private var busy = false
     @State private var statusMessage: String?
+    @State private var devLogCopyMessage: String?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -63,6 +65,30 @@ struct SettingsView: View {
                 case .failed(let msg):
                     Text(msg).foregroundStyle(.secondary).font(.callout)
                     Button("Try again") { Task { await updater.check() } }
+                }
+            }
+
+            Section("开发者日志") {
+                Text("记录听写朗读等功能的内部事件，方便排查偶发问题（比如卡住不动）。平时不影响使用。")
+                    .font(.caption).foregroundStyle(.secondary)
+                HStack {
+                    Button("复制日志到剪贴板") {
+                        let text = DevLog.contents()
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(text, forType: .string)
+                        devLogCopyMessage = "已复制（\(text.count) 字符）"
+                    }
+                    Button("在 Finder 中显示") {
+                        NSWorkspace.shared.activateFileViewerSelecting([DevLog.fileURL])
+                    }
+                    Button("清空日志", role: .destructive) {
+                        DevLog.clear()
+                        devLogCopyMessage = "已清空"
+                    }
+                    Spacer()
+                    if let devLogCopyMessage {
+                        Text(devLogCopyMessage).font(.caption).foregroundStyle(.secondary)
+                    }
                 }
             }
         }

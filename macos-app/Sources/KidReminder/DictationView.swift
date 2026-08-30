@@ -149,6 +149,7 @@ struct DictationView: View {
     private func playCurrent(index: Int) {
         guard let items = session?.items, items.indices.contains(index),
               let url = api.dictationAudioURL(wordId: items[index].wordId) else { return }
+        DevLog.log("DictationView playCurrent index=\(index) wordId=\(items[index].wordId)")
         showRecoveryHint = false
         recoveryToken += 1
         let token = recoveryToken
@@ -156,11 +157,13 @@ struct DictationView: View {
         Task {
             try? await Task.sleep(for: .seconds(6))
             guard token == recoveryToken, player.isBusy else { return } // wrapped up normally
+            DevLog.log("DictationView recovery hint shown index=\(index) (still busy after 6s)")
             showRecoveryHint = true
         }
     }
 
     private func forceRetry(index: Int) {
+        DevLog.log("DictationView forceRetry tapped index=\(index)")
         player.stop()
         playCurrent(index: index)
     }

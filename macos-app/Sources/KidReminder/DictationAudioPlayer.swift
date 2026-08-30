@@ -31,16 +31,24 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         let token = playToken
         self.onFinish = onFinish
         isLoading = true
+        DevLog.log("play() token=\(token) url=\(url.lastPathComponent)")
         Task {
             do {
+                let start = Date()
                 let (data, response) = try await URLSession.shared.data(from: url)
-                guard token == playToken else { return } // superseded while we were fetching
+                let elapsed = Date().timeIntervalSince(start)
+                guard token == playToken else {
+                    DevLog.log("play() token=\(token) fetch done after \(elapsed)s but superseded (current token=\(playToken)) — ignoring")
+                    return // superseded while we were fetching
+                }
                 // `data(from:)` only throws for network-level failures — a 5xx from our own
                 // server (e.g. the shared TTS service was briefly backlogged) still "succeeds"
                 // here, with the JSON error body as `data`. Feeding that to AVAudioPlayer used
                 // to sometimes leave it stuck reporting isPlaying with no audio and no finish
                 // callback (no valid audio to finish playing), instead of failing loudly — so
                 // check the status explicitly rather than trusting any 200-byte response is audio.
+                let statusCode = (response as? HTTPURLResponse)?.statusCode
+                DevLog.log("play() token=\(token) fetch done in \(elapsed)s status=\(statusCode.map(String.init) ?? "?") bytes=\(data.count)")
                 if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
                     throw APIError.status(http.statusCode)
                 }
@@ -49,6 +57,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
                 p.delegate = self
                 player = p
                 isPlaying = p.play()
+                DevLog.log("play() token=\(token) AVAudioPlayer created duration=\(p.duration)s play()->\(isPlaying)")
                 if !isPlaying {
                     finish()
                 } else {
@@ -56,6 +65,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
                 }
             } catch {
                 guard token == playToken else { return }
+                DevLog.log("play() token=\(token) failed: \(error)")
                 isLoading = false
                 finish()
             }
@@ -71,18 +81,21 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
     // clip's own duration if the delegate hasn't already done so by then.
     private func armSafetyNet(for p: AVAudioPlayer, token: Int) {
         let deadline = p.duration + 1.5
+        DevLog.log("armSafetyNet token=\(token) deadline=\(deadline)s")
         Task {
             try? await Task.sleep(for: .seconds(deadline))
-            guard token == self.playToken, self.isPlaying else { return } // already handled normally
-            #if DEBUG
-            print("[DictationAudioPlayer] safety-net fired — delegate never called finish()")
-            #endif
+            guard token == self.playToken, self.isPlaying else {
+                DevLog.log("armSafetyNet token=\(token) fired but already handled (token now \(self.playToken), isPlaying=\(self.isPlaying))")
+                return // already handled normally
+            }
+            DevLog.log("armSafetyNet token=\(token) FIRED — delegate never called finish()")
             self.finish()
         }
     }
 
     func stop() {
         playToken += 1
+        DevLog.log("stop() new token=\(playToken) hadPlayer=\(player != nil)")
         player?.stop()
         player = nil
         isLoading = false
@@ -91,12 +104,15 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
 
     nonisolated func audioPlayerDidFinishPlaying(_ finishedPlayer: AVAudioPlayer, successfully flag: Bool) {
         Task { @MainActor in
-            guard finishedPlayer === self.player else { return } // stale/superseded player
+            let isCurrent = finishedPlayer === self.player
+            DevLog.log("audioPlayerDidFinishPlaying successfully=\(flag) isCurrentPlayer=\(isCurrent)")
+            guard isCurrent else { return } // stale/superseded player
             finish()
         }
     }
 
     private func finish() {
+        DevLog.log("finish() token=\(playToken)")
         isPlaying = false
         isLoading = false
         let cb = onFinish
