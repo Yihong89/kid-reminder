@@ -175,6 +175,15 @@
   #engDialog textarea { width:100%; font-size:15px; padding:9px 10px; border:1px solid var(--border); border-radius:10px; font-family:inherit; resize:vertical; }
   #engDialog .opt-row { display:flex; gap:6px; }
   #engDialog .opt-row input { flex:1; }
+  /* English practice-set records (read-only, self-graded) */
+  .eng-rec-item .prompt { font-size:14px; font-weight:600; line-height:1.4; }
+  .eng-rec-item .answer-line { font-size:12px; color:var(--muted); margin-top:3px; }
+  .eng-rec-item .answer-line b { color:var(--ink); font-weight:600; }
+  .eng-rec-item .explain { font-size:12px; color:var(--muted); margin-top:3px; font-style:italic; }
+  .result-mark { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; font-size:16px; border:1px solid var(--border); flex-shrink:0; }
+  .result-mark.correct { background:#ecfdf5; border-color:#a7f3d0; }
+  .result-mark.incorrect { background:var(--urgent-bg); border-color:var(--urgent-bd); }
+  .badge.overridden { background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9; margin-top:4px; }
 </style>
 </head>
 <body>
@@ -202,6 +211,7 @@
       <button class="tab" id="tabVocab" hidden>📚 生词库</button>
       <button class="tab" id="tabDictation" hidden>📝 听写记录</button>
       <button class="tab" id="tabEnglish" hidden>📖 英语错题</button>
+      <button class="tab" id="tabEngRecords" hidden>📋 英语练习记录</button>
     </div>
 
     <!-- Today view -->
@@ -300,6 +310,14 @@
       <div class="card">
         <div class="vocab-summary" id="dictSummary"></div>
         <div class="vocab-list" id="dictList"></div>
+      </div>
+    </div>
+
+    <!-- English practice-set records view (self-graded, read-only) -->
+    <div id="engRecordsView" hidden>
+      <div class="card">
+        <div class="vocab-summary" id="engRecSummary"></div>
+        <div class="vocab-list" id="engRecList"></div>
       </div>
     </div>
 
@@ -436,6 +454,14 @@
   <div class="row">
     <button class="ghost" id="gradeDlgCancel">Cancel</button>
     <button class="primary" id="gradeDlgSubmit">提交批改</button>
+  </div>
+</dialog>
+
+<dialog id="engRecordDialog" class="grade-dialog">
+  <h3 id="engRecDlgTitle">📋 英语练习记录</h3>
+  <div id="engRecItems"></div>
+  <div class="row">
+    <button class="ghost" id="engRecDlgClose">关闭</button>
   </div>
 </dialog>
 
@@ -836,13 +862,15 @@
     $("#tabVocab").classList.toggle("active", t === "vocab");
     $("#tabDictation").classList.toggle("active", t === "dictation");
     $("#tabEnglish").classList.toggle("active", t === "english");
+    $("#tabEngRecords").classList.toggle("active", t === "engRecords");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
     $("#vocabView").hidden = t !== "vocab";
     $("#dictationView").hidden = t !== "dictation";
     $("#englishView").hidden = t !== "english";
-    $("#fabAdd").hidden = t === "vocab" || t === "dictation" || t === "english"; // task FAB doesn't apply to these tabs
+    $("#engRecordsView").hidden = t !== "engRecords";
+    $("#fabAdd").hidden = t === "vocab" || t === "dictation" || t === "english" || t === "engRecords"; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
     $("#fabAddEnglish").hidden = t !== "english";
     if (t === "today") { refresh(); refreshDayFlags(); }
@@ -850,7 +878,8 @@
     else if (t === "pokedex") { loadPokedex(); }
     else if (t === "vocab") { vocabOffset = 0; refreshVocab(); }
     else if (t === "english") { engOffset = 0; refreshEnglish(); }
-    else { refreshDictation(); }
+    else if (t === "dictation") { refreshDictation(); }
+    else { refreshEngRecords(); }
   }
 
   async function refresh() {
@@ -1227,6 +1256,88 @@
     } catch (e) { $("#gradeDlgErr").textContent = e.message; }
   };
 
+  // ---- 英语练习记录（自动批改，纯只读） --------------------------------
+  async function refreshEngRecords() {
+    try {
+      const data = await api("/api/english/sessions"); // full history, not just completed
+      const el = $("#engRecList");
+      el.innerHTML = "";
+      if (!data.sessions.length) {
+        $("#engRecSummary").textContent = "";
+        el.innerHTML = '<div class="empty">孩子还没有做过英语错题练习</div>';
+        return;
+      }
+      const inProgress = data.sessions.filter((s) => s.status === "in_progress").length;
+      $("#engRecSummary").textContent = `共 ${data.sessions.length} 次练习记录` + (inProgress ? ` · ${inProgress} 次进行中` : "");
+      for (const s of data.sessions) el.appendChild(engRecordRow(s));
+    } catch (e) { showErr(e.message); }
+  }
+
+  function engRecordRow(s) {
+    const row = document.createElement("div");
+    row.className = "card dict-session";
+    const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
+    let badge, sub;
+    if (s.status === "completed") {
+      badge = `<div class="badge">✅ ${s.correctCount}/${s.itemCount} 对</div>`;
+      sub = `完成于 ${when.toLocaleString()}`;
+    } else {
+      badge = '<div class="badge parent">⏳ 进行中</div>';
+      sub = "孩子还没有做完这次练习";
+      row.style.opacity = ".6";
+    }
+    row.innerHTML = `
+      <div class="icon">📖</div>
+      <div class="info">
+        <div class="count">${s.itemCount} 道题</div>
+        <div class="when">${sub}</div>
+      </div>
+      ${badge}
+      <button class="del" title="删除这条练习记录">🗑</button>`;
+    if (s.status !== "in_progress") row.onclick = () => openEngRecordDialog(s.id);
+    row.querySelector(".del").onclick = async (e) => {
+      e.stopPropagation();
+      if (!confirm(`删除这条练习记录（${s.itemCount} 道题）？`)) return;
+      try { await api(`/api/english/sessions/${s.id}`, { method: "DELETE" }); refreshEngRecords(); }
+      catch (err) { showErr(err.message); }
+    };
+    return row;
+  }
+
+  async function openEngRecordDialog(sessionId) {
+    try {
+      const data = await api(`/api/english/sessions/${sessionId}`);
+      $("#engRecDlgTitle").textContent = `📋 英语练习记录（共 ${data.items.length} 题，${data.session.correctCount ?? data.items.filter((i) => i.result === "correct").length}/${data.items.length} 对）`;
+      const el = $("#engRecItems");
+      el.innerHTML = "";
+      for (const it of data.items) el.appendChild(engRecordItemRow(it));
+      $("#engRecordDialog").showModal();
+    } catch (e) { showErr(e.message); }
+  }
+
+  function engRecordItemRow(it) {
+    const row = document.createElement("div");
+    row.className = "grade-item eng-rec-item";
+    const promptHtml = escapeHtml(it.prompt).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+    const answerShown = it.answer ? escapeHtml(it.answer) : "(未作答)";
+    const explainHtml = it.explanation ? `<div class="explain">💡 ${escapeHtml(it.explanation)}</div>` : "";
+    const overriddenBadge = it.overridden ? '<div class="badge overridden">已纠正</div>' : "";
+    row.innerHTML = `
+      <div class="seq">${it.seq}</div>
+      <div class="info">
+        <div class="prompt">${promptHtml}</div>
+        <div class="answer-line">你的答案：<b>${answerShown}</b>　正确答案：<b>${escapeHtml(it.correct_answer)}</b></div>
+        ${explainHtml}
+      </div>
+      <div class="grade-toggle">
+        <span class="result-mark ${it.result}">${it.result === "correct" ? "✓" : "✗"}</span>
+        ${overriddenBadge}
+      </div>`;
+    return row;
+  }
+
+  $("#engRecDlgClose").onclick = () => $("#engRecordDialog").close();
+
   function showErr(msg) {
     $("#err").textContent = msg;
     setTimeout(() => { $("#err").textContent = ""; }, 4000);
@@ -1268,6 +1379,8 @@
     $("#tabDictation").hidden = role !== "admin"; // 听写记录：仅家长可见
     $("#tabEnglish").onclick = () => setTab("english");
     $("#tabEnglish").hidden = role !== "admin"; // 英语错题管理：仅家长可见（孩子在App里录入新错题）
+    $("#tabEngRecords").onclick = () => setTab("engRecords");
+    $("#tabEngRecords").hidden = role !== "admin"; // 英语练习记录：仅家长可见
     $("#unlockBtn").onclick = unlockPokemon;
     $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();

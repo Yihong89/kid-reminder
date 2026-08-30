@@ -30,6 +30,9 @@
 //   POST /api/english/sessions/:id/items/:itemId/submit   -> auto-graded answer
 //   POST /api/english/sessions/:id/items/:itemId/override -> flip a verdict once
 //   POST /api/english/sessions/:id/complete -> mark a practice set finished
+//   GET  /api/english/sessions             -> list practice-set history (?status=) [X-Admin-Pin]
+//   GET  /api/english/sessions/:id         -> practice-set detail w/ answers       [X-Admin-Pin]
+//   DELETE /api/english/sessions/:id       -> delete a practice-set record         [X-Admin-Pin]
 //   GET  /english-audio/:id.wav           -> TTS audio for a spelling question (cached)
 //
 // Env vars: PORT (default 2021), ADMIN_PIN (default 1234), DB_PATH,
@@ -1207,6 +1210,57 @@ const server = http.createServer(async (req, res) => {
     if (engCompleteMatch && method === "POST") {
       const id = Number(engCompleteMatch[1]);
       const info = db.prepare("UPDATE english_quiz_sessions SET status = 'completed', completed_at = datetime('now') WHERE id = ?").run(id);
+      if (!info.changes) return sendJSON(404, { error: "session not found" });
+      return sendJSON(200, { ok: true });
+    }
+
+    // --- list practice-set history: all by default, or filter by ?status= (admin only) ---
+    if (method === "GET" && pathname === "/api/english/sessions") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const status = url.searchParams.get("status") || "";
+      const where = status ? "WHERE status = ?" : "";
+      const rows = db
+        .prepare(
+          `SELECT s.id, s.status, s.created_at, s.completed_at,
+                  COUNT(i.id) itemCount,
+                  SUM(CASE WHEN i.result = 'correct' THEN 1 ELSE 0 END) correctCount,
+                  SUM(CASE WHEN i.result = 'incorrect' THEN 1 ELSE 0 END) incorrectCount
+           FROM english_quiz_sessions s LEFT JOIN english_quiz_items i ON i.session_id = s.id
+           ${where} GROUP BY s.id ORDER BY s.created_at DESC`
+        )
+        .all(...(status ? [status] : []));
+      return sendJSON(200, { sessions: rows });
+    }
+
+    // --- practice-set detail: ordered items joined to their question (admin only) ---
+    const engSessDetailMatch = pathname.match(/^\/api\/english\/sessions\/(\d+)$/);
+    if (engSessDetailMatch && method === "GET") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const id = Number(engSessDetailMatch[1]);
+      const session = db.prepare("SELECT * FROM english_quiz_sessions WHERE id = ?").get(id);
+      if (!session) return sendJSON(404, { error: "session not found" });
+      const items = db
+        .prepare(
+          `SELECT i.id, i.seq, i.answer, i.result, i.overridden,
+                  q.id question_id, q.type, q.topic, q.prompt, q.options, q.correct_answer, q.explanation
+           FROM english_quiz_items i JOIN english_questions q ON q.id = i.question_id
+           WHERE i.session_id = ? ORDER BY i.seq`
+        )
+        .all(id)
+        .map((r) => ({ ...r, options: r.options ? JSON.parse(r.options) : null }));
+      return sendJSON(200, { session, items });
+    }
+
+    // --- delete a practice-set record (any status — abandoned in_progress ones the kid
+    // never finished, or just old history the parent wants to tidy up) (admin only) ---
+    if (engSessDetailMatch && method === "DELETE") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const id = Number(engSessDetailMatch[1]);
+      db.prepare("DELETE FROM english_quiz_items WHERE session_id = ?").run(id);
+      const info = db.prepare("DELETE FROM english_quiz_sessions WHERE id = ?").run(id);
       if (!info.changes) return sendJSON(404, { error: "session not found" });
       return sendJSON(200, { ok: true });
     }
