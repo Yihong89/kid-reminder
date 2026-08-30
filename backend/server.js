@@ -183,12 +183,46 @@ async function synthesizeSpeech(text, instruct = TTS_INSTRUCT) {
 // （见 /api/vocab 的 PATCH/DELETE），下次用到再重新生成。一次重试：TTS 服务和
 // dsh-sister 共用同一条生成队列，偶尔会因为并发繁忙短暂 503，等一下再试一次；两次都
 // 失败就退回本机自带的 say 朗读（音质差很多，但总比按了🔊没反应强）。
+//
+// inFlight 去重：一份听写表生成后会在后台预热整份表的音频（见 precacheDictationAudio），
+// 如果孩子playback的请求和预热请求前后脚打到同一个 word_id，两边都等同一个 Promise，
+// 不会对同一个词并发合成两次、抢同一个文件写。
+const inFlightDictationAudio = new Map(); // word_id -> Promise<string filePath>
 async function ensureDictationAudio(wordId, word, sentence) {
   const file = path.join(DICTATION_AUDIO_DIR, `${wordId}.wav`);
   if (fs.existsSync(file)) return file;
-  const text = `${word}。${sentence}`;
-  await synthesizeToFile(file, text, TTS_INSTRUCT, SAY_VOICE_ZH);
-  return file;
+  if (inFlightDictationAudio.has(wordId)) return inFlightDictationAudio.get(wordId);
+  const promise = (async () => {
+    const text = `${word}。${sentence}`;
+    await synthesizeToFile(file, text, TTS_INSTRUCT, SAY_VOICE_ZH);
+    return file;
+  })();
+  inFlightDictationAudio.set(wordId, promise);
+  try {
+    return await promise;
+  } finally {
+    inFlightDictationAudio.delete(wordId);
+  }
+}
+
+// 后台预热：一份听写表生成/续上后，按听写顺序依次把整份表的音频合成好，这样孩子点
+// "下一题"时大概率已经缓存好，不用现场等 TTS。故意串行（不是 Promise.all 并发炸一遍）——
+// TTS 服务和 dsh-sister 共用同一条生成队列，并发轰炸只会让谁都变慢。已缓存的词
+// ensureDictationAudio 会立刻返回，不占用生成队列。单个词失败不影响其他词继续预热，
+// 也不影响孩子真正播放时按需生成的兜底路径。
+function precacheDictationAudio(wordIds) {
+  const getWord = db.prepare("SELECT word, sentence FROM vocab_words WHERE id = ?");
+  (async () => {
+    for (const wordId of wordIds) {
+      const word = getWord.get(wordId);
+      if (!word) continue;
+      try {
+        await ensureDictationAudio(wordId, word.word, word.sentence);
+      } catch (err) {
+        console.error(`[kid-reminder] precache failed for word ${wordId}: ${err.message}`);
+      }
+    }
+  })();
 }
 function deleteDictationAudio(wordId) {
   try { fs.unlinkSync(path.join(DICTATION_AUDIO_DIR, `${wordId}.wav`)); } catch { /* no cache yet */ }
@@ -885,7 +919,10 @@ const server = http.createServer(async (req, res) => {
       const existing = db.prepare("SELECT id FROM dictation_sessions WHERE status = 'in_progress' ORDER BY created_at DESC LIMIT 1").get();
       if (existing) {
         const items = db.prepare("SELECT seq, word_id AS wordId FROM dictation_items WHERE session_id = ? ORDER BY seq").all(existing.id);
-        if (items.length) return sendJSON(200, { sessionId: existing.id, items });
+        if (items.length) {
+          precacheDictationAudio(items.map((i) => i.wordId));
+          return sendJSON(200, { sessionId: existing.id, items });
+        }
       }
 
       // weakest characters first: average correct_count per character, ascending
@@ -915,6 +952,7 @@ const server = http.createServer(async (req, res) => {
         insertItem.run(sessionId, wordId, i + 1);
         return { seq: i + 1, wordId };
       });
+      precacheDictationAudio(wordIds);
       return sendJSON(201, { sessionId, items });
     }
 
