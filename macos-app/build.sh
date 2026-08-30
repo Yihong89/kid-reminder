@@ -6,16 +6,27 @@ cd "$(dirname "$0")"
 APP_NAME="KidReminder"
 BUNDLE="build/$APP_NAME.app"
 
-echo "=== building (universal, falls back to native arch) ==="
-if swift build -c release --arch arm64 --arch x86_64; then
-  BIN=".build/apple/Products/Release/$APP_NAME"
-else
-  echo "-- universal build failed, trying native arch --"
-  rm -rf .build
-  swift build -c release
-  BIN=".build/release/$APP_NAME"
-fi
-[ -f "$BIN" ] || BIN=".build/release/$APP_NAME"
+echo "=== building (universal: arm64 + x86_64, combined with lipo) ==="
+# NOTE: `swift build --arch arm64 --arch x86_64` in one invocation asks
+# SwiftPM to hand off to xcbuild to produce the fat binary directly, which
+# isn't installed on every machine (plain Xcode Command Line Tools don't
+# ship it). That combo silently fell back to a *single native-arch* build
+# in that case — on an Intel dev machine this produced an x86_64-only
+# binary that then had to run under Rosetta on an Apple Silicon Mac, which
+# crashed inside CoreAudio's audio format converter the first time the app
+# played a sound (a known Rosetta translation issue with that code path,
+# not a bug in KidReminder). Building each arch as its own SwiftPM
+# invocation and combining with `lipo` sidesteps xcbuild entirely and
+# always yields a true universal binary regardless of the host machine.
+swift build -c release --arch arm64
+swift build -c release --arch x86_64
+BIN=".build/apple/Products/Release/$APP_NAME"
+mkdir -p "$(dirname "$BIN")"
+lipo -create \
+  ".build/arm64-apple-macosx/release/$APP_NAME" \
+  ".build/x86_64-apple-macosx/release/$APP_NAME" \
+  -output "$BIN"
+echo "  -> $(lipo -info "$BIN")"
 
 echo "=== assembling $BUNDLE ==="
 rm -rf "$BUNDLE"
@@ -63,7 +74,7 @@ cat > "$BUNDLE/Contents/Info.plist" <<PLIST
     <key>CFBundleDisplayName</key><string>Kid Reminder</string>
     <key>CFBundleIdentifier</key><string>com.kidreminder.mac</string>
     <key>CFBundleVersion</key><string>1</string>
-    <key>CFBundleShortVersionString</key><string>1.6.0</string>
+    <key>CFBundleShortVersionString</key><string>1.6.1</string>
     <key>CFBundleExecutable</key><string>$APP_NAME</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
