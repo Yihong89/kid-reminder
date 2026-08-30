@@ -26,6 +26,7 @@ struct DictationView: View {
     // is guaranteed to work even when the automatic recovery paths don't.
     @State private var showRecoveryHint = false
     @State private var recoveryToken = 0
+    @State private var recoveryHintTimer: Timer?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -159,13 +160,20 @@ struct DictationView: View {
         showRecoveryHint = false
         recoveryToken += 1
         let token = recoveryToken
+        recoveryHintTimer?.invalidate()
         player.play(url: url)
-        Task {
-            try? await Task.sleep(for: .seconds(6))
-            guard token == recoveryToken, player.isBusy else { return } // wrapped up normally
-            DevLog.log("DictationView recovery hint shown index=\(index) (still busy after 6s)")
-            showRecoveryHint = true
+        // Timer, not Task.sleep — dev-log evidence pointed at Task/async scheduling itself
+        // occasionally stalling on this machine (see DictationAudioPlayer.swift), so this
+        // recovery mechanism deliberately avoids the same tool that needed recovering from.
+        let timer = Timer(timeInterval: 6, repeats: false) { _ in
+            MainActor.assumeIsolated {
+                guard token == recoveryToken, player.isBusy else { return } // wrapped up normally
+                DevLog.log("DictationView recovery hint shown index=\(index) (still busy after 6s)")
+                showRecoveryHint = true
+            }
         }
+        RunLoop.main.add(timer, forMode: .common)
+        recoveryHintTimer = timer
     }
 
     private func forceRetry(index: Int) {
@@ -192,6 +200,8 @@ struct DictationView: View {
 
     private func reset() {
         player.stop()
+        recoveryHintTimer?.invalidate()
+        recoveryHintTimer = nil
         session = nil
         phase = .idle
     }

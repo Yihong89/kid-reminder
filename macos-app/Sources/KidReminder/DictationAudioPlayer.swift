@@ -25,50 +25,19 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
     private var onFinish: (() -> Void)?
     private var playToken = 0 // invalidates stale completions from a superseded play()/stop()
     private var activityToken: NSObjectProtocol? // see beginActivity below
-    private var heartbeatTask: Task<Void, Never>?
-    private var heartbeatTimer: Timer?
+    private var safetyNetTimer: Timer?
 
-    // Diagnostic only (not a fix): App Nap prevention didn't resolve the reported delay,
-    // and it got *worse*, not better — so it isn't OS-level throttling. Two independent
-    // heartbeats, on two different scheduling mechanisms, to find out what's actually
-    // stalling: if the Task-based one stalls but the Timer-based one keeps ticking, the
-    // problem is specific to Swift Concurrency's executor, not a true main-thread/RunLoop
-    // freeze (which would affect both equally, and would affect all UI interaction too).
-    private func startHeartbeats(token: Int) {
-        heartbeatTask?.cancel()
-        heartbeatTimer?.invalidate()
-        var taskTick = 0
-        heartbeatTask = Task {
-            while !Task.isCancelled, token == playToken {
-                DevLog.log("heartbeat[task] token=\(token) tick=\(taskTick)")
-                taskTick += 1
-                try? await Task.sleep(for: .seconds(1))
-            }
-        }
-        var timerTick = 0
-        let timer = Timer(timeInterval: 1, repeats: true) { _ in
-            DevLog.log("heartbeat[timer] token=\(token) tick=\(timerTick)")
-            timerTick += 1
-        }
-        RunLoop.main.add(timer, forMode: .common) // .common survives modal/tracking loops too
-        heartbeatTimer = timer
-    }
-    private func stopHeartbeats() {
-        heartbeatTask?.cancel()
-        heartbeatTask = nil
-        heartbeatTimer?.invalidate()
-        heartbeatTimer = nil
-    }
+    // Dev-log evidence from real stuck reports: a dual heartbeat (one Task.sleep-based,
+    // one a classic Foundation Timer, both logging every second during playback) showed
+    // the Timer ticking perfectly regularly throughout a ~20s stall, while the Task-based
+    // one froze solid and only resumed at the exact instant AVAudioPlayerDelegate's own
+    // Task-hop finally fired — the app stayed fully responsive the whole time (the kid
+    // could switch tabs). That rules out a real main-thread freeze and points squarely at
+    // Swift Concurrency's Task scheduling itself occasionally stalling on this machine —
+    // not the audio, not the delegate, not App Nap (tried and it didn't help — made it
+    // worse, in fact). So this file deliberately avoids Task/Task.sleep for anything
+    // time-sensitive: Timer + DispatchQueue.main, which the evidence shows stays reliable.
 
-    // Dev-log evidence from a real stuck report: a plain 6s Task.sleep (recovery-hint
-    // timer, no relation to audio at all) and AVAudioPlayer's own finish delegate both
-    // fired several seconds late — *at the same instant*, well after either was actually
-    // due. Two unrelated timers landing together like that means neither timer itself is
-    // broken; something paused all of the app's scheduled work for a few seconds and then
-    // let it all run at once. The dictation screen is "listen and write on paper" by
-    // design, so the kid isn't touching the app while a clip plays — exactly the profile
-    // macOS's App Nap targets for throttling. Hold off App Nap/idle sleep for the
-    // duration of playback so its timers (and the delegate callback) aren't delayed.
     private func beginActivity() {
         guard activityToken == nil else { return }
         activityToken = ProcessInfo.processInfo.beginActivity(
@@ -120,7 +89,6 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
                     finish()
                 } else {
                     armSafetyNet(for: p, token: token)
-                    startHeartbeats(token: token)
                 }
             } catch {
                 guard token == playToken else { return }
@@ -131,25 +99,25 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         }
     }
 
-    // AVAudioPlayer's finish-delegate is expected to always fire once playback
-    // reaches the end, but has occasionally been observed not to (a reported
-    // symptom: the clip is audibly done, yet the UI stays on "正在朗读" with
-    // 下一题 disabled forever — no known reproduction, and the delegate not
-    // firing isn't something we can fix from here). Rather than leave the kid
-    // stuck indefinitely if it happens again, force-finish a beat after the
-    // clip's own duration if the delegate hasn't already done so by then.
+    // Timer-based, not Task.sleep-based — see the note above. Force-finish a beat after
+    // the clip's own duration if the delegate hasn't already done so by then.
     private func armSafetyNet(for p: AVAudioPlayer, token: Int) {
         let deadline = p.duration + 1.5
         DevLog.log("armSafetyNet token=\(token) deadline=\(deadline)s")
-        Task {
-            try? await Task.sleep(for: .seconds(deadline))
-            guard token == self.playToken, self.isPlaying else {
-                DevLog.log("armSafetyNet token=\(token) fired but already handled (token now \(self.playToken), isPlaying=\(self.isPlaying))")
-                return // already handled normally
+        safetyNetTimer?.invalidate()
+        let timer = Timer(timeInterval: deadline, repeats: false) { [weak self] _ in
+            guard let self else { return }
+            MainActor.assumeIsolated {
+                guard token == self.playToken, self.isPlaying else {
+                    DevLog.log("armSafetyNet token=\(token) fired but already handled (token now \(self.playToken), isPlaying=\(self.isPlaying))")
+                    return // already handled normally
+                }
+                DevLog.log("armSafetyNet token=\(token) FIRED — delegate never called finish()")
+                self.finish()
             }
-            DevLog.log("armSafetyNet token=\(token) FIRED — delegate never called finish()")
-            self.finish()
         }
+        RunLoop.main.add(timer, forMode: .common) // .common survives modal/tracking loops too
+        safetyNetTimer = timer
     }
 
     func stop() {
@@ -160,15 +128,22 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         isLoading = false
         isPlaying = false
         endActivity()
-        stopHeartbeats()
+        safetyNetTimer?.invalidate()
+        safetyNetTimer = nil
     }
 
+    // Dispatches straight to the main queue rather than `Task { @MainActor in ... }` —
+    // the dev-log evidence points at Task-hop scheduling itself as the thing that
+    // occasionally stalls, so this callback (the one thing that absolutely must not be
+    // delayed) deliberately doesn't use it.
     nonisolated func audioPlayerDidFinishPlaying(_ finishedPlayer: AVAudioPlayer, successfully flag: Bool) {
-        Task { @MainActor in
-            let isCurrent = finishedPlayer === self.player
-            DevLog.log("audioPlayerDidFinishPlaying successfully=\(flag) isCurrentPlayer=\(isCurrent)")
-            guard isCurrent else { return } // stale/superseded player
-            finish()
+        DispatchQueue.main.async { [self] in
+            MainActor.assumeIsolated {
+                let isCurrent = finishedPlayer === self.player
+                DevLog.log("audioPlayerDidFinishPlaying successfully=\(flag) isCurrentPlayer=\(isCurrent)")
+                guard isCurrent else { return } // stale/superseded player
+                self.finish()
+            }
         }
     }
 
@@ -177,7 +152,8 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         isPlaying = false
         isLoading = false
         endActivity()
-        stopHeartbeats()
+        safetyNetTimer?.invalidate()
+        safetyNetTimer = nil
         let cb = onFinish
         onFinish = nil
         cb?()
