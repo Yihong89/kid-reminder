@@ -925,16 +925,20 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
-      // weakest characters first: average correct_count per character, ascending
-      const weakChars = db
-        .prepare(`SELECT character, AVG(correct_count) ac FROM vocab_words WHERE language = 'zh' GROUP BY character ORDER BY ac ASC LIMIT 60`)
+      // Character selection: weakest first (lowest average correct_count), lower grade
+      // level breaks ties (MIN(level) — a character can recur across levels; use the
+      // earliest one it's taught at), and RANDOM() as the final tiebreaker so characters
+      // tied on both of those don't always come out in the same order. SQLite evaluates
+      // ORDER BY expressions once per row before sorting, so RANDOM() here really is one
+      // fixed value per character for this query, not re-rolled per comparison.
+      const chosenChars = db
+        .prepare(
+          `SELECT character FROM vocab_words WHERE language = 'zh'
+           GROUP BY character ORDER BY AVG(correct_count) ASC, MIN(level) ASC, RANDOM() ASC LIMIT 10`
+        )
         .all()
         .map((r) => r.character);
-      if (weakChars.length === 0) return sendJSON(400, { error: "vocab bank is empty" });
-      // randomly sample up to 10 characters from that weak pool
-      const pool = weakChars.slice();
-      for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
-      const chosenChars = pool.slice(0, Math.min(10, pool.length));
+      if (chosenChars.length === 0) return sendJSON(400, { error: "vocab bank is empty" });
 
       // up to 3 random words per chosen character
       const wordIds = [];
