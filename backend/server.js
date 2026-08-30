@@ -821,6 +821,11 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (method === "DELETE") {
+        // a word referenced by past dictation_items (even an old graded session) used to
+        // fail here with a raw "FOREIGN KEY constraint failed" 500 — deleting a word the
+        // parent explicitly asked to remove is more useful than blocking on stale history
+        // that references it, so clear those references first.
+        db.prepare("DELETE FROM dictation_items WHERE word_id = ?").run(id);
         const info = db.prepare("DELETE FROM vocab_words WHERE id = ?").run(id);
         if (!info.changes) return sendJSON(404, { error: "word not found" });
         deleteDictationAudio(id);
@@ -1067,6 +1072,9 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (method === "DELETE") {
+        // same reasoning as the vocab_words delete: don't let old quiz history block
+        // deleting a question the parent explicitly asked to remove.
+        db.prepare("DELETE FROM english_quiz_items WHERE question_id = ?").run(id);
         const info = db.prepare("DELETE FROM english_questions WHERE id = ?").run(id);
         if (!info.changes) return sendJSON(404, { error: "question not found" });
         deleteEnglishAudio(id);
