@@ -93,14 +93,63 @@ Admin panel features:
 - **Countdown** — set a target date on a future task (e.g. an exam). Within the
   `countdownStart` window it shows a live `⏳ Nd` countdown, `📅 Today!` on the day,
   and `⏰ Nd ago` once passed. Future events can't be checked off until their day.
+- **Navigation** — tabs live in a left sidebar on wide screens; on narrow ones (phones)
+  they collapse to a wrapped row above the content instead of squeezing into one line.
+
+## Chinese dictation (听写)
+
+A vocabulary word bank (character, compound word, pinyin, example sentence — tagged
+识读/识写 and by grade level) drives adaptive listening-test sessions:
+
+- **Weakest-first** — each session pulls 10 words from the characters the kid has
+  gotten wrong most often (lowest `correct_count`), shuffled.
+- **Audio only, no text** — the kid hears the word + sentence read aloud (TTS, see
+  below) and writes it down; nothing is shown on screen during the test.
+- **Parent grading** — once the kid finishes, the session sits as *pending grading*
+  until the parent marks each word ✓/✗ on the web admin, which updates that word's
+  weak/strong count for future sessions.
+- **Web admin** — `📚 生词库` tab (full word-bank CRUD) and `📝 听写记录` tab (session
+  history: graded / pending / abandoned, with a delete button for cleanup).
+
+## English wrong-answer practice (英语错题练习)
+
+A question bank (`english_questions`) built from the kid's own real mistakes —
+fill-in-the-blank/spelling, multiple choice, and sentence-transformation questions,
+each carrying the correct answer and a short explanation.
+
+- **Self-graded** — typed/tapped answers are checked automatically against the
+  correct answer (supports multiple accepted alternatives); no parent step needed.
+  Uses the same weakest-first adaptive selection as dictation.
+- **Spelling audio** — fill-blank questions flagged as spelling-worthy get a 🔊
+  button that reads the completed sentence aloud.
+- **Self-override** — for sentence-transformation items where the auto-grader is too
+  strict, the kid can flip the verdict once after seeing the correct answer.
+- **Web admin** — `📖 英语错题` tab (bank CRUD) and `📋 英语练习记录` tab (read-only
+  session history, since grading is automatic).
+- **macOS app** — take a practice set, or log a brand-new mistake straight from the
+  app via an **➕ add a mistake** form (writes into the same shared bank the web
+  admin manages).
+- **Kept in sync automatically** — the kid keeps a running mistake log in a private
+  GitHub repo; a weekly job on the Mac Mini pulls it and imports any new entries
+  (idempotent, so re-runs are harmless). See
+  [`tools/english-wrong-answers/README.md`](tools/english-wrong-answers/README.md).
+
+### Text-to-speech
+
+Dictation and spelling audio are synthesized by a private neural TTS service
+(Qwen3-TTS) running alongside the backend, cached to disk per word/question so
+each one is only generated once. If that service is busy or unavailable, the
+backend automatically falls back to macOS's built-in `say` voices — lower
+quality, but instant and always available, so the 🔊 button never just goes dead.
 
 ## macOS app
 
 Native SwiftUI app (`macos-app/`). **Today** checklist, **Calendar** (month view
 with completion dots + pink countdown-event markers; click any day to inspect
-its tasks), **Countdown** panel, and a **Settings** view where the server IP,
-port, and PIN are configured — changes apply immediately (no restart needed).
-The build produces a signed `.app` with a custom icon (from `Resources/AppIcon.svg`).
+its tasks), **Countdown** panel, **听写** (dictation) and **英语错题** (English
+practice) tabs, and a **Settings** view where the server IP, port, and PIN are
+configured — changes apply immediately (no restart needed). The build produces a
+signed `.app` with a custom icon (from `Resources/AppIcon.svg`).
 
 ### Download the app
 
