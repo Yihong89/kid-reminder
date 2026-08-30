@@ -19,6 +19,13 @@ struct DictationView: View {
 
     @State private var phase: Phase = .idle
     @State private var session: DictationSession?
+    // If playback (loading or actually playing) doesn't wrap up within a few seconds,
+    // offer a manual way out — covers whatever's actually stuck (network hang, a
+    // rare AVAudioPlayer finish-delegate that never fires, anything else) without
+    // needing to know which. `stop()` always resets the player's own state, so this
+    // is guaranteed to work even when the automatic recovery paths don't.
+    @State private var showRecoveryHint = false
+    @State private var recoveryToken = 0
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -96,6 +103,12 @@ struct DictationView: View {
                 .buttonStyle(.borderedProminent)
                 .disabled(player.isBusy)
             }
+            if showRecoveryHint {
+                Button("卡住了？点这里重试这道题") { forceRetry(index: index) }
+                    .font(.footnote)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
+            }
         }
         .task(id: index) { if index == 0 { playCurrent(index: index) } }
     }
@@ -136,7 +149,20 @@ struct DictationView: View {
     private func playCurrent(index: Int) {
         guard let items = session?.items, items.indices.contains(index),
               let url = api.dictationAudioURL(wordId: items[index].wordId) else { return }
+        showRecoveryHint = false
+        recoveryToken += 1
+        let token = recoveryToken
         player.play(url: url)
+        Task {
+            try? await Task.sleep(for: .seconds(6))
+            guard token == recoveryToken, player.isBusy else { return } // wrapped up normally
+            showRecoveryHint = true
+        }
+    }
+
+    private func forceRetry(index: Int) {
+        player.stop()
+        playCurrent(index: index)
     }
 
     private func advance(to index: Int) {
