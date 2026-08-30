@@ -25,6 +25,40 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
     private var onFinish: (() -> Void)?
     private var playToken = 0 // invalidates stale completions from a superseded play()/stop()
     private var activityToken: NSObjectProtocol? // see beginActivity below
+    private var heartbeatTask: Task<Void, Never>?
+    private var heartbeatTimer: Timer?
+
+    // Diagnostic only (not a fix): App Nap prevention didn't resolve the reported delay,
+    // and it got *worse*, not better — so it isn't OS-level throttling. Two independent
+    // heartbeats, on two different scheduling mechanisms, to find out what's actually
+    // stalling: if the Task-based one stalls but the Timer-based one keeps ticking, the
+    // problem is specific to Swift Concurrency's executor, not a true main-thread/RunLoop
+    // freeze (which would affect both equally, and would affect all UI interaction too).
+    private func startHeartbeats(token: Int) {
+        heartbeatTask?.cancel()
+        heartbeatTimer?.invalidate()
+        var taskTick = 0
+        heartbeatTask = Task {
+            while !Task.isCancelled, token == playToken {
+                DevLog.log("heartbeat[task] token=\(token) tick=\(taskTick)")
+                taskTick += 1
+                try? await Task.sleep(for: .seconds(1))
+            }
+        }
+        var timerTick = 0
+        let timer = Timer(timeInterval: 1, repeats: true) { _ in
+            DevLog.log("heartbeat[timer] token=\(token) tick=\(timerTick)")
+            timerTick += 1
+        }
+        RunLoop.main.add(timer, forMode: .common) // .common survives modal/tracking loops too
+        heartbeatTimer = timer
+    }
+    private func stopHeartbeats() {
+        heartbeatTask?.cancel()
+        heartbeatTask = nil
+        heartbeatTimer?.invalidate()
+        heartbeatTimer = nil
+    }
 
     // Dev-log evidence from a real stuck report: a plain 6s Task.sleep (recovery-hint
     // timer, no relation to audio at all) and AVAudioPlayer's own finish delegate both
@@ -86,6 +120,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
                     finish()
                 } else {
                     armSafetyNet(for: p, token: token)
+                    startHeartbeats(token: token)
                 }
             } catch {
                 guard token == playToken else { return }
@@ -125,6 +160,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         isLoading = false
         isPlaying = false
         endActivity()
+        stopHeartbeats()
     }
 
     nonisolated func audioPlayerDidFinishPlaying(_ finishedPlayer: AVAudioPlayer, successfully flag: Bool) {
@@ -141,6 +177,7 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         isPlaying = false
         isLoading = false
         endActivity()
+        stopHeartbeats()
         let cb = onFinish
         onFinish = nil
         cb?()
