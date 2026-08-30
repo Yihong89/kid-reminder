@@ -21,10 +21,22 @@
   .date-line { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
   .date-line .date { color:var(--muted); font-size:14px; }
   .date-line button { background:none; border:1px solid var(--border); border-radius:8px; padding:4px 10px; font-size:13px; cursor:pointer; color:var(--ink); }
-  .tabs { display:flex; gap:8px; margin-bottom:14px; }
-  .tabs .tab { flex:1; background:var(--card); border:1px solid var(--border); border-radius:10px;
-               padding:9px 0; font-size:15px; font-weight:600; cursor:pointer; color:var(--muted); }
-  .tabs .tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  /* Wide screens: left sidebar nav + content column. .wrap widens to fit both
+     (see the min-width media query below); narrower screens (phones) fall back
+     to a wrapped horizontal button row above the content — see the max-width
+     query — so a growing tab list never gets cramped in either layout. */
+  .layout { display:flex; align-items:flex-start; gap:24px; }
+  .sidebar { display:flex; flex-direction:column; gap:6px; width:168px; flex-shrink:0; position:sticky; top:24px; }
+  .content { flex:1 1 auto; min-width:0; max-width:560px; }
+  .sidebar .tab { width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:10px;
+                  padding:10px 14px; font-size:14px; font-weight:600; cursor:pointer; color:var(--muted); }
+  .sidebar .tab.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+  @media (min-width: 721px) { .wrap { max-width:820px; } }
+  @media (max-width: 720px) {
+    .layout { flex-direction:column; gap:0; }
+    .sidebar { flex-direction:row; flex-wrap:wrap; width:auto; gap:8px; margin-bottom:14px; position:static; }
+    .sidebar .tab { flex:1 1 auto; width:auto; text-align:center; padding:9px 12px; }
+  }
   .card { background:var(--card); border:1px solid var(--border); border-radius:14px;
           padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 2px rgba(20,30,60,.04); }
   /* calendar */
@@ -204,16 +216,18 @@
 
   <!-- main -->
   <div id="main" hidden>
-    <div class="tabs">
-      <button class="tab active" id="tabToday">📋 Today</button>
-      <button class="tab" id="tabCountdown">⏳ Countdown</button>
-      <button class="tab" id="tabPokedex">⚡ Pokémon</button>
-      <button class="tab" id="tabVocab" hidden>📚 生词库</button>
-      <button class="tab" id="tabDictation" hidden>📝 听写记录</button>
-      <button class="tab" id="tabEnglish" hidden>📖 英语错题</button>
-      <button class="tab" id="tabEngRecords" hidden>📋 英语练习记录</button>
-    </div>
+    <div class="layout">
+      <nav class="sidebar">
+        <button class="tab active" id="tabToday">📋 Today</button>
+        <button class="tab" id="tabCountdown">⏳ Countdown</button>
+        <button class="tab" id="tabPokedex">⚡ Pokémon</button>
+        <button class="tab" id="tabVocab" hidden>📚 生词库</button>
+        <button class="tab" id="tabDictation" hidden>📝 听写记录</button>
+        <button class="tab" id="tabEnglish" hidden>📖 英语错题</button>
+        <button class="tab" id="tabEngRecords" hidden>📋 英语练习记录</button>
+      </nav>
 
+      <div class="content">
     <!-- Today view -->
     <div id="todayView">
       <div class="date-line">
@@ -338,6 +352,8 @@
     <div class="msg err" id="err"></div>
 
     <p class="hint">Use <b>＋</b> to add a task. Parent-created tasks can only be removed by the parent.</p>
+      </div>
+    </div>
   </div>
 
 </div>
