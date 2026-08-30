@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Template for the weekly wrong-answers.md sync job. Not auto-installed —
+  copy to ~/Library/LaunchAgents/ on the Mac Mini and
+  `launchctl load ~/Library/LaunchAgents/com.kidreminder.wronganswers-sync.plist`.
+  See README.md for the full setup (token file, script location).
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.kidreminder.wronganswers-sync</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/robot/kidreminder/english-sync/sync.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Weekday</key>
+        <integer>0</integer>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/robot/kidreminder/english-sync/sync.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/robot/kidreminder/english-sync/sync.log</string>
+</dict>
+</plist>
