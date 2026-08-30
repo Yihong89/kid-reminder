@@ -15,7 +15,7 @@
 //   POST /api/vocab                       -> add a word                      [X-Admin-Pin]
 //   PATCH /api/vocab/:id                  -> edit a word                     [X-Admin-Pin]
 //   DELETE /api/vocab/:id                 -> delete a word                   [X-Admin-Pin]
-//   POST /api/dictation/sessions          -> generate a listening test       (kid app)
+//   POST /api/dictation/sessions          -> resume in_progress, else generate new (kid app)
 //   POST /api/dictation/sessions/:id/complete -> kid finished, awaiting grading
 //   GET  /api/dictation/sessions          -> list sessions (?status=)        [X-Admin-Pin]
 //   GET  /api/dictation/sessions/:id      -> session detail w/ answers       [X-Admin-Pin]
@@ -876,6 +876,18 @@ const server = http.createServer(async (req, res) => {
 
     // --- dictation sessions: generate a listening-test set (open; kid app calls this) ---
     if (method === "POST" && pathname === "/api/dictation/sessions") {
+      // Resume an existing in_progress session instead of always starting a new one —
+      // the app's dictation view is torn down and rebuilt whenever the kid switches
+      // sidebar tabs (or if it gets stuck and they navigate away to recover), which used
+      // to silently abandon the in-flight session and spawn a fresh one every time,
+      // permanently losing progress. Replaying already-heard words from the top is a
+      // minor annoyance; losing the set entirely is not.
+      const existing = db.prepare("SELECT id FROM dictation_sessions WHERE status = 'in_progress' ORDER BY created_at DESC LIMIT 1").get();
+      if (existing) {
+        const items = db.prepare("SELECT seq, word_id AS wordId FROM dictation_items WHERE session_id = ? ORDER BY seq").all(existing.id);
+        if (items.length) return sendJSON(200, { sessionId: existing.id, items });
+      }
+
       // weakest characters first: average correct_count per character, ascending
       const weakChars = db
         .prepare(`SELECT character, AVG(correct_count) ac FROM vocab_words WHERE language = 'zh' GROUP BY character ORDER BY ac ASC LIMIT 60`)
