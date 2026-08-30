@@ -1,0 +1,14 @@
+{
+  "name": "vocab-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-off tool: scrapes the SGSchoolKaki PSLE Chinese word bank (character -> compound words + pinyin + example sentences) into a local JSON cache for kid-reminder's dictation feature.",
+  "type": "commonjs",
+  "scripts": {
+    "scrape": "node scrape.js",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

@@ -76,6 +76,19 @@ struct StatsInfo: Codable {
     }
 }
 
+// MARK: - Dictation (听写)
+
+struct DictationItemRef: Codable, Identifiable {
+    let seq: Int
+    let wordId: Int
+    var id: Int { wordId }
+}
+
+struct DictationSession: Codable {
+    let sessionId: Int
+    let items: [DictationItemRef]
+}
+
 struct UnlockResponse: Codable {
     let ok: Bool
     let pokemon: PokemonInfo

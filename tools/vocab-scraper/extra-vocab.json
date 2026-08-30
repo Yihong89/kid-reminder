@@ -1,0 +1,115 @@
+[
+  {"level":"P6","lessonIndex":11,"lesson":"第十一课","category":"write","character":"丧","word":"丧失","pinyin":"sàng shī","sentence":"他因为一场意外丧失了双腿的知觉，但仍然乐观面对生活。"},
+  {"level":"P6","lessonIndex":11,"lesson":"第十一课","category":"write","character":"丧","word":"沮丧","pinyin":"jǔ sàng","sentence":"比赛输了以后，同学们都很沮丧，教练鼓励大家不要放弃。"},
+
+  {"level":"P6","lessonIndex":6,"lesson":"第六课","category":"write","character":"伏","word":"埋伏","pinyin":"mái fú","sentence":"猎人在草丛里埋伏了好几个小时，终于等到猎物出现。"},
+  {"level":"P6","lessonIndex":6,"lesson":"第六课","category":"write","character":"伏","word":"起伏","pinyin":"qǐ fú","sentence":"这篇故事情节起伏，让读者忍不住一口气读完。"},
+
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"允","word":"允许","pinyin":"yǔn xǔ","sentence":"妈妈允许我星期六和朋友去图书馆看书。"},
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"允","word":"允诺","pinyin":"yǔn nuò","sentence":"他向老师允诺，以后一定会按时完成作业。"},
+
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"副","word":"副班长","pinyin":"fù bān zhǎng","sentence":"小美被选为副班长，负责协助班长处理班级事务。"},
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"副","word":"副作用","pinyin":"fù zuò yòng","sentence":"医生提醒他，这种药可能会有副作用，服用前要多加注意。"},
+
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"博","word":"博物馆","pinyin":"bó wù guǎn","sentence":"我们上个星期去了国家博物馆，参观了许多古老的文物。"},
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"博","word":"博士","pinyin":"bó shì","sentence":"他从小努力读书，长大后成为了一名受人尊敬的博士。"},
+
+  {"level":"P5","lessonIndex":17,"lesson":"第十七课","category":"read","character":"即","word":"即使","pinyin":"jí shǐ","sentence":"即使下大雨，同学们还是准时到校上课。"},
+  {"level":"P5","lessonIndex":17,"lesson":"第十七课","category":"read","character":"即","word":"立即","pinyin":"lì jí","sentence":"老师一发现火警，就立即带领学生疏散到操场。"},
+
+  {"level":"P5","lessonIndex":9,"lesson":"第九课","category":"write","character":"叮","word":"叮咛","pinyin":"dīng níng","sentence":"出门前，妈妈再三叮咛我要小心过马路。"},
+  {"level":"P5","lessonIndex":9,"lesson":"第九课","category":"write","character":"叮","word":"叮嘱","pinyin":"dīng zhǔ","sentence":"老师叮嘱我们考试时要仔细检查答案。"},
+
+  {"level":"P6","lessonIndex":11,"lesson":"第十一课","category":"write","character":"垂","word":"垂直","pinyin":"chuí zhí","sentence":"老师在黑板上画了一条垂直的线，教我们认识直角。"},
+  {"level":"P6","lessonIndex":11,"lesson":"第十一课","category":"write","character":"垂","word":"垂钓","pinyin":"chuí diào","sentence":"爷爷喜欢在湖边垂钓，一坐就是一个下午。"},
+
+  {"level":"P5","lessonIndex":14,"lesson":"第十四课","category":"write","character":"委","word":"委屈","pinyin":"wěi qu","sentence":"小华觉得很委屈，因为老师误会了他没有做作业。"},
+  {"level":"P5","lessonIndex":14,"lesson":"第十四课","category":"write","character":"委","word":"委员","pinyin":"wěi yuán","sentence":"她被选为班级的图书馆委员，负责整理班上的书籍。"},
+
+  {"level":"P5","lessonIndex":4,"lesson":"第四课","category":"write","character":"宁","word":"宁静","pinyin":"níng jìng","sentence":"夜晚的公园十分宁静，只听得见风吹树叶的声音。"},
+  {"level":"P5","lessonIndex":4,"lesson":"第四课","category":"write","character":"宁","word":"宁愿","pinyin":"nìng yuàn","sentence":"他宁愿多做练习，也不愿意考试的时候答不出题目。"},
+
+  {"level":"P5","lessonIndex":8,"lesson":"第八课","category":"write","character":"寸","word":"尺寸","pinyin":"chǐ cùn","sentence":"裁缝仔细量好衣服的尺寸，才开始动手缝制。"},
+  {"level":"P5","lessonIndex":8,"lesson":"第八课","category":"write","character":"寸","word":"寸步不离","pinyin":"cùn bù bù lí","sentence":"小狗寸步不离地跟着主人，无论他走到哪里。"},
+
+  {"level":"P5","lessonIndex":14,"lesson":"第十四课","category":"write","character":"屈","word":"屈服","pinyin":"qū fú","sentence":"无论遇到多大的困难，他都不肯向命运屈服。"},
+  {"level":"P5","lessonIndex":14,"lesson":"第十四课","category":"write","character":"屈","word":"屈指可数","pinyin":"qū zhǐ kě shǔ","sentence":"全班能在比赛中得奖的同学屈指可数，大家都为他们感到骄傲。"},
+
+  {"level":"P6","lessonIndex":12,"lesson":"第十二课","category":"write","character":"彻","word":"彻底","pinyin":"chè dǐ","sentence":"他决定彻底改掉粗心的坏习惯，认真检查每一道题。"},
+  {"level":"P6","lessonIndex":12,"lesson":"第十二课","category":"write","character":"彻","word":"彻夜","pinyin":"chè yè","sentence":"爸爸为了赶工作，彻夜没有睡觉。"},
+
+  {"level":"P5","lessonIndex":15,"lesson":"第十五课","category":"read","character":"态","word":"态度","pinyin":"tài dù","sentence":"老师夸奖小明学习态度认真，值得大家学习。"},
+  {"level":"P5","lessonIndex":15,"lesson":"第十五课","category":"read","character":"态","word":"状态","pinyin":"zhuàng tài","sentence":"睡眠充足能让我们以最好的状态迎接考试。"},
+
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"愤","word":"愤怒","pinyin":"fèn nù","sentence":"看到有人欺负小动物，他感到十分愤怒。"},
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"愤","word":"气愤","pinyin":"qì fèn","sentence":"同学们对这种不公平的做法感到很气愤。"},
+
+  {"level":"P6","lessonIndex":1,"lesson":"第一课","category":"read","character":"扎","word":"扎实","pinyin":"zhā shi","sentence":"他把基础打得很扎实，所以考试从来不怕难题。"},
+  {"level":"P6","lessonIndex":1,"lesson":"第一课","category":"read","character":"扎","word":"挣扎","pinyin":"zhēng zhá","sentence":"小鱼在网里拼命挣扎，最后还是被渔夫捉住了。"},
+
+  {"level":"P5","lessonIndex":11,"lesson":"第十一课","category":"write","character":"扭","word":"扭伤","pinyin":"niǔ shāng","sentence":"他在跑步时不小心扭伤了脚踝，只好坐在场边休息。"},
+  {"level":"P5","lessonIndex":11,"lesson":"第十一课","category":"write","character":"扭","word":"扭转","pinyin":"niǔ zhuǎn","sentence":"靠着大家的努力，球队终于扭转了落后的局面。"},
+
+  {"level":"P5","lessonIndex":2,"lesson":"第二课","category":"write","character":"抛","word":"抛弃","pinyin":"pāo qì","sentence":"他从来不会抛弃遇到困难的朋友，总是伸出援手。"},
+  {"level":"P5","lessonIndex":2,"lesson":"第二课","category":"write","character":"抛","word":"抛出","pinyin":"pāo chū","sentence":"老师抛出一个问题，让全班同学一起讨论。"},
+
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"挣","word":"挣钱","pinyin":"zhèng qián","sentence":"爸爸每天辛苦工作，挣钱养活一家人。"},
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"挣","word":"挣脱","pinyin":"zhèng tuō","sentence":"小狗挣脱了绳子，飞快地跑向草地。"},
+
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"染","word":"染色","pinyin":"rǎn sè","sentence":"我们用天然植物给布料染色，做成漂亮的手帕。"},
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"染","word":"感染","pinyin":"gǎn rǎn","sentence":"医生提醒大家勤洗手，以免感染病菌。"},
+
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"残","word":"残疾","pinyin":"cán jí","sentence":"虽然他身体残疾，但仍然坚持完成马拉松比赛。"},
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"残","word":"残忍","pinyin":"cán rěn","sentence":"猎杀野生动物是十分残忍的行为，我们应该保护它们。"},
+
+  {"level":"P6","lessonIndex":5,"lesson":"第五课","category":"write","character":"毫","word":"毫米","pinyin":"háo mǐ","sentence":"这只蚂蚁的身长大约只有五毫米。"},
+  {"level":"P6","lessonIndex":5,"lesson":"第五课","category":"write","character":"毫","word":"毫不","pinyin":"háo bù","sentence":"面对困难，他毫不退缩，勇敢地向前迈进。"},
+
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"污","word":"污染","pinyin":"wū rǎn","sentence":"工厂排放的废气严重污染了空气。"},
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"污","word":"污水","pinyin":"wū shuǐ","sentence":"我们应该把污水处理干净后，才排放到河里。"},
+
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"治","word":"治疗","pinyin":"zhì liáo","sentence":"医生给他开了药，治疗他的咳嗽。"},
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"治","word":"治理","pinyin":"zhì lǐ","sentence":"政府决定治理河流，让水变得更加清澈。"},
+
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"泻","word":"腹泻","pinyin":"fù xiè","sentence":"他吃坏了肚子，一直腹泻，只好去看医生。"},
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"泻","word":"泻药","pinyin":"xiè yào","sentence":"医生开了一些泻药，让他把肚子里的毒素排出来。"},
+
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"爆","word":"爆炸","pinyin":"bào zhà","sentence":"实验室里传来一声巨响，原来是气球爆炸了。"},
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"爆","word":"爆米花","pinyin":"bào mǐ huā","sentence":"看电影的时候，我们最喜欢买一桶爆米花一起分享。"},
+
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"甚","word":"甚至","pinyin":"shèn zhì","sentence":"他非常用功，甚至连星期六都留在学校温习功课。"},
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"甚","word":"甚少","pinyin":"shèn shǎo","sentence":"这种珍稀的鸟类甚少出现在城市里。"},
+
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"疗","word":"疗养","pinyin":"liáo yǎng","sentence":"爷爷生病后到疗养院休养了一段时间才康复。"},
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"疗","word":"医疗","pinyin":"yī liáo","sentence":"新加坡的医疗服务十分完善，让人民生活更安心。"},
+
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"盾","word":"矛盾","pinyin":"máo dùn","sentence":"两个好朋友因为一点小事产生了矛盾，后来互相道歉和好了。"},
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"盾","word":"后盾","pinyin":"hòu dùn","sentence":"家人永远是我们最坚强的后盾。"},
+
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"矛","word":"矛盾","pinyin":"máo dùn","sentence":"作文里，主角内心充满矛盾，不知道该原谅朋友还是继续生气。"},
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"矛","word":"矛头","pinyin":"máo tóu","sentence":"大家把矛头指向问题的根源，一起想办法解决。"},
+
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"筋","word":"筋疲力尽","pinyin":"jīn pí lì jìn","sentence":"爬完这座山后，大家都感到筋疲力尽。"},
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"筋","word":"脑筋","pinyin":"nǎo jīn","sentence":"这道数学题很难，我动了好一会儿脑筋才解开。"},
+
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"筝","word":"风筝","pinyin":"fēng zheng","sentence":"星期天，爸爸带我到公园放风筝。"},
+  {"level":"P6","lessonIndex":9,"lesson":"第九课","category":"write","character":"筝","word":"古筝","pinyin":"gǔ zhēng","sentence":"姐姐每个星期六都去学古筝，弹得越来越好听了。"},
+
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"肃","word":"严肃","pinyin":"yán sù","sentence":"老师用严肃的表情提醒我们要遵守纪律。"},
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"肃","word":"肃静","pinyin":"sù jìng","sentence":"考试的时候，礼堂里一片肃静，只听得见笔尖写字的声音。"},
+
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"股","word":"股票","pinyin":"gǔ piào","sentence":"爸爸喜欢研究股票，希望能学习理财的知识。"},
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"股","word":"股东","pinyin":"gǔ dōng","sentence":"这家公司有好几位股东，共同经营这门生意。"},
+
+  {"level":"P6","lessonIndex":10,"lesson":"第十课","category":"write","character":"贯","word":"贯彻","pinyin":"guàn chè","sentence":"他做事一向贯彻始终，从不半途而废。"},
+  {"level":"P6","lessonIndex":10,"lesson":"第十课","category":"write","character":"贯","word":"全神贯注","pinyin":"quán shén guàn zhù","sentence":"上课的时候，他总是全神贯注地听老师讲解。"},
+
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"返","word":"返回","pinyin":"fǎn huí","sentence":"参观完动物园后，我们就搭巴士返回学校。"},
+  {"level":"P6","lessonIndex":7,"lesson":"第七课","category":"write","character":"返","word":"往返","pinyin":"wǎng fǎn","sentence":"他每天往返学校和补习中心，非常忙碌。"},
+
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"迫","word":"迫切","pinyin":"pò qiè","sentence":"他迫切地想知道考试的成绩。"},
+  {"level":"P5","lessonIndex":16,"lesson":"第十六课","category":"write","character":"迫","word":"逼迫","pinyin":"bī pò","sentence":"没有人可以逼迫我们做自己不愿意做的事情。"},
+
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"逗","word":"逗号","pinyin":"dòu hào","sentence":"写句子的时候，别忘了在适当的地方加上逗号。"},
+  {"level":"P5","lessonIndex":5,"lesson":"第五课","category":"write","character":"逗","word":"逗笑","pinyin":"dòu xiào","sentence":"小丑做了滑稽的动作，逗笑了台下所有的小朋友。"}
+]

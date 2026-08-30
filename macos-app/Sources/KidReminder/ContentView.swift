@@ -5,6 +5,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     case calendar = "Calendar"
     case countdown = "Countdown"
     case stickers = "Stickers"
+    case dictation = "听写"
     case settings = "Settings"
 
     var id: String { rawValue }
@@ -14,6 +15,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
         case .calendar: return "calendar"
         case .countdown: return "timer"
         case .stickers: return "star.circle.fill"
+        case .dictation: return "speaker.wave.2.fill"
         case .settings: return "gearshape"
         }
     }
@@ -36,6 +38,7 @@ struct ContentView: View {
             case .calendar: CalendarView()
             case .countdown: CountdownView()
             case .stickers: StickersView()
+            case .dictation: DictationView()
             case .settings: SettingsView()
             }
         }

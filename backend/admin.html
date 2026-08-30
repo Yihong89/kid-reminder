@@ -105,13 +105,54 @@
   .badge.mine { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
   .badge.parent { background:var(--bg); color:var(--muted); }
   .badge.rep { background:#fefce8; border-color:#fde68a; color:#a16207; }
-  #fabAdd { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
+  #fabAdd, #fabAddVocab { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
             background:var(--accent); color:#fff; border:none; font-size:28px; line-height:1; cursor:pointer;
             box-shadow:0 6px 18px rgba(37,99,235,.35); z-index:20; }
-  #fabAdd:hover { filter:brightness(1.08); }
+  #fabAdd:hover, #fabAddVocab:hover { filter:brightness(1.08); }
   #addDialog .add { gap:8px; }
   #addDialog .add input[type=text] { flex:1 1 100%; width:100%; }
   #addDialog .add select { flex:0 0 auto; }
+  /* vocab (dictation word bank) */
+  .vocab-filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .vocab-filters input[type=text] { flex:1 1 160px; font-size:15px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; }
+  .vocab-filters select { font-size:14px; padding:7px 6px; border:1px solid var(--border); border-radius:8px; }
+  .vocab-summary { font-size:13px; color:var(--muted); margin-bottom:8px; }
+  .vocab-list { display:flex; flex-direction:column; gap:6px; }
+  .vocab-row { display:flex; align-items:center; gap:10px; padding:10px 12px; }
+  .vocab-row .char { font-size:22px; font-weight:600; width:32px; text-align:center; flex-shrink:0; }
+  .vocab-row .main { flex:1; min-width:0; }
+  .vocab-row .word-line { font-size:15px; font-weight:600; }
+  .vocab-row .word-line .pinyin { font-weight:400; color:var(--muted); font-size:12px; margin-left:6px; }
+  .vocab-row .sentence { font-size:12px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .vocab-row .meta { display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex-shrink:0; }
+  .vocab-row .cnt { font-size:12px; font-weight:600; padding:1px 8px; border-radius:99px; background:var(--bg); color:var(--ink); white-space:nowrap; }
+  .vocab-row .cnt.neg { background:var(--urgent-bg); color:var(--urgent-ink); }
+  .vocab-row .cnt.pos { background:#ecfdf5; color:#047857; }
+  .vocab-pager { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:10px; font-size:13px; color:var(--muted); }
+  .vocab-pager button { background:none; border:1px solid var(--border); border-radius:8px; padding:5px 12px; cursor:pointer; color:var(--ink); }
+  .vocab-pager button:disabled { opacity:.4; cursor:default; }
+  #vocabDialog { width:340px; }
+  #vocabDialog .add label { flex:1 1 45%; }
+  /* dictation grading */
+  .dict-session { display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .dict-session .icon { font-size:22px; }
+  .dict-session .info { flex:1; }
+  .dict-session .info .when { font-size:13px; color:var(--muted); }
+  .dict-session .info .count { font-size:15px; font-weight:600; }
+  .grade-dialog { width:520px; max-width:90vw; max-height:80vh; overflow:auto; }
+  .grade-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+  .grade-item:last-child { border-bottom:none; }
+  .grade-item .seq { font-size:12px; color:var(--muted); width:22px; text-align:right; flex-shrink:0; }
+  .grade-item .char { font-size:20px; font-weight:600; width:28px; text-align:center; flex-shrink:0; }
+  .grade-item .info { flex:1; min-width:0; }
+  .grade-item .word-line { font-size:15px; font-weight:600; }
+  .grade-item .word-line .pinyin { font-weight:400; color:var(--muted); font-size:12px; margin-left:6px; }
+  .grade-item .sentence { font-size:12px; color:var(--muted); }
+  .grade-toggle { display:flex; gap:4px; flex-shrink:0; }
+  .grade-toggle button { border:1px solid var(--border); background:var(--card); border-radius:8px; width:34px; height:34px; font-size:16px; cursor:pointer; opacity:.4; }
+  .grade-toggle button.sel-correct { opacity:1; background:#ecfdf5; border-color:#a7f3d0; }
+  .grade-toggle button.sel-incorrect { opacity:1; background:var(--urgent-bg); border-color:var(--urgent-bd); }
+  .grade-dialog .row { position:sticky; bottom:0; background:var(--card); padding-top:10px; }
 </style>
 </head>
 <body>
@@ -136,6 +177,8 @@
       <button class="tab active" id="tabToday">📋 Today</button>
       <button class="tab" id="tabCountdown">⏳ Countdown</button>
       <button class="tab" id="tabPokedex">⚡ Pokémon</button>
+      <button class="tab" id="tabVocab" hidden>📚 生词库</button>
+      <button class="tab" id="tabDictation" hidden>📝 听写批改</button>
     </div>
 
     <!-- Today view -->
@@ -181,6 +224,40 @@
       </div>
     </div>
 
+    <!-- Vocab (dictation word bank) view -->
+    <div id="vocabView" hidden>
+      <div class="card">
+        <div class="vocab-filters">
+          <input type="text" id="vocabSearch" placeholder="搜索字 / 词语 / 拼音 / 例句…" />
+          <select id="vocabLevelFilter">
+            <option value="">全部年级</option>
+            <option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option>
+            <option value="P4">P4</option><option value="P5">P5</option><option value="P6">P6</option>
+          </select>
+          <select id="vocabCategoryFilter">
+            <option value="">识读+识写</option>
+            <option value="read">识读字</option>
+            <option value="write">识写字</option>
+          </select>
+        </div>
+        <div class="vocab-summary" id="vocabSummary"></div>
+        <div class="vocab-list" id="vocabList"></div>
+        <div class="vocab-pager">
+          <button id="vocabPrev">‹ 上一页</button>
+          <span id="vocabPageLabel"></span>
+          <button id="vocabNext">下一页 ›</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dictation grading view -->
+    <div id="dictationView" hidden>
+      <div class="card">
+        <div class="vocab-summary" id="dictSummary"></div>
+        <div class="vocab-list" id="dictList"></div>
+      </div>
+    </div>
+
     <!-- unlock reveal modal -->
     <dialog id="revealDialog">
       <div style="text-align:center">
@@ -203,6 +280,7 @@
 </div>
 
 <button id="fabAdd" title="Add task" hidden>＋</button>
+<button id="fabAddVocab" title="添加生词" hidden>＋</button>
 
 <dialog id="addDialog">
   <h3>➕ New task</h3>
@@ -235,6 +313,51 @@
   </div>
 </dialog>
 
+<dialog id="vocabDialog">
+  <h3 id="vocabDlgTitle">➕ 添加生词</h3>
+  <div class="add">
+    <input type="text" id="vDlgCharacter" placeholder="字（如：科）" maxlength="4" style="flex:1 1 30%" />
+    <input type="text" id="vDlgWord" placeholder="词语（如：科学）" maxlength="12" style="flex:1 1 60%" />
+  </div>
+  <div class="add">
+    <input type="text" id="vDlgPinyin" placeholder="拼音（如：kē xué）" maxlength="40" />
+  </div>
+  <div class="add">
+    <input type="text" id="vDlgSentence" placeholder="例句" maxlength="200" />
+  </div>
+  <div class="add">
+    <select id="vDlgLevel">
+      <option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option>
+      <option value="P4">P4</option><option value="P5">P5</option><option value="P6">P6</option>
+    </select>
+    <select id="vDlgCategory">
+      <option value="write">识写字</option>
+      <option value="read">识读字</option>
+    </select>
+    <input type="number" id="vDlgLessonIndex" placeholder="课次序号（如 1）" min="1" max="30" style="width:110px" />
+  </div>
+  <div class="add">
+    <input type="text" id="vDlgLesson" placeholder="课次名（如：第一课）" maxlength="20" style="flex:1 1 60%" />
+    <label>正确数 <input type="number" id="vDlgCorrectCount" value="0" style="width:70px" /></label>
+  </div>
+  <div class="msg err" id="vocabDlgErr"></div>
+  <div class="row">
+    <button class="ghost" id="vDlgCancel">Cancel</button>
+    <button class="primary" id="vDlgSave">Save</button>
+  </div>
+</dialog>
+
+<dialog id="gradeDialog" class="grade-dialog">
+  <h3 id="gradeDlgTitle">📝 批改听写</h3>
+  <p>按听写时的顺序核对孩子写的答案，默认都算对，写错了点 ✗ 就好。</p>
+  <div id="gradeItems"></div>
+  <div class="msg err" id="gradeDlgErr"></div>
+  <div class="row">
+    <button class="ghost" id="gradeDlgCancel">Cancel</button>
+    <button class="primary" id="gradeDlgSubmit">提交批改</button>
+  </div>
+</dialog>
+
 <dialog id="minutesDialog">
   <h3>How long did it take? ⏱</h3>
   <p>Enter minutes spent on this task (0 is fine)</p>
@@ -252,8 +375,9 @@
   let tasks = [];
   let selectedDate = todayStr();
   let viewYear, viewMonth;
-  let tab = "today"; // "today" | "countdown"
+  let tab = "today"; // "today" | "countdown" | "pokedex" | "vocab"
   let dayFlags = {}; // date -> {total, done, events}
+  let vocabOffset = 0, vocabLimit = 50, vocabTotal = 0, vocabEditingId = null;
 
   const EMOJIS = [
     ["", "none"], ["📚","homework"], ["📝","writing"], ["✏️","write"], ["📖","read"], ["📒","notes"],
@@ -627,12 +751,20 @@
     $("#tabToday").classList.toggle("active", t === "today");
     $("#tabCountdown").classList.toggle("active", t === "countdown");
     $("#tabPokedex").classList.toggle("active", t === "pokedex");
+    $("#tabVocab").classList.toggle("active", t === "vocab");
+    $("#tabDictation").classList.toggle("active", t === "dictation");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
+    $("#vocabView").hidden = t !== "vocab";
+    $("#dictationView").hidden = t !== "dictation";
+    $("#fabAdd").hidden = t === "vocab" || t === "dictation"; // task FAB doesn't apply to the new tabs
+    $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
     if (t === "today") { refresh(); refreshDayFlags(); }
     else if (t === "countdown") { refreshCountdown(); }
-    else { loadPokedex(); }
+    else if (t === "pokedex") { loadPokedex(); }
+    else if (t === "vocab") { vocabOffset = 0; refreshVocab(); }
+    else { refreshDictation(); }
   }
 
   async function refresh() {
@@ -664,6 +796,203 @@
       for (const t of list) el.appendChild(taskRow(t, allowDoneFor(t)));
     } catch (e) { showErr(e.message); }
   }
+
+  // ---- vocab (dictation word bank) ----------------------------------------
+  function vocabFilters() {
+    return {
+      search: $("#vocabSearch").value.trim(),
+      level: $("#vocabLevelFilter").value,
+      category: $("#vocabCategoryFilter").value,
+    };
+  }
+
+  async function refreshVocab() {
+    try {
+      const f = vocabFilters();
+      const qs = new URLSearchParams({
+        ...(f.search ? { search: f.search } : {}),
+        ...(f.level ? { level: f.level } : {}),
+        ...(f.category ? { category: f.category } : {}),
+        limit: vocabLimit,
+        offset: vocabOffset,
+      });
+      const data = await api(`/api/vocab?${qs.toString()}`);
+      vocabTotal = data.total;
+      const el = $("#vocabList");
+      el.innerHTML = "";
+      if (!data.words.length) {
+        el.innerHTML = '<div class="empty">没有符合条件的生词</div>';
+      } else {
+        for (const w of data.words) el.appendChild(vocabRow(w));
+      }
+      const from = vocabTotal === 0 ? 0 : vocabOffset + 1;
+      const to = Math.min(vocabOffset + vocabLimit, vocabTotal);
+      $("#vocabSummary").textContent = `共 ${vocabTotal} 条 · 显示 ${from}–${to}`;
+      $("#vocabPageLabel").textContent = `第 ${Math.floor(vocabOffset / vocabLimit) + 1} / ${Math.max(1, Math.ceil(vocabTotal / vocabLimit))} 页`;
+      $("#vocabPrev").disabled = vocabOffset <= 0;
+      $("#vocabNext").disabled = vocabOffset + vocabLimit >= vocabTotal;
+    } catch (e) { showErr(e.message); }
+  }
+
+  function vocabRow(w) {
+    const row = document.createElement("div");
+    row.className = "card vocab-row";
+    const cntClass = w.correct_count > 0 ? "pos" : w.correct_count < 0 ? "neg" : "";
+    row.innerHTML = `
+      <div class="char">${escapeHtml(w.character)}</div>
+      <div class="main">
+        <div class="word-line">${escapeHtml(w.word)}<span class="pinyin">${escapeHtml(w.pinyin)}</span></div>
+        <div class="sentence">${escapeHtml(w.sentence)}</div>
+      </div>
+      <div class="badge">${escapeHtml(w.level)} · ${escapeHtml(w.lesson)}</div>
+      <div class="badge ${w.category === "write" ? "cnt" : ""}">${w.category === "write" ? "识写" : "识读"}</div>
+      <div class="meta">
+        <span class="cnt ${cntClass}">正确数 ${w.correct_count}</span>
+        <span>
+          <button class="edit" title="编辑">✏️</button>
+          <button class="del" title="删除">🗑</button>
+        </span>
+      </div>`;
+    row.querySelector(".edit").onclick = () => openVocabDialog(w);
+    row.querySelector(".del").onclick = async () => {
+      if (!confirm(`删除「${w.word}」？`)) return;
+      try { await api(`/api/vocab/${w.id}`, { method: "DELETE" }); refreshVocab(); }
+      catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+
+  function openVocabDialog(w) {
+    vocabEditingId = w ? w.id : null;
+    $("#vocabDlgTitle").textContent = w ? "✏️ 编辑生词" : "➕ 添加生词";
+    $("#vDlgCharacter").value = w ? w.character : "";
+    $("#vDlgWord").value = w ? w.word : "";
+    $("#vDlgPinyin").value = w ? w.pinyin : "";
+    $("#vDlgSentence").value = w ? w.sentence : "";
+    $("#vDlgLevel").value = w ? w.level : ($("#vocabLevelFilter").value || "P5");
+    $("#vDlgCategory").value = w ? w.category : "write";
+    $("#vDlgLessonIndex").value = w ? w.lesson_index : "";
+    $("#vDlgLesson").value = w ? w.lesson : "";
+    $("#vDlgCorrectCount").value = w ? w.correct_count : 0;
+    $("#vocabDlgErr").textContent = "";
+    $("#vocabDialog").showModal();
+    $("#vDlgCharacter").focus();
+  }
+
+  $("#fabAddVocab").onclick = () => openVocabDialog(null);
+  $("#vDlgCancel").onclick = () => $("#vocabDialog").close();
+  $("#vDlgSave").onclick = async () => {
+    const payload = {
+      character: $("#vDlgCharacter").value.trim(),
+      word: $("#vDlgWord").value.trim(),
+      pinyin: $("#vDlgPinyin").value.trim(),
+      sentence: $("#vDlgSentence").value.trim(),
+      level: $("#vDlgLevel").value,
+      category: $("#vDlgCategory").value,
+      lessonIndex: Number($("#vDlgLessonIndex").value),
+      lesson: $("#vDlgLesson").value.trim(),
+      correctCount: Number($("#vDlgCorrectCount").value) || 0,
+    };
+    if (!payload.character || !payload.word || !payload.pinyin || !payload.sentence || !payload.lesson || !payload.lessonIndex) {
+      $("#vocabDlgErr").textContent = "字、词语、拼音、例句、课次名、课次序号都是必填的";
+      return;
+    }
+    try {
+      if (vocabEditingId) await api(`/api/vocab/${vocabEditingId}`, { method: "PATCH", body: JSON.stringify(payload) });
+      else await api("/api/vocab", { method: "POST", body: JSON.stringify(payload) });
+      $("#vocabDialog").close();
+      refreshVocab();
+    } catch (e) { $("#vocabDlgErr").textContent = e.message; }
+  };
+  $("#vocabSearch").addEventListener("keydown", (e) => { if (e.key === "Enter") { vocabOffset = 0; refreshVocab(); } });
+  $("#vocabLevelFilter").onchange = () => { vocabOffset = 0; refreshVocab(); };
+  $("#vocabCategoryFilter").onchange = () => { vocabOffset = 0; refreshVocab(); };
+  $("#vocabPrev").onclick = () => { vocabOffset = Math.max(0, vocabOffset - vocabLimit); refreshVocab(); };
+  $("#vocabNext").onclick = () => { vocabOffset = vocabOffset + vocabLimit; refreshVocab(); };
+
+  // ---- dictation grading ---------------------------------------------------
+  let gradeSelections = {}; // itemId -> "correct" | "incorrect"
+
+  async function refreshDictation() {
+    try {
+      const data = await api("/api/dictation/sessions?status=pending_grading");
+      const el = $("#dictList");
+      el.innerHTML = "";
+      $("#dictSummary").textContent = data.sessions.length ? `${data.sessions.length} 份待批改` : "";
+      if (!data.sessions.length) {
+        el.innerHTML = '<div class="empty">目前没有待批改的听写 🎉</div>';
+        return;
+      }
+      for (const s of data.sessions) el.appendChild(dictSessionRow(s));
+    } catch (e) { showErr(e.message); }
+  }
+
+  function dictSessionRow(s) {
+    const row = document.createElement("div");
+    row.className = "card dict-session";
+    const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
+    row.innerHTML = `
+      <div class="icon">📝</div>
+      <div class="info">
+        <div class="count">${s.itemCount} 个词</div>
+        <div class="when">完成于 ${when.toLocaleString()}</div>
+      </div>
+      <div class="badge">待批改</div>`;
+    row.onclick = () => openGradeDialog(s.id);
+    return row;
+  }
+
+  async function openGradeDialog(sessionId) {
+    try {
+      const data = await api(`/api/dictation/sessions/${sessionId}`);
+      gradeSelections = {};
+      for (const it of data.items) gradeSelections[it.id] = it.result || "correct"; // default: assume correct, tap ✗ to flip
+      $("#gradeDlgTitle").textContent = `📝 批改听写（共 ${data.items.length} 题）`;
+      const el = $("#gradeItems");
+      el.innerHTML = "";
+      for (const it of data.items) el.appendChild(gradeItemRow(it));
+      $("#gradeDlgErr").textContent = "";
+      $("#gradeDialog").dataset.sessionId = sessionId;
+      $("#gradeDialog").showModal();
+    } catch (e) { showErr(e.message); }
+  }
+
+  function gradeItemRow(it) {
+    const row = document.createElement("div");
+    row.className = "grade-item";
+    row.innerHTML = `
+      <div class="seq">${it.seq}</div>
+      <div class="char">${escapeHtml(it.character)}</div>
+      <div class="info">
+        <div class="word-line">${escapeHtml(it.word)}<span class="pinyin">${escapeHtml(it.pinyin)}</span></div>
+        <div class="sentence">${escapeHtml(it.sentence)}</div>
+      </div>
+      <div class="grade-toggle">
+        <button class="ok" title="写对了">✓</button>
+        <button class="bad" title="写错了">✗</button>
+      </div>`;
+    const okBtn = row.querySelector(".ok");
+    const badBtn = row.querySelector(".bad");
+    const sync = () => {
+      okBtn.classList.toggle("sel-correct", gradeSelections[it.id] === "correct");
+      badBtn.classList.toggle("sel-incorrect", gradeSelections[it.id] === "incorrect");
+    };
+    okBtn.onclick = () => { gradeSelections[it.id] = "correct"; sync(); };
+    badBtn.onclick = () => { gradeSelections[it.id] = "incorrect"; sync(); };
+    sync();
+    return row;
+  }
+
+  $("#gradeDlgCancel").onclick = () => $("#gradeDialog").close();
+  $("#gradeDlgSubmit").onclick = async () => {
+    const sessionId = $("#gradeDialog").dataset.sessionId;
+    const results = Object.entries(gradeSelections).map(([itemId, result]) => ({ itemId: Number(itemId), result }));
+    try {
+      await api(`/api/dictation/sessions/${sessionId}/grade`, { method: "POST", body: JSON.stringify({ results }) });
+      $("#gradeDialog").close();
+      refreshDictation();
+    } catch (e) { $("#gradeDlgErr").textContent = e.message; }
+  };
 
   function showErr(msg) {
     $("#err").textContent = msg;
@@ -700,6 +1029,10 @@
     $("#tabToday").onclick = () => setTab("today");
     $("#tabCountdown").onclick = () => setTab("countdown");
     $("#tabPokedex").onclick = () => setTab("pokedex");
+    $("#tabVocab").onclick = () => setTab("vocab");
+    $("#tabVocab").hidden = role !== "admin"; // 生词库：仅家长可见
+    $("#tabDictation").onclick = () => setTab("dictation");
+    $("#tabDictation").hidden = role !== "admin"; // 听写批改：仅家长可见
     $("#unlockBtn").onclick = unlockPokemon;
     $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();
@@ -715,6 +1048,7 @@
     $("#main").hidden = true;
     $("#logoutBtn").hidden = true;
     $("#fabAdd").hidden = true;
+    $("#fabAddVocab").hidden = true;
     $("#pinGate").hidden = false;
     $("#pinInput").value = "";
     $("#pinInput").focus();

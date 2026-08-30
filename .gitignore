@@ -10,6 +10,11 @@ node_modules/
 # Local-only operational notes (contains home IPs / usernames)
 backend-setup.local.md
 
+# Scraped third-party vocab data (kid-reminder repo is public; this is
+# SGSchoolKaki's own curated word bank content — keep it local-only, don't
+# republish their content in our public repo)
+tools/vocab-scraper/vocab-raw.json
+
 # macOS
 .DS_Store
 

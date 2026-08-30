@@ -155,4 +155,28 @@ final class APIClient {
         comps.path = "/sounds/\(file)"
         return comps.url
     }
+
+    // MARK: - Dictation (听写)
+
+    /// Generates a new listening-test set: 10 characters picked from among the
+    /// weakest (lowest correct_count), up to 3 words each, shuffled into order.
+    func startDictation() async throws -> DictationSession {
+        let data = try await request("/api/dictation/sessions", method: "POST", body: Data("{}".utf8))
+        return try JSONDecoder().decode(DictationSession.self, from: data)
+    }
+
+    /// Marks a session as finished by the kid — it now shows up in the parent's grading queue.
+    func completeDictation(sessionId: Int) async throws {
+        _ = try await request("/api/dictation/sessions/\(sessionId)/complete", method: "POST", body: Data("{}".utf8))
+    }
+
+    /// URL for a word's TTS audio (word + example sentence), synthesized and cached server-side.
+    func dictationAudioURL(wordId: Int) -> URL? {
+        var comps = URLComponents()
+        comps.scheme = "http"
+        comps.host = settings.host
+        comps.port = settings.port
+        comps.path = "/dictation-audio/\(wordId).wav"
+        return comps.url
+    }
 }
