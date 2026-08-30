@@ -19,14 +19,6 @@ struct DictationView: View {
 
     @State private var phase: Phase = .idle
     @State private var session: DictationSession?
-    // If playback (loading or actually playing) doesn't wrap up within a few seconds,
-    // offer a manual way out — covers whatever's actually stuck (network hang, a
-    // rare AVAudioPlayer finish-delegate that never fires, anything else) without
-    // needing to know which. `stop()` always resets the player's own state, so this
-    // is guaranteed to work even when the automatic recovery paths don't.
-    @State private var showRecoveryHint = false
-    @State private var recoveryToken = 0
-    @State private var recoveryHintTimer: Timer?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -104,20 +96,8 @@ struct DictationView: View {
                 .buttonStyle(.borderedProminent)
                 .disabled(player.isBusy)
             }
-            if showRecoveryHint {
-                Button("卡住了？点这里重试这道题") { forceRetry(index: index) }
-                    .font(.footnote)
-                    .buttonStyle(.plain)
-                    .foregroundStyle(.secondary)
-            }
         }
         .task(id: index) { if index == 0 { playCurrent(index: index) } }
-        .onChange(of: player.isBusy) { _, busy in
-            // The recovery hint can appear while genuinely still playing a long clip
-            // (isBusy > 6s isn't itself abnormal) — once playback actually wraps up,
-            // by whatever path, hide it again instead of leaving it stuck showing.
-            if !busy { showRecoveryHint = false }
-        }
     }
 
     private var doneView: some View {
@@ -157,29 +137,7 @@ struct DictationView: View {
         guard let items = session?.items, items.indices.contains(index),
               let url = api.dictationAudioURL(wordId: items[index].wordId) else { return }
         DevLog.log("DictationView playCurrent index=\(index) wordId=\(items[index].wordId)")
-        showRecoveryHint = false
-        recoveryToken += 1
-        let token = recoveryToken
-        recoveryHintTimer?.invalidate()
         player.play(url: url)
-        // Timer, not Task.sleep — dev-log evidence pointed at Task/async scheduling itself
-        // occasionally stalling on this machine (see DictationAudioPlayer.swift), so this
-        // recovery mechanism deliberately avoids the same tool that needed recovering from.
-        let timer = Timer(timeInterval: 6, repeats: false) { _ in
-            MainActor.assumeIsolated {
-                guard token == recoveryToken, player.isBusy else { return } // wrapped up normally
-                DevLog.log("DictationView recovery hint shown index=\(index) (still busy after 6s)")
-                showRecoveryHint = true
-            }
-        }
-        RunLoop.main.add(timer, forMode: .common)
-        recoveryHintTimer = timer
-    }
-
-    private func forceRetry(index: Int) {
-        DevLog.log("DictationView forceRetry tapped index=\(index)")
-        player.stop()
-        playCurrent(index: index)
     }
 
     private func advance(to index: Int) {
@@ -200,8 +158,6 @@ struct DictationView: View {
 
     private func reset() {
         player.stop()
-        recoveryHintTimer?.invalidate()
-        recoveryHintTimer = nil
         session = nil
         phase = .idle
     }
