@@ -49,12 +49,35 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
                 p.delegate = self
                 player = p
                 isPlaying = p.play()
-                if !isPlaying { finish() }
+                if !isPlaying {
+                    finish()
+                } else {
+                    armSafetyNet(for: p, token: token)
+                }
             } catch {
                 guard token == playToken else { return }
                 isLoading = false
                 finish()
             }
+        }
+    }
+
+    // AVAudioPlayer's finish-delegate is expected to always fire once playback
+    // reaches the end, but has occasionally been observed not to (a reported
+    // symptom: the clip is audibly done, yet the UI stays on "正在朗读" with
+    // 下一题 disabled forever — no known reproduction, and the delegate not
+    // firing isn't something we can fix from here). Rather than leave the kid
+    // stuck indefinitely if it happens again, force-finish a beat after the
+    // clip's own duration if the delegate hasn't already done so by then.
+    private func armSafetyNet(for p: AVAudioPlayer, token: Int) {
+        let deadline = p.duration + 1.5
+        Task {
+            try? await Task.sleep(for: .seconds(deadline))
+            guard token == self.playToken, self.isPlaying else { return } // already handled normally
+            #if DEBUG
+            print("[DictationAudioPlayer] safety-net fired — delegate never called finish()")
+            #endif
+            self.finish()
         }
     }
 
@@ -66,8 +89,11 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         isPlaying = false
     }
 
-    nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        Task { @MainActor in finish() }
+    nonisolated func audioPlayerDidFinishPlaying(_ finishedPlayer: AVAudioPlayer, successfully flag: Bool) {
+        Task { @MainActor in
+            guard finishedPlayer === self.player else { return } // stale/superseded player
+            finish()
+        }
     }
 
     private func finish() {
