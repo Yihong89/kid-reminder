@@ -1,7 +1,9 @@
 # english-wrong-answers
 
-One-off import pipeline for the 英语错题练习 (English wrong-answer practice)
-feature: turns the kid's own mistake log into rows in `english_questions`.
+Import pipeline for the 英语错题练习 (English wrong-answer practice) feature:
+turns the kid's own mistake log into rows in `english_questions`. Runs
+automatically on a weekly schedule on the Mac Mini (see "Automated sync"
+below) — the steps here are also how to run it by hand.
 
 ## Source
 
@@ -28,6 +30,37 @@ node import.js                                     # imports parsed-questions.js
 `import.js` is idempotent (unique index on `source_number`) — re-running it
 after pulling a fresh `wrong-answers.md` only inserts genuinely new
 questions.
+
+## Automated sync
+
+`sync.sh` does the pull + parse + import in one step, straight against the
+production db, and runs weekly via a launchd job on the Mac Mini — so new
+entries the kid logs in the private repo show up in the app without anyone
+re-running this by hand.
+
+**Auth**: `GeorgeXL26/english-master` is a different individual's personal
+repo, so a fine-grained PAT can't be scoped to it (GitHub only lets
+fine-grained tokens target repos owned by yourself or an org you belong to —
+collaborator access on someone else's personal repo doesn't help). Use a
+**classic** PAT instead, scope `repo`, created by whichever account has
+collaborator access:
+[github.com/settings/tokens/new](https://github.com/settings/tokens/new).
+
+**Setup on the Mac Mini** (one-time):
+```bash
+mkdir -p ~/.config/kidreminder && chmod 700 ~/.config/kidreminder
+echo 'ghp_...' > ~/.config/kidreminder/wrong-answers-token && chmod 600 !$
+mkdir -p ~/kidreminder/english-sync
+# copy sync.sh, parse_wrong_answers.py, import.js into ~/kidreminder/english-sync/
+cp com.kidreminder.wronganswers-sync.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.kidreminder.wronganswers-sync.plist
+```
+Runs Sundays at 3am; logs to `~/kidreminder/english-sync/sync.log`. The token
+file lives outside the deployed app directory and is never scp'd/committed —
+only `sync.sh` reads it, via `GITHUB_TOKEN_FILE` (defaults to that path).
+
+If the token expires or is revoked, generate a new one and overwrite the same
+file — no need to touch the launchd job.
 
 ## What gets skipped
 
