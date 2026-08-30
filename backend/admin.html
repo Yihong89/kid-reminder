@@ -8,6 +8,12 @@
   :root { --bg:#f4f6fb; --card:#fff; --ink:#1f2430; --muted:#8a93a6; --accent:#3b82f6;
           --done:#10b981; --border:#e6e9f0; --danger:#ef4444; --urgent-bg:#fef2f2; --urgent-bd:#fecaca; --urgent-ink:#b91c1c; }
   * { box-sizing:border-box; }
+  /* Several containers (.add, .cnt-row, …) declare display:flex, which — being an
+     author-stylesheet rule — silently wins over the browser's built-in
+     "[hidden]{display:none}" rule of equal specificity. Without this, toggling
+     .hidden on a flex container via JS has no visual effect. Applies everywhere
+     since it's just restoring the attribute's intended meaning. */
+  [hidden] { display:none !important; }
   body { margin:0; font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
          background:var(--bg); color:var(--ink); }
   .wrap { max-width:560px; margin:0 auto; padding:24px 16px 80px; }
@@ -105,10 +111,10 @@
   .badge.mine { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
   .badge.parent { background:var(--bg); color:var(--muted); }
   .badge.rep { background:#fefce8; border-color:#fde68a; color:#a16207; }
-  #fabAdd, #fabAddVocab { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
+  #fabAdd, #fabAddVocab, #fabAddEnglish { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
             background:var(--accent); color:#fff; border:none; font-size:28px; line-height:1; cursor:pointer;
             box-shadow:0 6px 18px rgba(37,99,235,.35); z-index:20; }
-  #fabAdd:hover, #fabAddVocab:hover { filter:brightness(1.08); }
+  #fabAdd:hover, #fabAddVocab:hover, #fabAddEnglish:hover { filter:brightness(1.08); }
   #addDialog .add { gap:8px; }
   #addDialog .add input[type=text] { flex:1 1 100%; width:100%; }
   #addDialog .add select { flex:0 0 auto; }
@@ -152,7 +158,23 @@
   .grade-toggle button { border:1px solid var(--border); background:var(--card); border-radius:8px; width:34px; height:34px; font-size:16px; cursor:pointer; opacity:.4; }
   .grade-toggle button.sel-correct { opacity:1; background:#ecfdf5; border-color:#a7f3d0; }
   .grade-toggle button.sel-incorrect { opacity:1; background:var(--urgent-bg); border-color:var(--urgent-bd); }
+  .grade-toggle button:disabled { cursor:default; }
+  .grade-toggle button:disabled:not(.sel-correct):not(.sel-incorrect) { opacity:.15; }
   .grade-dialog .row { position:sticky; bottom:0; background:var(--card); padding-top:10px; }
+  /* English wrong-answer bank */
+  .eng-row { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; }
+  .eng-row .type-tag { font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; white-space:nowrap; margin-top:2px; }
+  .eng-row .type-tag.fill_blank { background:#eff6ff; color:#1d4ed8; }
+  .eng-row .type-tag.mcq { background:#fefce8; color:#a16207; }
+  .eng-row .type-tag.sentence_transform { background:#f5f3ff; color:#6d28d9; }
+  .eng-row .main { flex:1; min-width:0; }
+  .eng-row .prompt { font-size:14px; line-height:1.4; }
+  .eng-row .topic { font-size:11px; color:var(--muted); margin-top:2px; }
+  .eng-row .meta { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+  #engDialog { width:460px; max-width:90vw; }
+  #engDialog textarea { width:100%; font-size:15px; padding:9px 10px; border:1px solid var(--border); border-radius:10px; font-family:inherit; resize:vertical; }
+  #engDialog .opt-row { display:flex; gap:6px; }
+  #engDialog .opt-row input { flex:1; }
 </style>
 </head>
 <body>
@@ -178,7 +200,8 @@
       <button class="tab" id="tabCountdown">⏳ Countdown</button>
       <button class="tab" id="tabPokedex">⚡ Pokémon</button>
       <button class="tab" id="tabVocab" hidden>📚 生词库</button>
-      <button class="tab" id="tabDictation" hidden>📝 听写批改</button>
+      <button class="tab" id="tabDictation" hidden>📝 听写记录</button>
+      <button class="tab" id="tabEnglish" hidden>📖 英语错题</button>
     </div>
 
     <!-- Today view -->
@@ -250,6 +273,28 @@
       </div>
     </div>
 
+    <!-- English wrong-answer bank view -->
+    <div id="englishView" hidden>
+      <div class="card">
+        <div class="vocab-filters">
+          <input type="text" id="engSearch" placeholder="搜索题目 / 答案 / 解析…" />
+          <select id="engTypeFilter">
+            <option value="">全部题型</option>
+            <option value="fill_blank">填空/拼写</option>
+            <option value="mcq">选择题</option>
+            <option value="sentence_transform">句子转换</option>
+          </select>
+        </div>
+        <div class="vocab-summary" id="engSummary"></div>
+        <div class="vocab-list" id="engList"></div>
+        <div class="vocab-pager">
+          <button id="engPrev">‹ 上一页</button>
+          <span id="engPageLabel"></span>
+          <button id="engNext">下一页 ›</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Dictation grading view -->
     <div id="dictationView" hidden>
       <div class="card">
@@ -281,6 +326,7 @@
 
 <button id="fabAdd" title="Add task" hidden>＋</button>
 <button id="fabAddVocab" title="添加生词" hidden>＋</button>
+<button id="fabAddEnglish" title="添加错题" hidden>＋</button>
 
 <dialog id="addDialog">
   <h3>➕ New task</h3>
@@ -347,6 +393,41 @@
   </div>
 </dialog>
 
+<dialog id="engDialog">
+  <h3 id="engDlgTitle">➕ 添加错题</h3>
+  <div class="add">
+    <select id="eDlgType">
+      <option value="fill_blank">填空 / 拼写</option>
+      <option value="mcq">选择题</option>
+      <option value="sentence_transform">句子转换</option>
+    </select>
+    <input type="text" id="eDlgTopic" placeholder="分类（如：Grammar: Verb Tenses，选填）" style="flex:1 1 auto" />
+  </div>
+  <div class="add">
+    <textarea id="eDlgPrompt" rows="3" placeholder="题目（用 ___ 或 **(word)** 表示空格）" maxlength="500"></textarea>
+  </div>
+  <div id="eDlgOptionsWrap" class="add" style="flex-direction:column;gap:6px">
+    <div class="opt-row"><input type="text" id="eDlgOpt0" placeholder="选项 A" /></div>
+    <div class="opt-row"><input type="text" id="eDlgOpt1" placeholder="选项 B" /></div>
+    <div class="opt-row"><input type="text" id="eDlgOpt2" placeholder="选项 C" /></div>
+    <div class="opt-row"><input type="text" id="eDlgOpt3" placeholder="选项 D" /></div>
+  </div>
+  <div class="add">
+    <input type="text" id="eDlgAnswer" placeholder="正确答案（多个都算对用 / 分开）" maxlength="300" />
+  </div>
+  <div class="add">
+    <textarea id="eDlgExplanation" rows="3" placeholder="解析（选填，答题后会显示给孩子看）" maxlength="1000"></textarea>
+  </div>
+  <div class="add" id="eDlgAudioWrap">
+    <label><input type="checkbox" id="eDlgNeedsAudio" /> 🔊 给这题加朗读按钮（适合拼写题）</label>
+  </div>
+  <div class="msg err" id="engDlgErr"></div>
+  <div class="row">
+    <button class="ghost" id="eDlgCancel">Cancel</button>
+    <button class="primary" id="eDlgSave">Save</button>
+  </div>
+</dialog>
+
 <dialog id="gradeDialog" class="grade-dialog">
   <h3 id="gradeDlgTitle">📝 批改听写</h3>
   <p>按听写时的顺序核对孩子写的答案，默认都算对，写错了点 ✗ 就好。</p>
@@ -378,6 +459,7 @@
   let tab = "today"; // "today" | "countdown" | "pokedex" | "vocab"
   let dayFlags = {}; // date -> {total, done, events}
   let vocabOffset = 0, vocabLimit = 50, vocabTotal = 0, vocabEditingId = null;
+  let engOffset = 0, engLimit = 50, engTotal = 0, engEditingId = null;
 
   const EMOJIS = [
     ["", "none"], ["📚","homework"], ["📝","writing"], ["✏️","write"], ["📖","read"], ["📒","notes"],
@@ -753,17 +835,21 @@
     $("#tabPokedex").classList.toggle("active", t === "pokedex");
     $("#tabVocab").classList.toggle("active", t === "vocab");
     $("#tabDictation").classList.toggle("active", t === "dictation");
+    $("#tabEnglish").classList.toggle("active", t === "english");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
     $("#vocabView").hidden = t !== "vocab";
     $("#dictationView").hidden = t !== "dictation";
-    $("#fabAdd").hidden = t === "vocab" || t === "dictation"; // task FAB doesn't apply to the new tabs
+    $("#englishView").hidden = t !== "english";
+    $("#fabAdd").hidden = t === "vocab" || t === "dictation" || t === "english"; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
+    $("#fabAddEnglish").hidden = t !== "english";
     if (t === "today") { refresh(); refreshDayFlags(); }
     else if (t === "countdown") { refreshCountdown(); }
     else if (t === "pokedex") { loadPokedex(); }
     else if (t === "vocab") { vocabOffset = 0; refreshVocab(); }
+    else if (t === "english") { engOffset = 0; refreshEnglish(); }
     else { refreshDictation(); }
   }
 
@@ -910,19 +996,140 @@
   $("#vocabPrev").onclick = () => { vocabOffset = Math.max(0, vocabOffset - vocabLimit); refreshVocab(); };
   $("#vocabNext").onclick = () => { vocabOffset = vocabOffset + vocabLimit; refreshVocab(); };
 
+  // ---- English wrong-answer bank -------------------------------------------
+  const TYPE_LABEL = { fill_blank: "填空/拼写", mcq: "选择题", sentence_transform: "句子转换" };
+
+  function engFilters() {
+    return { search: $("#engSearch").value.trim(), type: $("#engTypeFilter").value };
+  }
+
+  async function refreshEnglish() {
+    try {
+      const f = engFilters();
+      const qs = new URLSearchParams({
+        ...(f.search ? { search: f.search } : {}),
+        ...(f.type ? { type: f.type } : {}),
+        limit: engLimit,
+        offset: engOffset,
+      });
+      const data = await api(`/api/english/questions?${qs.toString()}`);
+      engTotal = data.total;
+      const el = $("#engList");
+      el.innerHTML = "";
+      if (!data.questions.length) {
+        el.innerHTML = '<div class="empty">没有符合条件的错题</div>';
+      } else {
+        for (const q of data.questions) el.appendChild(englishRow(q));
+      }
+      const from = engTotal === 0 ? 0 : engOffset + 1;
+      const to = Math.min(engOffset + engLimit, engTotal);
+      $("#engSummary").textContent = `共 ${engTotal} 条 · 显示 ${from}–${to}`;
+      $("#engPageLabel").textContent = `第 ${Math.floor(engOffset / engLimit) + 1} / ${Math.max(1, Math.ceil(engTotal / engLimit))} 页`;
+      $("#engPrev").disabled = engOffset <= 0;
+      $("#engNext").disabled = engOffset + engLimit >= engTotal;
+    } catch (e) { showErr(e.message); }
+  }
+
+  function englishRow(q) {
+    const row = document.createElement("div");
+    row.className = "card eng-row";
+    const cntClass = q.correct_count > 0 ? "pos" : q.correct_count < 0 ? "neg" : "";
+    row.innerHTML = `
+      <div class="type-tag ${q.type}">${TYPE_LABEL[q.type] || q.type}</div>
+      <div class="main">
+        <div class="prompt">${escapeHtml(q.prompt)}${q.needs_audio ? " 🔊" : ""}</div>
+        <div class="topic">${escapeHtml(q.topic || "")}</div>
+      </div>
+      <div class="meta">
+        <span class="cnt ${cntClass}">正确数 ${q.correct_count}</span>
+        <span>
+          <button class="edit" title="编辑">✏️</button>
+          <button class="del" title="删除">🗑</button>
+        </span>
+      </div>`;
+    row.querySelector(".edit").onclick = () => openEnglishDialog(q);
+    row.querySelector(".del").onclick = async () => {
+      if (!confirm(`删除这道错题？\n\n${q.prompt.slice(0, 60)}`)) return;
+      try { await api(`/api/english/questions/${q.id}`, { method: "DELETE" }); refreshEnglish(); }
+      catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+
+  function syncEnglishDialogFields() {
+    const isMcq = $("#eDlgType").value === "mcq";
+    $("#eDlgOptionsWrap").hidden = !isMcq;
+    $("#eDlgAudioWrap").hidden = $("#eDlgType").value !== "fill_blank";
+  }
+
+  function openEnglishDialog(q) {
+    engEditingId = q ? q.id : null;
+    $("#engDlgTitle").textContent = q ? "✏️ 编辑错题" : "➕ 添加错题";
+    $("#eDlgType").value = q ? q.type : "fill_blank";
+    $("#eDlgTopic").value = q ? q.topic || "" : "";
+    $("#eDlgPrompt").value = q ? q.prompt : "";
+    const opts = (q && q.options) || ["", "", "", ""];
+    for (let i = 0; i < 4; i++) $(`#eDlgOpt${i}`).value = opts[i] || "";
+    $("#eDlgAnswer").value = q ? q.correct_answer : "";
+    $("#eDlgExplanation").value = q ? q.explanation || "" : "";
+    $("#eDlgNeedsAudio").checked = q ? !!q.needs_audio : false;
+    syncEnglishDialogFields();
+    $("#engDlgErr").textContent = "";
+    $("#engDialog").showModal();
+    $("#eDlgPrompt").focus();
+  }
+
+  $("#fabAddEnglish").onclick = () => openEnglishDialog(null);
+  $("#eDlgType").onchange = syncEnglishDialogFields;
+  $("#eDlgCancel").onclick = () => $("#engDialog").close();
+  $("#eDlgSave").onclick = async () => {
+    const type = $("#eDlgType").value;
+    const prompt = $("#eDlgPrompt").value.trim();
+    const correctAnswer = $("#eDlgAnswer").value.trim();
+    if (!prompt || !correctAnswer) {
+      $("#engDlgErr").textContent = "题目和正确答案是必填的";
+      return;
+    }
+    const payload = {
+      type,
+      topic: $("#eDlgTopic").value.trim(),
+      prompt,
+      correctAnswer,
+      explanation: $("#eDlgExplanation").value.trim(),
+      needsAudio: $("#eDlgNeedsAudio").checked,
+    };
+    if (type === "mcq") {
+      const opts = [0, 1, 2, 3].map((i) => $(`#eDlgOpt${i}`).value.trim()).filter(Boolean);
+      if (opts.length < 2) { $("#engDlgErr").textContent = "选择题至少需要2个选项"; return; }
+      payload.options = opts;
+    }
+    try {
+      if (engEditingId) await api(`/api/english/questions/${engEditingId}`, { method: "PATCH", body: JSON.stringify(payload) });
+      else await api("/api/english/questions", { method: "POST", body: JSON.stringify(payload) });
+      $("#engDialog").close();
+      refreshEnglish();
+    } catch (e) { $("#engDlgErr").textContent = e.message; }
+  };
+  $("#engSearch").addEventListener("keydown", (e) => { if (e.key === "Enter") { engOffset = 0; refreshEnglish(); } });
+  $("#engTypeFilter").onchange = () => { engOffset = 0; refreshEnglish(); };
+  $("#engPrev").onclick = () => { engOffset = Math.max(0, engOffset - engLimit); refreshEnglish(); };
+  $("#engNext").onclick = () => { engOffset = engOffset + engLimit; refreshEnglish(); };
+
   // ---- dictation grading ---------------------------------------------------
   let gradeSelections = {}; // itemId -> "correct" | "incorrect"
 
   async function refreshDictation() {
     try {
-      const data = await api("/api/dictation/sessions?status=pending_grading");
+      const data = await api("/api/dictation/sessions"); // full history, not just pending
       const el = $("#dictList");
       el.innerHTML = "";
-      $("#dictSummary").textContent = data.sessions.length ? `${data.sessions.length} 份待批改` : "";
       if (!data.sessions.length) {
-        el.innerHTML = '<div class="empty">目前没有待批改的听写 🎉</div>';
+        $("#dictSummary").textContent = "";
+        el.innerHTML = '<div class="empty">孩子还没有做过听写</div>';
         return;
       }
+      const pending = data.sessions.filter((s) => s.status === "pending_grading").length;
+      $("#dictSummary").textContent = `共 ${data.sessions.length} 份听写记录` + (pending ? ` · ${pending} 份待批改` : "");
       for (const s of data.sessions) el.appendChild(dictSessionRow(s));
     } catch (e) { showErr(e.message); }
   }
@@ -931,33 +1138,57 @@
     const row = document.createElement("div");
     row.className = "card dict-session";
     const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
+    let badge, sub;
+    if (s.status === "pending_grading") {
+      badge = '<div class="badge cnt">🔔 待批改</div>';
+      sub = `完成于 ${when.toLocaleString()}`;
+    } else if (s.status === "graded") {
+      badge = `<div class="badge">✅ ${s.correctCount}/${s.itemCount} 对</div>`;
+      sub = `完成于 ${when.toLocaleString()}`;
+    } else {
+      badge = '<div class="badge parent">⏳ 进行中</div>';
+      sub = "孩子还没有做完这次听写";
+      row.style.opacity = ".6";
+    }
     row.innerHTML = `
       <div class="icon">📝</div>
       <div class="info">
         <div class="count">${s.itemCount} 个词</div>
-        <div class="when">完成于 ${when.toLocaleString()}</div>
+        <div class="when">${sub}</div>
       </div>
-      <div class="badge">待批改</div>`;
-    row.onclick = () => openGradeDialog(s.id);
+      ${badge}
+      <button class="del" title="删除这条听写记录">🗑</button>`;
+    if (s.status !== "in_progress") row.onclick = () => openGradeDialog(s.id);
+    row.querySelector(".del").onclick = async (e) => {
+      e.stopPropagation(); // don't also trigger the row's own click (opening the dialog)
+      if (!confirm(`删除这条听写记录（${s.itemCount} 个词）？`)) return;
+      try { await api(`/api/dictation/sessions/${s.id}`, { method: "DELETE" }); refreshDictation(); }
+      catch (err) { showErr(err.message); }
+    };
     return row;
   }
 
   async function openGradeDialog(sessionId) {
     try {
       const data = await api(`/api/dictation/sessions/${sessionId}`);
+      const readOnly = data.session.status !== "pending_grading";
       gradeSelections = {};
       for (const it of data.items) gradeSelections[it.id] = it.result || "correct"; // default: assume correct, tap ✗ to flip
-      $("#gradeDlgTitle").textContent = `📝 批改听写（共 ${data.items.length} 题）`;
+      $("#gradeDlgTitle").textContent = readOnly
+        ? `📋 听写记录（共 ${data.items.length} 题，${data.session.status === "graded" ? "已批改" : ""}）`
+        : `📝 批改听写（共 ${data.items.length} 题）`;
       const el = $("#gradeItems");
       el.innerHTML = "";
-      for (const it of data.items) el.appendChild(gradeItemRow(it));
+      for (const it of data.items) el.appendChild(gradeItemRow(it, readOnly));
       $("#gradeDlgErr").textContent = "";
+      $("#gradeDlgSubmit").hidden = readOnly;
+      $("#gradeDlgCancel").textContent = readOnly ? "关闭" : "Cancel";
       $("#gradeDialog").dataset.sessionId = sessionId;
       $("#gradeDialog").showModal();
     } catch (e) { showErr(e.message); }
   }
 
-  function gradeItemRow(it) {
+  function gradeItemRow(it, readOnly) {
     const row = document.createElement("div");
     row.className = "grade-item";
     row.innerHTML = `
@@ -968,8 +1199,8 @@
         <div class="sentence">${escapeHtml(it.sentence)}</div>
       </div>
       <div class="grade-toggle">
-        <button class="ok" title="写对了">✓</button>
-        <button class="bad" title="写错了">✗</button>
+        <button class="ok" title="写对了" ${readOnly ? "disabled" : ""}>✓</button>
+        <button class="bad" title="写错了" ${readOnly ? "disabled" : ""}>✗</button>
       </div>`;
     const okBtn = row.querySelector(".ok");
     const badBtn = row.querySelector(".bad");
@@ -977,8 +1208,10 @@
       okBtn.classList.toggle("sel-correct", gradeSelections[it.id] === "correct");
       badBtn.classList.toggle("sel-incorrect", gradeSelections[it.id] === "incorrect");
     };
-    okBtn.onclick = () => { gradeSelections[it.id] = "correct"; sync(); };
-    badBtn.onclick = () => { gradeSelections[it.id] = "incorrect"; sync(); };
+    if (!readOnly) {
+      okBtn.onclick = () => { gradeSelections[it.id] = "correct"; sync(); };
+      badBtn.onclick = () => { gradeSelections[it.id] = "incorrect"; sync(); };
+    }
     sync();
     return row;
   }
@@ -1032,7 +1265,9 @@
     $("#tabVocab").onclick = () => setTab("vocab");
     $("#tabVocab").hidden = role !== "admin"; // 生词库：仅家长可见
     $("#tabDictation").onclick = () => setTab("dictation");
-    $("#tabDictation").hidden = role !== "admin"; // 听写批改：仅家长可见
+    $("#tabDictation").hidden = role !== "admin"; // 听写记录：仅家长可见
+    $("#tabEnglish").onclick = () => setTab("english");
+    $("#tabEnglish").hidden = role !== "admin"; // 英语错题管理：仅家长可见（孩子在App里录入新错题）
     $("#unlockBtn").onclick = unlockPokemon;
     $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();
@@ -1049,6 +1284,7 @@
     $("#logoutBtn").hidden = true;
     $("#fabAdd").hidden = true;
     $("#fabAddVocab").hidden = true;
+    $("#fabAddEnglish").hidden = true;
     $("#pinGate").hidden = false;
     $("#pinInput").value = "";
     $("#pinInput").focus();

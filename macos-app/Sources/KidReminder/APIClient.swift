@@ -179,4 +179,63 @@ final class APIClient {
         comps.path = "/dictation-audio/\(wordId).wav"
         return comps.url
     }
+
+    // MARK: - English wrong-answer practice (英语错题)
+
+    /// Generates a new practice set: 10 questions picked from among the weakest
+    /// (lowest correct_count), shuffled into order.
+    func startEnglishSession() async throws -> EnglishSession {
+        let data = try await request("/api/english/sessions", method: "POST", body: Data("{}".utf8))
+        return try JSONDecoder().decode(EnglishSession.self, from: data)
+    }
+
+    /// Submits a typed/picked answer for one item; auto-graded server-side. Safe to
+    /// call once per item — repeat calls just return the original stored result.
+    func submitEnglishAnswer(sessionId: Int, itemId: Int, answer: String) async throws -> EnglishAnswerResult {
+        let body = try JSONEncoder().encode(["answer": answer])
+        let data = try await request("/api/english/sessions/\(sessionId)/items/\(itemId)/submit", method: "POST", body: body)
+        return try JSONDecoder().decode(EnglishAnswerResult.self, from: data)
+    }
+
+    /// Flips an item's verdict once (e.g. a sentence-transform answer the auto-grader
+    /// marked wrong but is actually a valid alternative phrasing).
+    func overrideEnglishAnswer(sessionId: Int, itemId: Int, correct: Bool) async throws {
+        let body = try JSONEncoder().encode(["correct": correct])
+        _ = try await request("/api/english/sessions/\(sessionId)/items/\(itemId)/override", method: "POST", body: body)
+    }
+
+    /// Marks a practice set as finished.
+    func completeEnglishSession(sessionId: Int) async throws {
+        _ = try await request("/api/english/sessions/\(sessionId)/complete", method: "POST", body: Data("{}".utf8))
+    }
+
+    /// Adds a new question to the shared bank — used by the "add a mistake" form.
+    func addEnglishQuestion(type: EnglishQuestionType, topic: String, prompt: String,
+                             options: [String]?, correctAnswer: String, explanation: String,
+                             needsAudio: Bool) async throws {
+        struct NewQuestion: Encodable {
+            let type: String
+            let topic: String
+            let prompt: String
+            let options: [String]?
+            let correctAnswer: String
+            let explanation: String
+            let needsAudio: Bool
+        }
+        let payload = NewQuestion(type: type.rawValue, topic: topic, prompt: prompt,
+                                   options: options, correctAnswer: correctAnswer,
+                                   explanation: explanation, needsAudio: needsAudio)
+        let body = try JSONEncoder().encode(payload)
+        _ = try await request("/api/english/questions", method: "POST", body: body)
+    }
+
+    /// URL for a spelling question's TTS audio (the sentence read aloud with the blank filled in).
+    func englishAudioURL(questionId: Int) -> URL? {
+        var comps = URLComponents()
+        comps.scheme = "http"
+        comps.host = settings.host
+        comps.port = settings.port
+        comps.path = "/english-audio/\(questionId).wav"
+        return comps.url
+    }
 }

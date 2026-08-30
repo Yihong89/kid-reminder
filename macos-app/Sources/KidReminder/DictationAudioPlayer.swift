@@ -33,8 +33,17 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         isLoading = true
         Task {
             do {
-                let (data, _) = try await URLSession.shared.data(from: url)
+                let (data, response) = try await URLSession.shared.data(from: url)
                 guard token == playToken else { return } // superseded while we were fetching
+                // `data(from:)` only throws for network-level failures — a 5xx from our own
+                // server (e.g. the shared TTS service was briefly backlogged) still "succeeds"
+                // here, with the JSON error body as `data`. Feeding that to AVAudioPlayer used
+                // to sometimes leave it stuck reporting isPlaying with no audio and no finish
+                // callback (no valid audio to finish playing), instead of failing loudly — so
+                // check the status explicitly rather than trusting any 200-byte response is audio.
+                if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
+                    throw APIError.status(http.statusCode)
+                }
                 isLoading = false
                 let p = try AVAudioPlayer(data: data)
                 p.delegate = self

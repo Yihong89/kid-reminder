@@ -98,3 +98,34 @@ struct UnlockResponse: Codable {
     let caught: Int
     let total: Int
 }
+
+// MARK: - English wrong-answer practice (英语错题)
+
+enum EnglishQuestionType: String, Codable {
+    case fillBlank = "fill_blank"
+    case mcq
+    case sentenceTransform = "sentence_transform"
+}
+
+struct EnglishSessionItem: Codable, Identifiable {
+    let itemId: Int
+    let seq: Int
+    let questionId: Int
+    let type: EnglishQuestionType
+    let topic: String
+    let prompt: String
+    let options: [String]?
+    let needsAudio: Bool
+    var id: Int { itemId }
+}
+
+struct EnglishSession: Codable {
+    let sessionId: Int
+    let items: [EnglishSessionItem]
+}
+
+struct EnglishAnswerResult: Codable, Equatable {
+    let correct: Bool
+    let correctAnswer: String
+    let explanation: String
+}
