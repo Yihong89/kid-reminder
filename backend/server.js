@@ -925,27 +925,20 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
-      // Character selection: weakest first (lowest average correct_count), lower grade
-      // level breaks ties (MIN(level) — a character can recur across levels; use the
-      // earliest one it's taught at), and RANDOM() as the final tiebreaker so characters
-      // tied on both of those don't always come out in the same order. SQLite evaluates
-      // ORDER BY expressions once per row before sorting, so RANDOM() here really is one
-      // fixed value per character for this query, not re-rolled per comparison.
-      const chosenChars = db
+      // Word selection: weakest first (lowest correct_count), lower grade level breaks
+      // ties, and RANDOM() as the final tiebreaker so words tied on both don't always
+      // come out in the same order. SQLite evaluates ORDER BY expressions once per row
+      // before sorting, so RANDOM() here really is one fixed value per word for this
+      // query, not re-rolled per comparison. 30 words per dictation set.
+      const wordIds = db
         .prepare(
-          `SELECT character FROM vocab_words WHERE language = 'zh'
-           GROUP BY character ORDER BY AVG(correct_count) ASC, MIN(level) ASC, RANDOM() ASC LIMIT 10`
+          `SELECT id FROM vocab_words WHERE language = 'zh'
+           ORDER BY correct_count ASC, level ASC, RANDOM() ASC LIMIT 30`
         )
         .all()
-        .map((r) => r.character);
-      if (chosenChars.length === 0) return sendJSON(400, { error: "vocab bank is empty" });
+        .map((r) => r.id);
+      if (wordIds.length === 0) return sendJSON(400, { error: "vocab bank is empty" });
 
-      // up to 3 random words per chosen character
-      const wordIds = [];
-      for (const ch of chosenChars) {
-        const words = db.prepare(`SELECT id FROM vocab_words WHERE language = 'zh' AND character = ? ORDER BY RANDOM() LIMIT 3`).all(ch);
-        for (const w of words) wordIds.push(w.id);
-      }
       // shuffle the overall dictation order
       for (let i = wordIds.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [wordIds[i], wordIds[j]] = [wordIds[j], wordIds[i]]; }
 
