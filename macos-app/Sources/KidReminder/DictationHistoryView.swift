@@ -19,6 +19,7 @@ struct DictationHistoryView: View {
     var body: some View {
         content
             .navigationTitle("📋 我的听写记录")
+            .frame(minWidth: 420, minHeight: 420)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("关闭") { dismiss() }
