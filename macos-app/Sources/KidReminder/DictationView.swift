@@ -50,17 +50,23 @@ struct DictationView: View {
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .sheet(item: $activeSheet) { sheet in
-                switch sheet {
-                case .history:
-                    NavigationStack { DictationHistoryView() }
-                case .practiceList(let list):
-                    NavigationStack { CustomDictationPracticeView(list: list) }
-                case .createList:
-                    NavigationStack { DictationListEditorView(onSaved: { Task { await loadCustomLists() } }) }
-                case .editList(let list):
-                    NavigationStack { DictationListEditorView(existingList: list, onSaved: { Task { await loadCustomLists() } }) }
-                }
+                sheetContent(for: sheet)
+                    .onAppear { DevLog.log("DictationView sheet presented: \(sheet.id)") }
             }
+    }
+
+    @ViewBuilder
+    private func sheetContent(for sheet: SheetDestination) -> some View {
+        switch sheet {
+        case .history:
+            NavigationStack { DictationHistoryView() }
+        case .practiceList(let list):
+            NavigationStack { CustomDictationPracticeView(list: list) }
+        case .createList:
+            NavigationStack { DictationListEditorView(onSaved: { Task { await loadCustomLists() } }) }
+        case .editList(let list):
+            NavigationStack { DictationListEditorView(existingList: list, onSaved: { Task { await loadCustomLists() } }) }
+        }
     }
 
     @ViewBuilder
@@ -99,7 +105,7 @@ struct DictationView: View {
                 Button("🔊 开始听写") { Task { await start() } }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
-                Button("📋 我的听写记录") { activeSheet = .history }
+                Button("📋 我的听写记录") { DevLog.log("DictationView: 我的听写记录 tapped"); activeSheet = .history }
                     .buttonStyle(.bordered)
 
                 if !customLists.isEmpty {
