@@ -19,6 +19,7 @@ struct DictationView: View {
 
     @State private var phase: Phase = .idle
     @State private var session: DictationSession?
+    @State private var showHistorySheet = false
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -27,6 +28,9 @@ struct DictationView: View {
             .navigationTitle("听写")
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .sheet(isPresented: $showHistorySheet) {
+                NavigationStack { DictationHistoryView() }
+            }
     }
 
     @ViewBuilder
@@ -57,13 +61,15 @@ struct DictationView: View {
         VStack(spacing: 16) {
             Text("📝").font(.system(size: 56))
             Text("准备好听写了吗？").font(.title2).bold()
-            Text("会随机抽10个字、每字最多3个词，App 会念出来，写在纸上就好。")
+            Text("会挑30个最需要练习的词，App 会念出来，写在纸上就好。")
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 340)
             Button("🔊 开始听写") { Task { await start() } }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+            Button("📋 我的听写记录") { showHistorySheet = true }
+                .buttonStyle(.bordered)
         }
     }
 

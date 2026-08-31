@@ -89,6 +89,54 @@ struct DictationSession: Codable {
     let items: [DictationItemRef]
 }
 
+/// One row of /api/dictation/sessions — history list (used by DictationHistoryView so
+/// the kid can review their own graded results, and by the web admin's grading queue).
+/// Also doubles as the `session` field of /api/dictation/sessions/:id, which is a plain
+/// `SELECT *` on dictation_sessions and so doesn't carry itemCount/correctCount/
+/// incorrectCount — hence those being optional even though the list endpoint always
+/// sends them.
+struct DictationSessionSummary: Codable, Identifiable {
+    let id: Int
+    let status: String // "in_progress" | "pending_grading" | "graded"
+    let createdAt: String
+    let completedAt: String?
+    let gradedAt: String?
+    let itemCount: Int?
+    let correctCount: Int?
+    let incorrectCount: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case id, status, itemCount, correctCount, incorrectCount
+        case createdAt = "created_at"
+        case completedAt = "completed_at"
+        case gradedAt = "graded_at"
+    }
+}
+struct DictationSessionListResponse: Codable { let sessions: [DictationSessionSummary] }
+
+/// One graded word within a session's detail — the actual per-word ✓/✗ the kid reviews.
+struct DictationSessionDetailItem: Codable, Identifiable {
+    let id: Int
+    let seq: Int
+    let result: String? // nil until graded; "correct" | "incorrect" once it is
+    let wordId: Int
+    let character: String
+    let word: String
+    let pinyin: String
+    let sentence: String
+    let level: String
+    let lesson: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, seq, result, character, word, pinyin, sentence, level, lesson
+        case wordId = "word_id"
+    }
+}
+struct DictationSessionDetail: Codable {
+    let session: DictationSessionSummary
+    let items: [DictationSessionDetailItem]
+}
+
 struct UnlockResponse: Codable {
     let ok: Bool
     let pokemon: PokemonInfo
