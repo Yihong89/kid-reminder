@@ -85,6 +85,7 @@ struct DictationListEditorView: View {
         }
         .formStyle(.grouped)
         .navigationTitle(isNew ? "➕ 新建听写表" : "管理听写表")
+        .frame(minWidth: 420, minHeight: 420)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("关闭") { dismiss() }

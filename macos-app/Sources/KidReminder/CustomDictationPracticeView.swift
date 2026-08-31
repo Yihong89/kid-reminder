@@ -24,7 +24,7 @@ struct CustomDictationPracticeView: View {
         content
             .navigationTitle(list.name)
             .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(minWidth: 420, minHeight: 420)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("关闭") { player.stop(); dismiss() }
