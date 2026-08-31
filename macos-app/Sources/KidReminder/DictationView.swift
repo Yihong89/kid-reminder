@@ -19,11 +19,28 @@ struct DictationView: View {
 
     @State private var phase: Phase = .idle
     @State private var session: DictationSession?
-    @State private var showHistorySheet = false
     @State private var customLists: [DictationList] = []
-    @State private var practicingList: DictationList?
-    @State private var showCreateListSheet = false
-    @State private var editingList: DictationList?
+
+    // A single sheet destination instead of one @State + one .sheet modifier per
+    // destination — stacking multiple .sheet modifiers on one view is a known SwiftUI
+    // flakiness source (can silently present a blank sheet instead of the intended
+    // content); one .sheet(item:) driven by this enum sidesteps the whole class of bug.
+    private enum SheetDestination: Identifiable {
+        case history
+        case practiceList(DictationList)
+        case createList
+        case editList(DictationList)
+
+        var id: String {
+            switch self {
+            case .history: return "history"
+            case .practiceList(let l): return "practice-\(l.id)"
+            case .createList: return "createList"
+            case .editList(let l): return "edit-\(l.id)"
+            }
+        }
+    }
+    @State private var activeSheet: SheetDestination?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -32,17 +49,17 @@ struct DictationView: View {
             .navigationTitle("听写")
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .sheet(isPresented: $showHistorySheet) {
-                NavigationStack { DictationHistoryView() }
-            }
-            .sheet(item: $practicingList) { list in
-                NavigationStack { CustomDictationPracticeView(list: list) }
-            }
-            .sheet(isPresented: $showCreateListSheet) {
-                NavigationStack { DictationListEditorView(onSaved: { Task { await loadCustomLists() } }) }
-            }
-            .sheet(item: $editingList) { list in
-                NavigationStack { DictationListEditorView(existingList: list, onSaved: { Task { await loadCustomLists() } }) }
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                case .history:
+                    NavigationStack { DictationHistoryView() }
+                case .practiceList(let list):
+                    NavigationStack { CustomDictationPracticeView(list: list) }
+                case .createList:
+                    NavigationStack { DictationListEditorView(onSaved: { Task { await loadCustomLists() } }) }
+                case .editList(let list):
+                    NavigationStack { DictationListEditorView(existingList: list, onSaved: { Task { await loadCustomLists() } }) }
+                }
             }
     }
 
@@ -82,7 +99,7 @@ struct DictationView: View {
                 Button("🔊 开始听写") { Task { await start() } }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
-                Button("📋 我的听写记录") { showHistorySheet = true }
+                Button("📋 我的听写记录") { activeSheet = .history }
                     .buttonStyle(.bordered)
 
                 if !customLists.isEmpty {
@@ -92,7 +109,7 @@ struct DictationView: View {
                         ForEach(customLists) { list in
                             HStack(spacing: 8) {
                                 Button {
-                                    practicingList = list
+                                    activeSheet = .practiceList(list)
                                 } label: {
                                     HStack {
                                         Text("▶️ \(list.name)")
@@ -102,14 +119,14 @@ struct DictationView: View {
                                     }
                                 }
                                 .buttonStyle(.bordered)
-                                Button { editingList = list } label: { Image(systemName: "pencil") }
+                                Button { activeSheet = .editList(list) } label: { Image(systemName: "pencil") }
                                     .buttonStyle(.bordered)
                             }
                             .frame(maxWidth: 340)
                         }
                     }
                 }
-                Button("➕ 新建自定义听写表") { showCreateListSheet = true }
+                Button("➕ 新建自定义听写表") { activeSheet = .createList }
                     .buttonStyle(.bordered)
             }
             .padding(.vertical, 24)
