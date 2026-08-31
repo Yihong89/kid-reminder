@@ -258,6 +258,20 @@ async function ensureCustomDictationAudio(itemId, text) {
     inFlightCustomDictationAudio.delete(itemId);
   }
 }
+// 后台预热：跟 precacheDictationAudio 一样的思路，串行、跳过已缓存的、单条失败不影响
+// 其他条。触发点是 GET /api/dictation-lists/:id ——家长/孩子打开"管理"或者孩子开始
+// 播放这份表时都会调用，所以加完词看一眼、或者点开始听写，都会顺带把还没缓存的补上。
+function precacheCustomDictationAudio(items) {
+  (async () => {
+    for (const item of items) {
+      try {
+        await ensureCustomDictationAudio(item.id, item.text);
+      } catch (err) {
+        console.error(`[kid-reminder] precache failed for custom list item ${item.id}: ${err.message}`);
+      }
+    }
+  })();
+}
 function deleteCustomDictationAudio(itemId) {
   try { fs.unlinkSync(path.join(CUSTOM_DICTATION_AUDIO_DIR, `${itemId}.wav`)); } catch { /* no cache yet */ }
 }
@@ -1146,6 +1160,7 @@ const server = http.createServer(async (req, res) => {
         const list = db.prepare("SELECT id, name, created_by, created_at FROM dictation_lists WHERE id = ?").get(id);
         if (!list) return sendJSON(404, { error: "list not found" });
         const items = db.prepare("SELECT id, seq, text FROM dictation_list_items WHERE list_id = ? ORDER BY seq").all(id);
+        precacheCustomDictationAudio(items);
         return sendJSON(200, { list, items });
       }
 
