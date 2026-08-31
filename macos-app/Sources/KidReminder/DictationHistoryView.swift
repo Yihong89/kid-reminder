@@ -101,7 +101,12 @@ struct DictationSessionDetailView: View {
     var body: some View {
         content
             .navigationTitle(title)
-            .task { await load() }
+            .frame(minWidth: 420, minHeight: 420)
+            .onAppear { DevLog.log("DictationSessionDetailView appeared sessionId=\(sessionId)") }
+            .task {
+                DevLog.log("DictationSessionDetailView task started sessionId=\(sessionId)")
+                await load()
+            }
     }
 
     private var title: String {
@@ -149,8 +154,10 @@ struct DictationSessionDetailView: View {
     private func load() async {
         do {
             let detail = try await api.dictationSessionDetail(id: sessionId)
+            DevLog.log("DictationSessionDetailView load() succeeded sessionId=\(sessionId), \(detail.items.count) items")
             state = .loaded(detail)
         } catch {
+            DevLog.log("DictationSessionDetailView load() FAILED sessionId=\(sessionId): \(error)")
             state = .error(error.localizedDescription)
         }
     }
