@@ -123,10 +123,10 @@
   .badge.mine { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
   .badge.parent { background:var(--bg); color:var(--muted); }
   .badge.rep { background:#fefce8; border-color:#fde68a; color:#a16207; }
-  #fabAdd, #fabAddVocab, #fabAddEnglish { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
+  #fabAdd, #fabAddVocab, #fabAddEnglish, #fabAddList { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
             background:var(--accent); color:#fff; border:none; font-size:28px; line-height:1; cursor:pointer;
             box-shadow:0 6px 18px rgba(37,99,235,.35); z-index:20; }
-  #fabAdd:hover, #fabAddVocab:hover, #fabAddEnglish:hover { filter:brightness(1.08); }
+  #fabAdd:hover, #fabAddVocab:hover, #fabAddEnglish:hover, #fabAddList:hover { filter:brightness(1.08); }
   #addDialog .add { gap:8px; }
   #addDialog .add input[type=text] { flex:1 1 100%; width:100%; }
   #addDialog .add select { flex:0 0 auto; }
@@ -225,6 +225,7 @@
         <button class="tab" id="tabDictation" hidden>📝 听写记录</button>
         <button class="tab" id="tabEnglish" hidden>📖 英语错题</button>
         <button class="tab" id="tabEngRecords" hidden>📋 英语练习记录</button>
+        <button class="tab" id="tabDictationLists" hidden>📝 自定义听写表</button>
       </nav>
 
       <div class="content">
@@ -335,6 +336,14 @@
       </div>
     </div>
 
+    <!-- Custom dictation lists view (freeform, no grading — parent or kid managed) -->
+    <div id="dictationListsView" hidden>
+      <div class="card">
+        <div class="vocab-summary" id="listsSummary"></div>
+        <div class="vocab-list" id="listsList"></div>
+      </div>
+    </div>
+
     <!-- unlock reveal modal -->
     <dialog id="revealDialog">
       <div style="text-align:center">
@@ -361,6 +370,7 @@
 <button id="fabAdd" title="Add task" hidden>＋</button>
 <button id="fabAddVocab" title="添加生词" hidden>＋</button>
 <button id="fabAddEnglish" title="添加错题" hidden>＋</button>
+<button id="fabAddList" title="新建听写表" hidden>＋</button>
 
 <dialog id="addDialog">
   <h3>➕ New task</h3>
@@ -478,6 +488,37 @@
   <div id="engRecItems"></div>
   <div class="row">
     <button class="ghost" id="engRecDlgClose">关闭</button>
+  </div>
+</dialog>
+
+<dialog id="listCreateDialog">
+  <h3 id="listCreateDlgTitle">➕ 新建听写表</h3>
+  <div class="add">
+    <input type="text" id="listNameInput" placeholder="表名，比如「本周听写」" maxlength="60" style="flex:1 1 auto" />
+  </div>
+  <div class="msg err" id="listCreateDlgErr"></div>
+  <div class="row">
+    <button class="ghost" id="listCreateDlgCancel">Cancel</button>
+    <button class="primary" id="listCreateDlgSave">Save</button>
+  </div>
+</dialog>
+
+<dialog id="listManageDialog" class="grade-dialog">
+  <h3 id="listManageDlgTitle">📝 管理听写表</h3>
+  <div class="add">
+    <textarea id="listTextInput" placeholder="要听写的内容——一个字、一个词、一句话都可以" maxlength="300" rows="2" style="flex:1 1 auto; font-size:15px; padding:9px 10px; border:1px solid var(--border); border-radius:10px; font-family:inherit; resize:vertical"></textarea>
+  </div>
+  <div class="add">
+    <button class="primary" id="listWordSaveBtn">➕ 加入</button>
+    <button class="ghost" id="listWordCancelEditBtn" hidden>取消编辑</button>
+  </div>
+  <div class="msg err" id="listManageDlgErr"></div>
+  <div id="listItemsWrap"></div>
+  <div class="row">
+    <button class="ghost" id="listRenameBtn">✏️ 改名</button>
+    <button class="ghost" id="listDeleteBtn" style="color:var(--danger)">🗑 删除整张表</button>
+    <div style="flex:1"></div>
+    <button class="primary" id="listManageDlgClose">关闭</button>
   </div>
 </dialog>
 
@@ -879,6 +920,7 @@
     $("#tabDictation").classList.toggle("active", t === "dictation");
     $("#tabEnglish").classList.toggle("active", t === "english");
     $("#tabEngRecords").classList.toggle("active", t === "engRecords");
+    $("#tabDictationLists").classList.toggle("active", t === "dictationLists");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
@@ -886,16 +928,20 @@
     $("#dictationView").hidden = t !== "dictation";
     $("#englishView").hidden = t !== "english";
     $("#engRecordsView").hidden = t !== "engRecords";
-    $("#fabAdd").hidden = t === "vocab" || t === "dictation" || t === "english" || t === "engRecords"; // task FAB doesn't apply to these tabs
+    $("#dictationListsView").hidden = t !== "dictationLists";
+    const noTaskFab = ["vocab", "dictation", "english", "engRecords", "dictationLists"].includes(t);
+    $("#fabAdd").hidden = noTaskFab; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
     $("#fabAddEnglish").hidden = t !== "english";
+    $("#fabAddList").hidden = t !== "dictationLists";
     if (t === "today") { refresh(); refreshDayFlags(); }
     else if (t === "countdown") { refreshCountdown(); }
     else if (t === "pokedex") { loadPokedex(); }
     else if (t === "vocab") { vocabOffset = 0; refreshVocab(); }
     else if (t === "english") { engOffset = 0; refreshEnglish(); }
     else if (t === "dictation") { refreshDictation(); }
-    else { refreshEngRecords(); }
+    else if (t === "engRecords") { refreshEngRecords(); }
+    else { refreshLists(); }
   }
 
   async function refresh() {
@@ -1354,6 +1400,174 @@
 
   $("#engRecDlgClose").onclick = () => $("#engRecordDialog").close();
 
+  // ---- 自定义听写表（家长网页端管理；孩子在 App 里也能管理自己的表）--------
+  let listEditingItemId = null; // non-null while the add/edit word form is editing an existing word
+
+  async function refreshLists() {
+    try {
+      const data = await api("/api/dictation-lists");
+      const el = $("#listsList");
+      el.innerHTML = "";
+      if (!data.lists.length) {
+        $("#listsSummary").textContent = "";
+        el.innerHTML = '<div class="empty">还没有自定义听写表，点右下角 ＋ 新建一个</div>';
+        return;
+      }
+      $("#listsSummary").textContent = `共 ${data.lists.length} 张听写表`;
+      for (const l of data.lists) el.appendChild(listRow(l));
+    } catch (e) { showErr(e.message); }
+  }
+
+  function listRow(l) {
+    const row = document.createElement("div");
+    row.className = "card dict-session";
+    const creator = l.created_by === "kid" ? "🧒 孩子创建" : "👤 家长创建";
+    row.innerHTML = `
+      <div class="icon">📝</div>
+      <div class="info">
+        <div class="count">${escapeHtml(l.name)}</div>
+        <div class="when">${l.itemCount} 个词 · ${creator}</div>
+      </div>
+      <button class="del" title="删除整张表">🗑</button>`;
+    row.onclick = () => openListManageDialog(l.id);
+    row.querySelector(".del").onclick = async (e) => {
+      e.stopPropagation();
+      if (!confirm(`删除听写表"${l.name}"（含 ${l.itemCount} 个词）？`)) return;
+      try { await api(`/api/dictation-lists/${l.id}`, { method: "DELETE" }); refreshLists(); }
+      catch (err) { showErr(err.message); }
+    };
+    return row;
+  }
+
+  async function openListManageDialog(listId) {
+    try {
+      const data = await api(`/api/dictation-lists/${listId}`);
+      $("#listManageDialog").dataset.listId = listId;
+      $("#listManageDialog").dataset.listName = data.list.name;
+      $("#listManageDlgTitle").textContent = `📝 ${data.list.name}`;
+      renderListItems(data.items);
+      resetListWordForm();
+      $("#listManageDlgErr").textContent = "";
+      $("#listManageDialog").showModal();
+    } catch (e) { showErr(e.message); }
+  }
+
+  function renderListItems(items) {
+    const wrap = $("#listItemsWrap");
+    wrap.innerHTML = "";
+    if (!items.length) {
+      wrap.innerHTML = '<div class="empty">还没有加词，在上面输入后点"加入"</div>';
+      return;
+    }
+    for (const it of items) wrap.appendChild(listItemRow(it));
+  }
+
+  function listItemRow(it) {
+    const row = document.createElement("div");
+    row.className = "grade-item";
+    row.innerHTML = `
+      <div class="seq">${it.seq}</div>
+      <div class="info">
+        <div class="word-line">${escapeHtml(it.text)}</div>
+      </div>
+      <div class="grade-toggle">
+        <button class="edit-btn" title="编辑">✏️</button>
+        <button class="del" title="删除">🗑</button>
+      </div>`;
+    row.querySelector(".edit-btn").onclick = () => {
+      listEditingItemId = it.id;
+      $("#listTextInput").value = it.text;
+      $("#listWordSaveBtn").textContent = "💾 保存修改";
+      $("#listWordCancelEditBtn").hidden = false;
+      $("#listTextInput").focus();
+    };
+    row.querySelector(".del").onclick = async () => {
+      const listId = $("#listManageDialog").dataset.listId;
+      if (!confirm(`删除"${it.text}"？`)) return;
+      try {
+        await api(`/api/dictation-lists/${listId}/items/${it.id}`, { method: "DELETE" });
+        openListManageDialog(Number(listId));
+      } catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+
+  function resetListWordForm() {
+    listEditingItemId = null;
+    $("#listTextInput").value = "";
+    $("#listWordSaveBtn").textContent = "➕ 加入";
+    $("#listWordCancelEditBtn").hidden = true;
+  }
+  $("#listWordCancelEditBtn").onclick = resetListWordForm;
+
+  $("#listWordSaveBtn").onclick = async () => {
+    const listId = $("#listManageDialog").dataset.listId;
+    const text = $("#listTextInput").value.trim();
+    if (!text) { $("#listManageDlgErr").textContent = "请输入要听写的内容"; return; }
+    try {
+      if (listEditingItemId) {
+        await api(`/api/dictation-lists/${listId}/items/${listEditingItemId}`, {
+          method: "PATCH", body: JSON.stringify({ text }),
+        });
+      } else {
+        await api(`/api/dictation-lists/${listId}/items`, {
+          method: "POST", body: JSON.stringify({ text }),
+        });
+      }
+      openListManageDialog(Number(listId));
+    } catch (e) { $("#listManageDlgErr").textContent = e.message; }
+  };
+
+  $("#listRenameBtn").onclick = () => {
+    const listId = $("#listManageDialog").dataset.listId;
+    $("#listCreateDialog").dataset.renameListId = listId;
+    $("#listCreateDlgTitle").textContent = "✏️ 改名";
+    $("#listNameInput").value = $("#listManageDialog").dataset.listName;
+    $("#listCreateDlgErr").textContent = "";
+    $("#listCreateDialog").showModal();
+  };
+
+  $("#listDeleteBtn").onclick = async () => {
+    const listId = $("#listManageDialog").dataset.listId;
+    const name = $("#listManageDialog").dataset.listName;
+    if (!confirm(`删除整张听写表"${name}"？这个操作不能撤销。`)) return;
+    try {
+      await api(`/api/dictation-lists/${listId}`, { method: "DELETE" });
+      $("#listManageDialog").close();
+      refreshLists();
+    } catch (e) { showErr(e.message); }
+  };
+
+  $("#listManageDlgClose").onclick = () => $("#listManageDialog").close();
+
+  $("#fabAddList").onclick = () => {
+    $("#listCreateDialog").dataset.renameListId = "";
+    $("#listCreateDlgTitle").textContent = "➕ 新建听写表";
+    $("#listNameInput").value = "";
+    $("#listCreateDlgErr").textContent = "";
+    $("#listCreateDialog").showModal();
+  };
+  $("#listCreateDlgCancel").onclick = () => $("#listCreateDialog").close();
+  $("#listCreateDlgSave").onclick = async () => {
+    const name = $("#listNameInput").value.trim();
+    if (!name) { $("#listCreateDlgErr").textContent = "请输入表名"; return; }
+    const renameListId = $("#listCreateDialog").dataset.renameListId;
+    try {
+      if (renameListId) {
+        await api(`/api/dictation-lists/${renameListId}`, { method: "PATCH", body: JSON.stringify({ name }) });
+        $("#listCreateDialog").close();
+        $("#listManageDialog").dataset.listName = name;
+        $("#listManageDlgTitle").textContent = `📝 ${name}`;
+        refreshLists();
+      } else {
+        const res = await api("/api/dictation-lists", { method: "POST", body: JSON.stringify({ name }) });
+        $("#listCreateDialog").close();
+        refreshLists();
+        openListManageDialog(res.id);
+      }
+    } catch (e) { $("#listCreateDlgErr").textContent = e.message; }
+  };
+
   function showErr(msg) {
     $("#err").textContent = msg;
     setTimeout(() => { $("#err").textContent = ""; }, 4000);
@@ -1397,6 +1611,8 @@
     $("#tabEnglish").hidden = role !== "admin"; // 英语错题管理：仅家长可见（孩子在App里录入新错题）
     $("#tabEngRecords").onclick = () => setTab("engRecords");
     $("#tabEngRecords").hidden = role !== "admin"; // 英语练习记录：仅家长可见
+    $("#tabDictationLists").onclick = () => setTab("dictationLists");
+    $("#tabDictationLists").hidden = role !== "admin"; // 自定义听写表管理：仅家长网页端可见（孩子在App里也能管理自己的表）
     $("#unlockBtn").onclick = unlockPokemon;
     $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();
@@ -1414,6 +1630,7 @@
     $("#fabAdd").hidden = true;
     $("#fabAddVocab").hidden = true;
     $("#fabAddEnglish").hidden = true;
+    $("#fabAddList").hidden = true;
     $("#pinGate").hidden = false;
     $("#pinInput").value = "";
     $("#pinInput").focus();

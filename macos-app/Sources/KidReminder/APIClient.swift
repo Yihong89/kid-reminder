@@ -196,6 +196,62 @@ final class APIClient {
         return try JSONDecoder().decode(DictationSessionDetail.self, from: data)
     }
 
+    // MARK: - 自定义听写表 (freeform, ungraded, repeatable — see DictationListEditorView)
+
+    func dictationLists() async throws -> [DictationList] {
+        let data = try await request("/api/dictation-lists")
+        return try JSONDecoder().decode(DictationListsResponse.self, from: data).lists
+    }
+
+    func dictationListDetail(id: Int) async throws -> DictationListDetail {
+        let data = try await request("/api/dictation-lists/\(id)")
+        return try JSONDecoder().decode(DictationListDetail.self, from: data)
+    }
+
+    func createDictationList(name: String) async throws -> Int {
+        struct Req: Encodable { let name: String }
+        struct Resp: Decodable { let id: Int }
+        let body = try JSONEncoder().encode(Req(name: name))
+        let data = try await request("/api/dictation-lists", method: "POST", body: body)
+        return try JSONDecoder().decode(Resp.self, from: data).id
+    }
+
+    func renameDictationList(id: Int, name: String) async throws {
+        struct Req: Encodable { let name: String }
+        let body = try JSONEncoder().encode(Req(name: name))
+        _ = try await request("/api/dictation-lists/\(id)", method: "PATCH", body: body)
+    }
+
+    func deleteDictationList(id: Int) async throws {
+        _ = try await request("/api/dictation-lists/\(id)", method: "DELETE")
+    }
+
+    func addDictationListItem(listId: Int, text: String) async throws {
+        struct Req: Encodable { let text: String }
+        let body = try JSONEncoder().encode(Req(text: text))
+        _ = try await request("/api/dictation-lists/\(listId)/items", method: "POST", body: body)
+    }
+
+    func updateDictationListItem(listId: Int, itemId: Int, text: String) async throws {
+        struct Req: Encodable { let text: String }
+        let body = try JSONEncoder().encode(Req(text: text))
+        _ = try await request("/api/dictation-lists/\(listId)/items/\(itemId)", method: "PATCH", body: body)
+    }
+
+    func deleteDictationListItem(listId: Int, itemId: Int) async throws {
+        _ = try await request("/api/dictation-lists/\(listId)/items/\(itemId)", method: "DELETE")
+    }
+
+    /// URL for a custom list item's TTS audio, synthesized and cached server-side.
+    func customDictationAudioURL(itemId: Int) -> URL? {
+        var comps = URLComponents()
+        comps.scheme = "http"
+        comps.host = settings.host
+        comps.port = settings.port
+        comps.path = "/custom-dictation-audio/\(itemId).wav"
+        return comps.url
+    }
+
     // MARK: - English wrong-answer practice (英语错题)
 
     /// Generates a new practice set: 10 questions picked from among the weakest

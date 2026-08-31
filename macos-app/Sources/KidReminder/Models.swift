@@ -137,6 +137,34 @@ struct DictationSessionDetail: Codable {
     let items: [DictationSessionDetailItem]
 }
 
+/// 自定义听写表: a freeform, ungraded, repeatable word/phrase/sentence list the parent
+/// or kid types in themselves (not drawn from vocab_words). `itemCount` is present on
+/// the list endpoint but absent from the detail endpoint's nested `list`, hence optional.
+struct DictationList: Codable, Identifiable {
+    let id: Int
+    let name: String
+    let createdBy: String
+    let createdAt: String
+    let itemCount: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, itemCount
+        case createdBy = "created_by"
+        case createdAt = "created_at"
+    }
+}
+struct DictationListsResponse: Codable { let lists: [DictationList] }
+
+struct DictationListItem: Codable, Identifiable {
+    let id: Int
+    let seq: Int
+    let text: String
+}
+struct DictationListDetail: Codable {
+    let list: DictationList
+    let items: [DictationListItem]
+}
+
 struct UnlockResponse: Codable {
     let ok: Bool
     let pokemon: PokemonInfo
