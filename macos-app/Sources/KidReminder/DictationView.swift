@@ -20,6 +20,10 @@ struct DictationView: View {
     @State private var phase: Phase = .idle
     @State private var session: DictationSession?
     @State private var showHistorySheet = false
+    @State private var customLists: [DictationList] = []
+    @State private var practicingList: DictationList?
+    @State private var showCreateListSheet = false
+    @State private var editingList: DictationList?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -30,6 +34,15 @@ struct DictationView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .sheet(isPresented: $showHistorySheet) {
                 NavigationStack { DictationHistoryView() }
+            }
+            .sheet(item: $practicingList) { list in
+                NavigationStack { CustomDictationPracticeView(list: list) }
+            }
+            .sheet(isPresented: $showCreateListSheet) {
+                NavigationStack { DictationListEditorView(onSaved: { Task { await loadCustomLists() } }) }
+            }
+            .sheet(item: $editingList) { list in
+                NavigationStack { DictationListEditorView(existingList: list, onSaved: { Task { await loadCustomLists() } }) }
             }
     }
 
@@ -58,19 +71,54 @@ struct DictationView: View {
     }
 
     private var idleView: some View {
-        VStack(spacing: 16) {
-            Text("📝").font(.system(size: 56))
-            Text("准备好听写了吗？").font(.title2).bold()
-            Text("会挑30个最需要练习的词，App 会念出来，写在纸上就好。")
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: 340)
-            Button("🔊 开始听写") { Task { await start() } }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-            Button("📋 我的听写记录") { showHistorySheet = true }
-                .buttonStyle(.bordered)
+        ScrollView {
+            VStack(spacing: 16) {
+                Text("📝").font(.system(size: 56))
+                Text("准备好听写了吗？").font(.title2).bold()
+                Text("会挑30个最需要练习的词，App 会念出来，写在纸上就好。")
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: 340)
+                Button("🔊 开始听写") { Task { await start() } }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                Button("📋 我的听写记录") { showHistorySheet = true }
+                    .buttonStyle(.bordered)
+
+                if !customLists.isEmpty {
+                    Divider().frame(maxWidth: 300).padding(.top, 8)
+                    Text("我的自定义听写表").font(.headline)
+                    VStack(spacing: 8) {
+                        ForEach(customLists) { list in
+                            HStack(spacing: 8) {
+                                Button {
+                                    practicingList = list
+                                } label: {
+                                    HStack {
+                                        Text("▶️ \(list.name)")
+                                        Spacer()
+                                        Text("\(list.itemCount ?? 0) 条")
+                                            .foregroundStyle(.secondary).font(.caption)
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+                                Button { editingList = list } label: { Image(systemName: "pencil") }
+                                    .buttonStyle(.bordered)
+                            }
+                            .frame(maxWidth: 340)
+                        }
+                    }
+                }
+                Button("➕ 新建自定义听写表") { showCreateListSheet = true }
+                    .buttonStyle(.bordered)
+            }
+            .padding(.vertical, 24)
         }
+        .task { await loadCustomLists() }
+    }
+
+    private func loadCustomLists() async {
+        customLists = (try? await api.dictationLists()) ?? []
     }
 
     private func runningView(index: Int) -> some View {

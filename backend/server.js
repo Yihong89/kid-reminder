@@ -22,6 +22,15 @@
 //   DELETE /api/dictation/sessions/:id    -> delete a session (any status)   [X-Admin-Pin]
 //   POST /api/dictation/sessions/:id/grade -> submit ✓/✗ per item            [X-Admin-Pin]
 //   GET  /dictation-audio/:id.wav         -> TTS audio for a word (dsh-sister Qwen3-TTS, cached)
+//   GET  /api/dictation-lists             -> list custom 听写表 (freeform, no grading)   [X-Admin-Pin or X-Kid-Pin]
+//   POST /api/dictation-lists             -> create a custom list                        [X-Admin-Pin or X-Kid-Pin]
+//   GET  /api/dictation-lists/:id         -> list detail w/ items                        [X-Admin-Pin or X-Kid-Pin]
+//   PATCH /api/dictation-lists/:id        -> rename a list                               [X-Admin-Pin or X-Kid-Pin]
+//   DELETE /api/dictation-lists/:id       -> delete a list (+ its items/audio)            [X-Admin-Pin or X-Kid-Pin]
+//   POST /api/dictation-lists/:id/items   -> add a word+sentence to a list                [X-Admin-Pin or X-Kid-Pin]
+//   PATCH /api/dictation-lists/:id/items/:itemId   -> edit a word                         [X-Admin-Pin or X-Kid-Pin]
+//   DELETE /api/dictation-lists/:id/items/:itemId  -> remove a word                       [X-Admin-Pin or X-Kid-Pin]
+//   GET  /custom-dictation-audio/:id.wav  -> TTS audio for a custom list item (cached)
 //   GET  /api/english/questions           -> search/list question bank        [X-Admin-Pin]
 //   POST /api/english/questions           -> add a question (app or web)      [X-Admin-Pin or X-Kid-Pin]
 //   PATCH /api/english/questions/:id      -> edit a question                  [X-Admin-Pin]
@@ -54,8 +63,10 @@ const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 const SPRITES_DIR = path.join(__dirname, "sprites");
 const DICTATION_AUDIO_DIR = path.join(__dirname, "dictation-audio");
 const ENGLISH_AUDIO_DIR = path.join(__dirname, "english-audio");
+const CUSTOM_DICTATION_AUDIO_DIR = path.join(__dirname, "custom-dictation-audio");
 fs.mkdirSync(DICTATION_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(ENGLISH_AUDIO_DIR, { recursive: true });
+fs.mkdirSync(CUSTOM_DICTATION_AUDIO_DIR, { recursive: true });
 
 // ---------------------------------------------------------------- TTS (dsh-sister's Qwen3-TTS, loopback-only)
 // Reuses the existing dsh-sister-tts service (Qwen3-TTS-VoiceDesign on MLX) rather than
@@ -228,6 +239,29 @@ function deleteDictationAudio(wordId) {
   try { fs.unlinkSync(path.join(DICTATION_AUDIO_DIR, `${wordId}.wav`)); } catch { /* no cache yet */ }
 }
 
+// 自定义听写表：跟 ensureDictationAudio 完全一样的缓存/去重/say兜底逻辑，只是词来自
+// dictation_list_items（自由文本，不是 vocab_words），缓存到单独的目录，用
+// item_id（而不是 vocab_words 的 id）做文件名，避免两边 id 撞在一起。
+const inFlightCustomDictationAudio = new Map(); // list_item_id -> Promise<string filePath>
+async function ensureCustomDictationAudio(itemId, text) {
+  const file = path.join(CUSTOM_DICTATION_AUDIO_DIR, `${itemId}.wav`);
+  if (fs.existsSync(file)) return file;
+  if (inFlightCustomDictationAudio.has(itemId)) return inFlightCustomDictationAudio.get(itemId);
+  const promise = (async () => {
+    await synthesizeToFile(file, text, TTS_INSTRUCT, SAY_VOICE_ZH);
+    return file;
+  })();
+  inFlightCustomDictationAudio.set(itemId, promise);
+  try {
+    return await promise;
+  } finally {
+    inFlightCustomDictationAudio.delete(itemId);
+  }
+}
+function deleteCustomDictationAudio(itemId) {
+  try { fs.unlinkSync(path.join(CUSTOM_DICTATION_AUDIO_DIR, `${itemId}.wav`)); } catch { /* no cache yet */ }
+}
+
 // Fills a fill_blank prompt's blank marker with the correct answer, for the 🔊
 // replay-sentence button on spelling items. The source data uses a few different
 // blank-marker conventions (bold parenthetical, escaped underscores, plain
@@ -363,6 +397,23 @@ db.exec(`
     word_id    INTEGER NOT NULL REFERENCES vocab_words(id),
     seq        INTEGER NOT NULL,      -- 1..N, the order it was/will be dictated in
     result     TEXT                    -- NULL (ungraded) | 'correct' | 'incorrect'
+  );
+  -- 自定义听写表: freeform text entries the parent or kid type in themselves (not drawn
+  -- from vocab_words — could be anything: a single word, a phrase, a whole sentence,
+  -- e.g. this week's spelling list, or a set of sentences to dictate). No grading, no
+  -- session/progress tracking: the app just fetches the list and plays through it in a
+  -- fixed order, any number of times.
+  CREATE TABLE IF NOT EXISTS dictation_lists (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    name       TEXT NOT NULL,
+    created_by TEXT NOT NULL DEFAULT 'admin', -- 'admin' | 'kid'
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS dictation_list_items (
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    list_id INTEGER NOT NULL REFERENCES dictation_lists(id) ON DELETE CASCADE,
+    seq     INTEGER NOT NULL,     -- fixed playback order, 1..N
+    text    TEXT NOT NULL          -- read aloud as-is; a word, a phrase, or a whole sentence
   );
   CREATE TABLE IF NOT EXISTS english_questions (
     id             INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -1051,6 +1102,135 @@ const server = http.createServer(async (req, res) => {
         throw err;
       }
       return sendJSON(200, { ok: true });
+    }
+
+    // --- 自定义听写表: freeform lists the parent or kid types in themselves (not drawn
+    // from vocab_words). No grading, no session state — the app just fetches the list
+    // and plays through it, any number of times. Full CRUD is open to both admin and
+    // kid pins (unlike vocab/English banks) — this is explicitly self-managed content. ---
+    if (method === "GET" && pathname === "/api/dictation-lists") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const lists = db
+        .prepare(
+          `SELECT l.id, l.name, l.created_by, l.created_at, COUNT(i.id) itemCount
+           FROM dictation_lists l LEFT JOIN dictation_list_items i ON i.list_id = l.id
+           GROUP BY l.id ORDER BY l.created_at DESC`
+        )
+        .all();
+      return sendJSON(200, { lists });
+    }
+
+    if (method === "POST" && pathname === "/api/dictation-lists") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const body = await readBody(req);
+      const name = String(body.name || "").trim();
+      if (!name) return sendJSON(400, { error: "name is required" });
+      const info = db
+        .prepare("INSERT INTO dictation_lists (name, created_by) VALUES (?, ?)")
+        .run(name, isAdmin ? "admin" : "kid");
+      return sendJSON(201, { id: Number(info.lastInsertRowid) });
+    }
+
+    const listMatch = pathname.match(/^\/api\/dictation-lists\/(\d+)$/);
+    if (listMatch) {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const id = Number(listMatch[1]);
+
+      if (method === "GET") {
+        const list = db.prepare("SELECT id, name, created_by, created_at FROM dictation_lists WHERE id = ?").get(id);
+        if (!list) return sendJSON(404, { error: "list not found" });
+        const items = db.prepare("SELECT id, seq, text FROM dictation_list_items WHERE list_id = ? ORDER BY seq").all(id);
+        return sendJSON(200, { list, items });
+      }
+
+      if (method === "PATCH") {
+        const body = await readBody(req);
+        const name = String(body.name || "").trim();
+        if (!name) return sendJSON(400, { error: "name is required" });
+        const info = db.prepare("UPDATE dictation_lists SET name = ? WHERE id = ?").run(name, id);
+        if (!info.changes) return sendJSON(404, { error: "list not found" });
+        return sendJSON(200, { ok: true });
+      }
+
+      if (method === "DELETE") {
+        const itemIds = db.prepare("SELECT id FROM dictation_list_items WHERE list_id = ?").all(id).map((r) => r.id);
+        db.prepare("DELETE FROM dictation_list_items WHERE list_id = ?").run(id);
+        const info = db.prepare("DELETE FROM dictation_lists WHERE id = ?").run(id);
+        if (!info.changes) return sendJSON(404, { error: "list not found" });
+        for (const itemId of itemIds) deleteCustomDictationAudio(itemId);
+        return sendJSON(200, { ok: true });
+      }
+    }
+
+    const listItemsMatch = pathname.match(/^\/api\/dictation-lists\/(\d+)\/items$/);
+    if (listItemsMatch && method === "POST") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const listId = Number(listItemsMatch[1]);
+      const list = db.prepare("SELECT id FROM dictation_lists WHERE id = ?").get(listId);
+      if (!list) return sendJSON(404, { error: "list not found" });
+      const body = await readBody(req);
+      const text = String(body.text || "").trim();
+      if (!text) return sendJSON(400, { error: "text is required" });
+      const nextSeq = (db.prepare("SELECT COALESCE(MAX(seq), 0) n FROM dictation_list_items WHERE list_id = ?").get(listId)).n + 1;
+      const info = db
+        .prepare("INSERT INTO dictation_list_items (list_id, seq, text) VALUES (?, ?, ?)")
+        .run(listId, nextSeq, text);
+      return sendJSON(201, { id: Number(info.lastInsertRowid) });
+    }
+
+    const listItemMatch = pathname.match(/^\/api\/dictation-lists\/(\d+)\/items\/(\d+)$/);
+    if (listItemMatch) {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
+      const listId = Number(listItemMatch[1]);
+      const itemId = Number(listItemMatch[2]);
+
+      if (method === "PATCH") {
+        const body = await readBody(req);
+        if (body.text === undefined) return sendJSON(400, { error: "nothing to update" });
+        const text = String(body.text).trim();
+        if (!text) return sendJSON(400, { error: "text is required" });
+        const info = db.prepare("UPDATE dictation_list_items SET text = ? WHERE id = ? AND list_id = ?").run(text, itemId, listId);
+        if (!info.changes) return sendJSON(404, { error: "item not found" });
+        deleteCustomDictationAudio(itemId); // text changed -> stale cache, regenerate lazily
+        return sendJSON(200, { ok: true });
+      }
+
+      if (method === "DELETE") {
+        const info = db.prepare("DELETE FROM dictation_list_items WHERE id = ? AND list_id = ?").run(itemId, listId);
+        if (!info.changes) return sendJSON(404, { error: "item not found" });
+        deleteCustomDictationAudio(itemId);
+        return sendJSON(200, { ok: true });
+      }
+    }
+
+    // --- custom-list audio: same lazy-generate-and-cache pattern as /dictation-audio/ ---
+    if (method === "GET" && pathname.startsWith("/custom-dictation-audio/")) {
+      const file = path.basename(pathname);
+      const m = file.match(/^(\d+)\.wav$/);
+      if (!m) return sendJSON(404, { error: "not found" });
+      const itemId = Number(m[1]);
+      const item = db.prepare("SELECT text FROM dictation_list_items WHERE id = ?").get(itemId);
+      if (!item) return sendJSON(404, { error: "item not found" });
+      let filePath;
+      try {
+        filePath = await ensureCustomDictationAudio(itemId, item.text);
+      } catch (err) {
+        console.error(`[kid-reminder] custom dictation TTS failed for item ${itemId}: ${err.message}`);
+        return sendJSON(502, { error: "TTS service unavailable, try again shortly" });
+      }
+      const data = fs.readFileSync(filePath);
+      res.writeHead(200, { "Content-Type": "audio/wav", "Cache-Control": "public, max-age=31536000" });
+      return res.end(data);
     }
 
     // --- English wrong-answer practice: question bank CRUD -----------------
