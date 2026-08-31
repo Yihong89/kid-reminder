@@ -24,7 +24,11 @@ struct DictationHistoryView: View {
                     Button("关闭") { dismiss() }
                 }
             }
-            .task { await load() }
+            .onAppear { DevLog.log("DictationHistoryView appeared") }
+            .task {
+                DevLog.log("DictationHistoryView task started, host=\(settings.host) port=\(settings.port) isAdmin=\(settings.isAdmin)")
+                await load()
+            }
     }
 
     @ViewBuilder
@@ -70,8 +74,10 @@ struct DictationHistoryView: View {
     private func load() async {
         do {
             let sessions = try await api.dictationSessions(status: "graded")
+            DevLog.log("DictationHistoryView load() succeeded, \(sessions.count) sessions: \(sessions.map(\.id))")
             state = .loaded(sessions)
         } catch {
+            DevLog.log("DictationHistoryView load() FAILED: \(error)")
             state = .error(error.localizedDescription)
         }
     }
