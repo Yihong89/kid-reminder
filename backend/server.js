@@ -17,8 +17,8 @@
 //   DELETE /api/vocab/:id                 -> delete a word                   [X-Admin-Pin]
 //   POST /api/dictation/sessions          -> resume in_progress, else generate new (kid app)
 //   POST /api/dictation/sessions/:id/complete -> kid finished, awaiting grading
-//   GET  /api/dictation/sessions          -> list sessions (?status=)        [X-Admin-Pin]
-//   GET  /api/dictation/sessions/:id      -> session detail w/ answers       [X-Admin-Pin]
+//   GET  /api/dictation/sessions          -> list sessions (?status=)        [X-Admin-Pin or X-Kid-Pin]
+//   GET  /api/dictation/sessions/:id      -> session detail w/ answers       [X-Admin-Pin or X-Kid-Pin]
 //   DELETE /api/dictation/sessions/:id    -> delete a session (any status)   [X-Admin-Pin]
 //   POST /api/dictation/sessions/:id/grade -> submit ✓/✗ per item            [X-Admin-Pin]
 //   GET  /dictation-audio/:id.wav         -> TTS audio for a word (dsh-sister Qwen3-TTS, cached)
@@ -963,10 +963,12 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { ok: true });
     }
 
-    // --- list sessions: all history by default, or filter by ?status= (admin only) ---
+    // --- list sessions: all history by default, or filter by ?status= (admin, or the
+    // kid app viewing its own graded results — see DictationHistoryView) ---
     if (method === "GET" && pathname === "/api/dictation/sessions") {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
-      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
       const status = url.searchParams.get("status") || "";
       const where = status ? "WHERE status = ?" : "";
       const rows = db
@@ -982,11 +984,13 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { sessions: rows });
     }
 
-    // --- session detail for grading: ordered items joined to their word (admin only) ---
+    // --- session detail: ordered items joined to their word (admin grading, or the kid
+    // app viewing its own graded results — see DictationHistoryView) ---
     const sessDetailMatch = pathname.match(/^\/api\/dictation\/sessions\/(\d+)$/);
     if (sessDetailMatch && method === "GET") {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
-      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
       const id = Number(sessDetailMatch[1]);
       const session = db.prepare("SELECT * FROM dictation_sessions WHERE id = ?").get(id);
       if (!session) return sendJSON(404, { error: "session not found" });

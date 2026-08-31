@@ -158,8 +158,9 @@ final class APIClient {
 
     // MARK: - Dictation (听写)
 
-    /// Generates a new listening-test set: 10 characters picked from among the
-    /// weakest (lowest correct_count), up to 3 words each, shuffled into order.
+    /// Resumes the current in_progress set if there is one, otherwise generates a new
+    /// one: 30 words picked weakest (lowest correct_count) first, lower grade level
+    /// breaking ties, shuffled into playback order.
     func startDictation() async throws -> DictationSession {
         let data = try await request("/api/dictation/sessions", method: "POST", body: Data("{}".utf8))
         return try JSONDecoder().decode(DictationSession.self, from: data)
@@ -178,6 +179,21 @@ final class APIClient {
         comps.port = settings.port
         comps.path = "/dictation-audio/\(wordId).wav"
         return comps.url
+    }
+
+    /// Session history — used by DictationHistoryView so the kid can review their own
+    /// graded results. `status` filters (e.g. "graded"); omit for full history.
+    func dictationSessions(status: String? = nil) async throws -> [DictationSessionSummary] {
+        var path = "/api/dictation/sessions"
+        if let status { path += "?status=\(status)" }
+        let data = try await request(path)
+        return try JSONDecoder().decode(DictationSessionListResponse.self, from: data).sessions
+    }
+
+    /// Per-word detail (✓/✗ + the word/pinyin/sentence) for one session.
+    func dictationSessionDetail(id: Int) async throws -> DictationSessionDetail {
+        let data = try await request("/api/dictation/sessions/\(id)")
+        return try JSONDecoder().decode(DictationSessionDetail.self, from: data)
     }
 
     // MARK: - English wrong-answer practice (英语错题)
