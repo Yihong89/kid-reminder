@@ -381,6 +381,20 @@ db.exec(`
     dex          INTEGER PRIMARY KEY,        -- 1..151 which Pokémon was unlocked
     unlocked_at  TEXT NOT NULL DEFAULT (datetime('now'))
   );
+  -- Who changed what, so questions like "who awarded these 5 stamps?" have an
+  -- answer. Only mutating /api calls are recorded (see AUDIT_PATHS). Stores the
+  -- role a request authenticated AS — never the PIN it used.
+  CREATE TABLE IF NOT EXISTS audit_log (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    at           TEXT NOT NULL DEFAULT (datetime('now')),  -- UTC, like every other table here
+    role         TEXT NOT NULL,              -- 'admin' | 'kid' | 'none'
+    ip           TEXT NOT NULL DEFAULT '',
+    method       TEXT NOT NULL,
+    path         TEXT NOT NULL,              -- includes ?query when present
+    status       INTEGER NOT NULL,           -- response status, so rejected attempts are visible too
+    detail       TEXT NOT NULL DEFAULT ''    -- truncated JSON of the request body
+  );
+  CREATE INDEX IF NOT EXISTS idx_audit_at ON audit_log(at);
   CREATE TABLE IF NOT EXISTS vocab_words (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     language     TEXT NOT NULL DEFAULT 'zh',   -- 'zh' now; 'en' later for English dictation
@@ -580,13 +594,62 @@ function readBody(req) {
     req.on("end", () => {
       if (!data.trim()) return resolve({});
       try {
-        resolve(JSON.parse(data));
+        const parsed = JSON.parse(data);
+        req._auditBody = parsed; // stashed so the audit row can summarize it
+        resolve(parsed);
       } catch {
         reject(Object.assign(new Error("invalid JSON body"), { status: 400 }));
       }
     });
     req.on("error", reject);
   });
+}
+
+// ------------------------------------------------------------------- audit log
+// Mutating /api calls are recorded to audit_log so "who did this, from where,
+// when" is answerable after the fact. Reads are not logged — they are high
+// volume and were never the question.
+//
+// Deliberately NOT logged: /api/verify. It is the one endpoint that takes a PIN
+// in the request *body*, so recording its body would write the admin PIN into
+// the database in plaintext. scrubBody() strips pin-like keys as a second layer
+// in case a future endpoint does the same thing.
+const AUDIT_PATHS = /^\/api\/(stamps|unlock|tasks|vocab|dictation|dictation-lists|english)(\/|$)/;
+const AUDIT_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
+
+function auditRole(req) {
+  if (req.headers["x-admin-pin"] === ADMIN_PIN) return "admin";
+  if (req.headers["x-kid-pin"] === KID_PIN) return "kid";
+  return "none";
+}
+
+function clientIP(req) {
+  const fwd = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return (fwd || req.socket?.remoteAddress || "").replace(/^::ffff:/, "");
+}
+
+// Small, non-sensitive summary of the request body. Capped so a long 听写表 or
+// composition body can't bloat the table.
+function scrubBody(body) {
+  if (!body || typeof body !== "object") return "";
+  const safe = {};
+  for (const [k, v] of Object.entries(body)) {
+    if (/pin|password|secret|token/i.test(k)) continue;
+    safe[k] = typeof v === "string" ? v.slice(0, 120) : v;
+  }
+  const json = JSON.stringify(safe);
+  return json.length > 500 ? json.slice(0, 500) + "…" : json;
+}
+
+function recordAudit(req, method, pathWithQuery, status) {
+  try {
+    db.prepare(
+      "INSERT INTO audit_log (role, ip, method, path, status, detail) VALUES (?, ?, ?, ?, ?, ?)"
+    ).run(auditRole(req), clientIP(req), method, pathWithQuery, status, scrubBody(req._auditBody));
+  } catch (e) {
+    // Logging must never take the server down or fail a legitimate request.
+    console.error("audit_log insert failed:", e.message);
+  }
 }
 
 // normalizes a typed English answer for lenient comparison against correct_answer
@@ -601,10 +664,16 @@ const server = http.createServer(async (req, res) => {
   const pathname = url.pathname.replace(/\/+$/, "") || "/";
   const method = req.method;
 
+  // Every JSON response — including every mutation — funnels through here, so
+  // this is the one place the audit hook needs to live. /api/verify is excluded
+  // by AUDIT_PATHS because its body carries a PIN (see recordAudit above).
+  const shouldAudit = AUDIT_METHODS.has(method) && AUDIT_PATHS.test(pathname);
+
   const sendJSON = (status, obj) => {
     const body = JSON.stringify(obj);
     res.writeHead(status, { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) });
     res.end(body);
+    if (shouldAudit) recordAudit(req, method, pathname + url.search, status);
   };
 
   try {
