@@ -196,6 +196,39 @@
   .result-mark.correct { background:#ecfdf5; border-color:#a7f3d0; }
   .result-mark.incorrect { background:var(--urgent-bg); border-color:var(--urgent-bd); }
   .badge.overridden { background:#f5f3ff; border-color:#ddd6fe; color:#6d28d9; margin-top:4px; }
+  /* 科学 (PSLE Science open-ended) grading */
+  .sci-session { display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .sci-session .icon { font-size:22px; }
+  .sci-session .info { flex:1; }
+  .sci-session .info .when { font-size:13px; color:var(--muted); }
+  .sci-session .info .count { font-size:15px; font-weight:600; }
+  .sci-grade-dialog { width:640px; max-width:92vw; max-height:85vh; overflow:auto; }
+  .sci-item-card { border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:14px; }
+  .sci-item-card .head { display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-bottom:6px; }
+  .sci-item-card .context { font-size:13px; color:var(--muted); margin-bottom:4px; }
+  .sci-item-card .prompt { font-size:14px; margin-bottom:8px; }
+  .sci-item-card img { max-width:100%; max-height:280px; border-radius:8px; border:1px solid var(--border); display:block; margin-bottom:8px; }
+  .sci-item-card .answer-box { background:var(--bg); border-radius:8px; padding:8px 10px; font-size:14px; margin-bottom:10px; white-space:pre-wrap; }
+  .sci-point-row { display:flex; align-items:flex-start; gap:8px; padding:6px 0; border-top:1px solid var(--border); }
+  .sci-point-row:first-of-type { border-top:none; }
+  .sci-point-row input[type=checkbox] { margin-top:3px; width:16px; height:16px; flex-shrink:0; }
+  .sci-point-row .kind { font-size:12px; font-weight:600; }
+  .sci-point-row .kind.auto-yes { color:#047857; }
+  .sci-point-row .kind.auto-no { color:#b91c1c; }
+  .sci-point-row .desc { font-size:13px; color:var(--muted); }
+  .sci-item-card details { margin-top:8px; font-size:12px; color:var(--muted); }
+  .sci-item-card details summary { cursor:pointer; }
+  .sci-item-card .dna { margin-top:4px; }
+  .sci-item-card .dna .a { color:var(--ink); }
+  .sci-failure-row { display:flex; align-items:center; gap:8px; font-size:13px; padding:3px 0; }
+  .sci-failure-row .label { width:110px; flex-shrink:0; }
+  .sci-failure-row .bar { flex:1; height:8px; background:var(--bg); border-radius:99px; overflow:hidden; }
+  .sci-failure-row .bar .fill { height:100%; background:#f59e0b; }
+  .sci-failure-row .n { color:var(--muted); flex-shrink:0; width:70px; text-align:right; }
+  .sci-mistake-row { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; }
+  .sci-mistake-row .main { flex:1; min-width:0; }
+  .sci-mistake-row .prompt { font-size:14px; }
+  .sci-mistake-row .meta { font-size:12px; color:var(--muted); margin-top:2px; }
 </style>
 </head>
 <body>
@@ -226,6 +259,8 @@
         <button class="tab" id="tabEnglish" hidden>📖 英语错题</button>
         <button class="tab" id="tabEngRecords" hidden>📋 英语练习记录</button>
         <button class="tab" id="tabDictationLists" hidden>📝 自定义听写表</button>
+        <button class="tab" id="tabScience" hidden>🔬 科学批改</button>
+        <button class="tab" id="tabScienceMistakes" hidden>📕 科学错题本</button>
       </nav>
 
       <div class="content">
@@ -341,6 +376,26 @@
       <div class="card">
         <div class="vocab-summary" id="listsSummary"></div>
         <div class="vocab-list" id="listsList"></div>
+      </div>
+    </div>
+
+    <!-- 科学 (PSLE Science open-ended) grading queue -->
+    <div id="scienceView" hidden>
+      <div class="card" id="sciFailurePanel" hidden>
+        <div class="vocab-summary" style="margin-bottom:6px">最常丢的分</div>
+        <div id="sciFailureList"></div>
+      </div>
+      <div class="card">
+        <div class="vocab-summary" id="sciSummary"></div>
+        <div id="sciList"></div>
+      </div>
+    </div>
+
+    <!-- 科学错题本 management (sticky — only cleared here, never automatically) -->
+    <div id="scienceMistakesView" hidden>
+      <div class="card">
+        <div class="vocab-summary" id="sciMistakeSummary">错题本里的题只会在这里手动移出，答对了也不会自动清掉。</div>
+        <div id="sciMistakeList"></div>
       </div>
     </div>
 
@@ -488,6 +543,17 @@
   <div id="engRecItems"></div>
   <div class="row">
     <button class="ghost" id="engRecDlgClose">关闭</button>
+  </div>
+</dialog>
+
+<dialog id="scienceGradeDialog" class="sci-grade-dialog">
+  <h3 id="sciDlgTitle">🔬 批改科学练习</h3>
+  <p>关键词自动判分只做参考，勾选框已按自动判分预勾——覆盖不对的，其余照抄即可。</p>
+  <div id="sciItems"></div>
+  <div class="msg err" id="sciDlgErr"></div>
+  <div class="row">
+    <button class="ghost" id="sciDlgCancel">Cancel</button>
+    <button class="primary" id="sciDlgSubmit">保存批改</button>
   </div>
 </dialog>
 
@@ -921,6 +987,8 @@
     $("#tabEnglish").classList.toggle("active", t === "english");
     $("#tabEngRecords").classList.toggle("active", t === "engRecords");
     $("#tabDictationLists").classList.toggle("active", t === "dictationLists");
+    $("#tabScience").classList.toggle("active", t === "science");
+    $("#tabScienceMistakes").classList.toggle("active", t === "scienceMistakes");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
@@ -929,7 +997,9 @@
     $("#englishView").hidden = t !== "english";
     $("#engRecordsView").hidden = t !== "engRecords";
     $("#dictationListsView").hidden = t !== "dictationLists";
-    const noTaskFab = ["vocab", "dictation", "english", "engRecords", "dictationLists"].includes(t);
+    $("#scienceView").hidden = t !== "science";
+    $("#scienceMistakesView").hidden = t !== "scienceMistakes";
+    const noTaskFab = ["vocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes"].includes(t);
     $("#fabAdd").hidden = noTaskFab; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
     $("#fabAddEnglish").hidden = t !== "english";
@@ -941,7 +1011,9 @@
     else if (t === "english") { engOffset = 0; refreshEnglish(); }
     else if (t === "dictation") { refreshDictation(); }
     else if (t === "engRecords") { refreshEngRecords(); }
-    else { refreshLists(); }
+    else if (t === "dictationLists") { refreshLists(); }
+    else if (t === "science") { refreshScience(); }
+    else if (t === "scienceMistakes") { refreshScienceMistakes(); }
   }
 
   async function refresh() {
@@ -1318,6 +1390,214 @@
     } catch (e) { $("#gradeDlgErr").textContent = e.message; }
   };
 
+  // ---- 科学 (PSLE Science open-ended) grading --------------------------------
+  // Unlike dictation's flat ✓/✗-per-word grading, a science answer is graded
+  // per MARK POINT — a 3-mark question needs three separately-confirmed points.
+  // The keyword-matcher's autoHit only pre-fills the checkbox; the parent's tick
+  // is what actually counts.
+  let sciDecisions = {}; // itemId -> { markPointId: boolean }
+
+  async function refreshScience() {
+    try {
+      const [sessions, failure] = await Promise.all([
+        api("/api/science/sessions"), // full history, not just pending
+        api("/api/science/stats/failure-modes").catch(() => ({ kinds: [] })),
+      ]);
+      renderFailurePanel(failure.kinds);
+      const el = $("#sciList");
+      el.innerHTML = "";
+      if (!sessions.sessions.length) {
+        $("#sciSummary").textContent = "";
+        el.innerHTML = '<div class="empty">孩子还没有做过科学练习</div>';
+        return;
+      }
+      const pending = sessions.sessions.filter((s) => s.status === "pending_review").length;
+      $("#sciSummary").textContent = `共 ${sessions.sessions.length} 次练习记录` + (pending ? ` · ${pending} 次待批改` : "");
+      for (const s of sessions.sessions) el.appendChild(sciSessionRow(s));
+    } catch (e) { showErr(e.message); }
+  }
+
+  const SCI_KIND_LABEL = {
+    observation: "说出现象", mechanism: "解释原理", keyword: "科学名词", data: "引用数据",
+    comparison: "两边都要说", variable_independent: "改变的变量", variable_dependent: "测量的变量",
+    variable_controlled: "保持不变的变量", conclusion: "写出结论", aim: "实验目的",
+    prediction: "预测结果", suggestion: "提出方法", definition: "下定义", identification: "答出名称",
+  };
+
+  function renderFailurePanel(kinds) {
+    const panel = $("#sciFailurePanel");
+    if (!kinds.length) { panel.hidden = true; return; }
+    panel.hidden = false;
+    const el = $("#sciFailureList");
+    el.innerHTML = "";
+    for (const k of kinds.slice(0, 6)) {
+      const pct = k.total ? Math.round((k.missed / k.total) * 100) : 0;
+      const row = document.createElement("div");
+      row.className = "sci-failure-row";
+      row.innerHTML = `
+        <div class="label">${SCI_KIND_LABEL[k.pointKind] || k.pointKind}</div>
+        <div class="bar"><div class="fill" style="width:${pct}%"></div></div>
+        <div class="n">漏 ${k.missed}/${k.total}</div>`;
+      el.appendChild(row);
+    }
+  }
+
+  function sciSessionRow(s) {
+    const row = document.createElement("div");
+    row.className = "card sci-session";
+    const title = s.mode === "mistakes" ? "📕 错题本复习"
+      : s.school ? `📄 ${escapeHtml(s.school)} ${s.year || ""}` : "🔬 科学练习";
+    const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
+    let badge, sub;
+    if (s.status === "pending_review") {
+      badge = '<div class="badge cnt">🔔 待批改</div>';
+      sub = `完成于 ${when.toLocaleString()}`;
+    } else if (s.status === "reviewed") {
+      badge = `<div class="badge">✅ ${s.finalTotal}/${s.marksTotal}</div>`;
+      sub = `完成于 ${when.toLocaleString()}`;
+    } else {
+      badge = '<div class="badge parent">⏳ 进行中</div>';
+      sub = "孩子还没有做完这次练习";
+      row.style.opacity = ".6";
+    }
+    row.innerHTML = `
+      <div class="icon">🔬</div>
+      <div class="info">
+        <div class="count">${title}</div>
+        <div class="when">${sub}</div>
+      </div>
+      ${badge}
+      <button class="del" title="删除这条记录">🗑</button>`;
+    if (s.status !== "in_progress") row.onclick = () => openScienceGradeDialog(s.id);
+    row.querySelector(".del").onclick = async (e) => {
+      e.stopPropagation();
+      if (!confirm("删除这条科学练习记录？")) return;
+      try { await api(`/api/science/sessions/${s.id}`, { method: "DELETE" }); refreshScience(); }
+      catch (err) { showErr(err.message); }
+    };
+    return row;
+  }
+
+  async function openScienceGradeDialog(sessionId) {
+    try {
+      const data = await api(`/api/science/sessions/${sessionId}`);
+      const readOnly = data.session.status !== "pending_review";
+      sciDecisions = {};
+      for (const it of data.items) {
+        sciDecisions[it.id] = {};
+        for (const p of it.points) {
+          // Pre-fill from the parent's earlier decision if this is a re-review,
+          // otherwise from the keyword matcher's guess.
+          const finalKnown = p.finalHit === 0 || p.finalHit === 1;
+          sciDecisions[it.id][p.markPointId] = finalKnown ? !!p.finalHit : !!p.autoHit;
+        }
+      }
+      $("#sciDlgTitle").textContent = readOnly
+        ? `🔬 科学练习记录（${data.session.status === "reviewed" ? "已批改" : "进行中"}）`
+        : "🔬 批改科学练习";
+      const el = $("#sciItems");
+      el.innerHTML = "";
+      data.items.forEach((it, idx) => el.appendChild(sciItemCard(it, idx, readOnly)));
+      $("#sciDlgErr").textContent = "";
+      $("#sciDlgSubmit").hidden = readOnly;
+      $("#sciDlgCancel").textContent = readOnly ? "关闭" : "Cancel";
+      $("#scienceGradeDialog").dataset.sessionId = sessionId;
+      $("#scienceGradeDialog").showModal();
+    } catch (e) { showErr(e.message); }
+  }
+
+  function sciItemCard(it, idx, readOnly) {
+    const card = document.createElement("div");
+    card.className = "sci-item-card";
+    const imgHtml = it.image ? `<img src="/science-images/${encodeURIComponent(it.image)}" alt="" />` : "";
+    const ctxHtml = it.context ? `<div class="context">${escapeHtml(it.context)}</div>` : "";
+    const answerText = (it.answer || "").trim() || "（没有作答）";
+    const dna = it.do_not_accept || [];
+    const dnaHtml = dna.length ? `
+      <details><summary>不能接受的答法</summary>
+        ${dna.map((d) => `<div class="dna"><span class="a">✗ ${escapeHtml(d.answer)}</span> — ${escapeHtml(d.reason)}</div>`).join("")}
+      </details>` : "";
+    const modelHtml = it.model_answer ? `<details><summary>参考答案</summary><div style="margin-top:4px">${escapeHtml(it.model_answer)}</div></details>` : "";
+
+    card.innerHTML = `
+      <div class="head"><span>第 ${idx + 1} 题</span><span>${escapeHtml(it.theme)} · ${it.marks} 分</span></div>
+      ${ctxHtml}
+      ${imgHtml}
+      <div class="prompt">${escapeHtml(it.prompt)}</div>
+      <div class="answer-box">${escapeHtml(answerText)}</div>
+      <div class="points"></div>
+      ${modelHtml}
+      ${dnaHtml}`;
+
+    const pointsEl = card.querySelector(".points");
+    for (const p of it.points) {
+      const row = document.createElement("label");
+      row.className = "sci-point-row";
+      const autoClass = p.autoHit ? "auto-yes" : "auto-no";
+      const autoLabel = p.autoHit ? "自动判：给分" : "自动判：不给分";
+      row.innerHTML = `
+        <input type="checkbox" ${readOnly ? "disabled" : ""} ${sciDecisions[it.id][p.markPointId] ? "checked" : ""} />
+        <div>
+          <div class="kind ${autoClass}">${SCI_KIND_LABEL[p.pointKind] || p.pointKind} <span style="font-weight:400;color:var(--muted)">（${autoLabel}）</span></div>
+          <div class="desc">${escapeHtml(p.description)}</div>
+        </div>`;
+      if (!readOnly) {
+        row.querySelector("input").onchange = (e) => {
+          sciDecisions[it.id][p.markPointId] = e.target.checked;
+        };
+      }
+      pointsEl.appendChild(row);
+    }
+    return card;
+  }
+
+  $("#sciDlgCancel").onclick = () => $("#scienceGradeDialog").close();
+  $("#sciDlgSubmit").onclick = async () => {
+    const sessionId = $("#scienceGradeDialog").dataset.sessionId;
+    const items = Object.entries(sciDecisions).map(([itemId, points]) => ({
+      itemId: Number(itemId),
+      points: Object.entries(points).map(([markPointId, hit]) => ({ markPointId: Number(markPointId), hit })),
+    }));
+    try {
+      await api(`/api/science/sessions/${sessionId}/review`, { method: "POST", body: JSON.stringify({ items }) });
+      $("#scienceGradeDialog").close();
+      refreshScience();
+    } catch (e) { $("#sciDlgErr").textContent = e.message; }
+  };
+
+  // ---- 科学错题本管理（只在这里手动移出，从不自动清空） ----------------------
+  async function refreshScienceMistakes() {
+    try {
+      const data = await api("/api/science/questions?mistakeBank=1&limit=200");
+      const el = $("#sciMistakeList");
+      el.innerHTML = "";
+      if (!data.questions.length) {
+        el.innerHTML = '<div class="empty">错题本是空的 🎉</div>';
+        return;
+      }
+      for (const q of data.questions) el.appendChild(sciMistakeRow(q));
+    } catch (e) { showErr(e.message); }
+  }
+
+  function sciMistakeRow(q) {
+    const row = document.createElement("div");
+    row.className = "card sci-mistake-row";
+    row.innerHTML = `
+      <div class="main">
+        <div class="prompt">${escapeHtml(q.prompt)}</div>
+        <div class="meta">${escapeHtml(q.school)} ${q.year || ""} · ${escapeHtml(q.theme)} · ${q.marks} 分</div>
+      </div>
+      <button class="ghost" title="移出错题本">✅ 已掌握</button>`;
+    row.querySelector("button").onclick = async () => {
+      if (!confirm("确认这道题已经掌握，移出错题本？")) return;
+      try {
+        await api(`/api/science/questions/${q.id}`, { method: "PATCH", body: JSON.stringify({ inMistakeBank: false }) });
+        refreshScienceMistakes();
+      } catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+
   // ---- 英语练习记录（自动批改，纯只读） --------------------------------
   async function refreshEngRecords() {
     try {
@@ -1613,6 +1893,10 @@
     $("#tabEngRecords").hidden = role !== "admin"; // 英语练习记录：仅家长可见
     $("#tabDictationLists").onclick = () => setTab("dictationLists");
     $("#tabDictationLists").hidden = role !== "admin"; // 自定义听写表管理：仅家长网页端可见（孩子在App里也能管理自己的表）
+    $("#tabScience").onclick = () => setTab("science");
+    $("#tabScience").hidden = role !== "admin"; // 科学批改：仅家长可见（孩子在 App 里只练习，不批改）
+    $("#tabScienceMistakes").onclick = () => setTab("scienceMistakes");
+    $("#tabScienceMistakes").hidden = role !== "admin"; // 错题本移出是家长专属操作，从不自动发生
     $("#unlockBtn").onclick = unlockPokemon;
     $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();
