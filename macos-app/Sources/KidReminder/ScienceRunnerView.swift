@@ -62,10 +62,17 @@ struct ScienceRunnerView: View {
     var body: some View {
         content
             .navigationTitle(source.title)
-            // Load-bearing: on macOS a sheet sizes to its content's fitting
-            // size, and short content renders small enough to look blank. See
-            // DictationView's sheet comment for the full story.
-            .frame(minWidth: 760, minHeight: 560)
+            // Load-bearing floor, not a cap — there's no maxWidth/maxHeight, so
+            // the user can still drag the sheet's edges bigger than this. A
+            // macOS sheet has no title bar at all, so there is no maximize/zoom
+            // button to give it regardless of size (tried moving this to its
+            // own WindowGroup to get one — that crashed on open, reverted:
+            // see the revert of "科学 runner: open as its own window"). Opening
+            // this much bigger by default is the safe way to address "看不清楚
+            // 题目" without that risk. Also still: on macOS a sheet sizes to its
+            // content's fitting size, and short content renders small enough
+            // to look blank — see DictationView's sheet comment for that story.
+            .frame(minWidth: 1000, minHeight: 740)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("关闭") { dismiss() }
