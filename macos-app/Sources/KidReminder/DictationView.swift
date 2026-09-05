@@ -1,40 +1,31 @@
 import SwiftUI
 
-/// 📝 听写 (dictation): the app reads each word + example sentence aloud via
-/// server-side TTS; the screen deliberately never shows the character/word
-/// text — the kid writes it down on paper. A parent grades it later in the
-/// web admin panel, which is where ✓/✗ answers live.
+/// 📝 听写 (dictation) — the browser screen. Two columns: the kid's graded results on
+/// the left, their 自定义听写表 on the right. Actually *doing* a dictation always happens
+/// in `DictationRunnerView`, presented as a sheet — 随机听写 and every list's ▶️ button
+/// open that same window, differing only in `DictationSource`.
 struct DictationView: View {
     @EnvironmentObject var settings: SettingsStore
-    @StateObject private var player = DictationAudioPlayer()
 
-    private enum Phase: Equatable {
-        case idle
-        case starting
-        case running(index: Int)
-        case finishing
-        case done
-        case error(String)
-    }
-
-    @State private var phase: Phase = .idle
-    @State private var session: DictationSession?
     @State private var customLists: [DictationList] = []
+    @State private var sessions: [DictationSessionSummary] = []
+    @State private var historyError: String?
+    @State private var loadingHistory = true
 
     // A single sheet destination instead of one @State + one .sheet modifier per
     // destination — stacking multiple .sheet modifiers on one view is a known SwiftUI
     // flakiness source (can silently present a blank sheet instead of the intended
     // content); one .sheet(item:) driven by this enum sidesteps the whole class of bug.
     private enum SheetDestination: Identifiable {
-        case history
-        case practiceList(DictationList)
+        case run(DictationSource)
+        case sessionDetail(Int)
         case createList
         case editList(DictationList)
 
         var id: String {
             switch self {
-            case .history: return "history"
-            case .practiceList(let l): return "practice-\(l.id)"
+            case .run(let source): return "run-\(source.id)"
+            case .sessionDetail(let id): return "session-\(id)"
             case .createList: return "createList"
             case .editList(let l): return "edit-\(l.id)"
             }
@@ -47,7 +38,6 @@ struct DictationView: View {
     var body: some View {
         content
             .navigationTitle("听写")
-            .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .sheet(item: $activeSheet) { sheet in
                 sheetContent(for: sheet)
@@ -58,10 +48,10 @@ struct DictationView: View {
     @ViewBuilder
     private func sheetContent(for sheet: SheetDestination) -> some View {
         switch sheet {
-        case .history:
-            NavigationStack { DictationHistoryView() }
-        case .practiceList(let list):
-            NavigationStack { CustomDictationPracticeView(list: list) }
+        case .run(let source):
+            NavigationStack { DictationRunnerView(source: source) }
+        case .sessionDetail(let id):
+            NavigationStack { DictationSessionDetailView(sessionId: id) }
         case .createList:
             NavigationStack { DictationListEditorView(onSaved: { Task { await loadCustomLists() } }) }
         case .editList(let list):
@@ -76,166 +66,185 @@ struct DictationView: View {
                 systemImage: "antenna.radiowaves.left.and.right.slash",
                 description: Text("Enter the server address and PIN in Settings."))
         } else {
-            switch phase {
-            case .idle:
-                idleView
-            case .starting:
-                ProgressView("正在生成听写表…")
-            case .running(let index):
-                runningView(index: index)
-            case .finishing:
-                ProgressView("正在提交…")
-            case .done:
-                doneView
-            case .error(let message):
-                errorView(message)
+            VStack(spacing: 0) {
+                header
+                Divider()
+                HStack(spacing: 0) {
+                    historyColumn
+                    Divider()
+                    listsColumn
+                }
             }
+            .task { await loadAll() }
         }
     }
 
-    private var idleView: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                Text("📝").font(.system(size: 56))
-                Text("准备好听写了吗？").font(.title2).bold()
-                Text("会挑30个最需要练习的词，App 会念出来，写在纸上就好。")
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: 340)
-                Button("🔊 开始听写") { Task { await start() } }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                Button("📋 我的听写记录") { DevLog.log("DictationView: 我的听写记录 tapped"); activeSheet = .history }
-                    .buttonStyle(.bordered)
+    // MARK: - header
 
-                if !customLists.isEmpty {
-                    Divider().frame(maxWidth: 300).padding(.top, 8)
-                    Text("我的自定义听写表").font(.headline)
-                    VStack(spacing: 8) {
-                        ForEach(customLists) { list in
-                            HStack(spacing: 8) {
-                                Button {
-                                    activeSheet = .practiceList(list)
-                                } label: {
-                                    HStack {
-                                        Text("▶️ \(list.name)")
-                                        Spacer()
-                                        Text("\(list.itemCount ?? 0) 条")
-                                            .foregroundStyle(.secondary).font(.caption)
-                                    }
-                                }
-                                .buttonStyle(.bordered)
-                                Button { activeSheet = .editList(list) } label: { Image(systemName: "pencil") }
-                                    .buttonStyle(.bordered)
-                            }
-                            .frame(maxWidth: 340)
-                        }
-                    }
-                }
-                Button("➕ 新建自定义听写表") { activeSheet = .createList }
-                    .buttonStyle(.bordered)
+    private var header: some View {
+        HStack(spacing: 14) {
+            Text("📝").font(.system(size: 34))
+            VStack(alignment: .leading, spacing: 2) {
+                Text("听写").font(.title3.bold())
+                Text("会挑 30 个最需要练习的词，App 念出来，写在纸上就好。")
+                    .font(.caption).foregroundStyle(.secondary)
             }
-            .padding(.vertical, 24)
+            Spacer()
+            Button("🎲 随机听写") { activeSheet = .run(.random) }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
         }
-        .task { await loadCustomLists() }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+    }
+
+    // MARK: - 听写记录 column
+
+    private var historyColumn: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            columnHeader("📋 听写记录", trailing: nil)
+            Group {
+                if loadingHistory {
+                    centered { ProgressView() }
+                } else if let historyError {
+                    centered {
+                        ContentUnavailableView("加载失败", systemImage: "exclamationmark.triangle",
+                            description: Text(historyError))
+                    }
+                } else if sessions.isEmpty {
+                    centered {
+                        ContentUnavailableView("还没有批改好的听写", systemImage: "checkmark.circle",
+                            description: Text("做完听写后，等家长在网页端批改，结果就会显示在这里。"))
+                    }
+                } else {
+                    List(sessions) { session in
+                        Button { activeSheet = .sessionDetail(session.id) } label: {
+                            historyRow(session)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .listStyle(.inset)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func historyRow(_ s: DictationSessionSummary) -> some View {
+        let total = s.itemCount ?? 0
+        let correct = s.correctCount ?? 0
+        return HStack {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(s.completedAt ?? s.createdAt).font(.subheadline)
+                Text("\(total) 个词").font(.caption).foregroundStyle(.secondary)
+            }
+            Spacer()
+            Text("✅ \(correct)/\(total)")
+                .font(.callout).bold()
+                .monospacedDigit()
+                .foregroundStyle(total > 0 && correct == total ? .green : .primary)
+        }
+        .contentShape(Rectangle())
+        .padding(.vertical, 2)
+    }
+
+    // MARK: - 自定义听写表 column
+
+    private var listsColumn: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            columnHeader("📚 自定义听写表", trailing: AnyView(
+                Button { activeSheet = .createList } label: {
+                    Label("新建听写表", systemImage: "plus")
+                        .labelStyle(.iconOnly)
+                }
+                .buttonStyle(.borderless)
+                .help("新建自定义听写表")
+            ))
+            if customLists.isEmpty {
+                centered {
+                    ContentUnavailableView("还没有自定义听写表", systemImage: "text.badge.plus",
+                        description: Text("点右上角的 ＋ 新建一张，想练什么就写什么。"))
+                }
+            } else {
+                List(customLists) { list in
+                    listRow(list)
+                }
+                .listStyle(.inset)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// ▶️ is the only inline control — the column is only ~300pt wide at the usual window
+    /// size. Clicking anywhere else on the row opens the editor, so 管理 needs no button.
+    private func listRow(_ list: DictationList) -> some View {
+        HStack(spacing: 10) {
+            // The tap target is scoped to just this leading half rather than the whole
+            // row, so it can't compete with ▶️'s own click handling.
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(list.name).font(.subheadline)
+                    Text("\(list.itemCount ?? 0) 条").font(.caption).foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+            // Rectangle, not the content's own shape — otherwise the empty space to the
+            // right of a short name wouldn't be clickable.
+            .contentShape(Rectangle())
+            .onTapGesture { activeSheet = .editList(list) }
+            .help("点一下管理这张表")
+
+            // The play button the whole redesign hangs on — same window as 随机听写.
+            Button { activeSheet = .run(.list(list)) } label: {
+                Image(systemName: "play.fill")
+            }
+            .buttonStyle(.borderedProminent)
+            .help("开始听写这张表")
+        }
+        .padding(.vertical, 2)
+    }
+
+    // MARK: - shared column chrome
+
+    private func columnHeader(_ title: String, trailing: AnyView?) -> some View {
+        HStack {
+            Text(title).font(.headline)
+            Spacer()
+            if let trailing { trailing }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
+
+    private func centered<V: View>(@ViewBuilder _ inner: () -> V) -> some View {
+        VStack { Spacer(); inner(); Spacer() }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // MARK: - loading
+
+    private func loadAll() async {
+        await loadCustomLists()
+        await loadHistory()
     }
 
     private func loadCustomLists() async {
         customLists = (try? await api.dictationLists()) ?? []
     }
 
-    private func runningView(index: Int) -> some View {
-        let total = session?.items.count ?? 0
-        let isLast = index >= total - 1
-        return VStack(spacing: 20) {
-            Text("第 \(index + 1) 题 / 共 \(total) 题")
-                .font(.title2).bold()
-            Group {
-                if player.isLoading {
-                    ProgressView().controlSize(.large)
-                } else {
-                    Image(systemName: player.isPlaying ? "waveform" : "speaker.wave.2.fill")
-                        .font(.system(size: 48))
-                        .foregroundStyle(.blue)
-                        .symbolEffect(.variableColor.iterative, isActive: player.isPlaying)
-                }
-            }
-            .frame(height: 56)
-            Text(player.isLoading ? "准备中，马上就好…" : player.isPlaying ? "正在朗读…" : "写完了吗？")
-                .foregroundStyle(.secondary)
-            HStack(spacing: 14) {
-                Button("🔁 重听") { playCurrent(index: index) }
-                    .disabled(player.isBusy)
-                Button(isLast ? "✅ 完成听写" : "➡️ 下一题") {
-                    if isLast { Task { await finish() } }
-                    else { advance(to: index + 1) }
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(player.isBusy)
-            }
-        }
-        .task(id: index) { if index == 0 { playCurrent(index: index) } }
-    }
-
-    private var doneView: some View {
-        VStack(spacing: 16) {
-            Text("🎉").font(.system(size: 56))
-            Text("听写完成！").font(.title2).bold()
-            Text("已经提交给家长了，等家长批改后正确数就会更新。")
-                .foregroundStyle(.secondary)
-            Button("再听写一次") { reset() }
-                .buttonStyle(.bordered)
-        }
-    }
-
-    private func errorView(_ message: String) -> some View {
-        ContentUnavailableView("出错了", systemImage: "exclamationmark.triangle",
-            description: Text(message))
-            .overlay(alignment: .bottom) {
-                Button("重试") { reset() }.buttonStyle(.bordered).padding(.bottom, 40)
-            }
-    }
-
-    // MARK: - actions
-
-    private func start() async {
-        phase = .starting
+    /// Graded sessions only: 待批改 / 未完成 sets are deliberately not shown in the kid's
+    /// app — grading happens in the parent's web admin, and an ungraded session's detail
+    /// would reveal the word text this whole feature is built to keep off the screen.
+    private func loadHistory() async {
+        loadingHistory = true
+        defer { loadingHistory = false }
         do {
-            let s = try await api.startDictation()
-            guard !s.items.isEmpty else { phase = .error("生词库还是空的，请先在网页端添加生词。"); return }
-            session = s
-            phase = .running(index: 0)
+            sessions = try await api.dictationSessions(status: "graded")
+            historyError = nil
+            DevLog.log("DictationView history loaded: \(sessions.count) graded sessions")
         } catch {
-            phase = .error(error.localizedDescription)
+            historyError = error.localizedDescription
+            DevLog.log("DictationView history load FAILED: \(error)")
         }
-    }
-
-    private func playCurrent(index: Int) {
-        guard let items = session?.items, items.indices.contains(index),
-              let url = api.dictationAudioURL(wordId: items[index].wordId) else { return }
-        DevLog.log("DictationView playCurrent index=\(index) wordId=\(items[index].wordId)")
-        player.play(url: url)
-    }
-
-    private func advance(to index: Int) {
-        phase = .running(index: index)
-        playCurrent(index: index)
-    }
-
-    private func finish() async {
-        guard let sessionId = session?.sessionId else { return }
-        phase = .finishing
-        do {
-            try await api.completeDictation(sessionId: sessionId)
-            phase = .done
-        } catch {
-            phase = .error(error.localizedDescription)
-        }
-    }
-
-    private func reset() {
-        player.stop()
-        session = nil
-        phase = .idle
     }
 }
