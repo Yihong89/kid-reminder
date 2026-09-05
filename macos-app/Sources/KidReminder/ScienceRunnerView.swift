@@ -3,7 +3,10 @@ import SwiftUI
 /// Where a science practice set gets its questions from. Both a paper's ▶️ and
 /// the 错题本 button open the *same* window (`ScienceRunnerView`) — this is the
 /// only thing that differs between them.
-enum ScienceSource: Identifiable, Equatable {
+///
+/// Codable + Hashable because this is passed as the identifying value to a
+/// data-driven `WindowGroup(for: ScienceSource.self)` — see KidReminderApp.
+enum ScienceSource: Identifiable, Equatable, Codable, Hashable {
     /// One full exam paper, in the paper's own question order.
     case paper(key: String, title: String)
     /// The 错题本 pool, shuffled. Membership is sticky (a parent's explicit
@@ -35,7 +38,11 @@ enum ScienceSource: Identifiable, Equatable {
 /// review — completing a set just hands it to that queue.
 struct ScienceRunnerView: View {
     @EnvironmentObject var settings: SettingsStore
-    @Environment(\.dismiss) private var dismiss
+    // dismissWindow, not dismiss: this is presented via openWindow as its own
+    // top-level window (see KidReminderApp), not a .sheet. That's specifically
+    // so it gets a real title bar — a sheet has none, so there is no maximize/
+    // zoom control to give it no matter how the frame is sized.
+    @Environment(\.dismissWindow) private var dismissWindow
     let source: ScienceSource
 
     private enum Phase: Equatable {
@@ -62,13 +69,14 @@ struct ScienceRunnerView: View {
     var body: some View {
         content
             .navigationTitle(source.title)
-            // Load-bearing: on macOS a sheet sizes to its content's fitting
-            // size, and short content renders small enough to look blank. See
-            // DictationView's sheet comment for the full story.
-            .frame(minWidth: 760, minHeight: 560)
+            // Just a sane floor for manual shrinking — the window's actual
+            // opening size comes from .defaultSize on the Scene in
+            // KidReminderApp, and being a real window (not a sheet) it can be
+            // freely resized or maximized from there, unlike a sheet.
+            .frame(minWidth: 700, minHeight: 520)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("关闭") { dismiss() }
+                ToolbarItem(placement: .automatic) {
+                    Button("关闭") { dismissWindow() }
                 }
             }
             .task { await start() }
@@ -282,7 +290,7 @@ struct ScienceRunnerView: View {
             Text("自动判分 \(auto)/\(total)。\n已经交给家长在网页端批改，批改后分数才算数。")
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            Button("关闭") { dismiss() }.buttonStyle(.borderedProminent)
+            Button("关闭") { dismissWindow() }.buttonStyle(.borderedProminent)
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
