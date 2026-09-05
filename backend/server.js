@@ -1588,6 +1588,15 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+// server.log is world-readable and never rotates, so printing the PIN in full
+// left a permanent plaintext copy of it (plus every previous PIN) on disk. Show
+// just enough to confirm *which* PIN is live without disclosing it.
+function maskPin(pin) {
+  const s = String(pin ?? "");
+  if (s.length < 4) return "*".repeat(s.length || 1); // too short to reveal any of
+  return "*".repeat(s.length - 2) + s.slice(-2);
+}
+
 server.listen(PORT, () => {
-  console.log(`[kid-reminder] listening on http://0.0.0.0:${PORT} (admin pin: ${ADMIN_PIN})`);
+  console.log(`[kid-reminder] listening on http://0.0.0.0:${PORT} (admin pin: ${maskPin(ADMIN_PIN)})`);
 });
