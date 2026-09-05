@@ -81,11 +81,34 @@ includes the `[2]` mark allocations — they tell the child how many scoring poi
 write. The transcribed prompt text is kept for search and future TTS, but the crop is
 what gets displayed: a transcription of a scan can be wrong, the image cannot.
 
-## ACS(J) 2025 — extracted (the pilot set)
+## Extracted 2025 papers — the bank
+
+`<school>-2025-questions.json` (all gitignored) — **10 papers** have been
+extracted, each verified to match that paper's own stated Section B total
+(a useful check that nothing was dropped or double-counted):
+
+| paper_key | parts | marks | notes |
+|---|---:|---:|---|
+| `acsj-2025` | 35 | 44 | the pilot (see below) |
+| `henry-park-2025` | 32 | 39 | 3 mark allocations not legible — inferred against the 44-mark total |
+| `raffles-girls-2025` | 30 | 40 | |
+| `scgs-2025` | 33 | 41 | |
+| `ai-tong-2025` | 33 | 44 | |
+| `ch-2025` | 36 | 44 | Catholic High |
+| `mgs-2025` | 33 | 44 | MGS (Paya Lebar) |
+| `nan-hua-2025` | 36 | 44 | |
+| `nanyang-2025` | 31 | 44 | |
+| `tao-nan-2025` | 37 | 44 | Q29–Q41 |
+
+Only the **tooling** lives in git (`crop_questions.py` + per-paper `.crop.json`
+page-mapping configs, `validate.py`, `grade.py`, `import.js`). The papers
+themselves, the extracted `*-questions.json`, `survey-report.json`, and
+`backend/science-images/` are all **gitignored** — see the warning at the top.
+
+### ACS(J) 2025 — the pilot set
 
 `acsj-2025-questions.json` (gitignored): **35 question parts across Q29–Q40, 44 marks** —
-which matches the paper's own stated "(44 marks)" exactly, a useful check that nothing was
-dropped or double-counted.
+which matches the paper's own stated "(44 marks)" exactly.
 
 Mark-point kinds, over those 44 marks:
 

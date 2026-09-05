@@ -97,13 +97,26 @@ node server.js        # PORT=2021, ADMIN_PIN=1234（可通过环境变量覆盖�
 - **自动保持同步** —— 孩子把错题记在一个私有 GitHub 仓库里；Mac mini 上每周会自动拉取一次，把新增的条目导入进来（幂等，重复跑也不会出问题）。详见
   [`tools/english-wrong-answers/README.md`](tools/english-wrong-answers/README.md)。
 
+## 科学练习
+
+PSLE 科学**开放式问答（Booklet B）**，按得分点存——失分是**诊断**（哪种答题技巧没掌握），而不只是丢了一分。
+
+- **带标签的得分点** —— 每个得分点带一个 `point_kind`（`mechanism`、`observation`、`keyword`、`comparison`、`conclusion`…）。按得分点评分意味着按类型分组就能看出孩子真正欠缺的两三项技巧，而不只是一个总分。
+- **10 所学校、2025 年** —— 题库来自真实模拟考卷（ACS Junior、Henry Park、Raffles Girls、SCGS、Ai Tong、Catholic High、MGS、Nan Hua、Nanyang、Tao Nan），每份都逐题抽取并核对过该卷自己的 Section B 总分。
+- **关键词自动批改**（`grade.py`）+ 网页后台家长批改 —— 扫描件的题目显示为**裁剪出的页面图片**（文字转写仅供搜索；图片才是孩子看到的内容的权威来源）。
+- **错题本** —— 错题会收进跟其它科目共用的错题本，并可供复习。
+- **网页后台** —— `🧪 科学` 页签（题库浏览 + 批改）在这里进行。
+- **macOS 应用** —— 科学练习以**独立可最大化窗口**打开。
+
+> ⚠️ **考卷及其衍生内容属于私有。** PDF 是别校的受版权保护试卷，只为孩子个人学习下载——可以这么用，但不归我们重新发布。仓库**只提交工具**（`tools/science-oeq/`）；试卷、抽取出的 `*-questions.json`、`survey-report.json` 和 `backend/science-images/` 都在 `.gitignore` 里。这是 [`tools/english-wrong-answers/`](tools/english-wrong-answers/) 流水线遵循的同一规则。详见 [`tools/science-oeq/README.md`](tools/science-oeq/README.md)。
+
 ### 语音合成
 
 听写和拼写朗读都由一个私有的神经网络语音合成服务（Qwen3-TTS）生成，跟后端一起跑在同一台机器上，每个词/题只合成一次，缓存到磁盘。如果这个服务繁忙或不可用，后端会自动退回使用 macOS 自带的 `say` 语音——音质差一些，但总能立刻用，🔊 按钮不会彻底哑掉。
 
 ## macOS 应用
 
-原生 SwiftUI 应用（`macos-app/`）。**今天**清单、**日历**（月视图，含完成圆点 + 粉色倒计时事件标记，点击任意日期查看）、**倒计时**面板、**听写**和**英语错题**页签，以及**设置**（配置服务器 IP、端口、PIN，修改立即生效，无需重启）。构建会生成带自定义图标的已签名 `.app`（图标来自 `Resources/AppIcon.svg`）。
+原生 SwiftUI 应用（`macos-app/`）。**今天**清单、**日历**（月视图，含完成圆点 + 粉色倒计时事件标记，点击任意日期查看）、**倒计时**面板、**听写**、**英语错题**和**科学**页签，以及**设置**（配置服务器 IP、端口、PIN，修改立即生效，无需重启）。构建会生成带自定义图标的已签名 `.app`（图标来自 `Resources/AppIcon.svg`）。
 
 ### 下载应用
 

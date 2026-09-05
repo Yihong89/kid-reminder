@@ -134,6 +134,36 @@ each carrying the correct answer and a short explanation.
   (idempotent, so re-runs are harmless). See
   [`tools/english-wrong-answers/README.md`](tools/english-wrong-answers/README.md).
 
+## Science practice (科学练习)
+
+PSLE Science **open-ended questions (Booklet B)**, stored per mark point so a miss is
+a *diagnosis* (which technique failed) rather than just a lost mark.
+
+- **Tagged mark points** — each scoring point carries a `point_kind`
+  (`mechanism`, `observation`, `keyword`, `comparison`, `conclusion`, …). Grading by
+  point means GROUPING by kind shows the two or three technique failures the kid
+  actually has, not just a total.
+- **10 schools, 2025** — the bank is built from real prelim papers (ACS Junior,
+  Henry Park, Raffles Girls, SCGS, Ai Tong, Catholic High, MGS, Nan Hua, Nanyang,
+  Tao Nan), each extracted and verified against that paper's own Section B total.
+- **Keyword auto-grader** (`grade.py`) plus parent grading on the web admin —
+  scanned questions display as a **cropped page image** (the transcription is kept
+  only for search; the image is authoritative for what the child sees).
+- **错题本 (mistake bank)** — wrong answers are collected into the same 错题本 used
+  by other subjects, and can be reviewed.
+- **Web admin** — the `🧪 科学` tab (question-bank browser + grading) is where marking
+  happens.
+- **macOS app** — the science runner opens as its **own maximizable window**.
+
+> ⚠️ **The exam papers and everything derived from them are private.** The PDFs are
+> other schools' copyrighted papers, fetched for one child's personal study — fine
+> to use that way, not ours to republish. The repo commits **only the tooling**
+> (`tools/science-oeq/`); the papers, extracted `*-questions.json`,
+> `survey-report.json`, and `backend/science-images/` are gitignored. Same rule the
+> [`tools/english-wrong-answers/`](tools/english-wrong-answers/) pipeline follows.
+> See [`tools/science-oeq/README.md`](tools/science-oeq/README.md).
+
+
 ### Text-to-speech
 
 Dictation and spelling audio are synthesized by a private neural TTS service
@@ -146,10 +176,10 @@ quality, but instant and always available, so the 🔊 button never just goes de
 
 Native SwiftUI app (`macos-app/`). **Today** checklist, **Calendar** (month view
 with completion dots + pink countdown-event markers; click any day to inspect
-its tasks), **Countdown** panel, **听写** (dictation) and **英语错题** (English
-practice) tabs, and a **Settings** view where the server IP, port, and PIN are
-configured — changes apply immediately (no restart needed). The build produces a
-signed `.app` with a custom icon (from `Resources/AppIcon.svg`).
+its tasks), **Countdown** panel, **听写** (dictation), **英语错题** (English
+practice) and **科学** (Science) tabs, and a **Settings** view where the server IP,
+port, and PIN are configured — changes apply immediately (no restart needed). The
+build produces a signed `.app` with a custom icon (from `Resources/AppIcon.svg`).
 
 ### Download the app
 
