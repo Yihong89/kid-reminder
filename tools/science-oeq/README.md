@@ -31,12 +31,18 @@ three technique failures the child actually has.
 | `survey.py` | Reports per paper: page count, text-layer vs scan, Booklet A/B boundaries, raster and **vector** figure counts. Read-only unless `--dump-pages`. |
 | `check_answer_layers.py` | Which papers ship an extractable answer key, and whether it carries structural markers (`1st Marking Point:`, `Claim:/Evidence:/Reason:`, `Any two`, `Do Not Accept`). |
 | `count_oeq.py` | How many OEQ and mark-bearing parts are recoverable from each answer key. |
+| `crop_questions.py` | Renders each question's page region to PNG in `backend/science-images/`. |
+| `validate.py` | Checks an extracted question JSON: marks == mark-point count, known `point_kind`s, unique refs, images present, well-formed keyword groups. |
+| `grade.py` | Reference keyword auto-grader + a self-test of the matching rules. |
 
 ```bash
 bash fetch_papers.sh
 python3 survey.py --json survey-report.json
 python3 check_answer_layers.py
 python3 count_oeq.py
+python3 crop_questions.py
+python3 validate.py acsj-2025-questions.json
+python3 grade.py acsj-2025-questions.json --demo
 ```
 
 Requires **PyMuPDF** only (`pip3 install pymupdf`). No poppler, tesseract or ghostscript.
@@ -69,3 +75,47 @@ vector drawings, scans, tables and graphs.
 
 Crops land in `backend/science-images/` as `<school>-<year>-q<N>.png`, served by a
 sprites-style static handler and referenced by filename from the question row.
+
+The crop covers the **whole question region**, not just the diagram, and deliberately
+includes the `[2]` mark allocations — they tell the child how many scoring points to
+write. The transcribed prompt text is kept for search and future TTS, but the crop is
+what gets displayed: a transcription of a scan can be wrong, the image cannot.
+
+## ACS(J) 2025 — extracted (the pilot set)
+
+`acsj-2025-questions.json` (gitignored): **35 question parts across Q29–Q40, 44 marks** —
+which matches the paper's own stated "(44 marks)" exactly, a useful check that nothing was
+dropped or double-counted.
+
+Mark-point kinds, over those 44 marks:
+
+| kind | n | | kind | n |
+|---|--:|---|---|--:|
+| mechanism | 17 | | comparison | 2 |
+| identification | 9 | | keyword | 2 |
+| suggestion | 5 | | data | 2 |
+| conclusion | 3 | | aim / observation / variable_controlled / definition | 1 each |
+
+`mechanism` being 39% of all marks is consistent with the research: explaining *why* is
+both the largest scoring category and the most common thing children omit.
+
+One part is unusable in a typing app — **34(a) is a circuit to be drawn**, flagged
+`answer_mode: "drawing"`. Seven more are `short` (one word or a number).
+
+### Does keyword matching actually work?
+
+`grade.py --demo` runs 16 cases covering each failure mode. All pass:
+
+| answer | verdict |
+|---|---|
+| "The thick fur traps a layer of air. Air is a poor conductor of heat…" | ✅ 1/1 |
+| "The thick fur keeps them warm at night." | ❌ 0/1 — misses `mechanism` (observation only) |
+| "The fur traps air which is an **insulator**…" | ✅ 1/1 — different wording, same science |
+| "The lid is **transparent**… the cup is **opaque**" | ✅ 1/1 |
+| "The lid is see-through but the cup is not see-through" | ❌ 0/1 — misses `keyword` (everyday words) |
+| "left hand gained heat… right hand lost heat" | ✅ 1/1 |
+| "His left hand gained heat from the hot coffee" | ❌ 0/1 — misses `comparison` (one side only) |
+| "increase the mass of duck B" | ❌ 0/1 — on the paper's own *Do Not Accept* list |
+
+That is the core hypothesis working: a miss is not just a lost mark, it names *which
+technique failed*.
