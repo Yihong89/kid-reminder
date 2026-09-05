@@ -134,11 +134,39 @@ cd macos-app
 首次运行打开 **设置**，填入服务器 IP、端口和 PIN。孩子 PIN 解锁清单（只能操作自己的任务）；
 管理员 PIN 拥有全部权限。应用在每次请求时读取连接设置，因此修改立即生效。
 
+## 操作审计日志
+
+所有会改数据的 `/api` 请求都会记进 `audit_log` 表，这样「这几个 stamp 是谁发的、
+从哪台设备发的」事后查得到。读请求不记（量大，也不是关心的问题）；`/api/verify`
+也不记 —— 它是唯一一个把 PIN 放在请求 **body** 里的接口，记了就等于把 PIN 明文写进
+数据库。表里只存请求**认证成的角色**，永远不存 PIN 本身。
+
+被拒绝的请求同样会记录（`role='none'`、`status=401`），所以试密码也会留下痕迹。
+
+```bash
+# 最近的操作（时间是 UTC，本地时间 = UTC+8）
+sqlite3 -header -column ~/kidreminder/kidreminder.db \
+  "SELECT datetime(at,'+8 hours') AS local, role, ip, method, path, status, detail
+     FROM audit_log ORDER BY id DESC LIMIT 30;"
+
+# 只看 stamp / 宝可梦相关 —— 谁发的、谁花的
+sqlite3 -header -column ~/kidreminder/kidreminder.db \
+  "SELECT datetime(at,'+8 hours') AS local, role, ip, path, status, detail
+     FROM audit_log WHERE path LIKE '%stamps%' OR path LIKE '%unlock%' ORDER BY id;"
+
+# 认证失败的尝试
+sqlite3 -header -column ~/kidreminder/kidreminder.db \
+  "SELECT datetime(at,'+8 hours') AS local, ip, method, path FROM audit_log WHERE status = 401;"
+```
+
 ## 部署说明
 
 - 服务器通过 launchd 自启动（`com.kidreminder.server`）。
 - 仅局域网使用；建议在路由器上为 Mac Mini 设置 DHCP 保留地址，保持 IP 稳定。
 - 完整部署指南：[backend-setup.md](backend-setup.md)
+- 部署方式：`scp backend/server.js robot@<mini>:~/kidreminder/server.js`，然后
+  `launchctl kickstart -k gui/$(id -u)/com.kidreminder.server`。新表由启动时的
+  `CREATE TABLE IF NOT EXISTS` 自动建好，不需要单独的迁移步骤。
 
 ## 功能规划（计划中）
 

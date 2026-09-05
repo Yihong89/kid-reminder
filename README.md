@@ -183,11 +183,42 @@ On first run, open **Settings** and enter the server IP, port, and PIN. The kid
 PIN unlocks the checklist (own tasks only); the admin PIN unlocks full control.
 The app reads the connection settings on every request, so edits apply instantly.
 
+## Audit log
+
+Every mutating `/api` call is recorded to the `audit_log` table, so questions like
+"who awarded these stamps, from which device?" are answerable after the fact. Reads
+aren't logged (high volume, never the question), and neither is `/api/verify` — it's
+the one endpoint that takes a PIN in the request *body*, and logging it would write
+the PIN into the database in plaintext. Only the role a request authenticated **as**
+is stored, never the PIN it used.
+
+Rejected attempts are logged too (`role='none'`, `status=401`), so PIN guessing
+leaves a trail.
+
+```bash
+# recent activity (times are UTC; local = UTC+8)
+sqlite3 -header -column ~/kidreminder/kidreminder.db \
+  "SELECT datetime(at,'+8 hours') AS local, role, ip, method, path, status, detail
+     FROM audit_log ORDER BY id DESC LIMIT 30;"
+
+# just the reward economy — who awarded/spent stamps
+sqlite3 -header -column ~/kidreminder/kidreminder.db \
+  "SELECT datetime(at,'+8 hours') AS local, role, ip, path, status, detail
+     FROM audit_log WHERE path LIKE '%stamps%' OR path LIKE '%unlock%' ORDER BY id;"
+
+# failed auth attempts
+sqlite3 -header -column ~/kidreminder/kidreminder.db \
+  "SELECT datetime(at,'+8 hours') AS local, ip, method, path FROM audit_log WHERE status = 401;"
+```
+
 ## Deployment notes
 
 - Server auto-starts via launchd (`com.kidreminder.server`).
 - LAN-only; set a DHCP reservation for the Mac Mini so its IP stays stable.
 - Full setup guide: [backend-setup.md](backend-setup.md)
+- Deploy = `scp backend/server.js robot@<mini>:~/kidreminder/server.js` then
+  `launchctl kickstart -k gui/$(id -u)/com.kidreminder.server`. New tables are created
+  on startup by the `CREATE TABLE IF NOT EXISTS` block, so no migration step.
 
 ## Roadmap (planned)
 
