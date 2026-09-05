@@ -21,6 +21,16 @@ tools/english-wrong-answers/parsed-questions.json
 tools/english-wrong-answers/unparsed-questions.json
 tools/english-wrong-answers/wrong-answers.md
 
+# PSLE Science prelim papers + everything derived from them. These are other
+# schools' copyrighted exam papers, downloaded for one child's personal study —
+# free to use that way, NOT ours to republish in a public repo. Commit the
+# tooling in tools/science-oeq/, never the content.
+tools/science-oeq/papers/
+tools/science-oeq/survey/
+tools/science-oeq/*-questions.json
+tools/science-oeq/survey-report.json
+backend/science-images/
+
 # Generated TTS audio cache (dictation/English), regenerated on demand
 backend/dictation-audio/
 backend/english-audio/

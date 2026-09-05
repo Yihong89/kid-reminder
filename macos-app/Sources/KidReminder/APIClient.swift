@@ -310,4 +310,57 @@ final class APIClient {
         comps.path = "/english-audio/\(questionId).wav"
         return comps.url
     }
+
+    // MARK: - 科学 (PSLE Science open-ended)
+    //
+    // Grading/review lives in the web admin now, not the app (家长都是在网页端
+    // 完成的) — so this client only exposes what the kid's screen needs: browse
+    // papers, play one start to finish, or drill 错题本. No session-list,
+    // session-detail, review, or failure-stats methods here; those are
+    // admin-only endpoints the web UI calls directly.
+
+    /// Papers available to play, plus how many questions are currently in 错题本.
+    func sciencePapers() async throws -> SciencePapersResponse {
+        let data = try await request("/api/science/papers")
+        return try JSONDecoder().decode(SciencePapersResponse.self, from: data)
+    }
+
+    /// Starts a practice set. Pass exactly one of `paper` (play that exam paper
+    /// start to finish, in its own order) or `mistakes: true` (错题本, random
+    /// order — pool membership is sticky and only a parent clears it, so this
+    /// mode always contains something once it's non-empty).
+    func startScienceSession(paper: String? = nil, mistakes: Bool = false) async throws -> ScienceSession {
+        var path = "/api/science/sessions?"
+        if let paper { path += "paper=\(paper.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? paper)" }
+        else if mistakes { path += "mode=mistakes" }
+        let data = try await request(path, method: "POST", body: Data("{}".utf8))
+        return try JSONDecoder().decode(ScienceSession.self, from: data)
+    }
+
+    /// Submits one answer and gets the per-mark-point verdict back. The verdict is
+    /// provisional — a parent confirms it in the web admin before it counts.
+    func submitScienceAnswer(sessionId: Int, itemId: Int, answer: String) async throws -> ScienceSubmitResult {
+        struct Req: Encodable { let answer: String }
+        let body = try JSONEncoder().encode(Req(answer: answer))
+        let data = try await request("/api/science/sessions/\(sessionId)/items/\(itemId)/submit",
+                                     method: "POST", body: body)
+        return try JSONDecoder().decode(ScienceSubmitResult.self, from: data)
+    }
+
+    /// Hands the set to the parent's review queue (web admin, not this app).
+    func completeScienceSession(sessionId: Int) async throws {
+        _ = try await request("/api/science/sessions/\(sessionId)/complete", method: "POST", body: Data("{}".utf8))
+    }
+
+    /// URL for a question's scanned image (the crop is authoritative over the
+    /// transcribed prompt, which can contain OCR-era transcription slips).
+    func scienceImageURL(_ file: String) -> URL? {
+        guard !file.isEmpty else { return nil }
+        var comps = URLComponents()
+        comps.scheme = "http"
+        comps.host = settings.host
+        comps.port = settings.port
+        comps.path = "/science-images/\(file)"
+        return comps.url
+    }
 }

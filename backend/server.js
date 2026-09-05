@@ -61,12 +61,17 @@ const KID_PIN = process.env.KID_PIN || "4321"; // unlock the kid view (change be
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, "kidreminder.db");
 const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 const SPRITES_DIR = path.join(__dirname, "sprites");
+// Science question crops, produced offline by tools/science-oeq/crop_questions.py.
+// Read-only like sprites/ — nothing in the server ever writes here, so there is
+// no upload path to secure.
+const SCIENCE_IMAGES_DIR = path.join(__dirname, "science-images");
 const DICTATION_AUDIO_DIR = path.join(__dirname, "dictation-audio");
 const ENGLISH_AUDIO_DIR = path.join(__dirname, "english-audio");
 const CUSTOM_DICTATION_AUDIO_DIR = path.join(__dirname, "custom-dictation-audio");
 fs.mkdirSync(DICTATION_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(ENGLISH_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(CUSTOM_DICTATION_AUDIO_DIR, { recursive: true });
+fs.mkdirSync(SCIENCE_IMAGES_DIR, { recursive: true });
 
 // ---------------------------------------------------------------- TTS (dsh-sister's Qwen3-TTS, loopback-only)
 // Reuses the existing dsh-sister-tts service (Qwen3-TTS-VoiceDesign on MLX) rather than
@@ -472,6 +477,100 @@ db.exec(`
     result      TEXT,                 -- NULL (not yet answered) | 'correct' | 'incorrect'
     overridden  INTEGER NOT NULL DEFAULT 0  -- 1 if the kid flipped an auto-grade via self-override
   );
+
+  -- 科学 (PSLE Science open-ended). Unlike the English bank, a question is NOT
+  -- scored right/wrong: PSLE awards one mark per distinct scoring point, so a
+  -- question is stored decomposed into its mark points and graded per point.
+  -- Each point is tagged with its KIND, which is what makes the diagnosis work:
+  -- a missed point says *which* answering technique failed (stopped at the
+  -- observation, used an everyday word, ignored the data, missed the controlled
+  -- variable), not merely that a mark was lost.
+  CREATE TABLE IF NOT EXISTS science_questions (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_ref    TEXT NOT NULL,        -- e.g. 'acsj-2025-q31b'; unique, makes re-import idempotent
+    school        TEXT NOT NULL DEFAULT '',
+    year          INTEGER,
+    question_no   INTEGER,
+    part          TEXT NOT NULL DEFAULT '',
+    theme         TEXT NOT NULL DEFAULT '',  -- Diversity | Cycles | Systems | Interactions | Energy
+    topic         TEXT NOT NULL DEFAULT '',
+    question_type TEXT NOT NULL DEFAULT '',  -- explain | predict_explain | compare | data | experimental_design | draw_label
+    answer_mode   TEXT NOT NULL DEFAULT 'text', -- text | short | drawing ('drawing' can't be typed)
+    marks         INTEGER NOT NULL,
+    context       TEXT NOT NULL DEFAULT '',    -- shared stem shown above the prompt
+    prompt        TEXT NOT NULL,
+    model_answer  TEXT NOT NULL DEFAULT '',
+    image         TEXT NOT NULL DEFAULT '',    -- filename in science-images/
+    do_not_accept TEXT NOT NULL DEFAULT '',    -- JSON [{answer, reason}] from the paper's own scheme
+    attempts      INTEGER NOT NULL DEFAULT 0,
+    -- Unfloored on purpose. The English bank floors this at 0 (server.js
+    -- correct_count = MAX(0, ...)), which makes "wrong once" and "wrong eight
+    -- times" indistinguishable and breaks weakest-first selection.
+    score_total   INTEGER NOT NULL DEFAULT 0,  -- marks earned across all attempts
+    -- Groups questions into one paper (e.g. 'acsj-2025') and orders them within
+    -- it, so "做完整张卷子" can replay the exam's own question order.
+    paper_key     TEXT NOT NULL DEFAULT '',
+    paper_seq     INTEGER NOT NULL DEFAULT 0,
+    -- Sticky on purpose: a parent-reviewed miss sets this to 1, and it is NEVER
+    -- auto-cleared by a later correct answer — only an explicit parent action
+    -- (PATCH inMistakeBank:false) removes a question from 错题本. The parent
+    -- decides when something is actually mastered, not the keyword matcher.
+    in_mistake_bank INTEGER NOT NULL DEFAULT 0,
+    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS science_questions_ref ON science_questions(source_ref);
+
+  CREATE TABLE IF NOT EXISTS science_mark_points (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    question_id INTEGER NOT NULL REFERENCES science_questions(id),
+    seq         INTEGER NOT NULL,
+    point_kind  TEXT NOT NULL,        -- mechanism | observation | keyword | data | comparison | ...
+    description TEXT NOT NULL DEFAULT '',  -- model phrasing, shown after answering
+    keywords    TEXT NOT NULL DEFAULT '',  -- JSON [[a,b],[c]] = (a OR b) AND c
+    any_of      TEXT NOT NULL DEFAULT '',  -- JSON [[groups],[groups]] for the scheme's "Any two"
+    need_n      INTEGER NOT NULL DEFAULT 0 -- how many of any_of must match
+  );
+  CREATE INDEX IF NOT EXISTS science_mark_points_q ON science_mark_points(question_id);
+
+  -- Parent-reviewed, like dictation — not auto-graded like English. The keyword
+  -- verdict is provisional and only speeds the review up.
+  CREATE TABLE IF NOT EXISTS science_sessions (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    status       TEXT NOT NULL DEFAULT 'in_progress', -- in_progress | pending_review | reviewed
+    -- 'paper' = one full exam paper in its own order; 'mistakes' = the 错题本
+    -- pool in random order; 'weakest' = the original weakest-first pool
+    -- (kept for admin/testing, not offered in the app UI anymore).
+    mode         TEXT NOT NULL DEFAULT 'weakest',
+    paper_key    TEXT NOT NULL DEFAULT '',
+    -- school/year are denormalized from the paper's questions at session-create
+    -- time, purely so a session list can show "ACS(J) 2025" without a join.
+    school       TEXT NOT NULL DEFAULT '',
+    year         INTEGER,
+    created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    completed_at TEXT,
+    reviewed_at  TEXT
+  );
+  CREATE TABLE IF NOT EXISTS science_session_items (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id  INTEGER NOT NULL REFERENCES science_sessions(id),
+    question_id INTEGER NOT NULL REFERENCES science_questions(id),
+    seq         INTEGER NOT NULL,
+    answer      TEXT,
+    auto_score  INTEGER,               -- NULL until answered
+    final_score INTEGER                -- NULL until a parent reviews
+  );
+  CREATE INDEX IF NOT EXISTS science_session_items_s ON science_session_items(session_id);
+  -- One row per mark point per answer. This table is the point of the whole
+  -- design: without it "which kind of point does he keep missing?" is
+  -- unanswerable.
+  CREATE TABLE IF NOT EXISTS science_item_points (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_id       INTEGER NOT NULL REFERENCES science_session_items(id),
+    mark_point_id INTEGER NOT NULL REFERENCES science_mark_points(id),
+    auto_hit      INTEGER NOT NULL DEFAULT 0,
+    final_hit     INTEGER               -- NULL until reviewed; then 0/1
+  );
+  CREATE INDEX IF NOT EXISTS science_item_points_i ON science_item_points(item_id);
 `);
 // migrate older databases that predate newer columns
 try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
@@ -488,6 +587,22 @@ try {
   db.exec("UPDATE tasks SET countdown_enabled = 1 WHERE target_date IS NOT NULL"); // migrate legacy countdowns
 } catch { /* exists */ }
 try { db.exec("ALTER TABLE vocab_words ADD COLUMN correct_count INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_questions ADD COLUMN paper_key TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_questions ADD COLUMN paper_seq INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_questions ADD COLUMN in_mistake_bank INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_sessions ADD COLUMN mode TEXT NOT NULL DEFAULT 'weakest'"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_sessions ADD COLUMN paper_key TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_sessions ADD COLUMN school TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_sessions ADD COLUMN year INTEGER"); } catch { /* exists */ }
+// Created here, not in the CREATE TABLE block above: on an already-deployed DB,
+// "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
+// exists without paper_key/paper_seq), so an index on those columns placed in
+// that block would run BEFORE the ALTER TABLE lines above ever add them and
+// fail with "no such column: paper_key" — which crashed the server at startup
+// the first time this shipped. Placing the index after the ALTERs guarantees
+// the columns exist either way (freshly created here, or already in the
+// CREATE TABLE for a brand-new database).
+try { db.exec("CREATE INDEX IF NOT EXISTS science_questions_paper ON science_questions(paper_key, paper_seq)"); } catch { /* exists */ }
 console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 
 // ---------------------------------------------------------------- helpers
@@ -614,7 +729,7 @@ function readBody(req) {
 // in the request *body*, so recording its body would write the admin PIN into
 // the database in plaintext. scrubBody() strips pin-like keys as a second layer
 // in case a future endpoint does the same thing.
-const AUDIT_PATHS = /^\/api\/(stamps|unlock|tasks|vocab|dictation|dictation-lists|english)(\/|$)/;
+const AUDIT_PATHS = /^\/api\/(stamps|unlock|tasks|vocab|dictation|dictation-lists|english|science)(\/|$)/;
 const AUDIT_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
 
 function auditRole(req) {
@@ -656,6 +771,43 @@ function recordAudit(req, method, pathWithQuery, status) {
 // (case/whitespace/punctuation-insensitive) — used by /api/english/sessions/*/submit
 function normalizeEnglishAnswer(s) {
   return String(s || "").trim().toLowerCase().replace(/\s+/g, " ").replace(/[.,!?;:"'()]/g, "").trim();
+}
+
+// ----------------------------------------------------- 科学 mark-point matching
+// Science OEQ answers are free prose, so the English module's exact-after-
+// normalisation comparison is useless here. Instead each mark point declares the
+// terms that must appear:
+//
+//   keywords [[a,b],[c]]  ->  (a OR b) AND c
+//   any_of + need_n       ->  at least need_n alternatives match ("Any two ...")
+//
+// Substring matching is deliberate — storing the stem "evaporat" covers
+// evaporate/evaporates/evaporation without a stemmer.
+//
+// This verdict is PROVISIONAL. It cannot see whether the reasoning actually
+// hangs together, so a parent confirms every answer before it counts; only the
+// confirmed verdict feeds score_total and the failure-mode stats.
+function scienceParse(json, fallback) {
+  if (!json) return fallback;
+  try { return JSON.parse(json); } catch { return fallback; }
+}
+
+function scienceGroupHit(text, group) {
+  return group.some((term) => text.includes(normalizeEnglishAnswer(term)));
+}
+
+function scienceAutoHit(markPoint, answer) {
+  const text = normalizeEnglishAnswer(answer);
+  if (!text) return false;
+  const anyOf = scienceParse(markPoint.any_of, null);
+  if (Array.isArray(anyOf) && anyOf.length) {
+    const need = markPoint.need_n > 0 ? markPoint.need_n : 1;
+    const matched = anyOf.filter((alt) => alt.every((g) => scienceGroupHit(text, g))).length;
+    return matched >= need;
+  }
+  const groups = scienceParse(markPoint.keywords, []);
+  if (!Array.isArray(groups) || !groups.length) return false;
+  return groups.every((g) => scienceGroupHit(text, g));
 }
 
 // ---------------------------------------------------------------- http server
@@ -1144,8 +1296,11 @@ const server = http.createServer(async (req, res) => {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
       const id = Number(sessDetailMatch[1]);
-      // ON DELETE CASCADE in the schema isn't actually enforced (foreign_keys pragma is off,
-      // as it is for the whole db), so delete dictation_items ourselves first.
+      // ON DELETE CASCADE in the schema isn't automatic — node:sqlite's
+      // DatabaseSync actually enforces foreign_keys by default (confirmed:
+      // `PRAGMA foreign_keys` reports 1, contrary to what an earlier version of
+      // this comment claimed), which makes deleting children first mandatory,
+      // not just tidy: deleting dictation_sessions first would throw.
       db.prepare("DELETE FROM dictation_items WHERE session_id = ?").run(id);
       const info = db.prepare("DELETE FROM dictation_sessions WHERE id = ?").run(id);
       if (!info.changes) return sendJSON(404, { error: "session not found" });
@@ -1578,6 +1733,328 @@ const server = http.createServer(async (req, res) => {
       const info = db.prepare("DELETE FROM english_quiz_sessions WHERE id = ?").run(id);
       if (!info.changes) return sendJSON(404, { error: "session not found" });
       return sendJSON(200, { ok: true });
+    }
+
+    // ============================ 科学 (PSLE Science open-ended) ==============
+    // Grading is per MARK POINT, not per question, and every answer is confirmed
+    // by a parent — the keyword verdict only pre-fills the review.
+
+    // --- question images (open; same three-layer traversal guard as /sprites/) ---
+    if (method === "GET" && pathname.startsWith("/science-images/")) {
+      const file = path.basename(pathname);
+      const full = path.join(SCIENCE_IMAGES_DIR, file);
+      if (!full.startsWith(SCIENCE_IMAGES_DIR) || !/^[\w.-]+\.png$/.test(file) || !fs.existsSync(full)) {
+        return sendJSON(404, { error: "image not found" });
+      }
+      const data = fs.readFileSync(full);
+      res.writeHead(200, { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400" });
+      return res.end(data);
+    }
+
+    // --- browse the bank (admin only) ---------------------------------------
+    // ?mistakeBank=1 narrows to the 错题本 for the admin's mistake-bank
+    // management view (list + a per-question "移出错题本" action via PATCH below).
+    if (method === "GET" && pathname === "/api/science/questions") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limit") || "50", 10)));
+      const offset = Math.max(0, parseInt(url.searchParams.get("offset") || "0", 10) || 0);
+      const theme = url.searchParams.get("theme") || "";
+      const mistakeOnly = url.searchParams.get("mistakeBank") === "1";
+      const clauses = [], args = [];
+      if (theme) { clauses.push("theme = ?"); args.push(theme); }
+      if (mistakeOnly) clauses.push("in_mistake_bank = 1");
+      const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
+      const total = db.prepare(`SELECT COUNT(*) n FROM science_questions ${where}`).get(...args).n;
+      const rows = db.prepare(
+        `SELECT * FROM science_questions ${where} ORDER BY question_no, part LIMIT ? OFFSET ?`
+      ).all(...args, limit, offset);
+      return sendJSON(200, { total, limit, offset, questions: rows });
+    }
+
+    // --- clear (or set) a question's 错题本 membership (admin only) -----------
+    // Membership is sticky by design — a review only ever sets it to 1 (see the
+    // /review handler below); this is the one path that clears it, so a question
+    // never leaves 错题本 except by a parent's explicit decision.
+    const sciQuestionMatch = pathname.match(/^\/api\/science\/questions\/(\d+)$/);
+    if (sciQuestionMatch && method === "PATCH") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const body = await readBody(req);
+      if (typeof body.inMistakeBank !== "boolean") {
+        return sendJSON(400, { error: "inMistakeBank (boolean) is required" });
+      }
+      const info = db.prepare("UPDATE science_questions SET in_mistake_bank = ? WHERE id = ?")
+        .run(body.inMistakeBank ? 1 : 0, Number(sciQuestionMatch[1]));
+      if (!info.changes) return sendJSON(404, { error: "question not found" });
+      return sendJSON(200, { ok: true });
+    }
+
+    // --- list papers for the browse screen (open; the kid app calls this) -----
+    if (method === "GET" && pathname === "/api/science/papers") {
+      // Only non-drawing parts are counted — those are the ones the kid can
+      // actually earn marks on on a screen.
+      const papers = db.prepare(`
+        SELECT paper_key AS paperKey, school, year,
+               COUNT(*) AS questionCount, SUM(marks) AS marksTotal
+          FROM science_questions
+         WHERE answer_mode != 'drawing' AND paper_key != ''
+         GROUP BY paper_key ORDER BY year DESC, school ASC`).all();
+      const mistakeCount = db.prepare(
+        "SELECT COUNT(*) n FROM science_questions WHERE in_mistake_bank = 1 AND answer_mode != 'drawing'"
+      ).get().n;
+      return sendJSON(200, { papers, mistakeCount });
+    }
+
+    // --- start a practice set (open; the kid app calls this) ------------------
+    // Three modes:
+    //   ?paper=<paper_key>  一张完整卷子，按卷子本身的题号顺序
+    //   ?mode=mistakes      错题本，随机顺序
+    //   (neither)           legacy weakest-first pool — kept for admin/testing,
+    //                       the app UI no longer offers this path
+    if (method === "POST" && pathname === "/api/science/sessions") {
+      const paperKey = url.searchParams.get("paper") || "";
+      const mistakesMode = url.searchParams.get("mode") === "mistakes";
+      let qids, mode, school = "", year = null;
+
+      if (paperKey) {
+        const rows = db.prepare(`
+          SELECT id, school, year FROM science_questions
+           WHERE paper_key = ? AND answer_mode != 'drawing'
+           ORDER BY paper_seq ASC`).all(paperKey);
+        if (!rows.length) return sendJSON(404, { error: "paper not found" });
+        qids = rows.map((r) => r.id);
+        mode = "paper";
+        school = rows[0].school; year = rows[0].year;
+      } else if (mistakesMode) {
+        const rows = db.prepare(
+          "SELECT id FROM science_questions WHERE in_mistake_bank = 1 AND answer_mode != 'drawing'"
+        ).all();
+        if (!rows.length) return sendJSON(400, { error: "错题本是空的，继续保持！" });
+        qids = rows.map((r) => r.id);
+        for (let i = qids.length - 1; i > 0; i--) {         // Fisher-Yates — 随机顺序
+          const j = Math.floor(Math.random() * (i + 1));
+          [qids[i], qids[j]] = [qids[j], qids[i]];
+        }
+        mode = "mistakes";
+      } else {
+        // Legacy weakest-first pool, unchanged from the original implementation.
+        const size = Math.min(10, Math.max(1, parseInt(url.searchParams.get("size") || "5", 10) || 5));
+        const pool = db.prepare(`
+          SELECT id FROM science_questions
+           WHERE answer_mode != 'drawing'
+           ORDER BY (CASE WHEN attempts = 0 THEN 0
+                          ELSE CAST(score_total AS REAL) / (attempts * marks) END) ASC,
+                    RANDOM() ASC
+           LIMIT ?`).all(size * 3).map((r) => r.id);
+        if (!pool.length) return sendJSON(400, { error: "science question bank is empty" });
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        qids = pool.slice(0, size);
+        mode = "weakest";
+      }
+
+      const sessionId = db.prepare(
+        "INSERT INTO science_sessions (status, mode, paper_key, school, year) VALUES ('in_progress', ?, ?, ?, ?)"
+      ).run(mode, paperKey, school, year).lastInsertRowid;
+      const items = [];
+      qids.forEach((qid, idx) => {
+        const itemId = db.prepare(
+          "INSERT INTO science_session_items (session_id, question_id, seq) VALUES (?, ?, ?)"
+        ).run(sessionId, qid, idx + 1).lastInsertRowid;
+        const q = db.prepare("SELECT * FROM science_questions WHERE id = ?").get(qid);
+        items.push({
+          itemId: Number(itemId), seq: idx + 1, questionId: qid,
+          theme: q.theme, topic: q.topic, questionType: q.question_type,
+          answerMode: q.answer_mode, marks: q.marks,
+          context: q.context, prompt: q.prompt, image: q.image,
+        });
+      });
+      // model_answer and mark points are deliberately withheld until submit.
+      return sendJSON(201, { sessionId: Number(sessionId), mode, items });
+    }
+
+    // --- submit one answer (open) --------------------------------------------
+    const sciSubmit = pathname.match(/^\/api\/science\/sessions\/(\d+)\/items\/(\d+)\/submit$/);
+    if (sciSubmit && method === "POST") {
+      const sessionId = Number(sciSubmit[1]), itemId = Number(sciSubmit[2]);
+      const item = db.prepare(
+        "SELECT * FROM science_session_items WHERE id = ? AND session_id = ?"
+      ).get(itemId, sessionId);
+      if (!item) return sendJSON(404, { error: "item not found" });
+      const body = await readBody(req);
+      const answer = String(body.answer || "");
+      const q = db.prepare("SELECT * FROM science_questions WHERE id = ?").get(item.question_id);
+      const points = db.prepare(
+        "SELECT * FROM science_mark_points WHERE question_id = ? ORDER BY seq"
+      ).all(item.question_id);
+
+      // Idempotent, like the English submit: re-posting returns the stored
+      // verdict instead of re-scoring.
+      if (item.auto_score === null) {
+        let auto = 0;
+        for (const p of points) {
+          const hit = scienceAutoHit(p, answer) ? 1 : 0;
+          auto += hit;
+          db.prepare(
+            "INSERT INTO science_item_points (item_id, mark_point_id, auto_hit) VALUES (?, ?, ?)"
+          ).run(itemId, p.id, hit);
+        }
+        db.prepare("UPDATE science_session_items SET answer = ?, auto_score = ? WHERE id = ?")
+          .run(answer, auto, itemId);
+        item.auto_score = auto;
+      }
+
+      const hits = db.prepare("SELECT mark_point_id, auto_hit FROM science_item_points WHERE item_id = ?").all(itemId);
+      const hitBy = new Map(hits.map((h) => [h.mark_point_id, h.auto_hit]));
+      return sendJSON(200, {
+        autoScore: item.auto_score,
+        marks: q.marks,
+        modelAnswer: q.model_answer,
+        doNotAccept: scienceParse(q.do_not_accept, []),
+        provisional: true,   // a parent still has to confirm this
+        points: points.map((p) => ({
+          markPointId: p.id, seq: p.seq, pointKind: p.point_kind,
+          description: p.description, autoHit: (hitBy.get(p.id) || 0) === 1,
+        })),
+      });
+    }
+
+    // --- finish a set -> parent's review queue (open) -------------------------
+    const sciComplete = pathname.match(/^\/api\/science\/sessions\/(\d+)\/complete$/);
+    if (sciComplete && method === "POST") {
+      const info = db.prepare(
+        "UPDATE science_sessions SET status = 'pending_review', completed_at = datetime('now') WHERE id = ?"
+      ).run(Number(sciComplete[1]));
+      if (!info.changes) return sendJSON(404, { error: "session not found" });
+      return sendJSON(200, { ok: true });
+    }
+
+    // --- session list (admin: the review queue) ------------------------------
+    if (method === "GET" && pathname === "/api/science/sessions") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const status = url.searchParams.get("status");
+      const where = status ? "WHERE s.status = ?" : "";
+      const args = status ? [status] : [];
+      const rows = db.prepare(`
+        SELECT s.*,
+               (SELECT COUNT(*) FROM science_session_items i WHERE i.session_id = s.id) itemCount,
+               (SELECT COALESCE(SUM(q.marks), 0) FROM science_session_items i
+                  JOIN science_questions q ON q.id = i.question_id WHERE i.session_id = s.id) marksTotal,
+               (SELECT COALESCE(SUM(i.auto_score), 0) FROM science_session_items i WHERE i.session_id = s.id) autoTotal,
+               (SELECT COALESCE(SUM(i.final_score), 0) FROM science_session_items i WHERE i.session_id = s.id) finalTotal
+          FROM science_sessions s ${where} ORDER BY s.created_at DESC`).all(...args);
+      return sendJSON(200, { sessions: rows });
+    }
+
+    // --- one session in full, for reviewing or reading back (admin) ----------
+    const sciSessDetail = pathname.match(/^\/api\/science\/sessions\/(\d+)$/);
+    if (sciSessDetail && method === "GET") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const id = Number(sciSessDetail[1]);
+      const session = db.prepare("SELECT * FROM science_sessions WHERE id = ?").get(id);
+      if (!session) return sendJSON(404, { error: "session not found" });
+      const items = db.prepare(`
+        SELECT i.*, q.prompt, q.context, q.image, q.marks, q.model_answer, q.theme, q.topic,
+               q.question_type, q.do_not_accept, q.source_ref
+          FROM science_session_items i JOIN science_questions q ON q.id = i.question_id
+         WHERE i.session_id = ? ORDER BY i.seq`).all(id);
+      const detailed = items.map((it) => {
+        const pts = db.prepare(`
+          SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
+                 ip.auto_hit autoHit, ip.final_hit finalHit
+            FROM science_mark_points mp
+            LEFT JOIN science_item_points ip
+                   ON ip.mark_point_id = mp.id AND ip.item_id = ?
+           WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.id, it.question_id);
+        return { ...it, do_not_accept: scienceParse(it.do_not_accept, []), points: pts };
+      });
+      return sendJSON(200, { session, items: detailed });
+    }
+
+    // --- parent review: confirm or correct the per-point verdict (admin) -----
+    const sciReview = pathname.match(/^\/api\/science\/sessions\/(\d+)\/review$/);
+    if (sciReview && method === "POST") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const sessionId = Number(sciReview[1]);
+      const session = db.prepare("SELECT * FROM science_sessions WHERE id = ?").get(sessionId);
+      if (!session) return sendJSON(404, { error: "session not found" });
+      const body = await readBody(req);
+      if (!Array.isArray(body.items)) return sendJSON(400, { error: "items array required" });
+
+      // A re-review must not double-count: undo this session's previous
+      // contribution to the question stats before applying the new one.
+      const already = session.status === "reviewed";
+      for (const entry of body.items) {
+        const itemId = Number(entry.itemId);
+        const item = db.prepare(
+          "SELECT * FROM science_session_items WHERE id = ? AND session_id = ?"
+        ).get(itemId, sessionId);
+        if (!item) continue;
+        const q = db.prepare("SELECT marks FROM science_questions WHERE id = ?").get(item.question_id);
+        let final = 0;
+        for (const p of entry.points || []) {
+          const hit = p.hit ? 1 : 0;
+          final += hit;
+          db.prepare("UPDATE science_item_points SET final_hit = ? WHERE item_id = ? AND mark_point_id = ?")
+            .run(hit, itemId, Number(p.markPointId));
+        }
+        const prev = already && item.final_score !== null ? item.final_score : 0;
+        const prevAttempt = already ? 1 : 0;
+        db.prepare("UPDATE science_session_items SET final_score = ? WHERE id = ?").run(final, itemId);
+        db.prepare("UPDATE science_questions SET attempts = attempts + ?, score_total = score_total + ? WHERE id = ?")
+          .run(1 - prevAttempt, final - prev, item.question_id);
+        // Sticky add-only: a miss puts it in 错题本; a full score here does NOT
+        // take it back out — only the parent's explicit PATCH does that.
+        if (q && final < q.marks) {
+          db.prepare("UPDATE science_questions SET in_mistake_bank = 1 WHERE id = ?").run(item.question_id);
+        }
+      }
+      db.prepare("UPDATE science_sessions SET status = 'reviewed', reviewed_at = datetime('now') WHERE id = ?")
+        .run(sessionId);
+      return sendJSON(200, { ok: true });
+    }
+
+    // --- delete a set (admin) -----------------------------------------------
+    // For abandoned in_progress sets the kid never finished, and for tidying up.
+    // Deleting also removes its per-point rows, so the failure-mode stats stop
+    // counting it. Question attempts/score_total are NOT rewound — those record
+    // that the question was attempted, which stays true.
+    if (sciSessDetail && method === "DELETE") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const id = Number(sciSessDetail[1]);
+      const items = db.prepare("SELECT id FROM science_session_items WHERE session_id = ?").all(id);
+      for (const it of items) {
+        db.prepare("DELETE FROM science_item_points WHERE item_id = ?").run(it.id);
+      }
+      db.prepare("DELETE FROM science_session_items WHERE session_id = ?").run(id);
+      const info = db.prepare("DELETE FROM science_sessions WHERE id = ?").run(id);
+      if (!info.changes) return sendJSON(404, { error: "session not found" });
+      return sendJSON(200, { ok: true });
+    }
+
+    // --- the diagnosis: which kinds of point get missed (admin) --------------
+    if (method === "GET" && pathname === "/api/science/stats/failure-modes") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const rows = db.prepare(`
+        SELECT mp.point_kind pointKind,
+               COUNT(*) total,
+               SUM(CASE WHEN ip.final_hit = 1 THEN 1 ELSE 0 END) hit
+          FROM science_item_points ip
+          JOIN science_mark_points mp ON mp.id = ip.mark_point_id
+         WHERE ip.final_hit IS NOT NULL
+         GROUP BY mp.point_kind
+         ORDER BY (COUNT(*) - SUM(CASE WHEN ip.final_hit = 1 THEN 1 ELSE 0 END)) DESC`).all();
+      return sendJSON(200, {
+        kinds: rows.map((r) => ({ ...r, missed: r.total - r.hit })),
+      });
     }
 
     sendJSON(404, { error: "not found" });
