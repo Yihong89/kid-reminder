@@ -3,7 +3,10 @@ import SwiftUI
 /// Where a science practice set gets its questions from. Both a paper's ▶️ and
 /// the 错题本 button open the *same* window (`ScienceRunnerView`) — this is the
 /// only thing that differs between them.
-enum ScienceSource: Identifiable, Equatable {
+///
+/// Codable + Hashable because this is passed as the identifying value to a
+/// data-driven `WindowGroup(for: ScienceSource.self)` — see KidReminderApp.
+enum ScienceSource: Identifiable, Equatable, Codable, Hashable {
     /// One full exam paper, in the paper's own question order.
     case paper(key: String, title: String)
     /// The 错题本 pool, shuffled. Membership is sticky (a parent's explicit
@@ -35,7 +38,11 @@ enum ScienceSource: Identifiable, Equatable {
 /// review — completing a set just hands it to that queue.
 struct ScienceRunnerView: View {
     @EnvironmentObject var settings: SettingsStore
-    @Environment(\.dismiss) private var dismiss
+    // dismissWindow, not dismiss: this is presented via openWindow as its own
+    // top-level window (see KidReminderApp), not a .sheet. That's specifically
+    // so it gets a real title bar — a sheet has none, so there is no maximize/
+    // zoom control to give it no matter how the frame is sized.
+    @Environment(\.dismissWindow) private var dismissWindow
     let source: ScienceSource
 
     private enum Phase: Equatable {
@@ -62,20 +69,16 @@ struct ScienceRunnerView: View {
     var body: some View {
         content
             .navigationTitle(source.title)
-            // Load-bearing floor, not a cap — there's no maxWidth/maxHeight, so
-            // the user can still drag the sheet's edges bigger than this. A
-            // macOS sheet has no title bar at all, so there is no maximize/zoom
-            // button to give it regardless of size (tried moving this to its
-            // own WindowGroup to get one — that crashed on open, reverted:
-            // see the revert of "科学 runner: open as its own window"). Opening
-            // this much bigger by default is the safe way to address "看不清楚
-            // 题目" without that risk. Also still: on macOS a sheet sizes to its
-            // content's fitting size, and short content renders small enough
-            // to look blank — see DictationView's sheet comment for that story.
+            // Floor only, not a cap. Being a real window (see KidReminderApp's
+            // WindowGroup(id: "science-runner", ...)) rather than a sheet, it
+            // is genuinely user-resizable and has a working maximize/zoom
+            // button — a macOS sheet has neither, no matter how its frame is
+            // sized (confirmed: a plain .sheet with this exact same content
+            // could not be dragged bigger by the user either).
             .frame(minWidth: 1000, minHeight: 740)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("关闭") { dismiss() }
+                ToolbarItem(placement: .automatic) {
+                    Button("关闭") { dismissWindow() }
                 }
             }
             .task { await start() }
@@ -289,7 +292,7 @@ struct ScienceRunnerView: View {
             Text("自动判分 \(auto)/\(total)。\n已经交给家长在网页端批改，批改后分数才算数。")
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
-            Button("关闭") { dismiss() }.buttonStyle(.borderedProminent)
+            Button("关闭") { dismissWindow() }.buttonStyle(.borderedProminent)
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
