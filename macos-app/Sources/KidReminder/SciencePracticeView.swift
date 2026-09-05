@@ -2,32 +2,21 @@ import SwiftUI
 
 /// 🔬 科学 — the browser screen. Lists exam papers (school + year) the kid can
 /// play start to finish, plus a 错题本 entry point for the questions a parent's
-/// review has flagged as missed. Playing either always lands in the same
-/// window, `ScienceRunnerView`, presented as a sheet — mirrors 听写's
-/// DictationView/DictationRunnerView split.
+/// review has flagged as missed. Playing either opens the same window,
+/// `ScienceRunnerView` — as a separate top-level window (via `openWindow`),
+/// not a sheet, specifically so it gets a real title bar with a working
+/// maximize/zoom control. See KidReminderApp for the window-group declaration.
 ///
 /// Grading lives in the web admin now (家长都是在网页端完成的), not here — this
 /// screen has no review affordance at all, only practice.
 struct SciencePracticeView: View {
     @EnvironmentObject var settings: SettingsStore
+    @Environment(\.openWindow) private var openWindow
 
     @State private var papers: [SciencePaper] = []
     @State private var mistakeCount = 0
     @State private var loading = true
     @State private var loadError: String?
-
-    // Single sheet destination + Identifiable enum — same reasoning as
-    // DictationView: stacking multiple .sheet modifiers on one view is a known
-    // source of a sheet silently rendering blank.
-    private enum SheetDestination: Identifiable {
-        case run(ScienceSource)
-        var id: String {
-            switch self {
-            case .run(let source): return "run-\(source.id)"
-            }
-        }
-    }
-    @State private var activeSheet: SheetDestination?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -35,12 +24,6 @@ struct SciencePracticeView: View {
         content
             .navigationTitle("科学")
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .sheet(item: $activeSheet) { sheet in
-                switch sheet {
-                case .run(let source):
-                    NavigationStack { ScienceRunnerView(source: source) }
-                }
-            }
     }
 
     @ViewBuilder
@@ -72,7 +55,7 @@ struct SciencePracticeView: View {
             // the web admin, never automatically, so this button staying enabled
             // across sessions is expected, not a bug.
             Button {
-                activeSheet = .run(.mistakes)
+                openWindow(id: "science-runner", value: ScienceSource.mistakes)
             } label: {
                 Label(mistakeCount > 0 ? "📕 错题本 (\(mistakeCount))" : "📕 错题本",
                       systemImage: "book.closed.fill")
@@ -115,7 +98,8 @@ struct SciencePracticeView: View {
             }
             Spacer()
             Button {
-                activeSheet = .run(.paper(key: paper.paperKey, title: "\(paper.school) \(paper.year.map(String.init) ?? "")"))
+                let source = ScienceSource.paper(key: paper.paperKey, title: "\(paper.school) \(paper.year.map(String.init) ?? "")")
+                openWindow(id: "science-runner", value: source)
             } label: {
                 Image(systemName: "play.fill")
             }
