@@ -2373,6 +2373,113 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { session, items: detailed });
     }
 
+    // --- parent review: can correct EITHER tier, on ANY completed session ------
+    // Not gated to pending_review — an already-reviewed session (including a
+    // fully-objective one that never needed review) can be reopened if a
+    // parent spots an auto-grading mistake (e.g. an unlisted synonym).
+    const epaperReview = pathname.match(/^\/api\/epaper\/sessions\/(\d+)\/review$/);
+    if (epaperReview && method === "POST") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const sessionId = Number(epaperReview[1]);
+      const session = db.prepare("SELECT * FROM epaper_sessions WHERE id = ?").get(sessionId);
+      if (!session) return sendJSON(404, { error: "session not found" });
+      const body = await readBody(req);
+      if (!Array.isArray(body.items)) return sendJSON(400, { error: "items array required" });
+      const alreadyReviewed = session.status === "reviewed";
+
+      for (const entry of body.items) {
+        const itemId = Number(entry.itemId);
+        const item = db.prepare(
+          "SELECT * FROM epaper_session_items WHERE id = ? AND session_id = ?"
+        ).get(itemId, sessionId);
+        if (!item) continue;
+        const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(item.question_id);
+
+        if (Array.isArray(entry.points)) {
+          // oeq: mirrors science's review delta exactly — attempts only
+          // increments the FIRST time this session's verdict is finalized.
+          const before = db.prepare(
+            "SELECT auto_hit, final_hit FROM epaper_item_points WHERE item_id = ?"
+          ).all(itemId);
+          const prev = before.reduce((s, p) => s + (p.final_hit !== null ? p.final_hit : p.auto_hit), 0);
+          let final = 0;
+          for (const p of entry.points) {
+            const hit = p.hit ? 1 : 0;
+            final += hit;
+            db.prepare(
+              "UPDATE epaper_item_points SET final_hit = ? WHERE item_id = ? AND mark_point_id = ?"
+            ).run(hit, itemId, Number(p.markPointId));
+          }
+          const prevAttempt = alreadyReviewed ? 1 : 0;
+          db.prepare("UPDATE epaper_questions SET attempts = attempts + ?, score_total = score_total + ? WHERE id = ?")
+            .run(1 - prevAttempt, final - prev, q.id);
+          if (final < q.marks) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+        } else if (typeof entry.finalCorrect === "boolean") {
+          // objective: a pure correction to what submit already counted once —
+          // attempts never changes here, only score_total's delta and the
+          // sticky mistake-bank flag.
+          const prev = item.final_correct ? q.marks : 0;
+          const now = entry.finalCorrect ? q.marks : 0;
+          db.prepare("UPDATE epaper_session_items SET final_correct = ? WHERE id = ?")
+            .run(entry.finalCorrect ? 1 : 0, itemId);
+          db.prepare("UPDATE epaper_questions SET score_total = score_total + ? WHERE id = ?")
+            .run(now - prev, q.id);
+          if (!entry.finalCorrect) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+        }
+      }
+
+      const { marksTotal, scoreEarned } = epaperComputeScore(db, sessionId);
+      db.prepare(`UPDATE epaper_sessions SET status = 'reviewed', reviewed_at = datetime('now'),
+        score_earned = ?, marks_total = ? WHERE id = ?`).run(scoreEarned, marksTotal, sessionId);
+      return sendJSON(200, { ok: true, scoreEarned, marksTotal });
+    }
+
+    // --- clear (or set) a question's 错题本 membership (admin only) ------------
+    const epaperQuestionMatch = pathname.match(/^\/api\/epaper\/questions\/(\d+)$/);
+    if (epaperQuestionMatch && method === "PATCH") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const body = await readBody(req);
+      if (typeof body.inMistakeBank !== "boolean") {
+        return sendJSON(400, { error: "inMistakeBank (boolean) is required" });
+      }
+      const info = db.prepare("UPDATE epaper_questions SET in_mistake_bank = ? WHERE id = ?")
+        .run(body.inMistakeBank ? 1 : 0, Number(epaperQuestionMatch[1]));
+      if (!info.changes) return sendJSON(404, { error: "question not found" });
+      return sendJSON(200, { ok: true });
+    }
+
+    // --- delete a session record (admin) ----------------------------------------
+    if (epaperSessDetail && method === "DELETE") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const id = Number(epaperSessDetail[1]);
+      const items = db.prepare("SELECT id FROM epaper_session_items WHERE session_id = ?").all(id);
+      for (const it of items) {
+        db.prepare("DELETE FROM epaper_item_points WHERE item_id = ?").run(it.id);
+      }
+      db.prepare("DELETE FROM epaper_session_items WHERE session_id = ?").run(id);
+      const info = db.prepare("DELETE FROM epaper_sessions WHERE id = ?").run(id);
+      if (!info.changes) return sendJSON(404, { error: "session not found" });
+      return sendJSON(200, { ok: true });
+    }
+
+    // Also browse the bank directly (admin), mirroring GET /api/science/questions —
+    // needed by the mistake-bank management tab.
+    if (method === "GET" && pathname === "/api/epaper/questions") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limit") || "50", 10)));
+      const mistakeOnly = url.searchParams.get("mistakeBank") === "1";
+      const where = mistakeOnly ? "WHERE in_mistake_bank = 1" : "";
+      const total = db.prepare(`SELECT COUNT(*) n FROM epaper_questions ${where}`).get().n;
+      const rows = db.prepare(
+        `SELECT * FROM epaper_questions ${where} ORDER BY paper_key, paper_seq LIMIT ?`
+      ).all(limit);
+      return sendJSON(200, { total, questions: rows });
+    }
+
     sendJSON(404, { error: "not found" });
   } catch (err) {
     const status = err.status || 500;
