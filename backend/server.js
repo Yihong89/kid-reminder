@@ -2181,6 +2181,76 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    // ================================================== 英语试卷 (English Paper 2) ==
+
+    // --- question images (open; same 3-layer traversal guard as science-images) --
+    if (method === "GET" && pathname.startsWith("/epaper-images/")) {
+      const file = path.basename(pathname);
+      const full = path.join(EPAPER_IMAGES_DIR, file);
+      if (!full.startsWith(EPAPER_IMAGES_DIR) || !/^[\w.-]+\.png$/.test(file) || !fs.existsSync(full)) {
+        return sendJSON(404, { error: "image not found" });
+      }
+      const data = fs.readFileSync(full);
+      res.writeHead(200, { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400" });
+      return res.end(data);
+    }
+
+    // --- list papers for the browse screen (open; the kid app calls this) --------
+    if (method === "GET" && pathname === "/api/epaper/papers") {
+      const papers = db.prepare(`
+        SELECT paper_key AS paperKey, school, year,
+               COUNT(*) AS questionCount, SUM(marks) AS marksTotal
+          FROM epaper_questions WHERE paper_key != ''
+         GROUP BY paper_key ORDER BY year DESC, school ASC`).all();
+      const mistakeCount = db.prepare("SELECT COUNT(*) n FROM epaper_questions WHERE in_mistake_bank = 1").get().n;
+      return sendJSON(200, { papers, mistakeCount });
+    }
+
+    // --- start a practice set (open; the kid app calls this) ---------------------
+    if (method === "POST" && pathname === "/api/epaper/sessions") {
+      const body = await readBody(req);
+      const paperKey = String(body.paperKey || "");
+      const mistakesMode = body.mistakes === true;
+      let qids, mode;
+      if (paperKey) {
+        const rows = db.prepare(
+          "SELECT id FROM epaper_questions WHERE paper_key = ? ORDER BY paper_seq ASC"
+        ).all(paperKey);
+        if (!rows.length) return sendJSON(404, { error: "paper not found" });
+        qids = rows.map((r) => r.id);
+        mode = "paper";
+      } else if (mistakesMode) {
+        const rows = db.prepare("SELECT id FROM epaper_questions WHERE in_mistake_bank = 1").all();
+        if (!rows.length) return sendJSON(400, { error: "错题本是空的，继续保持！" });
+        qids = rows.map((r) => r.id);
+        for (let i = qids.length - 1; i > 0; i--) {   // Fisher-Yates
+          const j = Math.floor(Math.random() * (i + 1));
+          [qids[i], qids[j]] = [qids[j], qids[i]];
+        }
+        mode = "mistakes";
+      } else {
+        return sendJSON(400, { error: "paperKey or mistakes is required" });
+      }
+
+      const sessionId = db.prepare("INSERT INTO epaper_sessions (mode, paper_key) VALUES (?, ?)")
+        .run(mode, paperKey).lastInsertRowid;
+      const items = [];
+      qids.forEach((qid, idx) => {
+        const itemId = db.prepare(
+          "INSERT INTO epaper_session_items (session_id, question_id, seq) VALUES (?, ?, ?)"
+        ).run(sessionId, qid, idx + 1).lastInsertRowid;
+        const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(qid);
+        items.push({
+          itemId: Number(itemId), seq: idx + 1, questionId: qid, section: q.section,
+          questionType: q.question_type, context: q.context, prompt: q.prompt,
+          options: q.options ? JSON.parse(q.options) : null, marks: q.marks, image: q.image,
+        });
+      });
+      // correct_answer/explanation deliberately withheld until submit, same as
+      // science withholds model_answer.
+      return sendJSON(201, { sessionId: Number(sessionId), mode, items });
+    }
+
     sendJSON(404, { error: "not found" });
   } catch (err) {
     const status = err.status || 500;
