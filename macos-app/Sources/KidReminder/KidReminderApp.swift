@@ -35,5 +35,18 @@ struct KidReminderApp: App {
             }
         }
         .windowResizability(.contentMinSize)
+
+        // 英语试卷 practice — same window-group shape as 科学 (see the comment
+        // on the science-runner WindowGroup above for why .contentMinSize,
+        // never .defaultSize).
+        WindowGroup(id: "epaper-runner", for: EpaperSource.self) { $source in
+            if let source {
+                NavigationStack {
+                    EnglishPaperRunnerView(source: source)
+                }
+                .environmentObject(settings)
+            }
+        }
+        .windowResizability(.contentMinSize)
     }
 }
