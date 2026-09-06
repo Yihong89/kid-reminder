@@ -94,7 +94,7 @@ struct EnglishPaperPracticeView: View {
                 let source = EpaperSource.paper(key: paper.paperKey, title: "\(paper.school) \(paper.year.map(String.init) ?? "")")
                 openWindow(id: "epaper-runner", value: source)
             } label: {
-                Image(systemName: "play.fill")
+                Label("开始", systemImage: "play.fill")
             }
             .buttonStyle(.borderedProminent)
             .help("完整做这张卷子")

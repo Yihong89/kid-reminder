@@ -1856,10 +1856,13 @@
     let ptsHtml = "";
     if (q.points && q.points.length) {
       ptsHtml = (q.points || []).map((p) => {
-        const kw = p.keywords ? JSON.parse(p.keywords) : [];
+        let kw = [];
+        try { kw = typeof p.keywords === "string" && p.keywords ? JSON.parse(p.keywords) : []; } catch { kw = []; }
         const kwHtml = kw.length
           ? `<div class="kw">关键词：${kw.map((g) => `[${g.map(escapeHtml).join(" 或 ")}]`).join(" 且 ")}</div>` : "";
-        const anyHtml = p.anyOf ? `<div class="kw">任一 ${p.needN||1} 个：${JSON.parse(p.anyOf).map((g) => `[${g.map(escapeHtml).join(" 或 ")}]`).join(" 或 ")}</div>` : "";
+        let anyOf = [];
+        try { anyOf = typeof p.anyOf === "string" && p.anyOf ? JSON.parse(p.anyOf) : []; } catch { anyOf = []; }
+        const anyHtml = anyOf.length ? `<div class="kw">任一 ${p.needN||1} 个：${anyOf.map((g) => `[${g.map(escapeHtml).join(" 或 ")}]`).join(" 或 ")}</div>` : "";
         return `<div class="sci-point-row"><div>
           <div class="kind">${SCI_KIND_LABEL[p.pointKind] || p.pointKind}</div>
           <div class="desc">${escapeHtml(p.description)}</div>
@@ -1870,8 +1873,9 @@
     // 试卷自己的 “不接受” 提示（JSON [{answer, reason}]）
     let dnaHtml = "";
     if (q.do_not_accept) {
-      const list = JSON.parse(q.do_not_accept);
-      if (list.length) {
+      let list = [];
+      try { list = typeof q.do_not_accept === "string" ? JSON.parse(q.do_not_accept) : q.do_not_accept; } catch { list = []; }
+      if (Array.isArray(list) && list.length) {
         dnaHtml = `<div class="answer">不接受：${list.map((d) => `“${escapeHtml(d.answer)}”——${escapeHtml(d.reason)}`).join("；")}</div>`;
       }
     }
@@ -2330,7 +2334,7 @@
     $("#err").textContent = msg;
     setTimeout(() => { $("#err").textContent = ""; }, 4000);
   }
-  const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 
   // ---- pin gate -----------------------------------------------------------
   async function unlock() {

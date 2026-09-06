@@ -2329,7 +2329,9 @@ const server = http.createServer(async (req, res) => {
         ).run(answer, correct ? 1 : 0, correct ? 1 : 0, itemId);
         db.prepare("UPDATE epaper_questions SET attempts = attempts + 1, score_total = score_total + ? WHERE id = ?")
           .run(correct ? q.marks : 0, q.id);
-        if (!correct) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+        // NOTE: a wrong objective answer is NOT added to 错题本 here. It only
+        // enters the mistake bank after the parent reviews/flags it (see the
+        // /review handler below), so test runs don't pollute the bank.
         item.final_correct = correct ? 1 : 0;
       }
       return sendJSON(200, {
