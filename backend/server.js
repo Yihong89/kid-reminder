@@ -892,6 +892,48 @@ function scienceAutoHit(markPoint, answer) {
   return groups.every((g) => scienceGroupHit(text, g));
 }
 
+// ------------------------------------------------------- 英语试卷 grading/scoring
+// mcq/fill_blank: identical rule to the existing English wrong-answer bank —
+// "alt1 / alt2" in correct_answer means either counts, compared after the
+// same normalization (lowercase, collapsed whitespace, stripped punctuation).
+function epaperGradeObjective(answer, correctAnswer) {
+  const alts = String(correctAnswer || "").split("/").map((a) => normalizeEnglishAnswer(a));
+  return alts.includes(normalizeEnglishAnswer(answer));
+}
+
+// oeq: the exact same AND-of-ORs keyword matcher as science, minus any_of/
+// need_n (not needed for this module's "Any two of..." style — English
+// comprehension mark schemes tested so far don't use that pattern; add it
+// back symmetrically with science if a later paper needs it).
+function epaperAutoHit(markPoint, answer) {
+  const text = normalizeEnglishAnswer(answer);
+  const groups = scienceParse(markPoint.keywords, []);
+  return groups.every((g) => scienceGroupHit(text, g));
+}
+
+// Always recomputed from current DB state, never incremented by hand — so
+// there is no drift between what's stored on epaper_sessions and what the
+// items/points actually say. Called at both complete and review.
+function epaperComputeScore(db, sessionId) {
+  const items = db.prepare(`
+    SELECT i.id, i.final_correct, q.marks, q.question_type
+      FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
+     WHERE i.session_id = ?`).all(sessionId);
+  let marksTotal = 0, scoreEarned = 0;
+  for (const it of items) {
+    marksTotal += it.marks;
+    if (it.question_type === "oeq") {
+      const pts = db.prepare(
+        "SELECT auto_hit, final_hit FROM epaper_item_points WHERE item_id = ?"
+      ).all(it.id);
+      scoreEarned += pts.reduce((s, p) => s + (p.final_hit !== null ? p.final_hit : p.auto_hit), 0);
+    } else {
+      scoreEarned += it.final_correct ? it.marks : 0;
+    }
+  }
+  return { marksTotal, scoreEarned };
+}
+
 // ---------------------------------------------------------------- http server
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://localhost");
