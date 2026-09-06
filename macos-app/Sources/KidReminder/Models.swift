@@ -353,6 +353,8 @@ struct EpaperSessionItem: Codable, Identifiable {
 
 struct EpaperSession: Codable {
     let sessionId: Int
+    let mode: String   // "paper" | "mistakes" — mistakes mode is randomized, so the
+                        // runner must not group items into shared-passage steps there.
     let items: [EpaperSessionItem]
 }
 
