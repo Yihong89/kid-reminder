@@ -1674,7 +1674,7 @@
   // consecutive questions sharing one of the four shared-passage sections
   // becomes one block (passage/word bank shown once); everything else is its
   // own block. Keep this list and the logic in sync with the Swift side.
-  const EPAPER_GROUPABLE_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]);
+  const EPAPER_GROUPABLE_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq", "comprehension_mcq"]);
 
   function epaperGroupSteps(items) {
     const steps = [];
