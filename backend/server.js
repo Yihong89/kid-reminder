@@ -2251,6 +2251,69 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(201, { sessionId: Number(sessionId), mode, items });
     }
 
+    // --- submit one answer (open) -------------------------------------------
+    const epaperSubmit = pathname.match(/^\/api\/epaper\/sessions\/(\d+)\/items\/(\d+)\/submit$/);
+    if (epaperSubmit && method === "POST") {
+      const sessionId = Number(epaperSubmit[1]), itemId = Number(epaperSubmit[2]);
+      const item = db.prepare(
+        "SELECT * FROM epaper_session_items WHERE id = ? AND session_id = ?"
+      ).get(itemId, sessionId);
+      if (!item) return sendJSON(404, { error: "item not found" });
+      const body = await readBody(req);
+      const answer = String(body.answer || "");
+      const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(item.question_id);
+
+      if (q.question_type === "oeq") {
+        const points = db.prepare(
+          "SELECT * FROM epaper_mark_points WHERE question_id = ? ORDER BY seq"
+        ).all(q.id);
+        const already = db.prepare(
+          "SELECT COUNT(*) n FROM epaper_item_points WHERE item_id = ?"
+        ).get(itemId).n > 0;
+        if (!already) {
+          for (const p of points) {
+            const hit = epaperAutoHit(p, answer) ? 1 : 0;
+            db.prepare(
+              "INSERT INTO epaper_item_points (item_id, mark_point_id, auto_hit) VALUES (?, ?, ?)"
+            ).run(itemId, p.id, hit);
+          }
+          db.prepare("UPDATE epaper_session_items SET answer = ? WHERE id = ?").run(answer, itemId);
+        }
+        const hits = db.prepare(
+          "SELECT mark_point_id, auto_hit FROM epaper_item_points WHERE item_id = ?"
+        ).all(itemId);
+        const hitBy = new Map(hits.map((h) => [h.mark_point_id, h.auto_hit]));
+        const autoScore = hits.reduce((s, h) => s + h.auto_hit, 0);
+        return sendJSON(200, {
+          questionType: "oeq", autoScore, marks: q.marks, explanation: q.explanation,
+          provisional: true,
+          points: points.map((p) => ({
+            markPointId: p.id, seq: p.seq, pointKind: p.point_kind,
+            description: p.description, autoHit: (hitBy.get(p.id) || 0) === 1,
+          })),
+        });
+      }
+
+      // mcq / fill_blank — objective, instant, non-provisional. Idempotent:
+      // re-posting returns the stored verdict instead of re-scoring and
+      // double-counting attempts/score_total.
+      if (item.final_correct === null) {
+        const correct = epaperGradeObjective(answer, q.correct_answer);
+        db.prepare(
+          "UPDATE epaper_session_items SET answer = ?, auto_correct = ?, final_correct = ? WHERE id = ?"
+        ).run(answer, correct ? 1 : 0, correct ? 1 : 0, itemId);
+        db.prepare("UPDATE epaper_questions SET attempts = attempts + 1, score_total = score_total + ? WHERE id = ?")
+          .run(correct ? q.marks : 0, q.id);
+        if (!correct) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+        item.final_correct = correct ? 1 : 0;
+      }
+      return sendJSON(200, {
+        questionType: q.question_type, correct: item.final_correct === 1,
+        correctAnswer: q.correct_answer, explanation: q.explanation, marks: q.marks,
+        provisional: false,
+      });
+    }
+
     sendJSON(404, { error: "not found" });
   } catch (err) {
     const status = err.status || 500;
