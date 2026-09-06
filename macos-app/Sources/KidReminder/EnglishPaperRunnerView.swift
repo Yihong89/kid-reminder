@@ -113,7 +113,8 @@ struct EnglishPaperRunnerView: View {
                 // passage text in `context`. Prefer `passage` when present.
                 let readingText = items.compactMap { $0.passage?.isEmpty == false ? $0.passage : nil }
                                   .first ?? items.first?.context ?? ""
-                passageColumn(text: readingText)
+                let section = items.first?.section ?? ""
+                PassagedTextView(text: readingText, section: section)
                     .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
             } else if let url = api.epaperImageURL(items[0].image) {
                 Divider()
@@ -138,6 +139,9 @@ struct EnglishPaperRunnerView: View {
             HStack {
                 Text("\(seqLabel) / 共 \(session?.items.count ?? 0) 题").font(.headline)
                 Spacer()
+                Button(isLast ? "跳过本卷" : "跳过") { skipCurrent(stepIndex: stepIndex, totalSteps: totalSteps) }
+                    .buttonStyle(.bordered)
+                    .help("不批改这一步，直接跳到下一题——方便快速检查整卷内容。")
                 Text("\(totalMarks) 分").font(.caption).foregroundStyle(.secondary)
             }
 
@@ -336,16 +340,6 @@ struct EnglishPaperRunnerView: View {
         }
     }
 
-    private func passageColumn(text: String) -> some View {
-        ScrollView {
-            Text(text)
-                .font(.body)
-                .textSelection(.enabled)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(14)
-        }
-    }
-
     private func imageColumn(url: URL) -> some View {
         ScrollView {
             AsyncImage(url: url) { img in
@@ -418,6 +412,17 @@ struct EnglishPaperRunnerView: View {
         phase = .running(step: step)
     }
 
+    /// Skip the current step WITHOUT grading it — move to the next step (or
+    /// finish if this was the last one). Used to quickly page through a whole
+    /// paper to inspect its content without answering.
+    private func skipCurrent(stepIndex: Int, totalSteps: Int) {
+        if stepIndex >= totalSteps - 1 {
+            Task { await finish() }
+        } else {
+            advance(to: stepIndex + 1)
+        }
+    }
+
     private func finish() async {
         guard let sessionId = session?.sessionId else { return }
         phase = .finishing
@@ -427,5 +432,71 @@ struct EnglishPaperRunnerView: View {
         } catch {
             phase = .error(error.localizedDescription)
         }
+    }
+}
+
+/// Renders a shared-passage excerpt. For the `editing` section the paper marks
+/// the error word inline as `word(36)` (no underline survived the scan/re-key),
+/// so here we draw a clear underline under that word (and keep the "(36)" as a
+/// subtle hint) so the child can see which word to correct at a glance. All
+/// other sections render as plain selectable prose.
+struct PassagedTextView: View {
+    let text: String
+    let section: String
+
+    var body: some View {
+        ScrollView {
+            Group {
+                if section == "editing" {
+                    editingText
+                } else {
+                    Text(text)
+                }
+            }
+            .font(.body)
+            .textSelection(.enabled)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(14)
+        }
+    }
+
+    /// Splits on `word(NN)` and underlines the word. Preserves the rest verbatim.
+    /// The regex keeps any preceding word chars and the trailing `(NN)`.
+    private var editingText: some View {
+        // Split into (plain, errorWord, bracketNumber) triples.
+        let parts = parseEditing(text)
+        return ForEach(parts.indices, id: \.self) { i in
+            let p = parts[i]
+            if let word = p.word {
+                // underline the error word, keep the number subtle
+                (Text(verbatim: word).underline() + Text(verbatim: "(\(p.num))").italic().foregroundStyle(.secondary))
+            } else {
+                Text(verbatim: p.plain)
+            }
+        }
+    }
+
+    /// Tokenize `text`. Emits one part per run; an error word split out so it
+    /// can be underlined. Uses an NSRegularExpression to find `word(NN)`.
+    private func parseEditing(_ s: String) -> [(plain: String, word: String?, num: String)] {
+        guard let re = try? NSRegularExpression(pattern: "([A-Za-z\\u2019'\\u2013-]+)\\((\\d{1,2})\\)") else {
+            return [(s, nil, "")]
+        }
+        let ns = s as NSString
+        let matches = re.matches(in: s, range: NSRange(location: 0, length: ns.length))
+        var out: [(String, String?, String)] = []
+        var last = 0
+        for m in matches {
+            let range = m.range(at: 0)
+            out.append((ns.substring(with: NSRange(location: last, length: range.location - last)), nil, ""))
+            out.append(("",
+                        ns.substring(with: m.range(at: 1)),
+                        ns.substring(with: m.range(at: 2))))
+            last = range.location + range.length
+        }
+        if last < ns.length {
+            out.append((ns.substring(from: last), nil, ""))
+        }
+        return out
     }
 }
