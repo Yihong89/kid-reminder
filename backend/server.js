@@ -2334,6 +2334,45 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { ok: true, status, scoreEarned, marksTotal });
     }
 
+    // --- session list (admin): full history, not just pending -----------------
+    if (method === "GET" && pathname === "/api/epaper/sessions") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const status = url.searchParams.get("status");
+      const where = status ? "WHERE status = ?" : "";
+      const args = status ? [status] : [];
+      const rows = db.prepare(`SELECT * FROM epaper_sessions ${where} ORDER BY created_at DESC`).all(...args);
+      return sendJSON(200, { sessions: rows });
+    }
+
+    // --- one session in full, for the review dialog (admin) --------------------
+    const epaperSessDetail = pathname.match(/^\/api\/epaper\/sessions\/(\d+)$/);
+    if (epaperSessDetail && method === "GET") {
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
+      const id = Number(epaperSessDetail[1]);
+      const session = db.prepare("SELECT * FROM epaper_sessions WHERE id = ?").get(id);
+      if (!session) return sendJSON(404, { error: "session not found" });
+      const items = db.prepare(`
+        SELECT i.*, q.section, q.question_type, q.context, q.prompt, q.options,
+               q.correct_answer, q.explanation, q.marks, q.image, q.school, q.year
+          FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
+         WHERE i.session_id = ? ORDER BY i.seq`).all(id);
+      const detailed = items.map((it) => {
+        let points = null;
+        if (it.question_type === "oeq") {
+          points = db.prepare(`
+            SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
+                   ip.auto_hit autoHit, ip.final_hit finalHit
+              FROM epaper_mark_points mp
+              LEFT JOIN epaper_item_points ip ON ip.mark_point_id = mp.id AND ip.item_id = ?
+             WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.id, it.question_id);
+        }
+        return { ...it, options: it.options ? JSON.parse(it.options) : null, points };
+      });
+      return sendJSON(200, { session, items: detailed });
+    }
+
     sendJSON(404, { error: "not found" });
   } catch (err) {
     const status = err.status || 500;
