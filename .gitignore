@@ -31,6 +31,15 @@ tools/science-oeq/*-questions.json
 tools/science-oeq/survey-report.json
 backend/science-images/
 
+# English Paper 2 practice module (tools/english-papers/) — same discipline as
+# science-oeq: source PDFs, page renders, and extracted question JSON are
+# other schools' copyrighted material plus a real child's schoolwork. Only
+# the tooling and crop-config page-maps are committed.
+tools/english-papers/papers/
+tools/english-papers/survey/
+tools/english-papers/*-questions.json
+backend/epaper-images/
+
 # Generated TTS audio cache (dictation/English), regenerated on demand
 backend/dictation-audio/
 backend/english-audio/
