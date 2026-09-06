@@ -40,6 +40,7 @@ struct EnglishPaperRunnerView: View {
     @State private var typed = ""                       // single-item fill_blank/oeq
     @State private var pickedOption: String?             // single-item mcq
     @State private var groupAnswers: [Int: String] = [:]  // itemId -> answer, group steps
+    @State private var showOriginalScan = false           // comprehension_oeq: text vs. original scan
 
     private var api: APIClient { APIClient(settings: settings) }
     private var paperFont: PaperFont { PaperFont(scale: settings.paperFontScale) }
@@ -142,8 +143,31 @@ struct EnglishPaperRunnerView: View {
                     // passage text in `context`. Prefer `passage` when present.
                     let readingText = items.compactMap { $0.passage?.isEmpty == false ? $0.passage : nil }
                                       .first ?? items.first?.context ?? ""
-                    PassagedTextView(text: readingText, section: section, font: paperFont)
-                        .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
+                    // comprehension_oeq questions constantly reference specific printed
+                    // lines ("...(line 20)"), which the OCR'd plain text has no way to
+                    // show since transcription flattened the original line breaks. A
+                    // cropped scan of the original boxed passage (with its printed
+                    // line-number margin intact) lets the kid check those directly.
+                    let scanImage = items.compactMap { $0.image.isEmpty ? nil : $0.image }.first
+                    VStack(spacing: 0) {
+                        if let scanImage, let url = api.epaperImageURL(scanImage) {
+                            Picker("", selection: $showOriginalScan) {
+                                Text("文字").tag(false)
+                                Text("原文行号").tag(true)
+                            }
+                            .pickerStyle(.segmented)
+                            .labelsHidden()
+                            .padding(10)
+                            if showOriginalScan {
+                                imageColumn(url: url)
+                            } else {
+                                PassagedTextView(text: readingText, section: section, font: paperFont)
+                            }
+                        } else {
+                            PassagedTextView(text: readingText, section: section, font: paperFont)
+                        }
+                    }
+                    .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
                 }
             } else if let url = api.epaperImageURL(items[0].image) {
                 Divider()
@@ -156,6 +180,7 @@ struct EnglishPaperRunnerView: View {
             typed = ""
             pickedOption = nil
             groupAnswers = [:]
+            showOriginalScan = false
         }
     }
 
