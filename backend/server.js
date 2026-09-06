@@ -65,6 +65,10 @@ const SPRITES_DIR = path.join(__dirname, "sprites");
 // Read-only like sprites/ — nothing in the server ever writes here, so there is
 // no upload path to secure.
 const SCIENCE_IMAGES_DIR = path.join(__dirname, "science-images");
+// English Paper 2 question crops (posters/ads in the comprehension-MCQ
+// section only — most of the paper is plain text). Produced offline by
+// tools/english-papers/crop_questions.py. Read-only, same as science-images/.
+const EPAPER_IMAGES_DIR = path.join(__dirname, "epaper-images");
 const DICTATION_AUDIO_DIR = path.join(__dirname, "dictation-audio");
 const ENGLISH_AUDIO_DIR = path.join(__dirname, "english-audio");
 const CUSTOM_DICTATION_AUDIO_DIR = path.join(__dirname, "custom-dictation-audio");
@@ -72,6 +76,7 @@ fs.mkdirSync(DICTATION_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(ENGLISH_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(CUSTOM_DICTATION_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(SCIENCE_IMAGES_DIR, { recursive: true });
+fs.mkdirSync(EPAPER_IMAGES_DIR, { recursive: true });
 
 // ---------------------------------------------------------------- TTS (dsh-sister's Qwen3-TTS, loopback-only)
 // Reuses the existing dsh-sister-tts service (Qwen3-TTS-VoiceDesign on MLX) rather than
@@ -571,6 +576,83 @@ db.exec(`
     final_hit     INTEGER               -- NULL until reviewed; then 0/1
   );
   CREATE INDEX IF NOT EXISTS science_item_points_i ON science_item_points(item_id);
+
+  -- 英语试卷 (PSLE English Paper 2, every question — not just the open-ended
+  -- ones). Two grading tiers live in one table, picked by question_type:
+  -- mcq/fill_blank are objectively right or wrong and grade instantly at
+  -- submit; oeq (the ~10 comprehension questions per paper) is decomposed
+  -- into mark points and graded like science — provisional until a parent
+  -- reviews it. Mirrors science_questions' paper_key/paper_seq/
+  -- in_mistake_bank shape closely on purpose.
+  CREATE TABLE IF NOT EXISTS epaper_questions (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_ref    TEXT NOT NULL,        -- e.g. 'aitong-2025-q1'; unique, idempotent re-import
+    paper_key     TEXT NOT NULL,        -- e.g. 'aitong-2025'
+    paper_seq     INTEGER NOT NULL,     -- original question order in the paper
+    school        TEXT NOT NULL DEFAULT '',
+    year          INTEGER,
+    section       TEXT NOT NULL DEFAULT '',   -- grammar_mcq | vocab_mcq | cloze_mcq |
+                                                -- comprehension_mcq | cloze_wordbank |
+                                                -- editing | cloze_open | synthesis |
+                                                -- comprehension_oeq
+    question_type TEXT NOT NULL,         -- 'mcq' | 'fill_blank' | 'oeq'  (grading path)
+    context       TEXT NOT NULL DEFAULT '', -- shared passage/cloze text shown above the prompt
+    prompt        TEXT NOT NULL,
+    options       TEXT,                  -- JSON array of strings, mcq only
+    correct_answer TEXT,                 -- mcq/fill_blank only; "alt1 / alt2" = either counts
+    marks         INTEGER NOT NULL DEFAULT 1,
+    image         TEXT NOT NULL DEFAULT '',  -- filename in epaper-images/, posters/ads only
+    explanation   TEXT NOT NULL DEFAULT '',  -- shown after grading; doubles as oeq model answer
+    attempts      INTEGER NOT NULL DEFAULT 0,
+    score_total   INTEGER NOT NULL DEFAULT 0,   -- unfloored, same reasoning as science
+    in_mistake_bank INTEGER NOT NULL DEFAULT 0, -- sticky; parent-clear only, all tiers
+    created_at    TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS epaper_questions_ref ON epaper_questions(source_ref);
+  CREATE INDEX IF NOT EXISTS epaper_questions_paper ON epaper_questions(paper_key, paper_seq);
+
+  CREATE TABLE IF NOT EXISTS epaper_mark_points (   -- rows only for question_type = 'oeq'
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    question_id INTEGER NOT NULL REFERENCES epaper_questions(id),
+    seq         INTEGER NOT NULL,
+    point_kind  TEXT NOT NULL,   -- keyword | textual_evidence | inference | multi_part
+    description TEXT NOT NULL DEFAULT '',
+    keywords    TEXT NOT NULL DEFAULT ''   -- JSON [[a,b],[c]] = (a OR b) AND c
+  );
+  CREATE INDEX IF NOT EXISTS epaper_mark_points_q ON epaper_mark_points(question_id);
+
+  CREATE TABLE IF NOT EXISTS epaper_sessions (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    mode         TEXT NOT NULL DEFAULT 'paper',  -- 'paper' | 'mistakes'
+    paper_key    TEXT NOT NULL DEFAULT '',
+    status       TEXT NOT NULL DEFAULT 'in_progress', -- in_progress -> reviewed (no oeq items)
+                                                          -- or -> pending_review -> reviewed
+    score_earned INTEGER,
+    marks_total  INTEGER,
+    created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    completed_at TEXT,
+    reviewed_at  TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS epaper_session_items (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id     INTEGER NOT NULL REFERENCES epaper_sessions(id),
+    question_id    INTEGER NOT NULL REFERENCES epaper_questions(id),
+    seq            INTEGER NOT NULL,
+    answer         TEXT,
+    auto_correct   INTEGER,   -- mcq/fill_blank only, set at submit; NULL for oeq items
+    final_correct  INTEGER    -- mcq/fill_blank only; defaults to auto_correct, parent can flip
+  );
+  CREATE INDEX IF NOT EXISTS epaper_session_items_s ON epaper_session_items(session_id);
+
+  CREATE TABLE IF NOT EXISTS epaper_item_points (   -- rows only for oeq items
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_id       INTEGER NOT NULL REFERENCES epaper_session_items(id),
+    mark_point_id INTEGER NOT NULL REFERENCES epaper_mark_points(id),
+    auto_hit      INTEGER NOT NULL DEFAULT 0,
+    final_hit     INTEGER      -- NULL until reviewed; then 0/1
+  );
+  CREATE INDEX IF NOT EXISTS epaper_item_points_i ON epaper_item_points(item_id);
 `);
 // migrate older databases that predate newer columns
 try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
@@ -729,7 +811,7 @@ function readBody(req) {
 // in the request *body*, so recording its body would write the admin PIN into
 // the database in plaintext. scrubBody() strips pin-like keys as a second layer
 // in case a future endpoint does the same thing.
-const AUDIT_PATHS = /^\/api\/(stamps|unlock|tasks|vocab|dictation|dictation-lists|english|science)(\/|$)/;
+const AUDIT_PATHS = /^\/api\/(stamps|unlock|tasks|vocab|dictation|dictation-lists|english|science|epaper)(\/|$)/;
 const AUDIT_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
 
 function auditRole(req) {
