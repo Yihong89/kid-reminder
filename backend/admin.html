@@ -2456,7 +2456,22 @@
   };
   $("#dlgTitle").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#dlgCreate").click(); });
 
-  if (pin && role) { showMain(); } else { $("#pinGate").hidden = false; }
+  // On load, re-verify the saved PIN against the server. A stale PIN (e.g. the
+  // admin changed it, or it was rotated) must NOT let the page render the admin
+  // UI — the gates below only pass the ones the stored pin actually unlocked.
+  (async function boot() {
+    if (pin && role) {
+      try {
+        const res = await api("/api/verify", { method: "POST", body: JSON.stringify({ pin }) });
+        if (res.ok && res.role === role) { showMain(); return; }
+        // PIN no longer matches the saved role (changed/rotated): clear it.
+        pin = ""; role = null;
+        sessionStorage.removeItem("pin");
+        sessionStorage.removeItem("role");
+      } catch { /* verify failed — fall through to the gate */ }
+    }
+    $("#pinGate").hidden = false;
+  })();
 </script>
 </body>
 </html>
