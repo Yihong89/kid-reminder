@@ -2466,18 +2466,35 @@ const server = http.createServer(async (req, res) => {
     }
 
     // Also browse the bank directly (admin), mirroring GET /api/science/questions —
-    // needed by the mistake-bank management tab.
+    // needed by the mistake-bank management tab, and (via paperKey) the admin
+    // paper-preview dialog, which renders a whole paper read-only for a parent
+    // to check content before assigning it — same paper_seq order and the same
+    // shared-passage grouping the macOS runner applies, so what a parent sees
+    // here matches what the kid sees exactly.
     if (method === "GET" && pathname === "/api/epaper/questions") {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
-      const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limit") || "50", 10)));
+      const paperKey = url.searchParams.get("paperKey") || "";
       const mistakeOnly = url.searchParams.get("mistakeBank") === "1";
-      const where = mistakeOnly ? "WHERE in_mistake_bank = 1" : "";
-      const total = db.prepare(`SELECT COUNT(*) n FROM epaper_questions ${where}`).get().n;
+      const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limit") || (paperKey ? "100" : "50"), 10)));
+      const clauses = [], args = [];
+      if (paperKey) { clauses.push("paper_key = ?"); args.push(paperKey); }
+      if (mistakeOnly) clauses.push("in_mistake_bank = 1");
+      const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
+      const total = db.prepare(`SELECT COUNT(*) n FROM epaper_questions ${where}`).get(...args).n;
       const rows = db.prepare(
         `SELECT * FROM epaper_questions ${where} ORDER BY paper_key, paper_seq LIMIT ?`
-      ).all(limit);
-      return sendJSON(200, { total, questions: rows });
+      ).all(...args, limit);
+      const questions = rows.map((q) => {
+        let points = null;
+        if (q.question_type === "oeq") {
+          points = db.prepare(`
+            SELECT id AS markPointId, seq, point_kind AS pointKind, description, keywords
+              FROM epaper_mark_points WHERE question_id = ? ORDER BY seq`).all(q.id);
+        }
+        return { ...q, options: q.options ? JSON.parse(q.options) : null, points };
+      });
+      return sendJSON(200, { total, questions });
     }
 
     sendJSON(404, { error: "not found" });
