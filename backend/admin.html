@@ -220,6 +220,15 @@
   .sci-item-card details summary { cursor:pointer; }
   .sci-item-card .dna { margin-top:4px; }
   .sci-item-card .dna .a { color:var(--ink); }
+  .epaper-passage { background:var(--bg); border-radius:8px; padding:10px 12px; font-size:14px; white-space:pre-wrap; margin-bottom:10px; }
+  .epaper-blank-row { border-top:1px solid var(--border); padding:8px 0; }
+  .epaper-blank-row:first-of-type { border-top:none; }
+  .epaper-blank-row .seq { font-size:12px; font-weight:600; color:var(--muted); }
+  .epaper-blank-row .prompt { font-size:13px; margin:2px 0; }
+  .epaper-blank-row .answer { font-size:13px; color:#047857; }
+  .epaper-paper-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-top:1px solid var(--border); }
+  .epaper-paper-row:first-of-type { border-top:none; }
+  .epaper-paper-row .meta { font-size:13px; color:var(--muted); }
   .sci-failure-row { display:flex; align-items:center; gap:8px; font-size:13px; padding:3px 0; }
   .sci-failure-row .label { width:110px; flex-shrink:0; }
   .sci-failure-row .bar { flex:1; height:8px; background:var(--bg); border-radius:99px; overflow:hidden; }
@@ -404,6 +413,10 @@
     <!-- 英语试卷 (all-question English Paper 2) grading queue -->
     <div id="epaperView" hidden>
       <div class="card">
+        <div class="vocab-summary">试卷预览——内容和孩子在 macOS App 里看到的完全一致（包括完整段落和完整 word bank），这里额外显示答案方便家长检查。</div>
+        <div id="epaperPapersList"></div>
+      </div>
+      <div class="card">
         <div class="vocab-summary" id="epaperSummary"></div>
         <div id="epaperList"></div>
       </div>
@@ -583,6 +596,15 @@
   <div class="row">
     <button class="ghost" id="epaperDlgCancel">Cancel</button>
     <button class="primary" id="epaperDlgSubmit">保存批改</button>
+  </div>
+</dialog>
+
+<dialog id="epaperPreviewDialog" class="sci-grade-dialog">
+  <h3 id="epaperPreviewTitle">📘 试卷预览</h3>
+  <p>只读预览，和孩子在 macOS App 里看到的排版一致（同一段落/word bank 只显示一次，填完再交）；这里额外显示答案和解析。</p>
+  <div id="epaperPreviewItems"></div>
+  <div class="row">
+    <button class="ghost" id="epaperPreviewClose">关闭</button>
   </div>
 </dialog>
 
@@ -1047,7 +1069,7 @@
     else if (t === "dictationLists") { refreshLists(); }
     else if (t === "science") { refreshScience(); }
     else if (t === "scienceMistakes") { refreshScienceMistakes(); }
-    else if (t === "epaper") { refreshEpaper(); }
+    else if (t === "epaper") { refreshEpaper(); refreshEpaperPapers(); }
     else if (t === "epaperMistakes") { refreshEpaperMistakes(); }
   }
 
@@ -1632,6 +1654,134 @@
     };
     return row;
   }
+
+  // ---- 英语试卷预览：家长视角，排版和 macOS App 里孩子看到的完全一致 -------
+  // Same grouping rule as EnglishPaperRunnerView.swift's `steps`: a run of
+  // consecutive questions sharing one of the three shared-passage sections
+  // becomes one block (passage/word bank shown once); everything else is its
+  // own block. Keep this list and the logic in sync with the Swift side.
+  const EPAPER_GROUPABLE_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open"]);
+
+  function epaperGroupSteps(items) {
+    const steps = [];
+    let i = 0;
+    while (i < items.length) {
+      const section = items[i].section;
+      if (EPAPER_GROUPABLE_SECTIONS.has(section)) {
+        let j = i + 1;
+        while (j < items.length && items[j].section === section) j++;
+        steps.push(items.slice(i, j));
+        i = j;
+      } else {
+        steps.push([items[i]]);
+        i++;
+      }
+    }
+    return steps;
+  }
+
+  async function refreshEpaperPapers() {
+    try {
+      const data = await api("/api/epaper/papers");
+      const el = $("#epaperPapersList");
+      el.innerHTML = "";
+      if (!data.papers.length) {
+        el.innerHTML = '<div class="empty">还没有导入试卷</div>';
+        return;
+      }
+      for (const p of data.papers) {
+        const row = document.createElement("div");
+        row.className = "epaper-paper-row";
+        row.innerHTML = `
+          <div>
+            <div>${escapeHtml(p.school)} ${p.year || ""}</div>
+            <div class="meta">${p.questionCount} 题 · ${p.marksTotal} 分</div>
+          </div>
+          <button class="ghost">👁 预览</button>`;
+        row.querySelector("button").onclick = () => openEpaperPreview(p.paperKey, `${p.school} ${p.year || ""}`);
+        el.appendChild(row);
+      }
+    } catch (e) { showErr(e.message); }
+  }
+
+  async function openEpaperPreview(paperKey, label) {
+    try {
+      const data = await api(`/api/epaper/questions?paperKey=${encodeURIComponent(paperKey)}&limit=100`);
+      $("#epaperPreviewTitle").textContent = `📘 试卷预览 · ${label}`;
+      const el = $("#epaperPreviewItems");
+      el.innerHTML = "";
+      const steps = epaperGroupSteps(data.questions);
+      for (const step of steps) el.appendChild(epaperPreviewStepCard(step));
+      $("#epaperPreviewDialog").showModal();
+    } catch (e) { showErr(e.message); }
+  }
+
+  function epaperPreviewStepCard(step) {
+    const card = document.createElement("div");
+    card.className = "sci-item-card";
+    if (step.length === 1) {
+      const it = step[0];
+      const imgHtml = it.image ? `<img src="/epaper-images/${encodeURIComponent(it.image)}" alt="" />` : "";
+      const ctxHtml = it.context ? `<div class="context">${escapeHtml(it.context)}</div>` : "";
+      card.innerHTML = `
+        <div class="head"><span>第 ${it.paper_seq} 题 · ${escapeHtml(it.section)}</span><span>${it.marks} 分</span></div>
+        ${ctxHtml}
+        ${imgHtml}
+        <div class="prompt">${escapeHtml(it.prompt)}</div>
+        <div class="grade-area"></div>`;
+      const area = card.querySelector(".grade-area");
+      if (it.question_type === "oeq") {
+        for (const p of it.points || []) {
+          const row = document.createElement("div");
+          row.className = "sci-point-row";
+          row.innerHTML = `
+            <div>
+              <div class="kind">${EPAPER_KIND_LABEL[p.pointKind] || p.pointKind}</div>
+              <div class="desc">${escapeHtml(p.description)}</div>
+            </div>`;
+          area.appendChild(row);
+        }
+        if (it.explanation) {
+          const row = document.createElement("div");
+          row.className = "sci-point-row";
+          row.innerHTML = `<div><div class="kind">参考答案</div><div class="desc">${escapeHtml(it.explanation)}</div></div>`;
+          area.appendChild(row);
+        }
+      } else {
+        const optsHtml = (it.options || []).map((o) =>
+          `<span style="${o === it.correct_answer ? "color:#047857;font-weight:600" : ""}">${escapeHtml(o)}</span>`
+        ).join(" · ");
+        area.innerHTML = `
+          <div class="sci-point-row">
+            <div>
+              ${optsHtml ? `<div class="desc">${optsHtml}</div>` : ""}
+              <div class="kind" style="color:#047857">答案：${escapeHtml(it.correct_answer || "")}</div>
+              ${it.explanation ? `<div class="desc">${escapeHtml(it.explanation)}</div>` : ""}
+            </div>
+          </div>`;
+      }
+      return card;
+    }
+    // Grouped shared-passage block — mirrors the runner's left/right split as
+    // one column: full passage/word bank once, then every blank listed with
+    // its own prompt + answer.
+    const first = step[0], last = step[step.length - 1];
+    card.innerHTML = `
+      <div class="head"><span>第 ${first.paper_seq}–${last.paper_seq} 题 · ${escapeHtml(first.section)}</span><span>${step.reduce((s, q) => s + q.marks, 0)} 分</span></div>
+      <div class="epaper-passage">${escapeHtml(first.context)}</div>`;
+    for (const it of step) {
+      const row = document.createElement("div");
+      row.className = "epaper-blank-row";
+      row.innerHTML = `
+        <div class="seq">(${it.paper_seq})</div>
+        <div class="prompt">${escapeHtml(it.prompt)}</div>
+        <div class="answer">答案：${escapeHtml(it.correct_answer || "")}${it.explanation ? " — " + escapeHtml(it.explanation) : ""}</div>`;
+      card.appendChild(row);
+    }
+    return card;
+  }
+
+  $("#epaperPreviewClose").onclick = () => $("#epaperPreviewDialog").close();
 
   // ---- 英语试卷批改：两档题型，家长可以修改任意一档的判定 -----------------
   let epaperDecisions = {}; // itemId -> { finalCorrect: bool } | { points: {markPointId: bool} }
