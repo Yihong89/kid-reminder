@@ -1,11 +1,28 @@
 # Kid Reminder
 
-A simple daily checklist app for kids. The parent manages tasks from a web panel;
-the kid sees the checklist and marks tasks done from a native macOS app.
+A family homework helper for a primary-school kid. Parents manage everything from a
+web panel on a home Mac Mini; the kid does the work in a native macOS app.
+
+It started as a daily task checklist and grew into a **practice platform**: besides
+the chore/checklist system (with stamps, a Pokémon collection, and a countdown for
+upcoming events), the kid practices **Chinese dictation (听写)**, **English
+wrong-answer questions**, **English PSLE Paper 2 (整卷)**, and **PSLE Science
+open-ended questions** — all graded and tracked together. The app runs on the
+home LAN, so no data leaves the house.
 
 **Language: English | [中文](README.zh-CN.md)**
 
 ![arch: backend on Mac Mini + web admin + macOS client]
+
+## What's inside
+
+- **📋 Tasks** — daily checklist, parent/kid roles, kid-only locking, minutes, ⭐ stamps → Pokémon.
+- **⏳ Countdown** — future-dated events with a live countdown.
+- **📚 听写 (Dictation)** — adaptive weakest-first vocabulary listening tests, parent-graded.
+- **📖 英语错题 (English wrong answers)** — self-graded bank of the kid's real mistakes.
+- **🇬🇧 英语试卷 (English Paper 2)** — full scanned PSLE prelim papers: grammar, cloze, editing, synthesis, comprehension.
+- **🧪 科学 (Science)** — PSLE Booklet B open-ended, graded per mark point with a keyword auto-grader.
+- **🎙️ TTS** — neural speech for dictation/spelling with a macOS `say` fallback.
 
 ## Architecture
 
@@ -134,6 +151,39 @@ each carrying the correct answer and a short explanation.
   (idempotent, so re-runs are harmless). See
   [`tools/english-wrong-answers/README.md`](tools/english-wrong-answers/README.md).
 
+## English Paper 2 practice (英语整卷)
+
+The kid does a **whole scanned PSLE English Paper 2 prelim** (one school at a time),
+not just isolated drills. The bank stores one 2025 paper per school (14 schools),
+pulled from their prelim papers; the papers and the extracted question bank are
+**private** (see below).
+
+- **Full paper, in order** — grammar MCQ, vocabulary MCQ, cloze MCQ, comprehension
+  MCQ, cloze word-bank, editing, cloze open, synthesis, and open-ended comprehension.
+  Each paper is exactly **75 questions / 90 marks**, matching the exam's section split.
+- **Full context** — cloze/editing passages and the **complete comprehension article**
+  are shown in the runner, so the kid reads the real material (for comprehension the
+  right-hand panel shows the whole passage, not a fragment; `comprehension_mcq`
+  (Q21–25) shows Text 1 poster + Text 2 extract together).
+- **Grading** — objective items (MCQ / fill-in-the-blank) are graded instantly;
+  open-ended comprehension Q66–75 is auto-pre-graded against keyword mark points and
+  **finalised by the parent** on the web admin (which can override any item or
+  mark-point). Wrong answers only enter the shared **错题本** after the parent
+  reviews the paper, never on submit.
+- **Web admin** — `🇬🇧 英语试卷` tab (paper list + review), and a preview so the
+  parent can check a paper's answer key before handing it to the kid.
+- **macOS app** — the runner shows the passage and the questions side by side, with
+  a **跳过** button to page through a paper quickly and an **A− / A+** font control.
+- **No hint on editing** — the editing items just say "Write the correct word." so
+  the kid has to spot whether a word is a spelling or grammar error themselves.
+- **Persisted per paper** — the `epaper_*` tables store the passage on each
+  question; re-importing a paper is idempotent.
+
+> ⚠️ **Private, same rule as Science.** The scanned papers are other schools'
+> copyrighted prelims, used for one child's personal study. The repo commits only
+> the tooling (`tools/english-papers/`); the PDFs, extracted `*-questions.json`,
+> `survey/`, and `backend/epaper-images/` are gitignored.
+
 ## Science practice (科学练习)
 
 PSLE Science **open-ended questions (Booklet B)**, stored per mark point so a miss is
@@ -177,9 +227,14 @@ quality, but instant and always available, so the 🔊 button never just goes de
 Native SwiftUI app (`macos-app/`). **Today** checklist, **Calendar** (month view
 with completion dots + pink countdown-event markers; click any day to inspect
 its tasks), **Countdown** panel, **听写** (dictation), **英语错题** (English
-practice) and **科学** (Science) tabs, and a **Settings** view where the server IP,
-port, and PIN are configured — changes apply immediately (no restart needed). The
-build produces a signed `.app` with a custom icon (from `Resources/AppIcon.svg`).
+wrong answers), **英语试卷** (English Paper 2 full papers) and **科学** (Science)
+tabs, and a **Settings** view where the server IP, port, and PIN are configured —
+changes apply immediately (no restart needed). The build produces a signed `.app`
+with a custom icon (from `Resources/AppIcon.svg`).
+
+The paper runners share two niceties: a **跳过** button to page through a whole
+paper without answering (useful for a quick review), and an **A− / A+** control in
+the toolbar to zoom the reading text (persisted across papers/sessions).
 
 ### Download the app
 
