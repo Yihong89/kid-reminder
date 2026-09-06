@@ -304,6 +304,9 @@ sqlite3 -header -column ~/kidreminder/kidreminder.db \
 - Deploy = `scp backend/server.js robot@<mini>:~/kidreminder/server.js` then
   `launchctl kickstart -k gui/$(id -u)/com.kidreminder.server`. New tables are created
   on startup by the `CREATE TABLE IF NOT EXISTS` block, so no migration step.
+- The backend is not macOS-only; see
+  [docs/cross-platform-portability.md](docs/cross-platform-portability.md) for what
+  would be needed to run it on Windows / Linux.
 
 ## Roadmap (planned)
 
