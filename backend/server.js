@@ -2314,6 +2314,26 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    // --- finish a set: straight to 'reviewed' if no oeq item, else the parent's
+    // review queue (open) ------------------------------------------------------
+    const epaperComplete = pathname.match(/^\/api\/epaper\/sessions\/(\d+)\/complete$/);
+    if (epaperComplete && method === "POST") {
+      const sessionId = Number(epaperComplete[1]);
+      const session = db.prepare("SELECT id FROM epaper_sessions WHERE id = ?").get(sessionId);
+      if (!session) return sendJSON(404, { error: "session not found" });
+      const hasOeq = db.prepare(`
+        SELECT COUNT(*) n FROM epaper_session_items i
+          JOIN epaper_questions q ON q.id = i.question_id
+         WHERE i.session_id = ? AND q.question_type = 'oeq'`).get(sessionId).n > 0;
+      const { marksTotal, scoreEarned } = epaperComputeScore(db, sessionId);
+      const status = hasOeq ? "pending_review" : "reviewed";
+      db.prepare(`UPDATE epaper_sessions SET status = ?, completed_at = datetime('now'),
+        reviewed_at = CASE WHEN ? THEN reviewed_at ELSE datetime('now') END,
+        score_earned = ?, marks_total = ? WHERE id = ?`)
+        .run(status, hasOeq ? 1 : 0, scoreEarned, marksTotal, sessionId);
+      return sendJSON(200, { ok: true, status, scoreEarned, marksTotal });
+    }
+
     sendJSON(404, { error: "not found" });
   } catch (err) {
     const status = err.status || 500;
