@@ -4,11 +4,13 @@ import SwiftUI
 ///   - a single mcq/oeq/ungrouped fill_blank item is its own step (unchanged
 ///     behaviour: tappable options or a text field, instant right/wrong,
 ///     oeq shows only "submitted").
-///   - a run of consecutive items sharing one of the three shared-passage
-///     sections (cloze_wordbank / editing / cloze_open) becomes ONE step: the
-///     full passage (and word bank, if any) is shown once on the right, and
-///     the kid fills every blank on the left before a single 提交 grades the
-///     whole passage at once. Grouping only applies in "paper" mode — the
+///   - a run of consecutive items sharing one of the four shared-passage
+///     sections (cloze_wordbank / editing / cloze_open / comprehension_oeq)
+///     becomes ONE step: the full passage (and word bank, if any) is shown
+///     once on the right, and the kid answers every question on the left
+///     before a single 提交 submits the whole passage at once — a text field
+///     per blank for the cloze tiers, a bounded text editor per question for
+///     comprehension_oeq. Grouping only applies in "paper" mode — the
 ///     mistake bank shuffles items, so grouping there would weld together
 ///     unrelated leftovers from different papers.
 struct EnglishPaperRunnerView: View {
@@ -30,7 +32,7 @@ struct EnglishPaperRunnerView: View {
 
     // Sections that share ONE continuous passage across a run of consecutive
     // questions (see docs/superpowers/specs/2026-09-06-english-paper-practice-design.md).
-    private static let groupableSections: Set<String> = ["cloze_wordbank", "editing", "cloze_open"]
+    private static let groupableSections: Set<String> = ["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]
 
     @State private var phase: Phase = .loading
     @State private var stepPhase: StepPhase = .answering
@@ -106,7 +108,12 @@ struct EnglishPaperRunnerView: View {
 
             if isGroup {
                 Divider()
-                passageColumn(text: items.first?.context ?? "")
+                // comprehension_oeq shows the paper's FULL article (the `passage`
+                // field, duplicated across the run); cloze/editing show the shared
+                // passage text in `context`. Prefer `passage` when present.
+                let readingText = items.compactMap { $0.passage?.isEmpty == false ? $0.passage : nil }
+                                  .first ?? items.first?.context ?? ""
+                passageColumn(text: readingText)
                     .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
             } else if let url = api.epaperImageURL(items[0].image) {
                 Divider()
@@ -177,12 +184,17 @@ struct EnglishPaperRunnerView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     ForEach(items) { item in
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(item.prompt).font(.callout).foregroundStyle(.secondary)
-                            HStack {
+                            HStack(alignment: .top) {
                                 Text("(\(item.seq))").font(.body).bold().frame(width: 36, alignment: .leading)
+                                Text(item.prompt).font(.callout).foregroundStyle(.secondary)
+                            }
+                            if item.questionType == "oeq" {
+                                groupOeqAnswerBox(item)
+                            } else {
                                 TextField("填空…", text: groupAnswerBinding(item.itemId))
                                     .textFieldStyle(.roundedBorder)
                                     .font(.body)
+                                    .padding(.leading, 40)
                             }
                         }
                     }
@@ -200,6 +212,21 @@ struct EnglishPaperRunnerView: View {
 
     private func groupAnswerBinding(_ itemId: Int) -> Binding<String> {
         Binding(get: { groupAnswers[itemId] ?? "" }, set: { groupAnswers[itemId] = $0 })
+    }
+
+    /// A comprehension_oeq question inside a shared-passage group needs room
+    /// for a real sentence, not a single-line field — same bounded TextEditor
+    /// as the standalone oeq case, just sized down to fit inside the list.
+    private func groupOeqAnswerBox(_ item: EpaperSessionItem) -> some View {
+        TextEditor(text: groupAnswerBinding(item.itemId))
+            .font(.body)
+            .scrollContentBackground(.hidden)
+            .padding(6)
+            .background(Color.primary.opacity(0.04))
+            .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .frame(height: 70)
+            .padding(.leading, 40)
     }
 
     @ViewBuilder

@@ -1778,11 +1778,13 @@
     }
     // Grouped shared-passage block — mirrors the runner's left/right split as
     // one column: full passage/word bank once, then every blank listed with
-    // its own prompt + answer.
+    // its own prompt + answer. comprehension_oeq groups show the paper's FULL
+    // article (the `passage` field, duplicated across the run) when present.
     const first = step[0], last = step[step.length - 1];
+    const passageText = (step.find((q) => q.passage) || {}).passage || first.context || "";
     card.innerHTML = `
       <div class="head"><span>第 ${first.paper_seq}–${last.paper_seq} 题 · ${escapeHtml(first.section)}</span><span>${step.reduce((s, q) => s + q.marks, 0)} 分</span></div>
-      <div class="epaper-passage">${escapeHtml(first.context)}</div>`;
+      <div class="epaper-passage">${escapeHtml(passageText)}</div>`;
     for (const it of step) {
       const row = document.createElement("div");
       row.className = "epaper-blank-row";

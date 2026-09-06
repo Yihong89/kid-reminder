@@ -344,6 +344,7 @@ struct EpaperSessionItem: Codable, Identifiable {
     let section: String
     let questionType: String   // "mcq" | "fill_blank" | "oeq"
     let context: String
+    let passage: String?       // full comprehension passage for this paper's oeq run
     let prompt: String
     let options: [String]?     // mcq only
     let marks: Int

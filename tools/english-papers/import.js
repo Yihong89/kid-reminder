@@ -86,7 +86,7 @@ try {
 
     const row = [
       q.school || schoolGuess, q.year || (yearGuess ? Number(yearGuess) : null),
-      q.section || "", q.question_type, q.context || "", q.prompt,
+      q.section || "", q.question_type, q.context || "", q.passage || "", q.prompt,
       q.options ? JSON.stringify(q.options) : null, q.correct_answer || null,
       q.marks, q.image || "", q.explanation || "", paperKey, idx + 1,
     ];
@@ -97,16 +97,16 @@ try {
       // Preserve attempts/score_total/in_mistake_bank — re-importing a fixed
       // keyword list or corrected answer must not wipe the child's history.
       db.prepare(`UPDATE epaper_questions SET school=?, year=?, section=?, question_type=?,
-        context=?, prompt=?, options=?, correct_answer=?, marks=?, image=?, explanation=?,
+        context=?, passage=?, prompt=?, options=?, correct_answer=?, marks=?, image=?, explanation=?,
         paper_key=?, paper_seq=? WHERE source_ref=?`)
         .run(...row, q.source_ref);
       qid = existing.id;
       updated++;
     } else {
       qid = db.prepare(`INSERT INTO epaper_questions
-        (school, year, section, question_type, context, prompt, options, correct_answer,
+        (school, year, section, question_type, context, passage, prompt, options, correct_answer,
          marks, image, explanation, paper_key, paper_seq, source_ref)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(...row, q.source_ref).lastInsertRowid;
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(...row, q.source_ref).lastInsertRowid;
       inserted++;
     }
     bySection[q.section] = (bySection[q.section] || 0) + 1;

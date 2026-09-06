@@ -597,6 +597,7 @@ db.exec(`
                                                 -- comprehension_oeq
     question_type TEXT NOT NULL,         -- 'mcq' | 'fill_blank' | 'oeq'  (grading path)
     context       TEXT NOT NULL DEFAULT '', -- shared passage/cloze text shown above the prompt
+    passage       TEXT NOT NULL DEFAULT '', -- full comprehension passage (one paper's oeq article)
     prompt        TEXT NOT NULL,
     options       TEXT,                  -- JSON array of strings, mcq only
     correct_answer TEXT,                 -- mcq/fill_blank only; "alt1 / alt2" = either counts
@@ -676,6 +677,14 @@ try { db.exec("ALTER TABLE science_sessions ADD COLUMN mode TEXT NOT NULL DEFAUL
 try { db.exec("ALTER TABLE science_sessions ADD COLUMN paper_key TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_sessions ADD COLUMN school TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_sessions ADD COLUMN year INTEGER"); } catch { /* exists */ }
+// Full comprehension passage for a paper's comprehension_oeq questions, shown
+// once on the right of the runner. Stored per-question (duplicated across that
+// paper's oeq rows) so the grouping step can pick it up from any item; empty
+// for non-oeq rows. IMPORTANT: this ALTER must come AFTER the CREATE TABLE IF
+// NOT EXISTS epaper_questions block just above, which is a no-op on an
+// already-deployed DB; doing it in the migration section (like the science
+// paper_key/paper_seq ALTERs) is exactly how those columns were added safely.
+try { db.exec("ALTER TABLE epaper_questions ADD COLUMN passage TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 // Created here, not in the CREATE TABLE block above: on an already-deployed DB,
 // "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
 // exists without paper_key/paper_seq), so an index on those columns placed in
@@ -2257,7 +2266,8 @@ const server = http.createServer(async (req, res) => {
         const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(qid);
         items.push({
           itemId: Number(itemId), seq: idx + 1, questionId: qid, section: q.section,
-          questionType: q.question_type, context: q.context, prompt: q.prompt,
+          questionType: q.question_type, context: q.context, passage: q.passage || "",
+          prompt: q.prompt,
           options: q.options ? JSON.parse(q.options) : null, marks: q.marks, image: q.image,
         });
       });
