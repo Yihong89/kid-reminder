@@ -261,6 +261,8 @@
         <button class="tab" id="tabDictationLists" hidden>📝 自定义听写表</button>
         <button class="tab" id="tabScience" hidden>🔬 科学批改</button>
         <button class="tab" id="tabScienceMistakes" hidden>📕 科学错题本</button>
+        <button class="tab" id="tabEpaper" hidden>📘 英语试卷批改</button>
+        <button class="tab" id="tabEpaperMistakes" hidden>📕 英语试卷错题本</button>
       </nav>
 
       <div class="content">
@@ -396,6 +398,22 @@
       <div class="card">
         <div class="vocab-summary" id="sciMistakeSummary">错题本里的题只会在这里手动移出，答对了也不会自动清掉。</div>
         <div id="sciMistakeList"></div>
+      </div>
+    </div>
+
+    <!-- 英语试卷 (all-question English Paper 2) grading queue -->
+    <div id="epaperView" hidden>
+      <div class="card">
+        <div class="vocab-summary" id="epaperSummary"></div>
+        <div id="epaperList"></div>
+      </div>
+    </div>
+
+    <!-- 英语试卷错题本 management (sticky — only cleared here, never automatically) -->
+    <div id="epaperMistakesView" hidden>
+      <div class="card">
+        <div class="vocab-summary">错题本里的题只会在这里手动移出，答对了也不会自动清掉。</div>
+        <div id="epaperMistakeList"></div>
       </div>
     </div>
 
@@ -554,6 +572,17 @@
   <div class="row">
     <button class="ghost" id="sciDlgCancel">Cancel</button>
     <button class="primary" id="sciDlgSubmit">保存批改</button>
+  </div>
+</dialog>
+
+<dialog id="epaperGradeDialog" class="sci-grade-dialog">
+  <h3 id="epaperDlgTitle">📘 批改英语试卷</h3>
+  <p>选择题/填空题已经自动判分——如果自动判错了（比如漏收了一个同义答案），点一下切换。问答题按点勾选，关键词初判只做参考。</p>
+  <div id="epaperItems"></div>
+  <div class="msg err" id="epaperDlgErr"></div>
+  <div class="row">
+    <button class="ghost" id="epaperDlgCancel">Cancel</button>
+    <button class="primary" id="epaperDlgSubmit">保存批改</button>
   </div>
 </dialog>
 
@@ -989,6 +1018,8 @@
     $("#tabDictationLists").classList.toggle("active", t === "dictationLists");
     $("#tabScience").classList.toggle("active", t === "science");
     $("#tabScienceMistakes").classList.toggle("active", t === "scienceMistakes");
+    $("#tabEpaper").classList.toggle("active", t === "epaper");
+    $("#tabEpaperMistakes").classList.toggle("active", t === "epaperMistakes");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
@@ -999,7 +1030,9 @@
     $("#dictationListsView").hidden = t !== "dictationLists";
     $("#scienceView").hidden = t !== "science";
     $("#scienceMistakesView").hidden = t !== "scienceMistakes";
-    const noTaskFab = ["vocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes"].includes(t);
+    $("#epaperView").hidden = t !== "epaper";
+    $("#epaperMistakesView").hidden = t !== "epaperMistakes";
+    const noTaskFab = ["vocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes", "epaper", "epaperMistakes"].includes(t);
     $("#fabAdd").hidden = noTaskFab; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
     $("#fabAddEnglish").hidden = t !== "english";
@@ -1014,6 +1047,8 @@
     else if (t === "dictationLists") { refreshLists(); }
     else if (t === "science") { refreshScience(); }
     else if (t === "scienceMistakes") { refreshScienceMistakes(); }
+    else if (t === "epaper") { refreshEpaper(); }
+    else if (t === "epaperMistakes") { refreshEpaperMistakes(); }
   }
 
   async function refresh() {
@@ -1598,6 +1633,191 @@
     return row;
   }
 
+  // ---- 英语试卷批改：两档题型，家长可以修改任意一档的判定 -----------------
+  let epaperDecisions = {}; // itemId -> { finalCorrect: bool } | { points: {markPointId: bool} }
+
+  async function refreshEpaper() {
+    try {
+      const sessions = await api("/api/epaper/sessions"); // full history, not just pending
+      const el = $("#epaperList");
+      el.innerHTML = "";
+      if (!sessions.sessions.length) {
+        $("#epaperSummary").textContent = "";
+        el.innerHTML = '<div class="empty">孩子还没有做过英语试卷练习</div>';
+        return;
+      }
+      const pending = sessions.sessions.filter((s) => s.status === "pending_review").length;
+      $("#epaperSummary").textContent = `共 ${sessions.sessions.length} 次练习记录` + (pending ? ` · ${pending} 次待批改` : "");
+      for (const s of sessions.sessions) el.appendChild(epaperSessionRow(s));
+    } catch (e) { showErr(e.message); }
+  }
+
+  function epaperSessionRow(s) {
+    const row = document.createElement("div");
+    row.className = "card sci-session";
+    const title = s.mode === "mistakes" ? "📕 错题本复习" : "📘 英语试卷练习";
+    const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
+    let badge, sub;
+    if (s.status === "pending_review") {
+      badge = '<div class="badge cnt">🔔 待批改</div>';
+      sub = `完成于 ${when.toLocaleString()}`;
+    } else if (s.status === "reviewed") {
+      badge = `<div class="badge">✅ ${s.score_earned}/${s.marks_total}</div>`;
+      sub = `完成于 ${when.toLocaleString()}`;
+    } else {
+      badge = '<div class="badge parent">⏳ 进行中</div>';
+      sub = "孩子还没有做完这次练习";
+      row.style.opacity = ".6";
+    }
+    row.innerHTML = `
+      <div class="icon">📘</div>
+      <div class="info">
+        <div class="count">${title}</div>
+        <div class="when">${sub}</div>
+      </div>
+      ${badge}
+      <button class="del" title="删除这条记录">🗑</button>`;
+    if (s.status !== "in_progress") row.onclick = () => openEpaperGradeDialog(s.id);
+    row.querySelector(".del").onclick = async (e) => {
+      e.stopPropagation();
+      if (!confirm("删除这条英语试卷练习记录？")) return;
+      try { await api(`/api/epaper/sessions/${s.id}`, { method: "DELETE" }); refreshEpaper(); }
+      catch (err) { showErr(err.message); }
+    };
+    return row;
+  }
+
+  async function openEpaperGradeDialog(sessionId) {
+    try {
+      const data = await api(`/api/epaper/sessions/${sessionId}`);
+      // Review is available on ANY completed session, not just pending_review —
+      // a parent might reopen an already-reviewed, fully-objective session to
+      // fix a mis-graded synonym.
+      const readOnly = data.session.status === "in_progress";
+      epaperDecisions = {};
+      for (const it of data.items) {
+        if (it.question_type === "oeq") {
+          epaperDecisions[it.id] = { points: {} };
+          for (const p of it.points) {
+            const finalKnown = p.finalHit === 0 || p.finalHit === 1;
+            epaperDecisions[it.id].points[p.markPointId] = finalKnown ? !!p.finalHit : !!p.autoHit;
+          }
+        } else {
+          epaperDecisions[it.id] = { finalCorrect: !!it.final_correct };
+        }
+      }
+      $("#epaperDlgTitle").textContent = readOnly ? "📘 英语试卷练习记录（进行中）" : "📘 批改英语试卷";
+      const el = $("#epaperItems");
+      el.innerHTML = "";
+      data.items.forEach((it, idx) => el.appendChild(epaperItemCard(it, idx, readOnly)));
+      $("#epaperDlgErr").textContent = "";
+      $("#epaperDlgSubmit").hidden = readOnly;
+      $("#epaperDlgCancel").textContent = readOnly ? "关闭" : "Cancel";
+      $("#epaperGradeDialog").dataset.sessionId = sessionId;
+      $("#epaperGradeDialog").showModal();
+    } catch (e) { showErr(e.message); }
+  }
+
+  const EPAPER_KIND_LABEL = { keyword: "关键词", textual_evidence: "引用原文", inference: "推理", multi_part: "多个要点" };
+
+  function epaperItemCard(it, idx, readOnly) {
+    const card = document.createElement("div");
+    card.className = "sci-item-card";
+    const imgHtml = it.image ? `<img src="/epaper-images/${encodeURIComponent(it.image)}" alt="" />` : "";
+    const ctxHtml = it.context ? `<div class="context">${escapeHtml(it.context)}</div>` : "";
+    const answerText = (it.answer || "").trim() || "（没有作答）";
+
+    card.innerHTML = `
+      <div class="head"><span>第 ${idx + 1} 题 · ${escapeHtml(it.section)}</span><span>${it.marks} 分</span></div>
+      ${ctxHtml}
+      ${imgHtml}
+      <div class="prompt">${escapeHtml(it.prompt)}</div>
+      <div class="answer-box">${escapeHtml(answerText)}</div>
+      <div class="grade-area"></div>`;
+
+    const area = card.querySelector(".grade-area");
+    if (it.question_type === "oeq") {
+      for (const p of it.points) {
+        const row = document.createElement("label");
+        row.className = "sci-point-row";
+        const autoClass = p.autoHit ? "auto-yes" : "auto-no";
+        row.innerHTML = `
+          <input type="checkbox" ${readOnly ? "disabled" : ""} ${epaperDecisions[it.id].points[p.markPointId] ? "checked" : ""} />
+          <div>
+            <div class="kind ${autoClass}">${EPAPER_KIND_LABEL[p.pointKind] || p.pointKind}</div>
+            <div class="desc">${escapeHtml(p.description)}</div>
+          </div>`;
+        if (!readOnly) {
+          row.querySelector("input").onchange = (e) => { epaperDecisions[it.id].points[p.markPointId] = e.target.checked; };
+        }
+        area.appendChild(row);
+      }
+    } else {
+      const row = document.createElement("label");
+      row.className = "sci-point-row";
+      row.innerHTML = `
+        <input type="checkbox" ${readOnly ? "disabled" : ""} ${epaperDecisions[it.id].finalCorrect ? "checked" : ""} />
+        <div>
+          <div class="kind">判定：答对了吗？</div>
+          <div class="desc">正确答案：${escapeHtml(it.correct_answer || "")}${it.explanation ? " — " + escapeHtml(it.explanation) : ""}</div>
+        </div>`;
+      if (!readOnly) {
+        row.querySelector("input").onchange = (e) => { epaperDecisions[it.id].finalCorrect = e.target.checked; };
+      }
+      area.appendChild(row);
+    }
+    return card;
+  }
+
+  $("#epaperDlgCancel").onclick = () => $("#epaperGradeDialog").close();
+  $("#epaperDlgSubmit").onclick = async () => {
+    const sessionId = $("#epaperGradeDialog").dataset.sessionId;
+    const items = Object.entries(epaperDecisions).map(([itemId, d]) => {
+      if ("points" in d) {
+        return { itemId: Number(itemId), points: Object.entries(d.points).map(([markPointId, hit]) => ({ markPointId: Number(markPointId), hit })) };
+      }
+      return { itemId: Number(itemId), finalCorrect: d.finalCorrect };
+    });
+    try {
+      await api(`/api/epaper/sessions/${sessionId}/review`, { method: "POST", body: JSON.stringify({ items }) });
+      $("#epaperGradeDialog").close();
+      refreshEpaper();
+    } catch (e) { $("#epaperDlgErr").textContent = e.message; }
+  };
+
+  // ---- 英语试卷错题本管理（只在这里手动移出，从不自动清空） -----------------
+  async function refreshEpaperMistakes() {
+    try {
+      const data = await api("/api/epaper/questions?mistakeBank=1&limit=200");
+      const el = $("#epaperMistakeList");
+      el.innerHTML = "";
+      if (!data.questions.length) {
+        el.innerHTML = '<div class="empty">错题本是空的 🎉</div>';
+        return;
+      }
+      for (const q of data.questions) el.appendChild(epaperMistakeRow(q));
+    } catch (e) { showErr(e.message); }
+  }
+
+  function epaperMistakeRow(q) {
+    const row = document.createElement("div");
+    row.className = "card sci-mistake-row";
+    row.innerHTML = `
+      <div class="main">
+        <div class="prompt">${escapeHtml(q.prompt)}</div>
+        <div class="meta">${escapeHtml(q.school)} ${q.year || ""} · ${escapeHtml(q.section)} · ${q.marks} 分</div>
+      </div>
+      <button class="ghost" title="移出错题本">✅ 已掌握</button>`;
+    row.querySelector("button").onclick = async () => {
+      if (!confirm("确认这道题已经掌握，移出错题本？")) return;
+      try {
+        await api(`/api/epaper/questions/${q.id}`, { method: "PATCH", body: JSON.stringify({ inMistakeBank: false }) });
+        refreshEpaperMistakes();
+      } catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+
   // ---- 英语练习记录（自动批改，纯只读） --------------------------------
   async function refreshEngRecords() {
     try {
@@ -1897,6 +2117,10 @@
     $("#tabScience").hidden = role !== "admin"; // 科学批改：仅家长可见（孩子在 App 里只练习，不批改）
     $("#tabScienceMistakes").onclick = () => setTab("scienceMistakes");
     $("#tabScienceMistakes").hidden = role !== "admin"; // 错题本移出是家长专属操作，从不自动发生
+    $("#tabEpaper").onclick = () => setTab("epaper");
+    $("#tabEpaper").hidden = role !== "admin";
+    $("#tabEpaperMistakes").onclick = () => setTab("epaperMistakes");
+    $("#tabEpaperMistakes").hidden = role !== "admin";
     $("#unlockBtn").onclick = unlockPokemon;
     $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();
