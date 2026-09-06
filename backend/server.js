@@ -1881,19 +1881,34 @@ const server = http.createServer(async (req, res) => {
     if (method === "GET" && pathname === "/api/science/questions") {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
-      const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limit") || "50", 10)));
-      const offset = Math.max(0, parseInt(url.searchParams.get("offset") || "0", 10) || 0);
-      const theme = url.searchParams.get("theme") || "";
+      const paperKey = url.searchParams.get("paperKey") || "";
       const mistakeOnly = url.searchParams.get("mistakeBank") === "1";
+      const theme = url.searchParams.get("theme") || "";
+      // A full-paper preview returns all of that paper's non-drawing questions in
+      // exam order; otherwise paginate like before (legacy browse).
+      const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limit") || (paperKey ? "100" : "50"), 10)));
+      const offset = Math.max(0, parseInt(url.searchParams.get("offset") || "0", 10) || 0);
       const clauses = [], args = [];
+      if (paperKey) { clauses.push("paper_key = ?"); args.push(paperKey); }
       if (theme) { clauses.push("theme = ?"); args.push(theme); }
       if (mistakeOnly) clauses.push("in_mistake_bank = 1");
       const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
       const total = db.prepare(`SELECT COUNT(*) n FROM science_questions ${where}`).get(...args).n;
+      const order = paperKey ? "ORDER BY paper_seq ASC" : "ORDER BY question_no, part";
       const rows = db.prepare(
-        `SELECT * FROM science_questions ${where} ORDER BY question_no, part LIMIT ? OFFSET ?`
+        `SELECT * FROM science_questions ${where} ${order} LIMIT ? OFFSET ?`
       ).all(...args, limit, offset);
-      return sendJSON(200, { total, limit, offset, questions: rows });
+      const questions = rows.map((q) => {
+        let points = null;
+        if (q.answer_mode !== "drawing") {
+          points = db.prepare(`
+            SELECT id AS markPointId, seq, point_kind AS pointKind, description,
+                   keywords, any_of AS anyOf, need_n AS needN
+              FROM science_mark_points WHERE question_id = ? ORDER BY seq`).all(q.id);
+        }
+        return { ...q, points };
+      });
+      return sendJSON(200, { total, limit, offset, questions });
     }
 
     // --- clear (or set) a question's 错题本 membership (admin only) -----------

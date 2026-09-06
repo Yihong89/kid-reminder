@@ -392,6 +392,10 @@
 
     <!-- 科学 (PSLE Science open-ended) grading queue -->
     <div id="scienceView" hidden>
+      <div class="card">
+        <div class="vocab-summary">试卷预览——每道题显示题干/Crop 图片/得分点/参考答案/“不接受”提示，家长可以先校验整卷正确性，再让孩子做。</div>
+        <div id="sciPapersList"></div>
+      </div>
       <div class="card" id="sciFailurePanel" hidden>
         <div class="vocab-summary" style="margin-bottom:6px">最常丢的分</div>
         <div id="sciFailureList"></div>
@@ -605,6 +609,15 @@
   <div id="epaperPreviewItems"></div>
   <div class="row">
     <button class="ghost" id="epaperPreviewClose">关闭</button>
+  </div>
+</dialog>
+
+<dialog id="sciPreviewDialog" class="sci-grade-dialog">
+  <h3 id="sciPreviewTitle">🔬 科学试卷预览</h3>
+  <p>只读预览每道题的题干 + 裁剪图 + 得分点 + 参考答案 + 试卷的“不接受”提示，方便家长先校验整卷正确性，再给孩子做。</p>
+  <div id="sciPreviewItems"></div>
+  <div class="row">
+    <button class="ghost" id="sciPreviewClose">关闭</button>
   </div>
 </dialog>
 
@@ -1067,7 +1080,7 @@
     else if (t === "dictation") { refreshDictation(); }
     else if (t === "engRecords") { refreshEngRecords(); }
     else if (t === "dictationLists") { refreshLists(); }
-    else if (t === "science") { refreshScience(); }
+    else if (t === "science") { refreshSciencePapers(); refreshScience(); }
     else if (t === "scienceMistakes") { refreshScienceMistakes(); }
     else if (t === "epaper") { refreshEpaper(); refreshEpaperPapers(); }
     else if (t === "epaperMistakes") { refreshEpaperMistakes(); }
@@ -1456,6 +1469,7 @@
 
   async function refreshScience() {
     try {
+      refreshSciencePapers();
       const [sessions, failure] = await Promise.all([
         api("/api/science/sessions"), // full history, not just pending
         api("/api/science/stats/failure-modes").catch(() => ({ kinds: [] })),
@@ -1657,10 +1671,10 @@
 
   // ---- 英语试卷预览：家长视角，排版和 macOS App 里孩子看到的完全一致 -------
   // Same grouping rule as EnglishPaperRunnerView.swift's `steps`: a run of
-  // consecutive questions sharing one of the three shared-passage sections
+  // consecutive questions sharing one of the four shared-passage sections
   // becomes one block (passage/word bank shown once); everything else is its
   // own block. Keep this list and the logic in sync with the Swift side.
-  const EPAPER_GROUPABLE_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open"]);
+  const EPAPER_GROUPABLE_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]);
 
   function epaperGroupSteps(items) {
     const steps = [];
@@ -1772,16 +1786,108 @@
     for (const it of step) {
       const row = document.createElement("div");
       row.className = "epaper-blank-row";
-      row.innerHTML = `
-        <div class="seq">(${it.paper_seq})</div>
-        <div class="prompt">${escapeHtml(it.prompt)}</div>
-        <div class="answer">答案：${escapeHtml(it.correct_answer || "")}${it.explanation ? " — " + escapeHtml(it.explanation) : ""}</div>`;
+      if (it.question_type === "oeq") {
+        const pointsHtml = (it.points || []).map((p) =>
+          `<div class="sci-point-row"><div><div class="kind">${EPAPER_KIND_LABEL[p.pointKind] || p.pointKind}</div><div class="desc">${escapeHtml(p.description)}</div></div></div>`
+        ).join("");
+        row.innerHTML = `
+          <div class="seq">(${it.paper_seq}) · ${it.marks} 分</div>
+          <div class="prompt">${escapeHtml(it.prompt)}</div>
+          ${pointsHtml}
+          ${it.explanation ? `<div class="answer">参考答案：${escapeHtml(it.explanation)}</div>` : ""}`;
+      } else {
+        row.innerHTML = `
+          <div class="seq">(${it.paper_seq})</div>
+          <div class="prompt">${escapeHtml(it.prompt)}</div>
+          <div class="answer">答案：${escapeHtml(it.correct_answer || "")}${it.explanation ? " — " + escapeHtml(it.explanation) : ""}</div>`;
+      }
       card.appendChild(row);
     }
     return card;
   }
 
   $("#epaperPreviewClose").onclick = () => $("#epaperPreviewDialog").close();
+
+  // ---- 科学试卷预览：家长先校验整卷正确性，再给孩子做 ---------------------
+  async function refreshSciencePapers() {
+    try {
+      const data = await api("/api/science/papers");
+      const el = $("#sciPapersList");
+      el.innerHTML = "";
+      if (!data.papers.length) {
+        el.innerHTML = '<div class="empty">还没有导入科学试卷</div>';
+        return;
+      }
+      for (const p of data.papers) {
+        const row = document.createElement("div");
+        row.className = "epaper-paper-row";
+        row.innerHTML = `
+          <div>
+            <div>${escapeHtml(p.school)} ${p.year || ""}</div>
+            <div class="meta">${p.questionCount} 题 · ${p.marksTotal} 分</div>
+          </div>
+          <button class="ghost">👁 预览</button>`;
+        row.querySelector("button").onclick = () => openSciencePreview(p.paperKey, `${p.school} ${p.year || ""}`);
+        el.appendChild(row);
+      }
+    } catch (e) { showErr(e.message); }
+  }
+
+  async function openSciencePreview(paperKey, label) {
+    try {
+      const data = await api(`/api/science/questions?paperKey=${encodeURIComponent(paperKey)}&limit=200`);
+      $("#sciPreviewTitle").textContent = `🔬 试卷预览 · ${label}`;
+      const el = $("#sciPreviewItems");
+      el.innerHTML = "";
+      if (!data.questions.length) { el.innerHTML = '<div class="empty">该卷没有可预览的题目</div>'; }
+      for (const q of data.questions) el.appendChild(sciPreviewCard(q));
+      $("#sciPreviewDialog").showModal();
+    } catch (e) { showErr(e.message); }
+  }
+
+  function sciPreviewCard(q) {
+    const card = document.createElement("div");
+    card.className = "sci-item-card";
+    const imgHtml = q.image ? `<img src="/science-images/${encodeURIComponent(q.image)}" alt="" />` : "";
+    const ctxHtml = q.context ? `<div class="context">${escapeHtml(q.context)}</div>` : "";
+    // 每题的得分点（带 SCI_KIND_LABEL 和关键词）
+    let ptsHtml = "";
+    if (q.points && q.points.length) {
+      ptsHtml = (q.points || []).map((p) => {
+        const kw = p.keywords ? JSON.parse(p.keywords) : [];
+        const kwHtml = kw.length
+          ? `<div class="kw">关键词：${kw.map((g) => `[${g.map(escapeHtml).join(" 或 ")}]`).join(" 且 ")}</div>` : "";
+        const anyHtml = p.anyOf ? `<div class="kw">任一 ${p.needN||1} 个：${JSON.parse(p.anyOf).map((g) => `[${g.map(escapeHtml).join(" 或 ")}]`).join(" 或 ")}</div>` : "";
+        return `<div class="sci-point-row"><div>
+          <div class="kind">${SCI_KIND_LABEL[p.pointKind] || p.pointKind}</div>
+          <div class="desc">${escapeHtml(p.description)}</div>
+          ${kwHtml}${anyHtml}
+        </div></div>`;
+      }).join("");
+    }
+    // 试卷自己的 “不接受” 提示（JSON [{answer, reason}]）
+    let dnaHtml = "";
+    if (q.do_not_accept) {
+      const list = JSON.parse(q.do_not_accept);
+      if (list.length) {
+        dnaHtml = `<div class="answer">不接受：${list.map((d) => `“${escapeHtml(d.answer)}”——${escapeHtml(d.reason)}`).join("；")}</div>`;
+      }
+    }
+    card.innerHTML = `
+      <div class="head"><span>第 ${q.paper_seq} 题 · ${q.question_no}${q.part ? q.part : ""} · ${escapeHtml(q.theme || "")} / ${escapeHtml(q.topic || "")}</span><span>${q.marks} 分</span></div>
+      ${ctxHtml}
+      ${imgHtml}
+      <div class="prompt">${escapeHtml(q.prompt)}</div>
+      <div class="grade-area">
+        ${ptsHtml}
+        ${q.model_answer ? `<div class="sci-point-row"><div><div class="kind" style="color:#047857">参考答案</div><div class="desc">${escapeHtml(q.model_answer)}</div></div></div>` : ""}
+        ${dnaHtml}
+        ${q.answer_mode === "drawing" ? `<div class="answer">⚠️ 本题需在纸上作图（drawing），不能在应用内作答。</div>` : ""}
+      </div>`;
+    return card;
+  }
+
+  $("#sciPreviewClose").onclick = () => $("#sciPreviewDialog").close();
 
   // ---- 英语试卷批改：两档题型，家长可以修改任意一档的判定 -----------------
   let epaperDecisions = {}; // itemId -> { finalCorrect: bool } | { points: {markPointId: bool} }
