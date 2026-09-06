@@ -363,4 +363,43 @@ final class APIClient {
         comps.path = "/science-images/\(file)"
         return comps.url
     }
+
+    // MARK: - 英语试卷 (English Paper 2, every question)
+    //
+    // Same shape as the 科学 client methods: browse papers, play start to
+    // finish, or drill 错题本. Grading/review lives in the web admin.
+
+    func epaperPapers() async throws -> EpaperPapersResponse {
+        let data = try await request("/api/epaper/papers")
+        return try JSONDecoder().decode(EpaperPapersResponse.self, from: data)
+    }
+
+    func startEpaperSession(paper: String? = nil, mistakes: Bool = false) async throws -> EpaperSession {
+        struct Req: Encodable { let paperKey: String?; let mistakes: Bool? }
+        let body = try JSONEncoder().encode(Req(paperKey: paper, mistakes: mistakes ? true : nil))
+        let data = try await request("/api/epaper/sessions", method: "POST", body: body)
+        return try JSONDecoder().decode(EpaperSession.self, from: data)
+    }
+
+    func submitEpaperAnswer(sessionId: Int, itemId: Int, answer: String) async throws -> EpaperSubmitResult {
+        struct Req: Encodable { let answer: String }
+        let body = try JSONEncoder().encode(Req(answer: answer))
+        let data = try await request("/api/epaper/sessions/\(sessionId)/items/\(itemId)/submit",
+                                     method: "POST", body: body)
+        return try JSONDecoder().decode(EpaperSubmitResult.self, from: data)
+    }
+
+    func completeEpaperSession(sessionId: Int) async throws {
+        _ = try await request("/api/epaper/sessions/\(sessionId)/complete", method: "POST", body: Data("{}".utf8))
+    }
+
+    func epaperImageURL(_ file: String) -> URL? {
+        guard !file.isEmpty else { return nil }
+        var comps = URLComponents()
+        comps.scheme = "http"
+        comps.host = settings.host
+        comps.port = settings.port
+        comps.path = "/epaper-images/\(file)"
+        return comps.url
+    }
 }

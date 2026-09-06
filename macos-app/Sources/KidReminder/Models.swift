@@ -314,3 +314,80 @@ struct SciencePapersResponse: Codable {
     let papers: [SciencePaper]
     let mistakeCount: Int
 }
+
+// MARK: 英语试卷 (PSLE English Paper 2 — every question, two grading tiers)
+
+/// Where a practice set gets its questions from — mirrors ScienceSource exactly.
+enum EpaperSource: Identifiable, Equatable, Codable, Hashable {
+    case paper(key: String, title: String)
+    case mistakes
+
+    var id: String {
+        switch self {
+        case .paper(let key, _): return "epaper-\(key)"
+        case .mistakes: return "epaper-mistakes"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .paper(_, let title): return title
+        case .mistakes: return "📕 错题本"
+        }
+    }
+}
+
+struct EpaperSessionItem: Codable, Identifiable {
+    let itemId: Int
+    let seq: Int
+    let questionId: Int
+    let section: String
+    let questionType: String   // "mcq" | "fill_blank" | "oeq"
+    let context: String
+    let prompt: String
+    let options: [String]?     // mcq only
+    let marks: Int
+    let image: String
+    var id: Int { itemId }
+}
+
+struct EpaperSession: Codable {
+    let sessionId: Int
+    let items: [EpaperSessionItem]
+}
+
+struct EpaperMarkPointResult: Codable, Equatable, Identifiable {
+    let markPointId: Int
+    let seq: Int
+    let pointKind: String
+    let description: String
+    let autoHit: Bool
+    var id: Int { markPointId }
+}
+
+/// mcq/fill_blank fill `correct`/`correctAnswer` and leave `points`/`autoScore`
+/// nil; oeq is the reverse — the two tiers never populate both halves.
+struct EpaperSubmitResult: Codable, Equatable {
+    let questionType: String
+    let correct: Bool?
+    let correctAnswer: String?
+    let explanation: String
+    let autoScore: Int?
+    let marks: Int
+    let provisional: Bool
+    let points: [EpaperMarkPointResult]?
+}
+
+struct EpaperPaper: Codable, Identifiable {
+    let paperKey: String
+    let school: String
+    let year: Int?
+    let questionCount: Int
+    let marksTotal: Int
+    var id: String { paperKey }
+}
+
+struct EpaperPapersResponse: Codable {
+    let papers: [EpaperPaper]
+    let mistakeCount: Int
+}
