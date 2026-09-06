@@ -32,7 +32,7 @@ struct EnglishPaperRunnerView: View {
 
     // Sections that share ONE continuous passage across a run of consecutive
     // questions (see docs/superpowers/specs/2026-09-06-english-paper-practice-design.md).
-    private static let groupableSections: Set<String> = ["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]
+    private static let groupableSections: Set<String> = ["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq", "comprehension_mcq"]
 
     @State private var phase: Phase = .loading
     @State private var stepPhase: StepPhase = .answering
@@ -108,14 +108,23 @@ struct EnglishPaperRunnerView: View {
 
             if isGroup {
                 Divider()
-                // comprehension_oeq shows the paper's FULL article (the `passage`
-                // field, duplicated across the run); cloze/editing show the shared
-                // passage text in `context`. Prefer `passage` when present.
-                let readingText = items.compactMap { $0.passage?.isEmpty == false ? $0.passage : nil }
-                                  .first ?? items.first?.context ?? ""
                 let section = items.first?.section ?? ""
-                PassagedTextView(text: readingText, section: section)
-                    .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
+                if section == "comprehension_mcq" {
+                    // Text 1 (poster, in `image`) + Text 2 (extract, in `passage`).
+                    // Q21-25 all reference the same two stimuli, so show both once.
+                    let text1 = items.compactMap { $0.image.isEmpty ? nil : $0.image }.first
+                    let text2 = items.compactMap { $0.passage?.isEmpty == false ? $0.passage : nil }.first
+                    comprehensionStimulusColumn(text1: text1, text2: text2)
+                        .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    // comprehension_oeq shows the paper's FULL article (the `passage`
+                    // field, duplicated across the run); cloze/editing show the shared
+                    // passage text in `context`. Prefer `passage` when present.
+                    let readingText = items.compactMap { $0.passage?.isEmpty == false ? $0.passage : nil }
+                                      .first ?? items.first?.context ?? ""
+                    PassagedTextView(text: readingText, section: section)
+                        .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
+                }
             } else if let url = api.epaperImageURL(items[0].image) {
                 Divider()
                 imageColumn(url: url)
@@ -194,6 +203,8 @@ struct EnglishPaperRunnerView: View {
                             }
                             if item.questionType == "oeq" {
                                 groupOeqAnswerBox(item)
+                            } else if item.questionType == "mcq" {
+                                groupMcqOptions(item)
                             } else {
                                 TextField("填空…", text: groupAnswerBinding(item.itemId))
                                     .textFieldStyle(.roundedBorder)
@@ -231,6 +242,34 @@ struct EnglishPaperRunnerView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .frame(height: 70)
             .padding(.leading, 40)
+    }
+
+    /// MCQ options for a grouped comprehension_mcq step: tap one to select it.
+    /// The selection is stored as a plain string (the option text), matching how
+    /// single-item mcq answers are submitted. A trailing checkmark shows the
+    /// chosen option; a single 提交 grades the whole group.
+    @ViewBuilder
+    private func groupMcqOptions(_ item: EpaperSessionItem) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ForEach(item.options ?? [], id: \.self) { opt in
+                Button {
+                    groupAnswers[item.itemId] = opt
+                } label: {
+                    HStack {
+                        Text(opt).font(.body)
+                        Spacer()
+                        if groupAnswers[item.itemId] == opt {
+                            Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                        }
+                    }
+                    .padding(8)
+                    .background(Color.primary.opacity(0.04))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.leading, 40)
     }
 
     @ViewBuilder
@@ -349,6 +388,34 @@ struct EnglishPaperRunnerView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(10)
+        }
+    }
+
+    /// The right-hand stimulus column for a comprehension_mcq group: shows
+    /// Text 1 (the poster/ad image) then Text 2 (the extract prose) below it,
+    /// since Q21–25 all reference the same two sources.
+    private func comprehensionStimulusColumn(text1: String?, text2: String?) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                if let text1, !text1.isEmpty, let url = api.epaperImageURL(text1) {
+                    AsyncImage(url: url) { img in
+                        img.resizable().scaledToFit()
+                    } placeholder: {
+                        ProgressView().frame(height: 160)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                if let text2, !text2.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Text 2").font(.caption).bold().foregroundStyle(.secondary)
+                        Text(text2)
+                            .font(.callout)
+                            .textSelection(.enabled)
+                    }
+                    .padding(.top, 4)
+                }
+            }
+            .padding(14)
         }
     }
 
