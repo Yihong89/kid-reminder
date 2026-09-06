@@ -11,6 +11,10 @@ final class SettingsStore: ObservableObject {
     @Published var role: String?   // "admin" | "kid" | nil (unknown until verified)
     @Published var connected = false
     @Published var lastError: String?
+    /// Font scale (1.0 = normal) for the paper-runner reading text. The kid can
+    /// zoom the passage/prompts with A− / A+ in the runner toolbar.
+    @Published var paperFontScale: CGFloat
+    static let paperFontRange: ClosedRange<CGFloat> = 0.8...1.8
 
     private let defaults = UserDefaults.standard
 
@@ -21,6 +25,8 @@ final class SettingsStore: ObservableObject {
         pin = defaults.string(forKey: "pin") ?? ""
         role = defaults.string(forKey: "role")
         connected = defaults.bool(forKey: "connected")
+        let f = defaults.double(forKey: "paperFontScale")
+        paperFontScale = f == 0 ? 1.0 : CGFloat(f)
     }
 
     func save() {
@@ -29,6 +35,7 @@ final class SettingsStore: ObservableObject {
         defaults.set(pin, forKey: "pin")
         defaults.set(role, forKey: "role")
         defaults.set(connected, forKey: "connected")
+        defaults.set(paperFontScale, forKey: "paperFontScale")
     }
 
     var isAdmin: Bool { role == "admin" }

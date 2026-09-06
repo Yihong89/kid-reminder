@@ -42,6 +42,7 @@ struct EnglishPaperRunnerView: View {
     @State private var groupAnswers: [Int: String] = [:]  // itemId -> answer, group steps
 
     private var api: APIClient { APIClient(settings: settings) }
+    private var paperFont: PaperFont { PaperFont(scale: settings.paperFontScale) }
 
     /// Items chunked into steps. Grouping is disabled outside "paper" mode.
     private var steps: [[EpaperSessionItem]] {
@@ -72,8 +73,27 @@ struct EnglishPaperRunnerView: View {
                 ToolbarItem(placement: .automatic) {
                     Button("关闭") { dismissWindow() }
                 }
+                // A− / A+ : zoom the reading text of this paper.
+                ToolbarItem(placement: .automatic) {
+                    HStack(spacing: 2) {
+                        Button { adjustFont(-0.1) } label: { Text("A−").font(.body.weight(.semibold)) }
+                            .help("缩小文字")
+                        Text("\(Int(settings.paperFontScale * 100))%")
+                            .font(.caption).monospacedDigit().foregroundStyle(.secondary)
+                            .frame(minWidth: 34)
+                        Button { adjustFont(0.1) } label: { Text("A+").font(.body.weight(.semibold)) }
+                            .help("放大文字")
+                    }
+                    .controlSize(.small)
+                }
             }
             .task { await start() }
+    }
+
+    private func adjustFont(_ delta: CGFloat) {
+        let range = SettingsStore.paperFontRange
+        settings.paperFontScale = min(range.upperBound, max(range.lowerBound, settings.paperFontScale + delta))
+        settings.save()
     }
 
     @ViewBuilder
@@ -122,7 +142,7 @@ struct EnglishPaperRunnerView: View {
                     // passage text in `context`. Prefer `passage` when present.
                     let readingText = items.compactMap { $0.passage?.isEmpty == false ? $0.passage : nil }
                                       .first ?? items.first?.context ?? ""
-                    PassagedTextView(text: readingText, section: section)
+                    PassagedTextView(text: readingText, section: section, font: paperFont)
                         .frame(minWidth: 320, maxWidth: .infinity, maxHeight: .infinity)
                 }
             } else if let url = api.epaperImageURL(items[0].image) {
@@ -158,9 +178,9 @@ struct EnglishPaperRunnerView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 8) {
                         if !items[0].context.isEmpty {
-                            Text(items[0].context).font(.callout).foregroundStyle(.secondary)
+                            Text(items[0].context).font(paperFont.scaledCallout).foregroundStyle(.secondary)
                         }
-                        Text(items[0].prompt).font(.body)
+                        Text(items[0].prompt).font(paperFont.scaledBody)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -198,8 +218,8 @@ struct EnglishPaperRunnerView: View {
                     ForEach(items) { item in
                         VStack(alignment: .leading, spacing: 4) {
                             HStack(alignment: .top) {
-                                Text("(\(item.seq))").font(.body).bold().frame(width: 36, alignment: .leading)
-                                Text(item.prompt).font(.callout).foregroundStyle(.secondary)
+                                Text("(\(item.seq))").font(paperFont.scaledBody).bold().frame(width: 36, alignment: .leading)
+                                Text(item.prompt).font(paperFont.scaledCallout).foregroundStyle(.secondary)
                             }
                             if item.questionType == "oeq" {
                                 groupOeqAnswerBox(item)
@@ -256,7 +276,7 @@ struct EnglishPaperRunnerView: View {
                     groupAnswers[item.itemId] = opt
                 } label: {
                     HStack {
-                        Text(opt).font(.body)
+                        Text(opt).font(paperFont.scaledBody)
                         Spacer()
                         if groupAnswers[item.itemId] == opt {
                             Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
@@ -283,7 +303,7 @@ struct EnglishPaperRunnerView: View {
                         Task { await submit(items: [item], answers: [item.itemId: opt]) }
                     } label: {
                         HStack {
-                            Text(opt).font(.body)
+                            Text(opt).font(paperFont.scaledBody)
                             Spacer()
                         }
                         .padding(10)
@@ -340,26 +360,26 @@ struct EnglishPaperRunnerView: View {
                 ForEach(Array(zip(items, results)), id: \.0.itemId) { item, result in
                     VStack(alignment: .leading, spacing: 8) {
                         if isGroup {
-                            Text("(\(item.seq))").font(.callout).bold().foregroundStyle(.secondary)
+                            Text("(\(item.seq))").font(paperFont.scaledCallout).bold().foregroundStyle(.secondary)
                         }
                         if result.provisional {
                             Text("已提交，等待家长在网页端批改")
-                                .font(.callout).foregroundStyle(.secondary)
+                                .font(paperFont.scaledCallout).foregroundStyle(.secondary)
                         } else {
                             HStack {
                                 Image(systemName: (result.correct ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
                                     .foregroundStyle((result.correct ?? false) ? .green : .red)
                                 Text((result.correct ?? false) ? "答对了" : "答错了")
-                                    .font(.headline)
+                                    .font(paperFont.scaledHeadline)
                                     .foregroundStyle((result.correct ?? false) ? .green : .red)
                             }
                             if let correctAnswer = result.correctAnswer, !(result.correct ?? true) {
-                                Text("正确答案：\(correctAnswer)").font(.callout).foregroundStyle(.secondary)
+                                Text("正确答案：\(correctAnswer)").font(paperFont.scaledCallout).foregroundStyle(.secondary)
                             }
                         }
                         if !result.explanation.isEmpty {
                             Divider()
-                            Text(result.explanation).font(.callout).foregroundStyle(.secondary)
+                            Text(result.explanation).font(paperFont.scaledCallout).foregroundStyle(.secondary)
                         }
                     }
                     .padding(12)
@@ -407,9 +427,9 @@ struct EnglishPaperRunnerView: View {
                 }
                 if let text2, !text2.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Text 2").font(.caption).bold().foregroundStyle(.secondary)
+                        Text("Text 2").font(paperFont.scaledCaption).bold().foregroundStyle(.secondary)
                         Text(text2)
-                            .font(.callout)
+                            .font(paperFont.scaledCallout)
                             .textSelection(.enabled)
                     }
                     .padding(.top, 4)
@@ -510,6 +530,7 @@ struct EnglishPaperRunnerView: View {
 struct PassagedTextView: View {
     let text: String
     let section: String
+    var font: PaperFont = PaperFont(scale: 1.0)
 
     var body: some View {
         ScrollView {
@@ -520,7 +541,7 @@ struct PassagedTextView: View {
                     Text(text)
                 }
             }
-            .font(.body)
+            .font(font.scaledBody)
             .textSelection(.enabled)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(14)

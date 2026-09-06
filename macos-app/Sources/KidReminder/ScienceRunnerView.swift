@@ -65,6 +65,7 @@ struct ScienceRunnerView: View {
     @State private var marksSoFar = 0
 
     private var api: APIClient { APIClient(settings: settings) }
+    private var paperFont: PaperFont { PaperFont(scale: settings.paperFontScale) }
 
     var body: some View {
         content
@@ -80,8 +81,26 @@ struct ScienceRunnerView: View {
                 ToolbarItem(placement: .automatic) {
                     Button("关闭") { dismissWindow() }
                 }
+                ToolbarItem(placement: .automatic) {
+                    HStack(spacing: 2) {
+                        Button { adjustFont(-0.1) } label: { Text("A−").font(.body.weight(.semibold)) }
+                            .help("缩小文字")
+                        Text("\(Int(settings.paperFontScale * 100))%")
+                            .font(.caption).monospacedDigit().foregroundStyle(.secondary)
+                            .frame(minWidth: 34)
+                        Button { adjustFont(0.1) } label: { Text("A+").font(.body.weight(.semibold)) }
+                            .help("放大文字")
+                    }
+                    .controlSize(.small)
+                }
             }
             .task { await start() }
+    }
+
+    private func adjustFont(_ delta: CGFloat) {
+        let range = SettingsStore.paperFontRange
+        settings.paperFontScale = min(range.upperBound, max(range.lowerBound, settings.paperFontScale + delta))
+        settings.save()
     }
 
     @ViewBuilder
@@ -154,11 +173,11 @@ struct ScienceRunnerView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
                     if !item.context.isEmpty {
-                        Text(item.context).font(.callout).foregroundStyle(.secondary)
+                        Text(item.context).font(paperFont.scaledCallout).foregroundStyle(.secondary)
                     }
-                    Text(item.prompt).font(.body)
+                    Text(item.prompt).font(paperFont.scaledBody)
                     Text("这题 \(item.marks) 分 —— 要写出 \(item.marks) 个得分点。")
-                        .font(.caption).foregroundStyle(.orange)
+                        .font(paperFont.scaledCaption).foregroundStyle(.orange)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -198,9 +217,9 @@ struct ScienceRunnerView: View {
             case .graded(let result):
                 ScrollView {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("你写的").font(.caption).bold().foregroundStyle(.secondary)
+                        Text("你写的").font(paperFont.scaledCaption).bold().foregroundStyle(.secondary)
                         Text(typed)
-                            .font(.callout)
+                            .font(paperFont.scaledCallout)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(8)
                             .background(Color.primary.opacity(0.04))
@@ -256,26 +275,26 @@ struct ScienceRunnerView: View {
                         .foregroundStyle(p.autoHit ? .green : .red)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(p.pointKind.label)
-                            .font(.caption).bold()
+                            .font(paperFont.scaledCaption).bold()
                             .foregroundStyle(p.autoHit ? .green : .red)
-                        Text(p.description).font(.callout)
+                        Text(p.description).font(paperFont.scaledCallout)
                     }
                 }
             }
 
             if !r.modelAnswer.isEmpty {
                 Divider()
-                Text("参考答案").font(.caption).bold().foregroundStyle(.secondary)
-                Text(r.modelAnswer).font(.callout).foregroundStyle(.secondary)
+                Text("参考答案").font(paperFont.scaledCaption).bold().foregroundStyle(.secondary)
+                Text(r.modelAnswer).font(paperFont.scaledCallout).foregroundStyle(.secondary)
             }
 
             if !r.doNotAccept.isEmpty {
                 Divider()
-                Text("不能这样答").font(.caption).bold().foregroundStyle(.orange)
+                Text("不能这样答").font(paperFont.scaledCaption).bold().foregroundStyle(.orange)
                 ForEach(r.doNotAccept, id: \.answer) { d in
                     VStack(alignment: .leading, spacing: 1) {
-                        Text("✗ \(d.answer)").font(.callout)
-                        Text(d.reason).font(.caption).foregroundStyle(.secondary)
+                        Text("✗ \(d.answer)").font(paperFont.scaledCallout)
+                        Text(d.reason).font(paperFont.scaledCaption).foregroundStyle(.secondary)
                     }
                 }
             }
