@@ -323,6 +323,8 @@ function deleteEnglishAudio(questionId) {
 const GENERATIONS = [
   { name: "Kanto",   start: 1,   end: 151 },
   { name: "Johto",   start: 152, end: 251 },
+  { name: "Hoenn",   start: 252, end: 386 },
+  { name: "Sinnoh",  start: 387, end: 493 },
 ];
 const POKEDEX_INFO = (() => {
   try { return JSON.parse(fs.readFileSync(path.join(__dirname, "sprites", "info.json"), "utf8")); }
