@@ -1379,6 +1379,14 @@ const server = http.createServer(async (req, res) => {
       const session = db.prepare("SELECT status FROM dictation_sessions WHERE id = ?").get(id);
       if (!session) return sendJSON(404, { error: "session not found" });
       db.prepare("UPDATE dictation_sessions SET status = 'pending_grading', completed_at = datetime('now') WHERE id = ?").run(id);
+      // Grading is text-only (admin.html shows word/answer pairs, no audio replay), so
+      // the cached TTS clips for this set have no further use once the kid is done
+      // hearing them — clear them now rather than letting the cache grow unbounded.
+      // The same word_id gets re-synthesized next time it's picked (likely soon, since
+      // selection is weakest-first), which is the accepted tradeoff for not keeping a
+      // long-lived cache that also goes stale in the client whenever a word is edited.
+      const wordIds = db.prepare("SELECT word_id FROM dictation_items WHERE session_id = ?").all(id).map((r) => r.word_id);
+      for (const wordId of wordIds) deleteDictationAudio(wordId);
       return sendJSON(200, { ok: true });
     }
 

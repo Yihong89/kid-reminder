@@ -62,7 +62,17 @@ final class DictationAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
         Task {
             do {
                 let start = Date()
-                let (data, response) = try await URLSession.shared.data(from: url)
+                // The server's own dictation-audio/ directory IS the cache (keyed by word
+                // id, cleared when a word's text is edited or the session finishes) —
+                // URLSession's default protocol cache policy would add a SECOND cache on
+                // top of that, keyed by this same stable URL. Since the server can
+                // regenerate a fresh file at that URL after an edit, a stale client-side
+                // cache entry then plays old audio for a word that no longer matches, with
+                // no way to tell short of a full year passing (the old Cache-Control
+                // max-age). Bypassing it here makes the server the single source of truth.
+                var request = URLRequest(url: url)
+                request.cachePolicy = .reloadIgnoringLocalCacheData
+                let (data, response) = try await URLSession.shared.data(for: request)
                 let elapsed = Date().timeIntervalSince(start)
                 guard token == playToken else {
                     DevLog.log("play() token=\(token) fetch done after \(elapsed)s but superseded (current token=\(playToken)) — ignoring")
