@@ -381,12 +381,22 @@ struct EpaperSubmitResult: Codable, Equatable {
     let points: [EpaperMarkPointResult]?
 }
 
+/// The most recent fully-graded ("paper" mode) attempt at a paper — nil until
+/// the kid has finished it AND the parent has reviewed every oeq question.
+struct EpaperLastResult: Codable, Equatable {
+    let sessionId: Int
+    let scoreEarned: Int
+    let marksTotal: Int
+    let completedAt: String
+}
+
 struct EpaperPaper: Codable, Identifiable {
     let paperKey: String
     let school: String
     let year: Int?
     let questionCount: Int
     let marksTotal: Int
+    let lastResult: EpaperLastResult?
     var id: String { paperKey }
 }
 

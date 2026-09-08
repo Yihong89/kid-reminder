@@ -13,6 +13,8 @@ struct EnglishPaperPracticeView: View {
     @State private var mistakeCount = 0
     @State private var loading = true
     @State private var loadError: String?
+    @State private var downloadingPaperKey: String?
+    @State private var toastMessage: String?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -20,6 +22,20 @@ struct EnglishPaperPracticeView: View {
         content
             .navigationTitle("英语试卷")
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay(alignment: .bottom) { toast }
+    }
+
+    @ViewBuilder
+    private var toast: some View {
+        if let toastMessage {
+            Text(toastMessage)
+                .font(.callout)
+                .padding(.horizontal, 14).padding(.vertical, 10)
+                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+                .shadow(radius: 4)
+                .padding(.bottom, 20)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+        }
     }
 
     @ViewBuilder
@@ -88,8 +104,28 @@ struct EnglishPaperPracticeView: View {
                     .font(.subheadline)
                 Text("\(paper.questionCount) 题 · \(paper.marksTotal) 分")
                     .font(.caption).foregroundStyle(.secondary)
+                if let last = paper.lastResult {
+                    let pct = last.marksTotal > 0 ? Int((Double(last.scoreEarned) / Double(last.marksTotal) * 100).rounded()) : 0
+                    Text("上次成绩：\(last.scoreEarned)/\(last.marksTotal) · \(pct)%")
+                        .font(.caption.bold())
+                        .foregroundStyle(pct >= 90 ? .green : .orange)
+                }
             }
             Spacer()
+            if paper.lastResult != nil {
+                Button {
+                    downloadReport(for: paper)
+                } label: {
+                    if downloadingPaperKey == paper.paperKey {
+                        ProgressView().controlSize(.small).frame(width: 16)
+                    } else {
+                        Label("下载错题报告", systemImage: "square.and.arrow.down")
+                    }
+                }
+                .buttonStyle(.bordered)
+                .disabled(downloadingPaperKey != nil)
+                .help("下载这次的错题分析报告（英文，孩子能看懂）")
+            }
             Button {
                 let source = EpaperSource.paper(key: paper.paperKey, title: "\(paper.school) \(paper.year.map(String.init) ?? "")")
                 openWindow(id: "epaper-runner", value: source)
@@ -100,6 +136,50 @@ struct EnglishPaperPracticeView: View {
             .help("完整做这张卷子")
         }
         .padding(.vertical, 2)
+    }
+
+    /// Fetches the reviewed session's report HTML and saves it straight to
+    /// ~/Downloads (no save panel — see 2026-09-08 design discussion), then
+    /// shows a brief confirmation toast. Overwrites a same-named prior
+    /// download for this session, which is fine: the content is identical.
+    private func downloadReport(for paper: EpaperPaper) {
+        guard let last = paper.lastResult else { return }
+        downloadingPaperKey = paper.paperKey
+        Task {
+            defer { downloadingPaperKey = nil }
+            do {
+                let data = try await api.epaperReportHTML(sessionId: last.sessionId)
+                guard let downloadsDir = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
+                    showToast("找不到 Downloads 文件夹")
+                    return
+                }
+                let dateStamp = String(last.completedAt.prefix(10))
+                let namePart = sanitizedFilename("\(paper.school)-\(paper.year.map(String.init) ?? "")")
+                let url = downloadsDir.appendingPathComponent("\(namePart)-mistakes-\(dateStamp).html")
+                try data.write(to: url)
+                showToast("已保存到 Downloads：\(url.lastPathComponent)")
+            } catch {
+                showToast("下载失败：\(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func sanitizedFilename(_ s: String) -> String {
+        let allowed = CharacterSet.alphanumerics
+        var result = ""
+        for scalar in s.unicodeScalars {
+            result.append(allowed.contains(scalar) ? Character(scalar) : "-")
+        }
+        while result.contains("--") { result = result.replacingOccurrences(of: "--", with: "-") }
+        return result.trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+    }
+
+    private func showToast(_ text: String) {
+        withAnimation { toastMessage = text }
+        Task {
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            if toastMessage == text { withAnimation { toastMessage = nil } }
+        }
     }
 
     private func centered<V: View>(@ViewBuilder _ inner: () -> V) -> some View {

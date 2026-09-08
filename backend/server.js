@@ -945,6 +945,289 @@ function epaperComputeScore(db, sessionId) {
   return { marksTotal, scoreEarned };
 }
 
+// ------------------------------------------------- 英语试卷 mistake report (HTML)
+// Renders a self-contained, kid-facing HTML page for one *reviewed* paper-mode
+// session: every wrong mcq/fill_blank item, plus every missed oeq mark point,
+// each with the original question, the correct answer/model point, a
+// plain-language reason it was marked wrong, and a concrete tip. Written in
+// English throughout — no exam jargon — so the kid can read it without a
+// parent translating (family request, 2026-09-08).
+const EPAPER_SECTION_LABELS = {
+  grammar_mcq: "Grammar",
+  vocab_mcq: "Vocabulary",
+  cloze_mcq: "Cloze Passage",
+  comprehension_mcq: "Comprehension (multiple-choice)",
+  cloze_wordbank: "Cloze Passage (word bank)",
+  editing: "Editing",
+  cloze_open: "Cloze Passage (open)",
+  synthesis: "Sentence Synthesis",
+  comprehension_oeq: "Comprehension (written answers)",
+};
+// Sections whose reading text is ONE passage shared by a whole run of
+// questions (mirrors EnglishPaperRunnerView.groupableSections) — shown once
+// per section instead of repeated under every question.
+const EPAPER_SHARED_TEXT_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]);
+
+function epaperEscapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+// Cheap Levenshtein distance — used only to tell "misspelled a word you
+// clearly know" apart from "picked a genuinely different word" in Editing.
+function epaperEditDistance(a, b) {
+  a = String(a || "").toLowerCase().trim();
+  b = String(b || "").toLowerCase().trim();
+  const m = a.length, n = b.length;
+  const d = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) d[i][0] = i;
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      d[i][j] = a[i - 1] === b[j - 1] ? d[i - 1][j - 1]
+        : 1 + Math.min(d[i - 1][j], d[i][j - 1], d[i - 1][j - 1]);
+    }
+  }
+  return d[m][n];
+}
+
+// Picks a plain-language "why" + "how to improve" for one wrong mcq/fill_blank
+// item, based on its section and (for editing) how close the answer was.
+function epaperItemTip(section, kidAnswer, correctAnswer) {
+  switch (section) {
+    case "editing":
+      return epaperEditDistance(kidAnswer, correctAnswer) <= 2
+        ? { why: "This is a spelling slip — you already know the word, you just missed a letter or two.",
+            tip: "Write the correct spelling out 5 times, saying each letter out loud as you write it." }
+        : { why: "This wasn't quite the fix the sentence needed.",
+            tip: "Read the sentence slowly, word by word — the mistake is often a small word that's easy to skim past." };
+    case "cloze_open":
+      return { why: "Your word fits the general idea, but it's not the exact word this sentence is looking for.",
+               tip: "Reread the sentence (and the one before it) and ask which exact word matches the feeling the writer wants." };
+    case "synthesis":
+      return { why: "The meaning is close, but the sentence structure or grammar doesn't fully match what the question asked for.",
+               tip: "Practice this exact pattern a few more times with new sentences, until the structure feels automatic." };
+    case "vocab_mcq":
+      return { why: "You picked a word that's close in meaning, but not the best match here.",
+               tip: "Try each option in the sentence out loud — ask which one an English speaker would really say." };
+    default:
+      return { why: "This one didn't match the answer key.",
+               tip: "Read the explanation below, then try explaining in your own words why the correct answer works." };
+  }
+}
+
+// Same idea, for one missed oeq mark point — grouped by point_kind, which
+// captures WHY that kind of point tends to get missed regardless of paper.
+function epaperPointTip(pointKind) {
+  switch (pointKind) {
+    case "textual_evidence":
+      return { why: "Your answer didn't refer to this exact detail from the passage.",
+               tip: "Go back to the passage and use the writer's own words/details, not just your memory of what happened." };
+    case "inference":
+      return { why: "You described what happened, but not what it shows or why it matters — that's what this mark is for.",
+               tip: "After writing the fact, add one more sentence: “This shows that…” or “This means…”." };
+    case "multi_part":
+      return { why: "This question has more than one part, and your answer didn't fully cover this part.",
+               tip: "Number each part of your answer to match the parts of the question, so nothing gets left out." };
+    default: // "keyword"
+      return { why: "Your answer was missing this specific idea.",
+               tip: "Check the passage again for this exact point and add it in, even if you think you implied it." };
+  }
+}
+
+// Returns the full HTML document (string) for a session's mistake report, or
+// null if the session doesn't exist or isn't fully reviewed yet.
+function epaperBuildReportHTML(db, sessionId) {
+  const session = db.prepare("SELECT * FROM epaper_sessions WHERE id = ?").get(sessionId);
+  if (!session || session.status !== "reviewed") return null;
+
+  const meta = db.prepare(
+    "SELECT school, year FROM epaper_questions WHERE paper_key = ? LIMIT 1"
+  ).get(session.paper_key) || { school: "", year: null };
+
+  const items = db.prepare(`
+    SELECT i.id itemId, i.seq, i.answer, i.final_correct finalCorrect,
+           q.id questionId, q.section, q.question_type questionType, q.paper_seq paperSeq,
+           q.context, q.passage, q.prompt, q.correct_answer correctAnswer,
+           q.explanation, q.marks
+      FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
+     WHERE i.session_id = ? ORDER BY q.paper_seq`).all(sessionId);
+
+  // Section score summary, in first-seen (paper) order.
+  const sectionOrder = [];
+  const bySection = new Map();
+  for (const it of items) {
+    if (!bySection.has(it.section)) { bySection.set(it.section, { earned: 0, total: 0 }); sectionOrder.push(it.section); }
+    const s = bySection.get(it.section);
+    s.total += it.marks;
+    if (it.questionType === "oeq") {
+      const pts = db.prepare("SELECT auto_hit autoHit, final_hit finalHit FROM epaper_item_points WHERE item_id = ?").all(it.itemId);
+      s.earned += pts.reduce((sum, p) => sum + (p.finalHit !== null ? p.finalHit : p.autoHit), 0);
+    } else {
+      s.earned += it.finalCorrect ? it.marks : 0;
+    }
+  }
+
+  // One render block per wrong objective item / per oeq question with a miss,
+  // plus the shared reading text (shown once) for sections that have one.
+  const blocksBySection = new Map();
+  const sharedTextBySection = new Map();
+  for (const it of items) {
+    if (EPAPER_SHARED_TEXT_SECTIONS.has(it.section) && !sharedTextBySection.has(it.section)) {
+      const text = it.section === "comprehension_oeq" ? it.passage : it.context;
+      if (text) sharedTextBySection.set(it.section, text);
+    }
+    let block = null;
+    if (it.questionType === "oeq") {
+      const pts = db.prepare(`
+        SELECT mp.seq, mp.point_kind pointKind, mp.description,
+               ip.auto_hit autoHit, ip.final_hit finalHit
+          FROM epaper_mark_points mp
+          LEFT JOIN epaper_item_points ip ON ip.mark_point_id = mp.id AND ip.item_id = ?
+         WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.itemId, it.questionId);
+      const missed = pts.filter((p) => (p.finalHit !== null ? p.finalHit : p.autoHit) !== 1);
+      if (missed.length) block = { kind: "oeq", item: it, missed };
+    } else if (it.finalCorrect === 0) {
+      block = { kind: "objective", item: it };
+    }
+    if (block) {
+      if (!blocksBySection.has(it.section)) blocksBySection.set(it.section, []);
+      blocksBySection.get(it.section).push(block);
+    }
+  }
+
+  const scoreEarned = session.score_earned, marksTotal = session.marks_total;
+  const pct = marksTotal ? Math.round((scoreEarned / marksTotal) * 1000) / 10 : 0;
+  const TARGET_PCT = 90; // family's standing goal (AL1), same for every paper
+  const title = `${meta.school}${meta.year ? " " + meta.year : ""}`.trim() || "English Paper";
+  const wrongCount = [...blocksBySection.values()].reduce((n, arr) => n + arr.length, 0);
+
+  const summaryRows = sectionOrder.map((sec) => {
+    const s = bySection.get(sec);
+    const secPct = s.total ? Math.round((s.earned / s.total) * 100) : 0;
+    return `<tr><td>${epaperEscapeHtml(EPAPER_SECTION_LABELS[sec] || sec)}</td>` +
+      `<td class="num">${s.earned}/${s.total}</td><td class="num">${secPct}%</td></tr>`;
+  }).join("\n");
+
+  const sectionsHTML = sectionOrder
+    .filter((sec) => blocksBySection.has(sec))
+    .map((sec) => {
+      const sharedText = sharedTextBySection.get(sec);
+      const sharedTextHTML = sharedText
+        ? `<details class="passage" open><summary>📖 Reading text for this section</summary>` +
+          `<div class="passage-body">${epaperEscapeHtml(sharedText).replace(/\n/g, "<br>")}</div></details>`
+        : "";
+      const blocksHTML = blocksBySection.get(sec).map((b) => {
+        const it = b.item;
+        const marksLabel = `${it.marks} mark${it.marks === 1 ? "" : "s"}`;
+        const contextHTML = (!EPAPER_SHARED_TEXT_SECTIONS.has(sec) && it.context)
+          ? `<div class="q-context">${epaperEscapeHtml(it.context)}</div>` : "";
+        if (b.kind === "objective") {
+          const { why, tip } = epaperItemTip(sec, it.answer, it.correctAnswer);
+          return `<div class="q">
+            <div class="q-num">Question ${it.paperSeq} <span class="marks">(${marksLabel})</span></div>
+            ${contextHTML}
+            <div class="q-prompt">${epaperEscapeHtml(it.prompt)}</div>
+            <div class="answer-row">
+              <div class="your-answer"><span class="label">Your answer:</span> ${epaperEscapeHtml(it.answer) || "<em>(no answer)</em>"}</div>
+              <div class="correct-answer"><span class="label">Correct answer:</span> ${epaperEscapeHtml(it.correctAnswer)}</div>
+            </div>
+            <div class="why">${epaperEscapeHtml(why)}</div>
+            ${it.explanation ? `<div class="explain">${epaperEscapeHtml(it.explanation)}</div>` : ""}
+            <div class="tip">💡 <strong>How to get better at this:</strong> ${epaperEscapeHtml(tip)}</div>
+          </div>`;
+        }
+        // oeq
+        const pointsHTML = b.missed.map((p) => {
+          const { why, tip } = epaperPointTip(p.pointKind);
+          return `<div class="point">
+            <div class="point-model"><strong>What the answer needed:</strong> ${epaperEscapeHtml(p.description)}</div>
+            <div class="why">${epaperEscapeHtml(why)}</div>
+            <div class="tip">💡 ${epaperEscapeHtml(tip)}</div>
+          </div>`;
+        }).join("\n");
+        return `<div class="q">
+          <div class="q-num">Question ${it.paperSeq} <span class="marks">(${marksLabel})</span></div>
+          <div class="q-prompt">${epaperEscapeHtml(it.prompt)}</div>
+          <div class="your-answer"><span class="label">Your answer:</span> ${epaperEscapeHtml(it.answer) || "<em>(no answer)</em>"}</div>
+          <div class="points">${pointsHTML}</div>
+        </div>`;
+      }).join("\n");
+      return `<section>
+        <h2>${epaperEscapeHtml(EPAPER_SECTION_LABELS[sec] || sec)}</h2>
+        ${sharedTextHTML}
+        ${blocksHTML}
+      </section>`;
+    }).join("\n");
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>${epaperEscapeHtml(title)} — Mistake Report</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px 16px 60px; background: #f6f7fb; color: #1f2430;
+         font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header.top { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  header.top h1 { margin: 0 0 4px; font-size: 22px; }
+  header.top .sub { color: #6b7280; font-size: 14px; margin-bottom: 18px; }
+  .score-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .score-row .big { font-size: 36px; font-weight: 700; color: #2563eb; }
+  .score-row .pct { font-size: 18px; color: #6b7280; }
+  .bar { position: relative; height: 14px; border-radius: 7px; background: #e5e7eb; overflow: hidden; margin-bottom: 6px; }
+  .bar .fill { position: absolute; inset: 0; width: 0; background: linear-gradient(90deg,#60a5fa,#2563eb); border-radius: 7px; }
+  .bar .target { position: absolute; top: -3px; bottom: -3px; width: 2px; background: #16a34a; }
+  .bar-label { font-size: 12px; color: #6b7280; display: flex; justify-content: space-between; }
+  table.summary { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 14px; }
+  table.summary th, table.summary td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eef0f4; }
+  table.summary td.num, table.summary th.num { text-align: right; }
+  section { background: #fff; border-radius: 16px; padding: 20px 24px; margin-top: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  section h2 { margin: 0 0 12px; font-size: 17px; color: #1e293b; }
+  details.passage { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; }
+  details.passage summary { cursor: pointer; font-weight: 600; font-size: 13px; color: #475569; }
+  .passage-body { margin-top: 8px; font-size: 14px; color: #334155; white-space: pre-wrap; }
+  .q { padding: 14px 0; border-top: 1px solid #eef0f4; }
+  section .q:first-of-type { border-top: none; padding-top: 0; }
+  .q-num { font-weight: 700; font-size: 14px; color: #1e293b; margin-bottom: 6px; }
+  .q-num .marks { font-weight: 400; color: #94a3b8; }
+  .q-context { font-size: 14px; color: #64748b; margin-bottom: 6px; }
+  .q-prompt { font-size: 15px; margin-bottom: 10px; }
+  .answer-row { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 10px; font-size: 14px; }
+  .your-answer { color: #b91c1c; } .your-answer .label, .correct-answer .label { color: #64748b; font-weight: 600; }
+  .correct-answer { color: #15803d; }
+  .why { font-size: 14px; color: #334155; margin-bottom: 6px; }
+  .explain { font-size: 13px; color: #64748b; background: #f8fafc; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
+  .tip { font-size: 14px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 10px; }
+  .points .point { border-top: 1px dashed #e5e7eb; padding-top: 8px; margin-top: 8px; }
+  .points .point:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .point-model { font-size: 14px; margin-bottom: 4px; }
+  footer { text-align: center; color: #9ca3af; font-size: 12px; margin-top: 28px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>${epaperEscapeHtml(title)}</h1>
+    <div class="sub">Mistake Report · ${wrongCount} question${wrongCount === 1 ? "" : "s"} to review</div>
+    <div class="score-row"><span class="big">${scoreEarned}/${marksTotal}</span><span class="pct">${pct}%</span></div>
+    <div class="bar"><div class="fill" style="width:${Math.min(100, pct)}%"></div><div class="target" style="left:${TARGET_PCT}%"></div></div>
+    <div class="bar-label"><span>0%</span><span>Goal: ${TARGET_PCT}%</span></div>
+    <table class="summary">
+      <tr><th>Section</th><th class="num">Score</th><th class="num">%</th></tr>
+      ${summaryRows}
+    </table>
+  </header>
+  ${sectionsHTML}
+  <footer>Great effort finishing the whole paper — every mistake reviewed here is one you're less likely to make next time. 🌟</footer>
+</div>
+</body>
+</html>`;
+}
+
 // ---------------------------------------------------------------- http server
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://localhost");
@@ -2237,7 +2520,19 @@ const server = http.createServer(async (req, res) => {
           FROM epaper_questions WHERE paper_key != ''
          GROUP BY paper_key ORDER BY year DESC, school ASC`).all();
       const mistakeCount = db.prepare("SELECT COUNT(*) n FROM epaper_questions WHERE in_mistake_bank = 1").get().n;
-      return sendJSON(200, { papers, mistakeCount });
+      // Latest fully-graded ("paper" mode) attempt per paper, so the kid app
+      // can show a score badge + report-download button without a separate
+      // round trip per paper.
+      const lastResultStmt = db.prepare(`
+        SELECT id, score_earned AS scoreEarned, marks_total AS marksTotal, completed_at AS completedAt
+          FROM epaper_sessions
+         WHERE paper_key = ? AND mode = 'paper' AND status = 'reviewed'
+         ORDER BY completed_at DESC LIMIT 1`);
+      const withResults = papers.map((p) => {
+        const last = lastResultStmt.get(p.paperKey);
+        return { ...p, lastResult: last ? { sessionId: last.id, scoreEarned: last.scoreEarned, marksTotal: last.marksTotal, completedAt: last.completedAt } : null };
+      });
+      return sendJSON(200, { papers: withResults, mistakeCount });
     }
 
     // --- start a practice set (open; the kid app calls this) ---------------------
@@ -2369,6 +2664,17 @@ const server = http.createServer(async (req, res) => {
         score_earned = ?, marks_total = ? WHERE id = ?`)
         .run(status, hasOeq ? 1 : 0, scoreEarned, marksTotal, sessionId);
       return sendJSON(200, { ok: true, status, scoreEarned, marksTotal });
+    }
+
+    // --- kid-facing mistake report, one reviewed session, as a downloadable
+    // self-contained HTML page (open — same trust model as submit/complete) --
+    const epaperReport = pathname.match(/^\/api\/epaper\/sessions\/(\d+)\/report$/);
+    if (epaperReport && method === "GET") {
+      const sessionId = Number(epaperReport[1]);
+      const html = epaperBuildReportHTML(db, sessionId);
+      if (html === null) return sendJSON(409, { error: "session isn't fully graded yet" });
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+      return res.end(html);
     }
 
     // --- session list (admin): full history, not just pending -----------------

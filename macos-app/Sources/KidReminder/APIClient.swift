@@ -393,6 +393,12 @@ final class APIClient {
         _ = try await request("/api/epaper/sessions/\(sessionId)/complete", method: "POST", body: Data("{}".utf8))
     }
 
+    /// Raw HTML for a reviewed session's mistake report — saved straight to
+    /// disk by the caller, not decoded, since it's a document, not JSON.
+    func epaperReportHTML(sessionId: Int) async throws -> Data {
+        try await request("/api/epaper/sessions/\(sessionId)/report")
+    }
+
     func epaperImageURL(_ file: String) -> URL? {
         guard !file.isEmpty else { return nil }
         var comps = URLComponents()
