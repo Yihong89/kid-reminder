@@ -687,6 +687,11 @@ try { db.exec("ALTER TABLE science_sessions ADD COLUMN year INTEGER"); } catch {
 // already-deployed DB; doing it in the migration section (like the science
 // paper_key/paper_seq ALTERs) is exactly how those columns were added safely.
 try { db.exec("ALTER TABLE epaper_questions ADD COLUMN passage TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
+// answer +1 / wrong -1, floored at 0 — same convention as vocab_words/
+// english_questions' correct_count, shown as a "正确数" badge in the admin
+// 错题本 list so a parent can see progress on a mistake-bank question across
+// repeat attempts without it silently dropping out of the bank.
+try { db.exec("ALTER TABLE epaper_questions ADD COLUMN correct_count INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 // Created here, not in the CREATE TABLE block above: on an already-deployed DB,
 // "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
 // exists without paper_key/paper_seq), so an index on those columns placed in
@@ -2634,6 +2639,8 @@ const server = http.createServer(async (req, res) => {
         ).run(answer, correct ? 1 : 0, correct ? 1 : 0, itemId);
         db.prepare("UPDATE epaper_questions SET attempts = attempts + 1, score_total = score_total + ? WHERE id = ?")
           .run(correct ? q.marks : 0, q.id);
+        db.prepare("UPDATE epaper_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?")
+          .run(correct ? 1 : -1, q.id);
         // NOTE: a wrong objective answer is NOT added to 错题本 here. It only
         // enters the mistake bank after the parent reviews/flags it (see the
         // /review handler below), so test runs don't pollute the bank.
@@ -2758,6 +2765,14 @@ const server = http.createServer(async (req, res) => {
           db.prepare("UPDATE epaper_questions SET attempts = attempts + ?, score_total = score_total + ? WHERE id = ?")
             .run(1 - prevAttempt, final - prev, q.id);
           if (final < q.marks) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+          // correct_count: +1/-1 the first time this question is reviewed (mirrors
+          // the objective submit-time bump below); a later re-review that flips
+          // "full marks" either way nets ±2, same convention as english_questions'
+          // override endpoint (reverse the old delta, then apply the new one).
+          const prevFullMarks = prev >= q.marks, nowFullMarks = final >= q.marks;
+          const ccDelta = !alreadyReviewed ? (nowFullMarks ? 1 : -1)
+            : nowFullMarks !== prevFullMarks ? (nowFullMarks ? 2 : -2) : 0;
+          if (ccDelta) db.prepare("UPDATE epaper_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?").run(ccDelta, q.id);
         } else if (typeof entry.finalCorrect === "boolean") {
           // objective: a pure correction to what submit already counted once —
           // attempts never changes here, only score_total's delta and the
@@ -2769,6 +2784,12 @@ const server = http.createServer(async (req, res) => {
           db.prepare("UPDATE epaper_questions SET score_total = score_total + ? WHERE id = ?")
             .run(now - prev, q.id);
           if (!entry.finalCorrect) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+          // correct_count: submit already applied the initial +1/-1, so a
+          // correction here (if any) is always a flip — net ±2.
+          if (entry.finalCorrect !== !!item.final_correct) {
+            db.prepare("UPDATE epaper_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?")
+              .run(entry.finalCorrect ? 2 : -2, q.id);
+          }
         }
       }
 

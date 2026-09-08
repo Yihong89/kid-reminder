@@ -143,9 +143,10 @@
   .vocab-row .word-line .pinyin { font-weight:400; color:var(--muted); font-size:12px; margin-left:6px; }
   .vocab-row .sentence { font-size:12px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .vocab-row .meta { display:flex; flex-direction:column; align-items:flex-end; gap:2px; flex-shrink:0; }
-  .vocab-row .cnt { font-size:12px; font-weight:600; padding:1px 8px; border-radius:99px; background:var(--bg); color:var(--ink); white-space:nowrap; }
-  .vocab-row .cnt.neg { background:var(--urgent-bg); color:var(--urgent-ink); }
-  .vocab-row .cnt.pos { background:#ecfdf5; color:#047857; }
+  .vocab-row .cnt, .sci-mistake-row .cnt { font-size:12px; font-weight:600; padding:1px 8px; border-radius:99px; background:var(--bg); color:var(--ink); white-space:nowrap; }
+  .vocab-row .cnt.neg, .sci-mistake-row .cnt.neg { background:var(--urgent-bg); color:var(--urgent-ink); }
+  .vocab-row .cnt.pos, .sci-mistake-row .cnt.pos { background:#ecfdf5; color:#047857; }
+  .sci-mistake-row .cnt { margin-left:8px; }
   .vocab-pager { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:10px; font-size:13px; color:var(--muted); }
   .vocab-pager button { background:none; border:1px solid var(--border); border-radius:8px; padding:5px 12px; cursor:pointer; color:var(--ink); }
   .vocab-pager button:disabled { opacity:.4; cursor:default; }
@@ -2064,10 +2065,13 @@
   function epaperMistakeRow(q) {
     const row = document.createElement("div");
     row.className = "card sci-mistake-row";
+    const cntClass = q.correct_count > 0 ? "pos" : q.correct_count < 0 ? "neg" : "";
     row.innerHTML = `
       <div class="main">
         <div class="prompt">${escapeHtml(q.prompt)}</div>
-        <div class="meta">${escapeHtml(q.school)} ${q.year || ""} · ${escapeHtml(q.section)} · ${q.marks} 分</div>
+        <div class="meta">${escapeHtml(q.school)} ${q.year || ""} · ${escapeHtml(q.section)} · ${q.marks} 分
+          <span class="cnt ${cntClass}">正确数 ${q.correct_count}</span>
+        </div>
       </div>
       <button class="ghost" title="移出错题本">✅ 已掌握</button>`;
     row.querySelector("button").onclick = async () => {
