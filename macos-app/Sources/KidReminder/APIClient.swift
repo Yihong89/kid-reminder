@@ -166,6 +166,13 @@ final class APIClient {
         return try JSONDecoder().decode(DictationSession.self, from: data)
     }
 
+    /// Same endpoint as `startDictation()`, scoped to the English word bank
+    /// (`vocab_words.language = 'en'`) via the request body.
+    func startEnglishDictation() async throws -> DictationSession {
+        let data = try await request("/api/dictation/sessions", method: "POST", body: Data(#"{"language":"en"}"#.utf8))
+        return try JSONDecoder().decode(DictationSession.self, from: data)
+    }
+
     /// Marks a session as finished by the kid — it now shows up in the parent's grading queue.
     func completeDictation(sessionId: Int) async throws {
         _ = try await request("/api/dictation/sessions/\(sessionId)/complete", method: "POST", body: Data("{}".utf8))
@@ -182,10 +189,16 @@ final class APIClient {
     }
 
     /// Session history — used by DictationHistoryView so the kid can review their own
-    /// graded results. `status` filters (e.g. "graded"); omit for full history.
-    func dictationSessions(status: String? = nil) async throws -> [DictationSessionSummary] {
-        var path = "/api/dictation/sessions"
-        if let status { path += "?status=\(status)" }
+    /// graded results. `status` filters (e.g. "graded"); `language` filters "zh"/"en"
+    /// (used by EnglishDictationView; the Chinese DictationView omits it, same as
+    /// before this parameter existed). Omit both for full history.
+    func dictationSessions(status: String? = nil, language: String? = nil) async throws -> [DictationSessionSummary] {
+        var items: [URLQueryItem] = []
+        if let status { items.append(URLQueryItem(name: "status", value: status)) }
+        if let language { items.append(URLQueryItem(name: "language", value: language)) }
+        var comps = URLComponents()
+        comps.queryItems = items
+        let path = "/api/dictation/sessions" + (comps.percentEncodedQuery.map { "?\($0)" } ?? "")
         let data = try await request(path)
         return try JSONDecoder().decode(DictationSessionListResponse.self, from: data).sessions
     }
