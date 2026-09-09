@@ -239,7 +239,7 @@ struct DictationView: View {
         loadingHistory = true
         defer { loadingHistory = false }
         do {
-            sessions = try await api.dictationSessions(status: "graded")
+            sessions = try await api.dictationSessions(status: "graded", language: "zh")
             historyError = nil
             DevLog.log("DictationView history loaded: \(sessions.count) graded sessions")
         } catch {

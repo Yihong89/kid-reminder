@@ -1182,6 +1182,7 @@
     try {
       const f = vocabFilters();
       const qs = new URLSearchParams({
+        language: "zh",
         ...(f.search ? { search: f.search } : {}),
         ...(f.level ? { level: f.level } : {}),
         ...(f.category ? { category: f.category } : {}),
