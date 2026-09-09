@@ -209,13 +209,17 @@ async function synthesizeSpeech(text, instruct = TTS_INSTRUCT) {
 // 如果孩子playback的请求和预热请求前后脚打到同一个 word_id，两边都等同一个 Promise，
 // 不会对同一个词并发合成两次、抢同一个文件写。
 const inFlightDictationAudio = new Map(); // word_id -> Promise<string filePath>
-async function ensureDictationAudio(wordId, word, sentence) {
+async function ensureDictationAudio(wordId, word, sentence, language) {
   const file = path.join(DICTATION_AUDIO_DIR, `${wordId}.wav`);
   if (fs.existsSync(file)) return file;
   if (inFlightDictationAudio.has(wordId)) return inFlightDictationAudio.get(wordId);
   const promise = (async () => {
-    const text = `${word}。${sentence}`;
-    await synthesizeToFile(file, text, TTS_INSTRUCT, SAY_VOICE_ZH);
+    const isEn = language === "en";
+    // Chinese uses the full-width period as a natural pause between word and example
+    // sentence; English dictation reads the same way but with a regular period+space —
+    // ASCII punctuation here, not the zh one, or the TTS mispronounces the pause.
+    const text = isEn ? `${word}. ${sentence}` : `${word}。${sentence}`;
+    await synthesizeToFile(file, text, isEn ? TTS_INSTRUCT_EN : TTS_INSTRUCT, isEn ? SAY_VOICE_EN : SAY_VOICE_ZH);
     return file;
   })();
   inFlightDictationAudio.set(wordId, promise);
@@ -232,13 +236,13 @@ async function ensureDictationAudio(wordId, word, sentence) {
 // ensureDictationAudio 会立刻返回，不占用生成队列。单个词失败不影响其他词继续预热，
 // 也不影响孩子真正播放时按需生成的兜底路径。
 function precacheDictationAudio(wordIds) {
-  const getWord = db.prepare("SELECT word, sentence FROM vocab_words WHERE id = ?");
+  const getWord = db.prepare("SELECT word, sentence, language FROM vocab_words WHERE id = ?");
   (async () => {
     for (const wordId of wordIds) {
       const word = getWord.get(wordId);
       if (!word) continue;
       try {
-        await ensureDictationAudio(wordId, word.word, word.sentence);
+        await ensureDictationAudio(wordId, word.word, word.sentence, word.language);
       } catch (err) {
         console.error(`[kid-reminder] precache failed for word ${wordId}: ${err.message}`);
       }
@@ -1608,11 +1612,11 @@ const server = http.createServer(async (req, res) => {
       const m = file.match(/^(\d+)\.wav$/);
       if (!m) return sendJSON(404, { error: "not found" });
       const wordId = Number(m[1]);
-      const word = db.prepare("SELECT word, sentence FROM vocab_words WHERE id = ?").get(wordId);
+      const word = db.prepare("SELECT word, sentence, language FROM vocab_words WHERE id = ?").get(wordId);
       if (!word) return sendJSON(404, { error: "word not found" });
       let filePath;
       try {
-        filePath = await ensureDictationAudio(wordId, word.word, word.sentence);
+        filePath = await ensureDictationAudio(wordId, word.word, word.sentence, word.language);
       } catch (err) {
         console.error(`[kid-reminder] TTS failed for word ${wordId}: ${err.message}`);
         return sendJSON(502, { error: "TTS service unavailable, try again shortly" });
