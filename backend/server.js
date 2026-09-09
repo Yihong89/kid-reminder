@@ -11,11 +11,11 @@
 //   POST /api/tasks/:id/toggle            -> mark done / not done   (kid's app)
 //   POST /api/verify                      -> check admin PIN
 //   GET  / , /admin                       -> parent web admin panel
-//   GET  /api/vocab                       -> search/list dictation word bank [X-Admin-Pin]
-//   POST /api/vocab                       -> add a word                      [X-Admin-Pin]
+//   GET  /api/vocab                       -> search/list dictation word bank (?language=zh|en) [X-Admin-Pin]
+//   POST /api/vocab                       -> add a word (body.language: "zh"|"en", default zh) [X-Admin-Pin]
 //   PATCH /api/vocab/:id                  -> edit a word                     [X-Admin-Pin]
 //   DELETE /api/vocab/:id                 -> delete a word                   [X-Admin-Pin]
-//   POST /api/dictation/sessions          -> resume in_progress, else generate new (kid app)
+//   POST /api/dictation/sessions          -> resume in_progress, else generate new (kid app; body.language: "zh"|"en", default zh)
 //   POST /api/dictation/sessions/:id/complete -> kid finished, awaiting grading
 //   GET  /api/dictation/sessions          -> list sessions (?status=)        [X-Admin-Pin or X-Kid-Pin]
 //   GET  /api/dictation/sessions/:id      -> session detail w/ answers       [X-Admin-Pin or X-Kid-Pin]
@@ -1508,18 +1508,20 @@ const server = http.createServer(async (req, res) => {
       const search = (url.searchParams.get("search") || "").trim();
       const level = url.searchParams.get("level") || "";
       const category = url.searchParams.get("category") || "";
+      const language = url.searchParams.get("language") || "";
       const limit = Math.max(1, Math.min(200, parseInt(url.searchParams.get("limit") || "50", 10) || 50));
       const offset = Math.max(0, parseInt(url.searchParams.get("offset") || "0", 10) || 0);
 
       const where = [];
       const params = [];
       if (search) {
-        where.push("(character LIKE ? OR word LIKE ? OR pinyin LIKE ? OR sentence LIKE ?)");
+        where.push("(character LIKE ? OR word LIKE ? OR pinyin LIKE ? OR sentence LIKE ? OR topic LIKE ?)");
         const like = `%${search}%`;
-        params.push(like, like, like, like);
+        params.push(like, like, like, like, like);
       }
       if (level) { where.push("level = ?"); params.push(level); }
       if (category) { where.push("category = ?"); params.push(category); }
+      if (language) { where.push("language = ?"); params.push(language); }
       const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
       const total = db.prepare(`SELECT COUNT(*) n FROM vocab_words ${whereSql}`).get(...params).n;
@@ -1533,18 +1535,43 @@ const server = http.createServer(async (req, res) => {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
       const body = await readBody(req);
-      const character = String(body.character || "").trim();
+      const language = body.language === "en" ? "en" : "zh";
       const word = String(body.word || "").trim();
-      const pinyin = String(body.pinyin || "").trim();
       const sentence = String(body.sentence || "").trim();
       const level = String(body.level || "").trim();
+      const correctCount = Number.isFinite(Number(body.correctCount)) ? Math.round(Number(body.correctCount)) : 0;
+
+      if (language === "en") {
+        // English dictation words have no character/pinyin/lesson concept — `topic` is
+        // the free-text grouping tag instead (e.g. "Silent Letters"), and lesson_index/
+        // lesson/category/character/pinyin are all stored blank/zero (NOT NULL columns
+        // shared with the zh rows, so they need *some* value, just an unused one).
+        const topic = String(body.topic || "").trim();
+        if (!word || !sentence || !level) {
+          return sendJSON(400, { error: "word, sentence, level are required" });
+        }
+        try {
+          const info = db
+            .prepare(
+              `INSERT INTO vocab_words (language, level, lesson_index, lesson, category, character, word, pinyin, sentence, topic, correct_count, source)
+               VALUES ('en', ?, 0, '', '', '', ?, '', ?, ?, ?, 'manual')`
+            )
+            .run(level, word, sentence, topic, correctCount);
+          return sendJSON(201, { id: Number(info.lastInsertRowid) });
+        } catch (err) {
+          if (String(err.message).includes("UNIQUE")) return sendJSON(409, { error: "this word already exists for that level" });
+          throw err;
+        }
+      }
+
+      const character = String(body.character || "").trim();
+      const pinyin = String(body.pinyin || "").trim();
       const lessonIndex = parseInt(body.lessonIndex, 10);
       const lesson = String(body.lesson || "").trim();
       const category = ["read", "write"].includes(body.category) ? body.category : "write";
       if (!character || !word || !pinyin || !sentence || !level || !lesson || !Number.isInteger(lessonIndex)) {
         return sendJSON(400, { error: "character, word, pinyin, sentence, level, lessonIndex, lesson are required" });
       }
-      const correctCount = Number.isFinite(Number(body.correctCount)) ? Math.round(Number(body.correctCount)) : 0;
       try {
         const info = db
           .prepare(
@@ -1566,6 +1593,8 @@ const server = http.createServer(async (req, res) => {
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
 
       if (method === "PATCH") {
+        const existing = db.prepare("SELECT language FROM vocab_words WHERE id = ?").get(id);
+        if (!existing) return sendJSON(404, { error: "word not found" });
         const body = await readBody(req);
         const sets = [];
         const vals = [];
@@ -1576,8 +1605,16 @@ const server = http.createServer(async (req, res) => {
         strField("sentence", "sentence");
         strField("level", "level");
         strField("lesson", "lesson");
+        strField("topic", "topic");
         if (body.lessonIndex !== undefined) { sets.push("lesson_index = ?"); vals.push(parseInt(body.lessonIndex, 10) || 0); }
-        if (body.category !== undefined && ["read", "write"].includes(body.category)) { sets.push("category = ?"); vals.push(body.category); }
+        if (body.category !== undefined) {
+          // zh keeps the fixed 识读/识写 enum; en has no such enum, any tag is fine.
+          if (existing.language === "zh") {
+            if (["read", "write"].includes(body.category)) { sets.push("category = ?"); vals.push(body.category); }
+          } else {
+            sets.push("category = ?"); vals.push(String(body.category).trim());
+          }
+        }
         if (body.correctCount !== undefined) { sets.push("correct_count = ?"); vals.push(Math.round(Number(body.correctCount)) || 0); }
         if (!sets.length) return sendJSON(400, { error: "nothing to update" });
         vals.push(id);
@@ -1588,7 +1625,7 @@ const server = http.createServer(async (req, res) => {
           if (body.word !== undefined || body.sentence !== undefined) deleteDictationAudio(id);
           return sendJSON(200, { ok: true });
         } catch (err) {
-          if (String(err.message).includes("UNIQUE")) return sendJSON(409, { error: "this character+word already exists for that level/lesson/category" });
+          if (String(err.message).includes("UNIQUE")) return sendJSON(409, { error: "this word already exists for that level/lesson/category" });
           throw err;
         }
       }
