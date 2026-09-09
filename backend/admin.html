@@ -123,10 +123,10 @@
   .badge.mine { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
   .badge.parent { background:var(--bg); color:var(--muted); }
   .badge.rep { background:#fefce8; border-color:#fde68a; color:#a16207; }
-  #fabAdd, #fabAddVocab, #fabAddEnglish, #fabAddList { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
+  #fabAdd, #fabAddVocab, #fabAddEnVocab, #fabAddEnglish, #fabAddList { position:fixed; right:22px; bottom:22px; width:60px; height:60px; border-radius:50%;
             background:var(--accent); color:#fff; border:none; font-size:28px; line-height:1; cursor:pointer;
             box-shadow:0 6px 18px rgba(37,99,235,.35); z-index:20; }
-  #fabAdd:hover, #fabAddVocab:hover, #fabAddEnglish:hover, #fabAddList:hover { filter:brightness(1.08); }
+  #fabAdd:hover, #fabAddVocab:hover, #fabAddEnVocab:hover, #fabAddEnglish:hover, #fabAddList:hover { filter:brightness(1.08); }
   #addDialog .add { gap:8px; }
   #addDialog .add input[type=text] { flex:1 1 100%; width:100%; }
   #addDialog .add select { flex:0 0 auto; }
@@ -265,6 +265,7 @@
         <button class="tab" id="tabCountdown">⏳ Countdown</button>
         <button class="tab" id="tabPokedex">⚡ Pokémon</button>
         <button class="tab" id="tabVocab" hidden>📚 生词库</button>
+        <button class="tab" id="tabEnVocab" hidden>🔤 英语听写词库</button>
         <button class="tab" id="tabDictation" hidden>📝 听写记录</button>
         <button class="tab" id="tabEnglish" hidden>📖 英语错题</button>
         <button class="tab" id="tabEngRecords" hidden>📋 英语练习记录</button>
@@ -341,6 +342,27 @@
           <button id="vocabPrev">‹ 上一页</button>
           <span id="vocabPageLabel"></span>
           <button id="vocabNext">下一页 ›</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- English dictation word bank -->
+    <div id="enVocabView" hidden>
+      <div class="card">
+        <div class="vocab-filters">
+          <input type="text" id="enVocabSearch" placeholder="搜索单词 / 例句 / 分类…" />
+          <select id="enVocabLevelFilter">
+            <option value="">全部年级</option>
+            <option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option>
+            <option value="P4">P4</option><option value="P5">P5</option><option value="P6">P6</option>
+          </select>
+        </div>
+        <div class="vocab-summary" id="enVocabSummary"></div>
+        <div class="vocab-list" id="enVocabList"></div>
+        <div class="vocab-pager">
+          <button id="enVocabPrev">‹ 上一页</button>
+          <span id="enVocabPageLabel"></span>
+          <button id="enVocabNext">下一页 ›</button>
         </div>
       </div>
     </div>
@@ -460,6 +482,7 @@
 
 <button id="fabAdd" title="Add task" hidden>＋</button>
 <button id="fabAddVocab" title="添加生词" hidden>＋</button>
+<button id="fabAddEnVocab" title="添加英语单词" hidden>＋</button>
 <button id="fabAddEnglish" title="添加错题" hidden>＋</button>
 <button id="fabAddList" title="新建听写表" hidden>＋</button>
 
@@ -525,6 +548,29 @@
   <div class="row">
     <button class="ghost" id="vDlgCancel">Cancel</button>
     <button class="primary" id="vDlgSave">Save</button>
+  </div>
+</dialog>
+
+<dialog id="enVocabDialog">
+  <h3 id="enVocabDlgTitle">➕ 添加英语单词</h3>
+  <div class="add">
+    <input type="text" id="evDlgWord" placeholder="单词（如：handkerchief）" maxlength="60" style="flex:1 1 auto" />
+  </div>
+  <div class="add">
+    <input type="text" id="evDlgSentence" placeholder="例句（英文，听写会读这句话）" maxlength="200" style="flex:1 1 auto" />
+  </div>
+  <div class="add">
+    <select id="evDlgLevel">
+      <option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option>
+      <option value="P4">P4</option><option value="P5">P5</option><option value="P6">P6</option>
+    </select>
+    <input type="text" id="evDlgTopic" placeholder="分类（如：Silent Letters，选填）" style="flex:1 1 auto" />
+    <label>正确数 <input type="number" id="evDlgCorrectCount" value="0" style="width:70px" /></label>
+  </div>
+  <div class="msg err" id="enVocabDlgErr"></div>
+  <div class="row">
+    <button class="ghost" id="evDlgCancel">Cancel</button>
+    <button class="primary" id="evDlgSave">Save</button>
   </div>
 </dialog>
 
@@ -673,6 +719,7 @@
   let tab = "today"; // "today" | "countdown" | "pokedex" | "vocab"
   let dayFlags = {}; // date -> {total, done, events}
   let vocabOffset = 0, vocabLimit = 50, vocabTotal = 0, vocabEditingId = null;
+  let enVocabOffset = 0, enVocabLimit = 50, enVocabTotal = 0, enVocabEditingId = null;
   let engOffset = 0, engLimit = 50, engTotal = 0, engEditingId = null;
 
   const EMOJIS = [
@@ -1048,6 +1095,7 @@
     $("#tabCountdown").classList.toggle("active", t === "countdown");
     $("#tabPokedex").classList.toggle("active", t === "pokedex");
     $("#tabVocab").classList.toggle("active", t === "vocab");
+    $("#tabEnVocab").classList.toggle("active", t === "enVocab");
     $("#tabDictation").classList.toggle("active", t === "dictation");
     $("#tabEnglish").classList.toggle("active", t === "english");
     $("#tabEngRecords").classList.toggle("active", t === "engRecords");
@@ -1060,6 +1108,7 @@
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
     $("#vocabView").hidden = t !== "vocab";
+    $("#enVocabView").hidden = t !== "enVocab";
     $("#dictationView").hidden = t !== "dictation";
     $("#englishView").hidden = t !== "english";
     $("#engRecordsView").hidden = t !== "engRecords";
@@ -1068,15 +1117,17 @@
     $("#scienceMistakesView").hidden = t !== "scienceMistakes";
     $("#epaperView").hidden = t !== "epaper";
     $("#epaperMistakesView").hidden = t !== "epaperMistakes";
-    const noTaskFab = ["vocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes", "epaper", "epaperMistakes"].includes(t);
+    const noTaskFab = ["vocab", "enVocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes", "epaper", "epaperMistakes"].includes(t);
     $("#fabAdd").hidden = noTaskFab; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
+    $("#fabAddEnVocab").hidden = t !== "enVocab" || role !== "admin";
     $("#fabAddEnglish").hidden = t !== "english";
     $("#fabAddList").hidden = t !== "dictationLists";
     if (t === "today") { refresh(); refreshDayFlags(); }
     else if (t === "countdown") { refreshCountdown(); }
     else if (t === "pokedex") { loadPokedex(); }
     else if (t === "vocab") { vocabOffset = 0; refreshVocab(); }
+    else if (t === "enVocab") { enVocabOffset = 0; refreshEnVocab(); }
     else if (t === "english") { engOffset = 0; refreshEnglish(); }
     else if (t === "dictation") { refreshDictation(); }
     else if (t === "engRecords") { refreshEngRecords(); }
@@ -1229,6 +1280,108 @@
   $("#vocabCategoryFilter").onchange = () => { vocabOffset = 0; refreshVocab(); };
   $("#vocabPrev").onclick = () => { vocabOffset = Math.max(0, vocabOffset - vocabLimit); refreshVocab(); };
   $("#vocabNext").onclick = () => { vocabOffset = vocabOffset + vocabLimit; refreshVocab(); };
+
+  // ---- English dictation word bank ----------------------------------------
+  function enVocabFilters() {
+    return {
+      search: $("#enVocabSearch").value.trim(),
+      level: $("#enVocabLevelFilter").value,
+    };
+  }
+
+  async function refreshEnVocab() {
+    try {
+      const f = enVocabFilters();
+      const qs = new URLSearchParams({
+        language: "en",
+        ...(f.search ? { search: f.search } : {}),
+        ...(f.level ? { level: f.level } : {}),
+        limit: enVocabLimit,
+        offset: enVocabOffset,
+      });
+      const data = await api(`/api/vocab?${qs.toString()}`);
+      enVocabTotal = data.total;
+      const el = $("#enVocabList");
+      el.innerHTML = "";
+      if (!data.words.length) {
+        el.innerHTML = '<div class="empty">没有符合条件的单词</div>';
+      } else {
+        for (const w of data.words) el.appendChild(enVocabRow(w));
+      }
+      const from = enVocabTotal === 0 ? 0 : enVocabOffset + 1;
+      const to = Math.min(enVocabOffset + enVocabLimit, enVocabTotal);
+      $("#enVocabSummary").textContent = `共 ${enVocabTotal} 条 · 显示 ${from}–${to}`;
+      $("#enVocabPageLabel").textContent = `第 ${Math.floor(enVocabOffset / enVocabLimit) + 1} / ${Math.max(1, Math.ceil(enVocabTotal / enVocabLimit))} 页`;
+      $("#enVocabPrev").disabled = enVocabOffset <= 0;
+      $("#enVocabNext").disabled = enVocabOffset + enVocabLimit >= enVocabTotal;
+    } catch (e) { showErr(e.message); }
+  }
+
+  function enVocabRow(w) {
+    const row = document.createElement("div");
+    row.className = "card vocab-row";
+    const cntClass = w.correct_count > 0 ? "pos" : w.correct_count < 0 ? "neg" : "";
+    row.innerHTML = `
+      <div class="main">
+        <div class="word-line">${escapeHtml(w.word)}</div>
+        <div class="sentence">${escapeHtml(w.sentence)}</div>
+      </div>
+      <div class="badge">${escapeHtml(w.level)}${w.topic ? " · " + escapeHtml(w.topic) : ""}</div>
+      <div class="meta">
+        <span class="cnt ${cntClass}">正确数 ${w.correct_count}</span>
+        <span>
+          <button class="edit" title="编辑">✏️</button>
+          <button class="del" title="删除">🗑</button>
+        </span>
+      </div>`;
+    row.querySelector(".edit").onclick = () => openEnVocabDialog(w);
+    row.querySelector(".del").onclick = async () => {
+      if (!confirm(`删除「${w.word}」？`)) return;
+      try { await api(`/api/vocab/${w.id}`, { method: "DELETE" }); refreshEnVocab(); }
+      catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+
+  function openEnVocabDialog(w) {
+    enVocabEditingId = w ? w.id : null;
+    $("#enVocabDlgTitle").textContent = w ? "✏️ 编辑单词" : "➕ 添加英语单词";
+    $("#evDlgWord").value = w ? w.word : "";
+    $("#evDlgSentence").value = w ? w.sentence : "";
+    $("#evDlgLevel").value = w ? w.level : ($("#enVocabLevelFilter").value || "P6");
+    $("#evDlgTopic").value = w ? w.topic : "";
+    $("#evDlgCorrectCount").value = w ? w.correct_count : 0;
+    $("#enVocabDlgErr").textContent = "";
+    $("#enVocabDialog").showModal();
+    $("#evDlgWord").focus();
+  }
+
+  $("#fabAddEnVocab").onclick = () => openEnVocabDialog(null);
+  $("#evDlgCancel").onclick = () => $("#enVocabDialog").close();
+  $("#evDlgSave").onclick = async () => {
+    const payload = {
+      language: "en",
+      word: $("#evDlgWord").value.trim(),
+      sentence: $("#evDlgSentence").value.trim(),
+      level: $("#evDlgLevel").value,
+      topic: $("#evDlgTopic").value.trim(),
+      correctCount: Number($("#evDlgCorrectCount").value) || 0,
+    };
+    if (!payload.word || !payload.sentence) {
+      $("#enVocabDlgErr").textContent = "单词和例句都是必填的";
+      return;
+    }
+    try {
+      if (enVocabEditingId) await api(`/api/vocab/${enVocabEditingId}`, { method: "PATCH", body: JSON.stringify(payload) });
+      else await api("/api/vocab", { method: "POST", body: JSON.stringify(payload) });
+      $("#enVocabDialog").close();
+      refreshEnVocab();
+    } catch (e) { $("#enVocabDlgErr").textContent = e.message; }
+  };
+  $("#enVocabSearch").addEventListener("keydown", (e) => { if (e.key === "Enter") { enVocabOffset = 0; refreshEnVocab(); } });
+  $("#enVocabLevelFilter").onchange = () => { enVocabOffset = 0; refreshEnVocab(); };
+  $("#enVocabPrev").onclick = () => { enVocabOffset = Math.max(0, enVocabOffset - enVocabLimit); refreshEnVocab(); };
+  $("#enVocabNext").onclick = () => { enVocabOffset = enVocabOffset + enVocabLimit; refreshEnVocab(); };
 
   // ---- English wrong-answer bank -------------------------------------------
   const TYPE_LABEL = { fill_blank: "填空/拼写", mcq: "选择题", sentence_transform: "句子转换" };
@@ -2386,6 +2539,8 @@
     $("#tabPokedex").onclick = () => setTab("pokedex");
     $("#tabVocab").onclick = () => setTab("vocab");
     $("#tabVocab").hidden = role !== "admin"; // 生词库：仅家长可见
+    $("#tabEnVocab").onclick = () => setTab("enVocab");
+    $("#tabEnVocab").hidden = role !== "admin"; // 英语听写词库：仅家长可见
     $("#tabDictation").onclick = () => setTab("dictation");
     $("#tabDictation").hidden = role !== "admin"; // 听写记录：仅家长可见
     $("#tabEnglish").onclick = () => setTab("english");
@@ -2418,6 +2573,7 @@
     $("#logoutBtn").hidden = true;
     $("#fabAdd").hidden = true;
     $("#fabAddVocab").hidden = true;
+    $("#fabAddEnVocab").hidden = true;
     $("#fabAddEnglish").hidden = true;
     $("#fabAddList").hidden = true;
     $("#pinGate").hidden = false;
