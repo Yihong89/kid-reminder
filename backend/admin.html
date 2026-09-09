@@ -1901,7 +1901,18 @@
 
   async function refreshEpaper() {
     try {
-      const sessions = await api("/api/epaper/sessions"); // full history, not just pending
+      // Fetched together (not cached from refreshEpaperPapers, which runs
+      // concurrently from the same tab-switch and isn't guaranteed to resolve
+      // first) so each session row can show WHICH paper it was — "school + year",
+      // e.g. "ACS(J) 2025" — instead of a generic "英语试卷练习" for every one.
+      // The parent needs this to plan which paper to assign next.
+      const [sessions, papersData] = await Promise.all([
+        api("/api/epaper/sessions"), // full history, not just pending
+        api("/api/epaper/papers"),
+      ]);
+      const paperLabels = Object.fromEntries(
+        papersData.papers.map((p) => [p.paperKey, `${p.school}${p.year ? " " + p.year : ""}`])
+      );
       const el = $("#epaperList");
       el.innerHTML = "";
       if (!sessions.sessions.length) {
@@ -1911,14 +1922,18 @@
       }
       const pending = sessions.sessions.filter((s) => s.status === "pending_review").length;
       $("#epaperSummary").textContent = `共 ${sessions.sessions.length} 次练习记录` + (pending ? ` · ${pending} 次待批改` : "");
-      for (const s of sessions.sessions) el.appendChild(epaperSessionRow(s));
+      for (const s of sessions.sessions) el.appendChild(epaperSessionRow(s, paperLabels));
     } catch (e) { showErr(e.message); }
   }
 
-  function epaperSessionRow(s) {
+  function epaperSessionRow(s, paperLabels) {
     const row = document.createElement("div");
     row.className = "card sci-session";
-    const title = s.mode === "mistakes" ? "📕 错题本复习" : "📘 英语试卷练习";
+    const title = s.mode === "mistakes"
+      ? "📕 错题本复习"
+      // Fall back to the raw paper_key if the paper was since removed from the
+      // bank (history still references it) or for old rows with no paper_key.
+      : `📘 ${paperLabels[s.paper_key] || s.paper_key || "英语试卷练习"}`;
     const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
     let badge, sub;
     if (s.status === "pending_review") {
