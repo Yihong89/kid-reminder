@@ -166,6 +166,7 @@
   .grade-item .info { flex:1; min-width:0; }
   .grade-item .word-line { font-size:15px; font-weight:600; }
   .grade-item .word-line .pinyin { font-weight:400; color:var(--muted); font-size:12px; margin-left:6px; }
+  .lang-tag { display:inline-block; font-size:10px; font-weight:700; letter-spacing:.03em; background:#eff6ff; color:#1d4ed8; border-radius:5px; padding:1px 5px; margin-right:4px; vertical-align:1px; }
   .grade-item .sentence { font-size:12px; color:var(--muted); }
   .grade-toggle { display:flex; gap:4px; flex-shrink:0; }
   .grade-toggle button { border:1px solid var(--border); background:var(--card); border-radius:8px; width:34px; height:34px; font-size:16px; cursor:pointer; opacity:.4; }
@@ -1525,6 +1526,7 @@
     const row = document.createElement("div");
     row.className = "card dict-session";
     const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
+    const isEn = s.language === "en";
     let badge, sub;
     if (s.status === "pending_grading") {
       badge = '<div class="badge cnt">🔔 待批改</div>';
@@ -1538,9 +1540,9 @@
       row.style.opacity = ".6";
     }
     row.innerHTML = `
-      <div class="icon">📝</div>
+      <div class="icon">${isEn ? "🔤" : "📝"}</div>
       <div class="info">
-        <div class="count">${s.itemCount} 个词</div>
+        <div class="count">${isEn ? '<span class="lang-tag">EN</span> ' : ""}${s.itemCount} 个词</div>
         <div class="when">${sub}</div>
       </div>
       ${badge}
@@ -1578,11 +1580,15 @@
   function gradeItemRow(it, readOnly) {
     const row = document.createElement("div");
     row.className = "grade-item";
+    // English rows have no character/pinyin (see Task 4's schema notes) — the server
+    // sends them as empty strings, not null, so this is a plain truthiness check.
+    const charHtml = it.character ? `<div class="char">${escapeHtml(it.character)}</div>` : "";
+    const pinyinHtml = it.pinyin ? `<span class="pinyin">${escapeHtml(it.pinyin)}</span>` : "";
     row.innerHTML = `
       <div class="seq">${it.seq}</div>
-      <div class="char">${escapeHtml(it.character)}</div>
+      ${charHtml}
       <div class="info">
-        <div class="word-line">${escapeHtml(it.word)}<span class="pinyin">${escapeHtml(it.pinyin)}</span></div>
+        <div class="word-line">${escapeHtml(it.word)}${pinyinHtml}</div>
         <div class="sentence">${escapeHtml(it.sentence)}</div>
       </div>
       <div class="grade-toggle">
