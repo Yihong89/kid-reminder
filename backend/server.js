@@ -1689,13 +1689,16 @@ const server = http.createServer(async (req, res) => {
       // ties, and RANDOM() as the final tiebreaker so words tied on both don't always
       // come out in the same order. SQLite evaluates ORDER BY expressions once per row
       // before sorting, so RANDOM() here really is one fixed value per word for this
-      // query, not re-rolled per comparison. 30 words per dictation set.
+      // query, not re-rolled per comparison. 30 words per Chinese set (unchanged); 10
+      // for English, per family request (2026-09-09) — the two languages don't have to
+      // share a set size just because they share this query.
+      const setSize = language === "en" ? 10 : 30;
       const wordIds = db
         .prepare(
           `SELECT id FROM vocab_words WHERE language = ?
-           ORDER BY correct_count ASC, level ASC, RANDOM() ASC LIMIT 30`
+           ORDER BY correct_count ASC, level ASC, RANDOM() ASC LIMIT ?`
         )
-        .all(language)
+        .all(language, setSize)
         .map((r) => r.id);
       if (wordIds.length === 0) {
         return sendJSON(400, { error: language === "en" ? "英语听写词库还是空的，请先在网页端添加单词" : "vocab bank is empty" });

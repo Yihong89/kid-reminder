@@ -66,7 +66,7 @@ struct EnglishDictationView: View {
             Text("🔤").font(.system(size: 34))
             VStack(alignment: .leading, spacing: 2) {
                 Text("英语听写").font(.title3.bold())
-                Text("会挑 30 个最需要练习的单词，App 念出来，写在纸上就好。")
+                Text("会挑 10 个最需要练习的单词，App 念出来，写在纸上就好。")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
