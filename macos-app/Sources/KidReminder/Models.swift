@@ -359,26 +359,17 @@ struct EpaperSession: Codable {
     let items: [EpaperSessionItem]
 }
 
-struct EpaperMarkPointResult: Codable, Equatable, Identifiable {
-    let markPointId: Int
-    let seq: Int
-    let pointKind: String
-    let description: String
-    let autoHit: Bool
-    var id: Int { markPointId }
-}
-
-/// mcq/fill_blank fill `correct`/`correctAnswer` and leave `points`/`autoScore`
-/// nil; oeq is the reverse — the two tiers never populate both halves.
+/// The kid never learns right/wrong or the answer key at submit time (2026-09-09,
+/// family decision after a cheating incident where the old response — which used to
+/// carry `correct`/`correctAnswer`/`explanation`/oeq mark-point detail — gave that
+/// away immediately). Grading still happens in full server-side; the kid only sees
+/// results after a parent reviews the whole paper, via the score badge on the paper
+/// list and the downloadable mistake report. This ack just confirms the answer was
+/// recorded.
 struct EpaperSubmitResult: Codable, Equatable {
     let questionType: String
-    let correct: Bool?
-    let correctAnswer: String?
-    let explanation: String
-    let autoScore: Int?
     let marks: Int
-    let provisional: Bool
-    let points: [EpaperMarkPointResult]?
+    let submitted: Bool
 }
 
 /// The most recent fully-graded ("paper" mode) attempt at a paper — nil until

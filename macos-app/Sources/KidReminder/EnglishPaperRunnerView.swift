@@ -377,35 +377,25 @@ struct EnglishPaperRunnerView: View {
         }
     }
 
+    /// Deliberately shows no correct/wrong, no answer key, no explanation — just an
+    /// "answer recorded" acknowledgment per item. See `EpaperSubmitResult`'s doc
+    /// comment for why (2026-09-09 cheating incident). `results` is still threaded
+    /// through from `submit()` (one entry per item, same order as `items`) so a
+    /// future need to distinguish e.g. "already answered" from "just answered" has
+    /// somewhere to hang off, even though today's UI doesn't read its fields.
     @ViewBuilder
     private func gradedPanel(items: [EpaperSessionItem], results: [EpaperSubmitResult], isLast: Bool, stepIndex: Int) -> some View {
         let isGroup = items.count > 1
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                ForEach(Array(zip(items, results)), id: \.0.itemId) { item, result in
-                    VStack(alignment: .leading, spacing: 8) {
+                ForEach(items) { item in
+                    HStack(spacing: 8) {
                         if isGroup {
                             Text("(\(item.seq))").font(paperFont.scaledCallout).bold().foregroundStyle(.secondary)
                         }
-                        if result.provisional {
-                            Text("已提交，等待家长在网页端批改")
-                                .font(paperFont.scaledCallout).foregroundStyle(.secondary)
-                        } else {
-                            HStack {
-                                Image(systemName: (result.correct ?? false) ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                    .foregroundStyle((result.correct ?? false) ? .green : .red)
-                                Text((result.correct ?? false) ? "答对了" : "答错了")
-                                    .font(paperFont.scaledHeadline)
-                                    .foregroundStyle((result.correct ?? false) ? .green : .red)
-                            }
-                            if let correctAnswer = result.correctAnswer, !(result.correct ?? true) {
-                                Text("正确答案：\(correctAnswer)").font(paperFont.scaledCallout).foregroundStyle(.secondary)
-                            }
-                        }
-                        if !result.explanation.isEmpty {
-                            Divider()
-                            Text(result.explanation).font(paperFont.scaledCallout).foregroundStyle(.secondary)
-                        }
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.secondary)
+                        Text("已提交").font(paperFont.scaledCallout).foregroundStyle(.secondary)
+                        Spacer()
                     }
                     .padding(12)
                     .background(.quaternary.opacity(0.3))
@@ -414,6 +404,8 @@ struct EnglishPaperRunnerView: View {
             }
         }
         .frame(maxHeight: .infinity)
+        Text("答对答错要等家长批改完整张卷子才能看到。")
+            .font(paperFont.scaledCaption).foregroundStyle(.secondary)
         HStack {
             Spacer()
             Button(isLast ? "✅ 完成" : "➡️ 下一题") {

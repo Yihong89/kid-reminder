@@ -2614,19 +2614,13 @@ const server = http.createServer(async (req, res) => {
           }
           db.prepare("UPDATE epaper_session_items SET answer = ? WHERE id = ?").run(answer, itemId);
         }
-        const hits = db.prepare(
-          "SELECT mark_point_id, auto_hit FROM epaper_item_points WHERE item_id = ?"
-        ).all(itemId);
-        const hitBy = new Map(hits.map((h) => [h.mark_point_id, h.auto_hit]));
-        const autoScore = hits.reduce((s, h) => s + h.auto_hit, 0);
-        return sendJSON(200, {
-          questionType: "oeq", autoScore, marks: q.marks, explanation: q.explanation,
-          provisional: true,
-          points: points.map((p) => ({
-            markPointId: p.id, seq: p.seq, pointKind: p.point_kind,
-            description: p.description, autoHit: (hitBy.get(p.id) || 0) === 1,
-          })),
-        });
+        // Kid never sees auto-score, the model answer (explanation doubles as one
+        // for oeq — see the schema comment), or per-point hits at submit time
+        // (2026-09-09, after a cheating incident where the old response gave all of
+        // that away immediately). Grading above is unaffected — final_hit still gets
+        // set by the parent's review, same as always; the kid just learns the result
+        // later, via the score badge on the paper list and the downloadable report.
+        return sendJSON(200, { questionType: "oeq", marks: q.marks, submitted: true });
       }
 
       // mcq / fill_blank — objective, instant, non-provisional. Idempotent:
@@ -2646,11 +2640,12 @@ const server = http.createServer(async (req, res) => {
         // /review handler below), so test runs don't pollute the bank.
         item.final_correct = correct ? 1 : 0;
       }
-      return sendJSON(200, {
-        questionType: q.question_type, correct: item.final_correct === 1,
-        correctAnswer: q.correct_answer, explanation: q.explanation, marks: q.marks,
-        provisional: false,
-      });
+      // Kid never sees correct/wrong or the answer key at submit time (2026-09-09,
+      // same cheating-incident decision as the oeq branch above) — grading above is
+      // unaffected (final_correct/attempts/score_total/correct_count all still get
+      // written), just not echoed back. Revealed later via the score badge on the
+      // paper list and the downloadable mistake report, once a parent has reviewed.
+      return sendJSON(200, { questionType: q.question_type, marks: q.marks, submitted: true });
     }
 
     // --- finish a set: straight to 'reviewed' if no oeq item, else the parent's
@@ -2670,7 +2665,12 @@ const server = http.createServer(async (req, res) => {
         reviewed_at = CASE WHEN ? THEN reviewed_at ELSE datetime('now') END,
         score_earned = ?, marks_total = ? WHERE id = ?`)
         .run(status, hasOeq ? 1 : 0, scoreEarned, marksTotal, sessionId);
-      return sendJSON(200, { ok: true, status, scoreEarned, marksTotal });
+      // scoreEarned/marksTotal are computed and stored above as always, just not
+      // echoed back — same 2026-09-09 no-reveal-before-review policy as /submit.
+      // (The kid app already discards this response entirely and shows a generic
+      // "done!" screen, but stripping it here too closes the gap for anyone poking
+      // the API directly instead of relying on the client not reading the field.)
+      return sendJSON(200, { ok: true, status });
     }
 
     // --- kid-facing mistake report, one reviewed session, as a downloadable
