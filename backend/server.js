@@ -1740,17 +1740,22 @@ const server = http.createServer(async (req, res) => {
       const isKid = req.headers["x-kid-pin"] === KID_PIN;
       if (!isAdmin && !isKid) return sendJSON(401, { error: "admin or kid pin required" });
       const status = url.searchParams.get("status") || "";
-      const where = status ? "WHERE status = ?" : "";
+      const language = url.searchParams.get("language") || "";
+      const where = [];
+      const args = [];
+      if (status) { where.push("s.status = ?"); args.push(status); }
+      if (language) { where.push("s.language = ?"); args.push(language); }
+      const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
       const rows = db
         .prepare(
-          `SELECT s.id, s.status, s.created_at, s.completed_at, s.graded_at,
+          `SELECT s.id, s.status, s.language, s.created_at, s.completed_at, s.graded_at,
                   COUNT(i.id) itemCount,
                   SUM(CASE WHEN i.result = 'correct' THEN 1 ELSE 0 END) correctCount,
                   SUM(CASE WHEN i.result = 'incorrect' THEN 1 ELSE 0 END) incorrectCount
            FROM dictation_sessions s LEFT JOIN dictation_items i ON i.session_id = s.id
-           ${where} GROUP BY s.id ORDER BY s.created_at DESC`
+           ${whereSql} GROUP BY s.id ORDER BY s.created_at DESC`
         )
-        .all(...(status ? [status] : []));
+        .all(...args);
       return sendJSON(200, { sessions: rows });
     }
 
