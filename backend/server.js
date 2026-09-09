@@ -2615,7 +2615,15 @@ const server = http.createServer(async (req, res) => {
         qids = rows.map((r) => r.id);
         mode = "paper";
       } else if (mistakesMode) {
-        const rows = db.prepare("SELECT id FROM epaper_questions WHERE in_mistake_bank = 1").all();
+        // Pick the 15 weakest (lowest correct_count) rather than dumping the
+        // whole bank into one session — family found the full bank (which had
+        // grown past 30 questions) too long to finish in one sitting
+        // (2026-09-09). RANDOM() breaks ties among equally-weak questions so
+        // the same 15 aren't picked every time; the Fisher-Yates below still
+        // separately shuffles the *presentation* order of whichever 15 got picked.
+        const rows = db.prepare(
+          "SELECT id FROM epaper_questions WHERE in_mistake_bank = 1 ORDER BY correct_count ASC, RANDOM() ASC LIMIT 15"
+        ).all();
         if (!rows.length) return sendJSON(400, { error: "错题本是空的，继续保持！" });
         qids = rows.map((r) => r.id);
         for (let i = qids.length - 1; i > 0; i--) {   // Fisher-Yates
