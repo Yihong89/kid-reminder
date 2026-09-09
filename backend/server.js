@@ -672,6 +672,11 @@ try {
   db.exec("UPDATE tasks SET countdown_enabled = 1 WHERE target_date IS NOT NULL"); // migrate legacy countdowns
 } catch { /* exists */ }
 try { db.exec("ALTER TABLE vocab_words ADD COLUMN correct_count INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+// English dictation (2026-09): vocab_words.language already had an 'en' slot reserved
+// ("'zh' now; 'en' later for English dictation") — these two migrations are what turn
+// that reservation into a real, working second language sharing the same tables.
+try { db.exec("ALTER TABLE vocab_words ADD COLUMN topic TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE dictation_sessions ADD COLUMN language TEXT NOT NULL DEFAULT 'zh'"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_questions ADD COLUMN paper_key TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_questions ADD COLUMN paper_seq INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_questions ADD COLUMN in_mistake_bank INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
