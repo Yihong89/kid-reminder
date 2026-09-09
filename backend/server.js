@@ -1628,13 +1628,18 @@ const server = http.createServer(async (req, res) => {
 
     // --- dictation sessions: generate a listening-test set (open; kid app calls this) ---
     if (method === "POST" && pathname === "/api/dictation/sessions") {
+      const body = await readBody(req);
+      const language = body.language === "en" ? "en" : "zh";
+
       // Resume an existing in_progress session instead of always starting a new one —
       // the app's dictation view is torn down and rebuilt whenever the kid switches
       // sidebar tabs (or if it gets stuck and they navigate away to recover), which used
       // to silently abandon the in-flight session and spawn a fresh one every time,
       // permanently losing progress. Replaying already-heard words from the top is a
-      // minor annoyance; losing the set entirely is not.
-      const existing = db.prepare("SELECT id FROM dictation_sessions WHERE status = 'in_progress' ORDER BY created_at DESC LIMIT 1").get();
+      // minor annoyance; losing the set entirely is not. Scoped to `language` too — a
+      // resume must not hand an English session's words back to the Chinese screen (or
+      // vice versa) just because it happened to be the most recent in_progress row.
+      const existing = db.prepare("SELECT id FROM dictation_sessions WHERE status = 'in_progress' AND language = ? ORDER BY created_at DESC LIMIT 1").get(language);
       if (existing) {
         const items = db.prepare("SELECT seq, word_id AS wordId FROM dictation_items WHERE session_id = ? ORDER BY seq").all(existing.id);
         if (items.length) {
@@ -1650,17 +1655,19 @@ const server = http.createServer(async (req, res) => {
       // query, not re-rolled per comparison. 30 words per dictation set.
       const wordIds = db
         .prepare(
-          `SELECT id FROM vocab_words WHERE language = 'zh'
+          `SELECT id FROM vocab_words WHERE language = ?
            ORDER BY correct_count ASC, level ASC, RANDOM() ASC LIMIT 30`
         )
-        .all()
+        .all(language)
         .map((r) => r.id);
-      if (wordIds.length === 0) return sendJSON(400, { error: "vocab bank is empty" });
+      if (wordIds.length === 0) {
+        return sendJSON(400, { error: language === "en" ? "英语听写词库还是空的，请先在网页端添加单词" : "vocab bank is empty" });
+      }
 
       // shuffle the overall dictation order
       for (let i = wordIds.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [wordIds[i], wordIds[j]] = [wordIds[j], wordIds[i]]; }
 
-      const info = db.prepare("INSERT INTO dictation_sessions DEFAULT VALUES").run();
+      const info = db.prepare("INSERT INTO dictation_sessions (language) VALUES (?)").run(language);
       const sessionId = Number(info.lastInsertRowid);
       const insertItem = db.prepare("INSERT INTO dictation_items (session_id, word_id, seq) VALUES (?, ?, ?)");
       const items = wordIds.map((wordId, i) => {
