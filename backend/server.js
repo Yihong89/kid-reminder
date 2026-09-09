@@ -2334,9 +2334,22 @@ const server = http.createServer(async (req, res) => {
         mode = "paper";
         school = rows[0].school; year = rows[0].year;
       } else if (mistakesMode) {
-        const rows = db.prepare(
-          "SELECT id FROM science_questions WHERE in_mistake_bank = 1 AND answer_mode != 'drawing'"
-        ).all();
+        // Pick the 15 weakest rather than dumping the whole bank into one
+        // session — same reasoning and same day as the epaper equivalent of
+        // this change (2026-09-09): a bank that's grown past 30+ questions is
+        // too long to finish in one sitting. science_questions has no
+        // correct_count column (unlike epaper/vocab_words — see the comment on
+        // score_total above), so "weakest" reuses the same score-ratio
+        // expression the legacy pool below already uses: unattempted counts as
+        // weakest (CASE WHEN attempts = 0), otherwise average marks earned per
+        // attempt, ascending. RANDOM() breaks ties before the LIMIT.
+        const rows = db.prepare(`
+          SELECT id FROM science_questions
+           WHERE in_mistake_bank = 1 AND answer_mode != 'drawing'
+           ORDER BY (CASE WHEN attempts = 0 THEN 0
+                          ELSE CAST(score_total AS REAL) / (attempts * marks) END) ASC,
+                    RANDOM() ASC
+           LIMIT 15`).all();
         if (!rows.length) return sendJSON(400, { error: "错题本是空的，继续保持！" });
         qids = rows.map((r) => r.id);
         for (let i = qids.length - 1; i > 0; i--) {         // Fisher-Yates — 随机顺序
