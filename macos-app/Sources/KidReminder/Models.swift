@@ -349,6 +349,11 @@ struct EpaperSessionItem: Codable, Identifiable {
     let options: [String]?     // mcq only
     let marks: Int
     let image: String
+    /// True if this item already has a stored answer — only meaningful on a
+    /// resumed session (see POST /api/epaper/sessions); always false on a
+    /// freshly created one. Lets the runner jump straight to the first
+    /// unanswered step instead of restarting from question 1.
+    let answered: Bool
     var id: Int { itemId }
 }
 
