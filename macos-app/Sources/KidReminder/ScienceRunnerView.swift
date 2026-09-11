@@ -334,10 +334,26 @@ struct ScienceRunnerView: View {
             session = s
             itemPhase = .answering
             typed = ""
-            phase = .running(index: 0)
+            phase = .running(index: resumeIndex())
         } catch {
             phase = .error(error.localizedDescription)
         }
+    }
+
+    /// The index just past the furthest answered item — so resuming an
+    /// interrupted session picks up where the kid left off instead of
+    /// restarting from question 1. On a freshly created session every item's
+    /// `answered` is false, so this always evaluates to 0, same as before.
+    /// There is no skip button in this runner (unlike EnglishPaperRunnerView),
+    /// so "furthest reached" and "first unanswered" are equivalent here today —
+    /// this is written the same way as the epaper fix anyway, both for
+    /// consistency and so a future skip feature here wouldn't reintroduce the
+    /// bug that shape caused there. Falls back to the last item's index if
+    /// every item is somehow already answered, so "完成" is still reachable.
+    private func resumeIndex() -> Int {
+        let items = session?.items ?? []
+        guard let lastAnswered = items.lastIndex(where: { $0.answered }) else { return 0 }
+        return min(lastAnswered + 1, items.count - 1)
     }
 
     private func submit(item: ScienceSessionItem) async {
