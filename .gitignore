@@ -52,3 +52,4 @@ backend/english-audio/
 build/
 *.xcodeproj/xcuserdata/
 *.zip
+.worktrees/
