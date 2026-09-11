@@ -258,6 +258,11 @@ struct ScienceSessionItem: Codable, Identifiable {
     let context: String
     let prompt: String
     let image: String
+    /// True if this item already has a stored answer — only meaningful on a
+    /// resumed session (see POST /api/science/sessions); always false on a
+    /// freshly created one. Lets the runner skip straight past already-
+    /// answered items instead of restarting from question 1.
+    let answered: Bool
     var id: Int { itemId }
 }
 
