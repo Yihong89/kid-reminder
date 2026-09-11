@@ -2319,9 +2319,52 @@ const server = http.createServer(async (req, res) => {
     //   ?mode=mistakes      错题本，随机顺序
     //   (neither)           legacy weakest-first pool — kept for admin/testing,
     //                       the app UI no longer offers this path
+    //
+    // Resumes an existing in_progress session that matches the requested source
+    // first (paper mode: same paper_key; mistakes mode: any in-progress mistakes
+    // session) instead of always creating a new one — same fix as epaper's
+    // 2026-09-10 resume change, for the identical create-always/strand-forever
+    // failure mode (a kid who force-quits mid-session leaves it stuck
+    // in_progress and ungradeable, and every subsequent attempt piles another
+    // orphaned session on top). The legacy `weakest` pool is deliberately NOT
+    // resumed: it has no stable identity (a random snapshot of "currently
+    // weakest" questions, re-drawn every time, not offered in the app UI
+    // anymore) so there is nothing meaningful to reattach to.
     if (method === "POST" && pathname === "/api/science/sessions") {
       const paperKey = url.searchParams.get("paper") || "";
       const mistakesMode = url.searchParams.get("mode") === "mistakes";
+
+      let existing;
+      if (paperKey) {
+        existing = db.prepare(
+          "SELECT id FROM science_sessions WHERE status = 'in_progress' AND mode = 'paper' AND paper_key = ? ORDER BY created_at DESC LIMIT 1"
+        ).get(paperKey);
+      } else if (mistakesMode) {
+        existing = db.prepare(
+          "SELECT id FROM science_sessions WHERE status = 'in_progress' AND mode = 'mistakes' ORDER BY created_at DESC LIMIT 1"
+        ).get();
+      }
+      if (existing) {
+        const rows = db.prepare(`
+          SELECT i.id itemId, i.seq, i.question_id questionId, q.theme, q.topic,
+                 q.question_type questionType, q.answer_mode answerMode, q.marks,
+                 q.context, q.prompt, q.image, i.auto_score autoScore
+            FROM science_session_items i JOIN science_questions q ON q.id = i.question_id
+           WHERE i.session_id = ? ORDER BY i.seq`).all(existing.id);
+        const existingSession = db.prepare("SELECT mode FROM science_sessions WHERE id = ?").get(existing.id);
+        const items = rows.map((it) => ({
+          itemId: it.itemId, seq: it.seq, questionId: it.questionId, theme: it.theme,
+          topic: it.topic, questionType: it.questionType, answerMode: it.answerMode,
+          marks: it.marks, context: it.context, prompt: it.prompt, image: it.image,
+          // "answered" = auto_score has been written, which /submit does exactly
+          // once, at first submit (its own idempotency check below reads the
+          // same column). No mcq/oeq split to account for here, unlike epaper —
+          // science has exactly one grading tier.
+          answered: it.autoScore !== null,
+        }));
+        return sendJSON(200, { sessionId: existing.id, mode: existingSession.mode, items });
+      }
+
       let qids, mode, school = "", year = null;
 
       if (paperKey) {
@@ -2390,6 +2433,7 @@ const server = http.createServer(async (req, res) => {
           theme: q.theme, topic: q.topic, questionType: q.question_type,
           answerMode: q.answer_mode, marks: q.marks,
           context: q.context, prompt: q.prompt, image: q.image,
+          answered: false,
         });
       });
       // model_answer and mark points are deliberately withheld until submit.
