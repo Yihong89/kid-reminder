@@ -321,7 +321,6 @@ struct ScienceRunnerView: View {
 
     private func start() async {
         phase = .loading
-        autoSoFar = 0; marksSoFar = 0
         do {
             let s: ScienceSession
             switch source {
@@ -332,6 +331,15 @@ struct ScienceRunnerView: View {
             }
             guard !s.items.isEmpty else { phase = .error("这里还没有题目。"); return }
             session = s
+            // Rebuild the running score total from any already-answered items
+            // (non-zero only on a resumed session — a freshly created session
+            // has every item's autoScore == nil, so this evaluates to 0/0,
+            // identical to the old unconditional reset). Without this, a
+            // resumed session's completion screen would silently undercount:
+            // autoSoFar/marksSoFar previously only accumulated via submit(),
+            // which a resumed session's pre-resume answers never call again.
+            autoSoFar = s.items.reduce(0) { $0 + ($1.autoScore ?? 0) }
+            marksSoFar = s.items.filter(\.answered).reduce(0) { $0 + $1.marks }
             itemPhase = .answering
             typed = ""
             phase = .running(index: resumeIndex())

@@ -263,6 +263,13 @@ struct ScienceSessionItem: Codable, Identifiable {
     /// freshly created one. Lets the runner skip straight past already-
     /// answered items instead of restarting from question 1.
     let answered: Bool
+    /// The stored auto-score for this item, present only on a resumed
+    /// session's already-answered items (absent — decodes to nil — on a
+    /// freshly created session, and on any resumed item not yet answered).
+    /// Used by `ScienceRunnerView.start()` to rebuild the running score
+    /// total (`autoSoFar`/`marksSoFar`) that would otherwise reset to 0 and
+    /// undercount a resumed session's completion-screen score.
+    let autoScore: Int?
     var id: Int { itemId }
 }
 

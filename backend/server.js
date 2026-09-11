@@ -2361,6 +2361,12 @@ const server = http.createServer(async (req, res) => {
           // same column). No mcq/oeq split to account for here, unlike epaper —
           // science has exactly one grading tier.
           answered: it.autoScore !== null,
+          // Threaded through (not just used for `answered` above) so the
+          // client can rebuild its running score total on resume — see the
+          // ScienceRunnerView fix this pairs with. NULL until /submit writes
+          // it, matching the fresh-create path where the key is simply absent
+          // (an optional Swift field decodes a missing key as nil).
+          autoScore: it.autoScore,
         }));
         return sendJSON(200, { sessionId: existing.id, mode: existingSession.mode, items });
       }
