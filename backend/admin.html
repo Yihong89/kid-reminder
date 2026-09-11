@@ -2107,6 +2107,16 @@
       sub = "孩子还没有做完这次练习";
       row.style.opacity = ".6";
     }
+    // "标记可批改" only makes sense for in_progress rows: the same recovery
+    // the app itself now does automatically on resume (see the 2026-09-10
+    // resume fix), exposed here as a manual escape hatch for the one case
+    // resume can't cover — the kid switched to a *different* paper while this
+    // one was still open, so the app's own resume (scoped to the same
+    // paper_key) never reattaches to it and it would otherwise sit stuck
+    // in_progress forever, same as the incident that motivated this button.
+    const forceCompleteBtn = s.status === "in_progress"
+      ? '<button class="ghost force-complete" title="标记为可批改（孩子不会再继续做这份了）">✅ 标记可批改</button>'
+      : "";
     row.innerHTML = `
       <div class="icon">📘</div>
       <div class="info">
@@ -2114,8 +2124,17 @@
         <div class="when">${sub}</div>
       </div>
       ${badge}
+      ${forceCompleteBtn}
       <button class="del" title="删除这条记录">🗑</button>`;
     if (s.status !== "in_progress") row.onclick = () => openEpaperGradeDialog(s.id);
+    if (s.status === "in_progress") {
+      row.querySelector(".force-complete").onclick = async (e) => {
+        e.stopPropagation();
+        if (!confirm("确认孩子不会再继续做这份了吗？会把已经答的题目标记为可批改。")) return;
+        try { await api(`/api/epaper/sessions/${s.id}/complete`, { method: "POST" }); refreshEpaper(); }
+        catch (err) { showErr(err.message); }
+      };
+    }
     row.querySelector(".del").onclick = async (e) => {
       e.stopPropagation();
       if (!confirm("删除这条英语试卷练习记录？")) return;
