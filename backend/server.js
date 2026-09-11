@@ -2615,10 +2615,61 @@ const server = http.createServer(async (req, res) => {
     }
 
     // --- start a practice set (open; the kid app calls this) ---------------------
+    // Resumes an existing in_progress session that matches the requested source
+    // first (paper mode: same paper_key; mistakes mode: any in-progress mistakes
+    // session) instead of always creating a new one — without this, a kid who
+    // force-quits mid-paper leaves that session stranded in_progress forever
+    // (ungradeable: the admin row for in_progress sessions isn't clickable), and
+    // every subsequent "开始" press creates ANOTHER orphaned session on top of
+    // it. Confirmed happening in production (2026-09-10): one paper attempt
+    // abandoned at 65/75 answered spawned three more abandoned attempts before
+    // anyone noticed, all stuck un-gradeable until a parent manually completed
+    // them via the API. Mirrors dictation's existing resume logic (see
+    // POST /api/dictation/sessions above) but goes further: dictation just
+    // replays its word list from the top on resume (cheap — 30 words, and
+    // re-submitting an already-answered word is idempotent); a 75-question
+    // paper is too expensive to redo, so every resumed item also reports
+    // whether it's already been answered, and the client
+    // (EnglishPaperRunnerView) uses that to jump straight to the first
+    // unanswered step instead of restarting from question 1.
     if (method === "POST" && pathname === "/api/epaper/sessions") {
       const body = await readBody(req);
       const paperKey = String(body.paperKey || "");
       const mistakesMode = body.mistakes === true;
+
+      let existing;
+      if (paperKey) {
+        existing = db.prepare(
+          "SELECT id FROM epaper_sessions WHERE status = 'in_progress' AND mode = 'paper' AND paper_key = ? ORDER BY created_at DESC LIMIT 1"
+        ).get(paperKey);
+      } else if (mistakesMode) {
+        existing = db.prepare(
+          "SELECT id FROM epaper_sessions WHERE status = 'in_progress' AND mode = 'mistakes' ORDER BY created_at DESC LIMIT 1"
+        ).get();
+      }
+      if (existing) {
+        const rows = db.prepare(`
+          SELECT i.id itemId, i.seq, i.question_id questionId, q.section, q.question_type questionType,
+                 q.context, q.passage, q.prompt, q.options, q.marks, q.image,
+                 i.final_correct finalCorrect,
+                 (SELECT COUNT(*) FROM epaper_item_points ip WHERE ip.item_id = i.id) pointCount
+            FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
+           WHERE i.session_id = ? ORDER BY i.seq`).all(existing.id);
+        const existingSession = db.prepare("SELECT mode FROM epaper_sessions WHERE id = ?").get(existing.id);
+        const items = rows.map((it) => ({
+          itemId: it.itemId, seq: it.seq, questionId: it.questionId, section: it.section,
+          questionType: it.questionType, context: it.context, passage: it.passage || "",
+          prompt: it.prompt, options: it.options ? JSON.parse(it.options) : null, marks: it.marks,
+          image: it.image,
+          // oeq "answered" = at least one mark point was auto-scored at submit
+          // time (see the /submit handler below); mcq/fill_blank "answered" =
+          // final_correct has been set. Both are set exactly once, at first
+          // submit — matches how /submit's own idempotency check works.
+          answered: it.questionType === "oeq" ? it.pointCount > 0 : it.finalCorrect !== null,
+        }));
+        return sendJSON(200, { sessionId: existing.id, mode: existingSession.mode, items });
+      }
+
       let qids, mode;
       if (paperKey) {
         const rows = db.prepare(
@@ -2661,6 +2712,7 @@ const server = http.createServer(async (req, res) => {
           questionType: q.question_type, context: q.context, passage: q.passage || "",
           prompt: q.prompt,
           options: q.options ? JSON.parse(q.options) : null, marks: q.marks, image: q.image,
+          answered: false,
         });
       });
       // correct_answer/explanation deliberately withheld until submit, same as
