@@ -484,10 +484,22 @@ struct EnglishPaperRunnerView: View {
             stepPhase = .answering
             typed = ""
             groupAnswers = [:]
-            phase = .running(step: 0)
+            phase = .running(step: resumeStepIndex())
         } catch {
             phase = .error(error.localizedDescription)
         }
+    }
+
+    /// The first step containing any unanswered item — so resuming an
+    /// interrupted paper picks up where the kid left off instead of
+    /// restarting from question 1. On a freshly created session every item's
+    /// `answered` is false, so this always evaluates to 0, same as before.
+    /// Falls back to the last step if every item is somehow already answered
+    /// (e.g. the kid answered everything but the app closed before "完成"
+    /// registered) so they can still reach the finish button.
+    private func resumeStepIndex() -> Int {
+        let allSteps = steps
+        return allSteps.firstIndex { $0.contains { !$0.answered } } ?? max(0, allSteps.count - 1)
     }
 
     /// Submits every item in the step (one call each — no batch endpoint), in
