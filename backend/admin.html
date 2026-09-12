@@ -2105,6 +2105,26 @@
     } catch (e) { showErr(e.message); }
   }
 
+  // How long the kid spent on a paper, derived from the two timestamps the
+  // server already stores (created_at when the paper was opened, completed_at
+  // when it was finished) — no extra column, no extra request.
+  //
+  // Wall-clock, on purpose: the kid can leave a paper half-done and resume days
+  // later (断点续做), and this will report the whole span rather than pure
+  // working time. Good enough to spot a paper that ran long against the
+  // 1h50m the real PSLE Paper 2 allows; not a stopwatch.
+  function fmtDuration(startIso, endIso) {
+    if (!startIso || !endIso) return "";
+    const a = Date.parse(startIso.replace(" ", "T") + "Z");
+    const b = Date.parse(endIso.replace(" ", "T") + "Z");
+    if (!Number.isFinite(a) || !Number.isFinite(b) || b <= a) return "";
+    const mins = Math.round((b - a) / 60000);
+    if (mins < 1) return "不到 1 分钟";
+    if (mins < 60) return `${mins} 分钟`;
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return m ? `${h} 小时 ${m} 分` : `${h} 小时`;
+  }
+
   function epaperSessionRow(s, paperLabels) {
     const row = document.createElement("div");
     row.className = "card sci-session";
@@ -2114,13 +2134,15 @@
       // bank (history still references it) or for old rows with no paper_key.
       : `📘 ${paperLabels[s.paper_key] || s.paper_key || "英语试卷练习"}`;
     const when = new Date((s.completed_at || s.created_at).replace(" ", "T") + "Z");
+    const dur = fmtDuration(s.created_at, s.completed_at);
+    const durText = dur ? ` · 用时 ${dur}` : "";
     let badge, sub;
     if (s.status === "pending_review") {
       badge = '<div class="badge cnt">🔔 待批改</div>';
-      sub = `完成于 ${when.toLocaleString()}`;
+      sub = `完成于 ${when.toLocaleString()}${durText}`;
     } else if (s.status === "reviewed") {
       badge = `<div class="badge">✅ ${s.score_earned}/${s.marks_total}</div>`;
-      sub = `完成于 ${when.toLocaleString()}`;
+      sub = `完成于 ${when.toLocaleString()}${durText}`;
     } else {
       badge = '<div class="badge parent">⏳ 进行中</div>';
       sub = "孩子还没有做完这次练习";
@@ -2188,7 +2210,10 @@
           epaperDecisions[it.id] = { finalCorrect: !!it.final_correct };
         }
       }
-      $("#epaperDlgTitle").textContent = readOnly ? "📘 英语试卷练习记录（进行中）" : "📘 批改英语试卷";
+      const dlgDur = fmtDuration(data.session.created_at, data.session.completed_at);
+      $("#epaperDlgTitle").textContent =
+        (readOnly ? "📘 英语试卷练习记录（进行中）" : "📘 批改英语试卷") +
+        (dlgDur ? ` · 用时 ${dlgDur}` : "");
       const el = $("#epaperItems");
       el.innerHTML = "";
       data.items.forEach((it, idx) => el.appendChild(epaperItemCard(it, idx, readOnly)));
