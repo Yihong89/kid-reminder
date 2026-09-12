@@ -41,6 +41,11 @@ struct EnglishPaperRunnerView: View {
     @State private var pickedOption: String?             // single-item mcq
     @State private var groupAnswers: [Int: String] = [:]  // itemId -> answer, group steps
     @State private var showOriginalScan = false           // comprehension_oeq: text vs. original scan
+    /// Break length for the post-paper reminder. The server sends it on complete
+    /// (EPAPER_REST_MINUTES) so it can be retuned without rebuilding this app;
+    /// 30 is just the fallback for an older server.
+    @State private var restMinutes = 30
+    @State private var showRestPrompt = false
 
     private var api: APIClient { APIClient(settings: settings) }
     private var paperFont: PaperFont { PaperFont(scale: settings.paperFontScale) }
@@ -70,6 +75,15 @@ struct EnglishPaperRunnerView: View {
         content
             .navigationTitle(source.title)
             .frame(minWidth: 1000, minHeight: 740)
+            // The "take a break" popup. Fires the moment the paper is submitted —
+            // a kid who just finished a full Paper 2 should not roll straight into
+            // the next thing. Dismissing leaves the same reminder on the done
+            // screen, so it can't be missed by closing the alert reflexively.
+            .alert("做完一份卷子啦 🎉", isPresented: $showRestPrompt) {
+                Button("好的，去休息") { }
+            } message: {
+                Text("先别急着做下一份。站起来走走、喝点水、看看远处，让眼睛和脑子都歇 \(restMinutes) 分钟吧。")
+            }
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button("关闭") { dismissWindow() }
@@ -463,6 +477,22 @@ struct EnglishPaperRunnerView: View {
             Text("选择题、填空题已经批完；问答题交给家长在网页端批改。")
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+
+            // Same reminder the alert carried, kept on screen so it survives an
+            // absent-minded dismissal of the popup.
+            VStack(spacing: 6) {
+                Text("☕️ 该休息 \(restMinutes) 分钟了")
+                    .font(.title3).bold()
+                Text("站起来走走、喝点水、看看远处。\n连续做题太久，记住的东西反而更少。")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.vertical, 14)
+            .padding(.horizontal, 22)
+            .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+            .padding(.top, 8)
+
             Button("关闭") { dismissWindow() }.buttonStyle(.borderedProminent)
         }
         .padding()
@@ -550,8 +580,11 @@ struct EnglishPaperRunnerView: View {
         guard let sessionId = session?.sessionId else { return }
         phase = .finishing
         do {
-            try await api.completeEpaperSession(sessionId: sessionId)
+            if let minutes = try await api.completeEpaperSession(sessionId: sessionId), minutes > 0 {
+                restMinutes = minutes
+            }
             phase = .done
+            showRestPrompt = true   // the paper is in — prompt the break now
         } catch {
             phase = .error(error.localizedDescription)
         }

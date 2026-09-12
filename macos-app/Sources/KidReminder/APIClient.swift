@@ -402,8 +402,16 @@ final class APIClient {
         return try JSONDecoder().decode(EpaperSubmitResult.self, from: data)
     }
 
-    func completeEpaperSession(sessionId: Int) async throws {
-        _ = try await request("/api/epaper/sessions/\(sessionId)/complete", method: "POST", body: Data("{}".utf8))
+    /// Returns how many minutes the server wants the kid to rest afterwards, so
+    /// the break length can be retuned server-side (EPAPER_REST_MINUTES) without
+    /// rebuilding and re-copying this app to the kid's MacBook. nil when the
+    /// server didn't send one — the caller then keeps its own default.
+    @discardableResult
+    func completeEpaperSession(sessionId: Int) async throws -> Int? {
+        struct Resp: Decodable { let restMinutes: Int? }
+        let data = try await request("/api/epaper/sessions/\(sessionId)/complete",
+                                     method: "POST", body: Data("{}".utf8))
+        return (try? JSONDecoder().decode(Resp.self, from: data))?.restMinutes
     }
 
     /// Raw HTML for a reviewed session's mistake report — saved straight to

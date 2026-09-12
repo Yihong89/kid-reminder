@@ -71,6 +71,10 @@ const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen3.8-27b-ctx16k:latest";
 // model doesn't hold the machine in swap (it peaked at 12 GB swap while loaded).
 const AI_KEEP_ALIVE = process.env.AI_KEEP_ALIVE || "5m";
 const AI_TIMEOUT_MS = parseInt(process.env.AI_TIMEOUT_MS || "180000", 10);
+// Rest reminder the kid's app pops up after finishing a paper. Server-supplied
+// so this can be tuned from the plist without rebuilding and re-copying the app
+// to the kid's MacBook. The app falls back to 30 if the field is absent.
+const EPAPER_REST_MINUTES = parseInt(process.env.EPAPER_REST_MINUTES || "30", 10);
 const SPRITES_DIR = path.join(__dirname, "sprites");
 // Science question crops, produced offline by tools/science-oeq/crop_questions.py.
 // Read-only like sprites/ — nothing in the server ever writes here, so there is
@@ -3000,7 +3004,9 @@ const server = http.createServer(async (req, res) => {
       // (The kid app already discards this response entirely and shows a generic
       // "done!" screen, but stripping it here too closes the gap for anyone poking
       // the API directly instead of relying on the client not reading the field.)
-      return sendJSON(200, { ok: true, status });
+      // restMinutes is the one thing the app DOES read from here: it drives the
+      // "take a break" popup, so the length is tunable without an app rebuild.
+      return sendJSON(200, { ok: true, status, restMinutes: EPAPER_REST_MINUTES });
     }
 
     // --- kid-facing mistake report, one reviewed session, as a downloadable
