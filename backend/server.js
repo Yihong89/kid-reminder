@@ -60,6 +60,17 @@ const ADMIN_PIN = process.env.ADMIN_PIN || "1234";
 const KID_PIN = process.env.KID_PIN || "4321"; // unlock the kid view (change before deploying)
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, "kidreminder.db");
 const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
+
+// Local-AI second opinion on OEQ mark points the keyword matcher missed.
+// Runs entirely against Ollama on this same Mac — a child's answers never leave
+// the house. Opt out with AI_GRADING=0 (grading then behaves exactly as before).
+const AI_GRADING = process.env.AI_GRADING !== "0";
+const OLLAMA_URL = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen3.8-27b-ctx16k:latest";
+// A whole paper's worth of OEQ can queue up; keep the window short so the 10 GB
+// model doesn't hold the machine in swap (it peaked at 12 GB swap while loaded).
+const AI_KEEP_ALIVE = process.env.AI_KEEP_ALIVE || "5m";
+const AI_TIMEOUT_MS = parseInt(process.env.AI_TIMEOUT_MS || "180000", 10);
 const SPRITES_DIR = path.join(__dirname, "sprites");
 // Science question crops, produced offline by tools/science-oeq/crop_questions.py.
 // Read-only like sprites/ — nothing in the server ever writes here, so there is
@@ -701,6 +712,12 @@ try { db.exec("ALTER TABLE epaper_questions ADD COLUMN passage TEXT NOT NULL DEF
 // 错题本 list so a parent can see progress on a mistake-bank question across
 // repeat attempts without it silently dropping out of the bank.
 try { db.exec("ALTER TABLE epaper_questions ADD COLUMN correct_count INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+// Local-AI second opinion on OEQ mark points the keyword matcher missed
+// (auto_hit = 0). NULL = not analysed — feature off, Ollama unavailable, or the
+// background job hasn't finished yet. Purely additive: when it's NULL the parent
+// review falls back to auto_hit exactly as it did before this existed.
+try { db.exec("ALTER TABLE epaper_item_points ADD COLUMN ai_hit INTEGER"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE epaper_item_points ADD COLUMN ai_reason TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 // Created here, not in the CREATE TABLE block above: on an already-deployed DB,
 // "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
 // exists without paper_key/paper_seq), so an index on those columns placed in
@@ -981,6 +998,83 @@ function epaperAutoHit(markPoint, answer) {
   const text = normalizeEnglishAnswer(answer);
   const groups = scienceParse(markPoint.keywords, []);
   return groups.every((g) => scienceGroupHit(text, g));
+}
+
+// ------------------------------------ 英语试卷 OEQ: 本地 AI 复核（兜底建议）
+// The keyword matcher above is precise but has poor recall: a correct answer
+// that paraphrases the mark point scores 0. Measured on this DB, 37 mark points
+// in the 2025 papers have keywords that appear nowhere in their passage, and the
+// parent overrode auto_hit on 4/15 synthesis and several OEQ points by hand.
+// So the points the matcher MISSED get a second opinion from a local model.
+//
+// Output format is deliberately dumb. A nested-JSON schema made the model emit
+// an immediate stop (1 token, nothing parseable) on ~23% of mark points, while
+// plain "1: YES" lines did not miss once — measured against the parent's own
+// verdicts, 27B@Q2_K agreed on 81% of points, 8B@Q4 on only 67%.
+const AI_PROMPT_TAIL =
+  "\nAnswer with one line per mark point, exactly like:\n1: YES\n2: NO\nNo other text.";
+
+async function epaperAiSuggest(question, answer, points) {
+  if (!AI_GRADING || !points.length) return null;
+  const lines = points.map((p) => `${p.seq}. ${p.description}`).join("\n");
+  const content =
+    "Mark each mark point YES or NO for this student answer.\n\n" +
+    `Question: ${question.prompt}\n\n` +
+    (question.passage ? `Passage: ${String(question.passage).slice(0, 2500)}\n\n` : "") +
+    `Student answer: ${answer || "(blank)"}\n\n` +
+    `Mark points:\n${lines}` + AI_PROMPT_TAIL;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${OLLAMA_URL}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        stream: false,
+        think: false,            // without this it returns its reasoning, not the verdict
+        keep_alive: AI_KEEP_ALIVE,
+        options: { temperature: 0, num_predict: 60 + points.length * 12 },
+        messages: [{ role: "user", content }],
+      }),
+    });
+    if (!res.ok) return null;
+    const out = await res.json();
+    const text = (out && out.message && out.message.content) || "";
+    const verdicts = new Map();
+    for (const m of text.matchAll(/(\d+)\s*[:.\-]\s*(YES|NO)/gi)) {
+      verdicts.set(Number(m[1]), m[2].toUpperCase() === "YES" ? 1 : 0);
+    }
+    if (!verdicts.size) return null;
+    return { verdicts, raw: text.trim().slice(0, 300) };
+  } catch {
+    return null;   // Ollama down, timed out, or disabled — simply no suggestion
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// Fire-and-forget. The submit handler must NOT await this: the kid's answer is
+// already stored, and letting a 10-30s model call sit on the request would make
+// submitting a paper feel broken. Failures are swallowed by design — a missing
+// suggestion is exactly the behaviour before this feature existed.
+function epaperRunAiSuggest(itemId, question, answer, missed) {
+  if (!AI_GRADING || !missed.length) return;
+  epaperAiSuggest(question, answer, missed).then((result) => {
+    if (!result) return;
+    for (const p of missed) {
+      const hit = result.verdicts.get(p.seq);
+      if (hit === undefined) continue;
+      try {
+        db.prepare(
+          "UPDATE epaper_item_points SET ai_hit = ?, ai_reason = ? WHERE item_id = ? AND mark_point_id = ?"
+        ).run(hit, result.raw, itemId, p.id);
+      } catch { /* row re-graded or session deleted while we were thinking */ }
+    }
+    if (AI_GRADING) console.log(`[ai] session item ${itemId}: suggested on ${missed.length} missed point(s)`);
+  }).catch(() => { /* never let an AI failure surface anywhere */ });
 }
 
 // Always recomputed from current DB state, never incremented by hand — so
@@ -2837,13 +2931,18 @@ const server = http.createServer(async (req, res) => {
           "SELECT COUNT(*) n FROM epaper_item_points WHERE item_id = ?"
         ).get(itemId).n > 0;
         if (!already) {
+          const missed = [];
           for (const p of points) {
             const hit = epaperAutoHit(p, answer) ? 1 : 0;
             db.prepare(
               "INSERT INTO epaper_item_points (item_id, mark_point_id, auto_hit) VALUES (?, ?, ?)"
             ).run(itemId, p.id, hit);
+            if (!hit) missed.push(p);
           }
           db.prepare("UPDATE epaper_session_items SET answer = ? WHERE id = ?").run(answer, itemId);
+          // Second opinion on the points the keyword matcher missed, deliberately
+          // off the request path — submit returns to the kid immediately.
+          epaperRunAiSuggest(itemId, q, answer, missed);
         }
         // Kid never sees auto-score, the model answer (explanation doubles as one
         // for oeq — see the schema comment), or per-point hits at submit time
@@ -2944,7 +3043,8 @@ const server = http.createServer(async (req, res) => {
         if (it.question_type === "oeq") {
           points = db.prepare(`
             SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
-                   ip.auto_hit autoHit, ip.final_hit finalHit
+                   ip.auto_hit autoHit, ip.final_hit finalHit,
+                   ip.ai_hit aiHit, ip.ai_reason aiReason
               FROM epaper_mark_points mp
               LEFT JOIN epaper_item_points ip ON ip.mark_point_id = mp.id AND ip.item_id = ?
              WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.id, it.question_id);

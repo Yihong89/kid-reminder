@@ -2176,7 +2176,13 @@
           epaperDecisions[it.id] = { points: {} };
           for (const p of it.points) {
             const finalKnown = p.finalHit === 0 || p.finalHit === 1;
-            epaperDecisions[it.id].points[p.markPointId] = finalKnown ? !!p.finalHit : !!p.autoHit;
+            // autoHit is a precise keyword match with poor recall. When it MISSED,
+            // start from the local model's second opinion instead of defaulting to
+            // "no mark" — the parent still confirms, and the card shows which points
+            // came from the AI so they know where to look harder.
+            const aiKnown = p.aiHit === 0 || p.aiHit === 1;
+            const suggest = p.autoHit ? 1 : (aiKnown ? p.aiHit : 0);
+            epaperDecisions[it.id].points[p.markPointId] = finalKnown ? !!p.finalHit : !!suggest;
           }
         } else {
           epaperDecisions[it.id] = { finalCorrect: !!it.final_correct };
@@ -2217,11 +2223,18 @@
         const row = document.createElement("label");
         row.className = "sci-point-row";
         const autoClass = p.autoHit ? "auto-yes" : "auto-no";
+        // Only shown for points the keyword matcher missed — where a second
+        // opinion is actually adding information.
+        const aiKnown = p.aiHit === 0 || p.aiHit === 1;
+        const aiHtml = (!p.autoHit && aiKnown)
+          ? `<div class="desc" style="color:${p.aiHit ? "#047857" : "#b45309"};font-style:italic">🤖 AI 建议：${p.aiHit ? "给分" : "不给分"}（关键词未命中，仅供参考）</div>`
+          : "";
         row.innerHTML = `
           <input type="checkbox" ${readOnly ? "disabled" : ""} ${epaperDecisions[it.id].points[p.markPointId] ? "checked" : ""} />
           <div>
             <div class="kind ${autoClass}">${EPAPER_KIND_LABEL[p.pointKind] || p.pointKind}</div>
             <div class="desc">${escapeHtml(p.description)}</div>
+            ${aiHtml}
           </div>`;
         if (!readOnly) {
           row.querySelector("input").onchange = (e) => { epaperDecisions[it.id].points[p.markPointId] = e.target.checked; };
