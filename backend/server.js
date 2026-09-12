@@ -926,6 +926,53 @@ function epaperGradeObjective(answer, correctAnswer) {
   return alts.includes(normalizeEnglishAnswer(answer));
 }
 
+// cloze_wordbank answer keys are stored inconsistently across imported papers:
+// some hold the word ("can"), others hold the option letter ("D") — while the
+// paper itself always lets the child give either, because the word bank prints
+// both side by side. Comparing the two forms literally made every such item
+// ungradeable (catholichigh-2025: 10/10 false negatives, all rescued by hand
+// during parent review).
+//
+// The word bank is printed once per paper, in the context of its first
+// cloze_wordbank item (paper_seq 26 in every imported paper). Parse letter<->word
+// from there and accept either form, routed through the existing "a / b"
+// alternative-answer mechanism rather than a second comparison path.
+function epaperWordBank(db, question) {
+  if (!question || question.section !== "cloze_wordbank") return null;
+  const row = db.prepare(`
+    SELECT context FROM epaper_questions
+     WHERE paper_key = ? AND section = 'cloze_wordbank' AND context LIKE '%Word bank%'
+     ORDER BY paper_seq LIMIT 1`).get(question.paper_key);
+  if (!row || !row.context) return null;
+  // Stop at the blank line that separates the bank from the passage body, and
+  // only accept "(LETTER) word" pairs — passage blanks are ___(26)___ (digits),
+  // so they can never collide with this pattern.
+  const seg = row.context.slice(row.context.indexOf("Word bank")).split("\n\n")[0];
+  const byLetter = new Map();
+  for (const m of seg.matchAll(/\(([A-Z])\)\s*([A-Za-z][A-Za-z'’-]*)/g)) {
+    byLetter.set(m[1].toLowerCase(), m[2].toLowerCase());
+  }
+  return byLetter.size ? byLetter : null;
+}
+
+// Returns correct_answer with the equivalent letter/word form appended, so the
+// single existing grader accepts either. No-op for every other section.
+function epaperAcceptedAnswers(db, question) {
+  const base = String(question.correct_answer || "");
+  const bank = epaperWordBank(db, question);
+  if (!bank) return base;
+  const key = normalizeEnglishAnswer(base);
+  let alt = null;
+  if (key.length === 1) {
+    alt = bank.get(key) || null; // key stores the letter -> also accept the word
+  } else {
+    for (const [letter, word] of bank) {
+      if (word === key) { alt = letter; break; } // key stores the word -> also accept the letter
+    }
+  }
+  return alt ? `${base} / ${alt}` : base;
+}
+
 // oeq: the exact same AND-of-ORs keyword matcher as science, minus any_of/
 // need_n (not needed for this module's "Any two of..." style — English
 // comprehension mark schemes tested so far don't use that pattern; add it
@@ -2811,7 +2858,7 @@ const server = http.createServer(async (req, res) => {
       // re-posting returns the stored verdict instead of re-scoring and
       // double-counting attempts/score_total.
       if (item.final_correct === null) {
-        const correct = epaperGradeObjective(answer, q.correct_answer);
+        const correct = epaperGradeObjective(answer, epaperAcceptedAnswers(db, q));
         db.prepare(
           "UPDATE epaper_session_items SET answer = ?, auto_correct = ?, final_correct = ? WHERE id = ?"
         ).run(answer, correct ? 1 : 0, correct ? 1 : 0, itemId);
