@@ -1670,10 +1670,17 @@ const server = http.createServer(async (req, res) => {
       const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
       const total = db.prepare(`SELECT COUNT(*) n FROM vocab_words ${whereSql}`).get(...params).n;
+      // How many of the filtered words the kid has never got right. correct_count
+      // is +1 right / -1 wrong floored at 0, so 0 means "never answered correctly"
+      // — the parent's only view of dictation progress, since a dictation session
+      // itself only records which words came up, not how they're trending.
+      const zeroCount = db.prepare(
+        `SELECT COUNT(*) n FROM vocab_words ${where.length ? whereSql + " AND" : "WHERE"} correct_count = 0`
+      ).get(...params).n;
       const words = db
         .prepare(`SELECT * FROM vocab_words ${whereSql} ORDER BY level, lesson_index, id LIMIT ? OFFSET ?`)
         .all(...params, limit, offset);
-      return sendJSON(200, { total, limit, offset, words });
+      return sendJSON(200, { total, zeroCount, limit, offset, words });
     }
 
     if (method === "POST" && pathname === "/api/vocab") {

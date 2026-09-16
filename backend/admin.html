@@ -1200,7 +1200,8 @@
       }
       const from = vocabTotal === 0 ? 0 : vocabOffset + 1;
       const to = Math.min(vocabOffset + vocabLimit, vocabTotal);
-      $("#vocabSummary").textContent = `共 ${vocabTotal} 条 · 显示 ${from}–${to}`;
+      $("#vocabSummary").textContent =
+        `共 ${vocabTotal} 条 · 🔴 还没答对过（正确数 0）${data.zeroCount} 条 · 显示 ${from}–${to}`;
       $("#vocabPageLabel").textContent = `第 ${Math.floor(vocabOffset / vocabLimit) + 1} / ${Math.max(1, Math.ceil(vocabTotal / vocabLimit))} 页`;
       $("#vocabPrev").disabled = vocabOffset <= 0;
       $("#vocabNext").disabled = vocabOffset + vocabLimit >= vocabTotal;
@@ -1312,7 +1313,8 @@
       }
       const from = enVocabTotal === 0 ? 0 : enVocabOffset + 1;
       const to = Math.min(enVocabOffset + enVocabLimit, enVocabTotal);
-      $("#enVocabSummary").textContent = `共 ${enVocabTotal} 条 · 显示 ${from}–${to}`;
+      $("#enVocabSummary").textContent =
+        `共 ${enVocabTotal} 条 · 🔴 还没答对过（正确数 0）${data.zeroCount} 条 · 显示 ${from}–${to}`;
       $("#enVocabPageLabel").textContent = `第 ${Math.floor(enVocabOffset / enVocabLimit) + 1} / ${Math.max(1, Math.ceil(enVocabTotal / enVocabLimit))} 页`;
       $("#enVocabPrev").disabled = enVocabOffset <= 0;
       $("#enVocabNext").disabled = enVocabOffset + enVocabLimit >= enVocabTotal;
