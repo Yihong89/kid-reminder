@@ -66,11 +66,56 @@ const insert = db.prepare(`
 const META_MARKERS = ["Comprehension Cloze", "Editing (S&G)", "Editing —", "Editing -", "Grammar Cloze", "Vocabulary Cloze", "not captured"];
 const isMetaOnly = (rec) => META_MARKERS.some((m) => rec.prompt.includes(m));
 
-let inserted = 0, skippedMeta = 0;
+// --- duplicate guard -------------------------------------------------------
+// source_number alone is not enough to keep the bank clean: the same question
+// appears under several numbers (a question first logged in "Grammar: Sentence
+// Transformation" and again in "New Wrong Answers (…)" or a revision-paper
+// batch). When a parent deletes or edits one of those copies by hand, its
+// source_number disappears from the table, and the next weekly sync happily
+// re-inserts it as a "new" row — resurrecting a duplicate the family already
+// dealt with (2026-09-19: #123/#124 would have come back as copies of the
+// already-present #148/#149).
+//
+// So: before inserting, skip anything that is effectively already in the bank —
+// same type, same answer, and a prompt that's mostly the same words.
+const ANSWER_OF = (rec) => String(rec.correct_answer || "").split("/")[0].trim().toLowerCase();
+
+function tokenSet(s) {
+  return new Set(
+    String(s || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter((w) => w.length > 2)
+  );
+}
+
+function jaccard(a, b) {
+  const A = tokenSet(a), B = tokenSet(b);
+  if (!A.size || !B.size) return 0;
+  let inter = 0;
+  for (const w of A) if (B.has(w)) inter++;
+  return inter / (A.size + B.size - inter);
+}
+
+const existingRows = db.prepare("SELECT type, prompt, correct_answer FROM english_questions").all();
+function isDuplicate(rec) {
+  const ans = ANSWER_OF(rec);
+  for (const row of existingRows) {
+    if (row.type !== rec.type) continue;
+    if (String(row.correct_answer || "").split("/")[0].trim().toLowerCase() !== ans) continue;
+    if (jaccard(row.prompt, rec.prompt) >= 0.6) return true;
+  }
+  return false;
+}
+
+let inserted = 0, skippedMeta = 0, skippedDup = 0;
+const dupSamples = [];
 db.exec("BEGIN");
 try {
   for (const r of data) {
     if (isMetaOnly(r)) { skippedMeta++; continue; }
+    if (isDuplicate(r)) {
+      skippedDup++;
+      if (dupSamples.length < 5) dupSamples.push(`#${r.number} ${r.prompt.slice(0, 60)}`);
+      continue;
+    }
     const info = insert.run(
       r.type,
       r.topic || "",
@@ -94,6 +139,8 @@ const byType = db.prepare("SELECT type, COUNT(*) n FROM english_questions GROUP 
 const audioCount = db.prepare("SELECT COUNT(*) n FROM english_questions WHERE needs_audio = 1").get().n;
 
 console.log(`Skipped ${skippedMeta} meta-only entries (no real sentence to show).`);
+console.log(`Skipped ${skippedDup} duplicate entries (already in the bank under another source number).`);
+for (const d of dupSamples) console.log(`  dup: ${d}`);;
 console.log(`Inserted ${inserted} new rows (${data.length - inserted - skippedMeta} already present).`);
 console.log(`Table now has ${total} rows total.`);
 console.log("Per type:", Object.fromEntries(byType.map((r) => [r.type, r.n])));

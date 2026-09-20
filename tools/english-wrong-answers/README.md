@@ -62,6 +62,52 @@ only `sync.sh` reads it, via `GITHUB_TOKEN_FILE` (defaults to that path).
 If the token expires or is revoked, generate a new one and overwrite the same
 file — no need to touch the launchd job.
 
+## What gets rejected before import
+
+`parse_wrong_answers.py` runs every parsed record through `validate_record()`
+and writes the ones the app cannot present to **`rejected-questions.json`** and
+a readable **`rejected-questions.md`** instead of letting them through. That
+file keeps the full original block text for every rejected item, so a parent
+can find the source material and re-enter it properly.
+
+Why it exists: on 2026-09-19 the child reported "some questions can't be done".
+74 of the 240 rows in the bank were exactly that — the app shows only `prompt`
+(+ `options` for mcq), so a record that references a passage/flyer/image it
+can't display, or that asks for a sentence transformation without saying into
+what, is a dead end. Nothing in the pipeline had checked for that.
+
+| rule | what it catches |
+|---|---|
+| `missing_prompt` / `missing_answer` | empty field |
+| `bad_options` | not 4 options, an empty option, or duplicate options |
+| `answer_not_in_options` | the answer isn't one of the options |
+| `comprehension_without_options` | a question that reads like MCQs (or whose answer is just `B`/`(4)`) but has no options |
+| `references_missing_text` | prompt mentions Text 1/Text 2 / this flyer / the passage / … — there is nowhere to store it |
+| `unbalanced_markdown` | odd number of `**` in a no-options prompt (corrupted annotation) |
+| `transformation_without_instruction` | a rewrite task with neither an instruction word nor a target stem (`-> Each of ______`) |
+
+Rejected is a *safe* outcome, not a loss: fix the wording in `wrong-answers.md`
+(usually by adding the scaffold line the original S&T items already have) and
+the next run picks it up.
+
+Three parser bugs were found and fixed at the same time, all of which had been
+silently making questions unusable:
+
+1. **The target-structure scaffold was dropped.** S&T items are written as a
+   source sentence plus a scaffold line (`**Neither** **\_** **nor** **\_** .`);
+   only the first line was kept, so the child saw a bare sentence.
+2. **Options on separate lines were not extracted.** The old matcher required
+   all four `A. … B. … C. … D.` on ONE line, so multi-line option lists came
+   through as questions with no options at all.
+3. **`(1) … (2) … (3) … (4)` option labels were not recognised** — only `1.`.
+
+`import.js` also gained a **duplicate guard**: the same question often appears
+under several source numbers (once in "Grammar: Sentence Transformation", again
+in a "New Wrong Answers (…)" batch). If a parent deletes one copy by hand, its
+`source_number` leaves the table and the next weekly sync used to re-insert it
+as new. Now a record is skipped when the bank already holds the same `type`,
+same answer, and a prompt with >=60% word overlap.
+
 ## What gets skipped
 
 - ~40 entries per run are "meta-only": the log recorded "student wrote X,

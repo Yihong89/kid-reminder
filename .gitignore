@@ -19,6 +19,8 @@ tools/vocab-scraper/vocab-raw.json
 # don't publish a real child's schoolwork/mistakes in this public repo
 tools/english-wrong-answers/parsed-questions.json
 tools/english-wrong-answers/unparsed-questions.json
+tools/english-wrong-answers/rejected-questions.json
+tools/english-wrong-answers/rejected-questions.md
 tools/english-wrong-answers/wrong-answers.md
 
 # PSLE Science prelim papers + everything derived from them. These are other
