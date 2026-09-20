@@ -275,6 +275,7 @@
         <button class="tab" id="tabScienceMistakes" hidden>📕 科学错题本</button>
         <button class="tab" id="tabEpaper" hidden>📘 英语试卷批改</button>
         <button class="tab" id="tabEpaperMistakes" hidden>📕 英语试卷错题本</button>
+        <button class="tab" id="tabSettings" hidden>⚙️ 设置</button>
       </nav>
 
       <div class="content">
@@ -455,6 +456,18 @@
       <div class="card">
         <div class="vocab-summary">错题本里的题只会在这里手动移出，答对了也不会自动清掉。</div>
         <div id="epaperMistakeList"></div>
+      </div>
+    </div>
+
+    <!-- 听写/练习设置（家长可改，立即生效，不需要改代码） -->
+    <div id="settingsView" hidden>
+      <div class="card">
+        <div class="vocab-summary">这里改的数字保存后立即生效，孩子端下次开始听写就用新个数（正在进行的套题不受影响）。</div>
+        <div id="settingsFields"></div>
+        <div class="row" style="margin-top:12px;align-items:center">
+          <button class="primary" id="settingsSave">保存</button>
+          <span id="settingsMsg" style="color:var(--muted);font-size:13px;margin-left:10px"></span>
+        </div>
       </div>
     </div>
 
@@ -1105,6 +1118,7 @@
     $("#tabScienceMistakes").classList.toggle("active", t === "scienceMistakes");
     $("#tabEpaper").classList.toggle("active", t === "epaper");
     $("#tabEpaperMistakes").classList.toggle("active", t === "epaperMistakes");
+    $("#tabSettings").classList.toggle("active", t === "settings");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
     $("#pokedexView").hidden = t !== "pokedex";
@@ -1118,7 +1132,8 @@
     $("#scienceMistakesView").hidden = t !== "scienceMistakes";
     $("#epaperView").hidden = t !== "epaper";
     $("#epaperMistakesView").hidden = t !== "epaperMistakes";
-    const noTaskFab = ["vocab", "enVocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes", "epaper", "epaperMistakes"].includes(t);
+    $("#settingsView").hidden = t !== "settings";
+    const noTaskFab = ["vocab", "enVocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes", "epaper", "epaperMistakes", "settings"].includes(t);
     $("#fabAdd").hidden = noTaskFab; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
     $("#fabAddEnVocab").hidden = t !== "enVocab" || role !== "admin";
@@ -1137,6 +1152,7 @@
     else if (t === "scienceMistakes") { refreshScienceMistakes(); }
     else if (t === "epaper") { refreshEpaper(); refreshEpaperPapers(); }
     else if (t === "epaperMistakes") { refreshEpaperMistakes(); }
+    else if (t === "settings") { refreshSettings(); }
   }
 
   async function refresh() {
@@ -1166,6 +1182,47 @@
       el.innerHTML = "";
       if (!list.length) { el.innerHTML = '<div class="empty">No countdown events yet — add a task with a target date.</div>'; return; }
       for (const t of list) el.appendChild(taskRow(t, allowDoneFor(t)));
+    } catch (e) { showErr(e.message); }
+  }
+
+  // ---- app settings (parent-editable) --------------------------------------
+  let settingsFields = [];
+
+  async function refreshSettings() {
+    try {
+      const data = await api("/api/settings");
+      settingsFields = data.fields || [];
+      const el = $("#settingsFields");
+      el.innerHTML = "";
+      for (const f of settingsFields) {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.style.marginBottom = "10px";
+        const label = document.createElement("label");
+        label.textContent = f.label;
+        label.style.minWidth = "180px";
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = f.min; input.max = f.max; input.value = f.value;
+        input.id = "setting-" + f.key;
+        input.style.width = "110px";
+        const unit = document.createElement("span");
+        unit.style.cssText = "color:var(--muted);font-size:13px;margin-left:8px";
+        unit.textContent = `个（可填 ${f.min}–${f.max}）`;
+        row.append(label, input, unit);
+        el.appendChild(row);
+      }
+      $("#settingsMsg").textContent = `当前：中文 ${data.dictation.zh} 个 / 英文 ${data.dictation.en} 个`;
+    } catch (e) { showErr(e.message); }
+  }
+
+  async function saveSettings() {
+    try {
+      const settings = {};
+      for (const f of settingsFields) settings[f.key] = Number($("#setting-" + f.key).value);
+      const r = await api("/api/settings", { method: "PATCH", body: JSON.stringify({ settings }) });
+      $("#settingsMsg").textContent = `已保存 · 中文 ${r.dictation.zh} 个 / 英文 ${r.dictation.en} 个`;
+      refreshSettings();
     } catch (e) { showErr(e.message); }
   }
 
@@ -2641,7 +2698,10 @@
     $("#tabEpaper").onclick = () => setTab("epaper");
     $("#tabEpaper").hidden = role !== "admin";
     $("#tabEpaperMistakes").onclick = () => setTab("epaperMistakes");
+    $("#tabSettings").onclick = () => setTab("settings");
+    $("#settingsSave").onclick = saveSettings;
     $("#tabEpaperMistakes").hidden = role !== "admin";
+    $("#tabSettings").hidden = role !== "admin"; // 设置：仅家长
     $("#unlockBtn").onclick = unlockPokemon;
     $("#revealOk").onclick = () => $("#revealDialog").close();
     refresh();

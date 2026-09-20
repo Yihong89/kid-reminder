@@ -15,6 +15,8 @@
 //   POST /api/vocab                       -> add a word (body.language: "zh"|"en", default zh) [X-Admin-Pin]
 //   PATCH /api/vocab/:id                  -> edit a word                     [X-Admin-Pin]
 //   DELETE /api/vocab/:id                 -> delete a word                   [X-Admin-Pin]
+//   GET  /api/settings                    -> parent-editable settings (open; kid app reads dictation sizes)
+//   PATCH /api/settings                   -> update settings (body {settings:{key:value}})   [X-Admin-Pin]
 //   POST /api/dictation/sessions          -> resume in_progress, else generate new (kid app; body.language: "zh"|"en", default zh)
 //   POST /api/dictation/sessions/:id/complete -> kid finished, awaiting grading
 //   GET  /api/dictation/sessions          -> list sessions (?status=)        [X-Admin-Pin or X-Kid-Pin]
@@ -675,6 +677,15 @@ db.exec(`
     final_hit     INTEGER      -- NULL until reviewed; then 0/1
   );
   CREATE INDEX IF NOT EXISTS epaper_item_points_i ON epaper_item_points(item_id);
+
+  -- Parent-editable runtime settings (key/value). A table rather than hardcoded
+  -- constants so that changing something like the dictation set size does not
+  -- need a code change + redeploy (family request, 2026-09-19).
+  CREATE TABLE IF NOT EXISTS app_settings (
+    key        TEXT PRIMARY KEY,
+    value      TEXT NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 // migrate older databases that predate newer columns
 try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
@@ -734,6 +745,45 @@ try { db.exec("CREATE INDEX IF NOT EXISTS science_questions_paper ON science_que
 console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 
 // ---------------------------------------------------------------- helpers
+
+// ---------------------------------------------------------------- settings
+// Parent-editable runtime settings, stored in app_settings (key/value). Read
+// through getSetting() so a missing/corrupt row falls back to the default
+// instead of breaking a request.
+const SETTING_DEFS = {
+  "dictation.zh.size": { def: 40, min: 1, max: 200, label: "中文听写每套词数" },
+  "dictation.en.size": { def: 20, min: 1, max: 200, label: "英语听写每套词数" },
+};
+function getSettingInt(key) {
+  const meta = SETTING_DEFS[key];
+  if (!meta) throw new Error(`unknown setting: ${key}`);
+  const row = db.prepare("SELECT value FROM app_settings WHERE key = ?").get(key);
+  const n = row ? parseInt(row.value, 10) : NaN;
+  if (!Number.isInteger(n) || n < meta.min || n > meta.max) return meta.def;
+  return n;
+}
+function setSettingInt(key, value) {
+  const meta = SETTING_DEFS[key];
+  if (!meta) throw new Error(`unknown setting: ${key}`);
+  const n = parseInt(value, 10);
+  if (!Number.isInteger(n) || n < meta.min || n > meta.max) {
+    return { ok: false, error: `${meta.label}要在 ${meta.min}–${meta.max} 之间` };
+  }
+  db.prepare(
+    `INSERT INTO app_settings (key, value, updated_at) VALUES (?, ?, datetime('now'))
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`
+  ).run(key, String(n));
+  return { ok: true, value: n };
+}
+// The dictation sizes the kid's app should advertise. Both the GET endpoint and
+// the session response use this, so the two can never disagree.
+function dictationSizes() {
+  return {
+    zh: getSettingInt("dictation.zh.size"),
+    en: getSettingInt("dictation.en.size"),
+  };
+}
+
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -1453,6 +1503,38 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(401, { error: "wrong pin" });
     }
 
+    // --- app settings (parent-editable) --------------------------------
+    // GET is OPEN: the kid's app needs the dictation set size to show "会挑 N 个"
+    // on the idle screen before it starts a session. It exposes nothing sensitive
+    // — just the two counts the app already ends up displaying.
+    if (method === "GET" && pathname === "/api/settings") {
+      const sizes = dictationSizes();
+      return sendJSON(200, {
+        dictation: sizes,
+        // what the admin panel renders its inputs from, so labels/limits live in
+        // one place (SETTING_DEFS) instead of being duplicated in the HTML
+        fields: Object.entries(SETTING_DEFS).map(([key, m]) => ({
+          key, label: m.label, min: m.min, max: m.max,
+          value: getSettingInt(key),
+        })),
+      });
+    }
+    if (method === "PATCH" && pathname === "/api/settings") {
+      if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+      const body = await readBody(req);
+      const updates = body.settings && typeof body.settings === "object" ? body.settings : body;
+      const applied = {};
+      for (const [key, value] of Object.entries(updates)) {
+        if (!SETTING_DEFS[key]) return sendJSON(400, { error: `unknown setting: ${key}` });
+        const r = setSettingInt(key, value);
+        if (!r.ok) return sendJSON(400, { error: r.error });
+        applied[key] = r.value;
+      }
+      if (!Object.keys(applied).length) return sendJSON(400, { error: "no settings given" });
+      console.log(`[kid-reminder] settings updated: ${JSON.stringify(applied)}`);
+      return sendJSON(200, { ok: true, applied, dictation: dictationSizes() });
+    }
+
     // --- tasks list (open; parent-only hidden unless admin) -------------
     if (method === "GET" && pathname === "/api/tasks") {
       const reqDate = url.searchParams.get("date") || "";
@@ -1833,18 +1915,18 @@ const server = http.createServer(async (req, res) => {
         const items = db.prepare("SELECT seq, word_id AS wordId FROM dictation_items WHERE session_id = ? ORDER BY seq").all(existing.id);
         if (items.length) {
           precacheDictationAudio(items.map((i) => i.wordId));
-          return sendJSON(200, { sessionId: existing.id, items });
+          return sendJSON(200, { sessionId: existing.id, items, setSize: items.length });
         }
       }
 
       // Word selection: weakest first (lowest correct_count), lower grade level breaks
       // ties, and RANDOM() as the final tiebreaker so words tied on both don't always
       // come out in the same order. SQLite evaluates ORDER BY expressions once per row
-      // before sorting, so RANDOM() here really is one fixed value per word for this
-      // query, not re-rolled per comparison. 30 words per Chinese set (unchanged); 10
-      // for English, per family request (2026-09-09) — the two languages don't have to
-      // share a set size just because they share this query.
-      const setSize = language === "en" ? 10 : 30;
+      // before sorting, so RANDOM() here really is one fixed value per row for this
+      // query, not re-rolled per comparison. The set size is a parent-editable setting
+      // (app_settings, 网页端「听写设置」) rather than a constant, so changing it needs
+      // no code change; defaults are 40 Chinese / 20 English.
+      const setSize = getSettingInt(language === "en" ? "dictation.en.size" : "dictation.zh.size");
       const wordIds = db
         .prepare(
           `SELECT id FROM vocab_words WHERE language = ?
@@ -1867,7 +1949,7 @@ const server = http.createServer(async (req, res) => {
         return { seq: i + 1, wordId };
       });
       precacheDictationAudio(wordIds);
-      return sendJSON(201, { sessionId, items });
+      return sendJSON(201, { sessionId, items, setSize });
     }
 
     // --- mark a session finished by the kid; now awaiting parent grading (open) ---
@@ -2828,7 +2910,7 @@ const server = http.createServer(async (req, res) => {
     // anyone noticed, all stuck un-gradeable until a parent manually completed
     // them via the API. Mirrors dictation's existing resume logic (see
     // POST /api/dictation/sessions above) but goes further: dictation just
-    // replays its word list from the top on resume (cheap — 30 words, and
+    // replays its word list from the top on resume (cheap — a few dozen words, and
     // re-submitting an already-answered word is idempotent); a 75-question
     // paper is too expensive to redo, so every resumed item also reports
     // whether it's already been answered, and the client

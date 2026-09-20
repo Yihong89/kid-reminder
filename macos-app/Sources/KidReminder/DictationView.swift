@@ -11,6 +11,8 @@ struct DictationView: View {
     @State private var sessions: [DictationSessionSummary] = []
     @State private var historyError: String?
     @State private var loadingHistory = true
+    /// 每套听写的词数 — 家长在网页端「设置」里改，这里只负责显示，取不到就先显示「…」
+    @State private var setSize: Int?
 
     // A single sheet destination instead of one @State + one .sheet modifier per
     // destination — stacking multiple .sheet modifiers on one view is a known SwiftUI
@@ -86,7 +88,7 @@ struct DictationView: View {
             Text("📝").font(.system(size: 34))
             VStack(alignment: .leading, spacing: 2) {
                 Text("听写").font(.title3.bold())
-                Text("会挑 30 个最需要练习的词，App 念出来，写在纸上就好。")
+                Text("会挑 \(setSize.map(String.init) ?? "…") 个最需要练习的词，App 念出来，写在纸上就好。")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
@@ -225,7 +227,14 @@ struct DictationView: View {
 
     private func loadAll() async {
         await loadCustomLists()
+        await loadSettings()
         await loadHistory()
+    }
+
+    /// The set size is a parent-editable server setting, not a constant — see
+    /// GET /api/settings. Failure is non-fatal: the header just shows "…".
+    private func loadSettings() async {
+        setSize = (try? await api.fetchSettings())?.dictation.zh
     }
 
     private func loadCustomLists() async {

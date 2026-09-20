@@ -87,6 +87,20 @@ struct DictationItemRef: Codable, Identifiable {
 struct DictationSession: Codable {
     let sessionId: Int
     let items: [DictationItemRef]
+    /// How many words this set was built with. Sent by the server so the app can
+    /// show the real number instead of hardcoding it — the size is a
+    /// parent-editable setting (网页端「设置」), not a constant.
+    let setSize: Int?
+}
+
+/// Parent-editable runtime settings, from GET /api/settings. Currently just the
+/// dictation set sizes; the app only reads them to label its idle screens.
+struct AppSettings: Codable {
+    struct DictationSizes: Codable {
+        let zh: Int
+        let en: Int
+    }
+    let dictation: DictationSizes
 }
 
 /// One row of /api/dictation/sessions — history list (used by DictationHistoryView so

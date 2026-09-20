@@ -158,9 +158,17 @@ final class APIClient {
 
     // MARK: - Dictation (听写)
 
+    /// Parent-editable runtime settings. Open endpoint (no PIN) — the app needs the
+    /// dictation set sizes to label its idle screens before a session exists.
+    func fetchSettings() async throws -> AppSettings {
+        let data = try await request("/api/settings")
+        return try JSONDecoder().decode(AppSettings.self, from: data)
+    }
+
     /// Resumes the current in_progress set if there is one, otherwise generates a new
-    /// one: 30 words picked weakest (lowest correct_count) first, lower grade level
-    /// breaking ties, shuffled into playback order.
+    /// one: N Chinese / M English words (N and M are parent-editable settings, default
+    /// 40 / 20) picked weakest (lowest correct_count) first, lower grade level breaking
+    /// ties, shuffled into playback order.
     func startDictation() async throws -> DictationSession {
         let data = try await request("/api/dictation/sessions", method: "POST", body: Data("{}".utf8))
         return try JSONDecoder().decode(DictationSession.self, from: data)

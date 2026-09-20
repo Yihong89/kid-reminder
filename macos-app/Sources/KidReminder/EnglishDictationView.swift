@@ -10,6 +10,8 @@ struct EnglishDictationView: View {
     @State private var sessions: [DictationSessionSummary] = []
     @State private var historyError: String?
     @State private var loadingHistory = true
+    /// 每套听写的单词数 — 家长在网页端「设置」里改，这里只负责显示，取不到就先显示「…」
+    @State private var setSize: Int?
 
     private enum SheetDestination: Identifiable {
         case run
@@ -57,7 +59,7 @@ struct EnglishDictationView: View {
                 Divider()
                 historyColumn
             }
-            .task { await loadHistory() }
+            .task { await loadSettings(); await loadHistory() }
         }
     }
 
@@ -66,7 +68,7 @@ struct EnglishDictationView: View {
             Text("🔤").font(.system(size: 34))
             VStack(alignment: .leading, spacing: 2) {
                 Text("英语听写").font(.title3.bold())
-                Text("会挑 10 个最需要练习的单词，App 念出来，写在纸上就好。")
+                Text("会挑 \(setSize.map(String.init) ?? "…") 个最需要练习的单词，App 念出来，写在纸上就好。")
                     .font(.caption).foregroundStyle(.secondary)
             }
             Spacer()
@@ -143,6 +145,11 @@ struct EnglishDictationView: View {
     /// Graded sessions only — same rule as the Chinese DictationView: grading happens
     /// in the parent's web admin, and an ungraded session's detail would reveal word
     /// text this feature is built to keep off the kid's screen until then.
+    /// 家长在网页端「设置」里改，这里只负责显示（GET /api/settings，无需 PIN）。
+    private func loadSettings() async {
+        setSize = (try? await api.fetchSettings())?.dictation.en
+    }
+
     private func loadHistory() async {
         loadingHistory = true
         defer { loadingHistory = false }
