@@ -1471,7 +1471,8 @@
       }
       const from = engTotal === 0 ? 0 : engOffset + 1;
       const to = Math.min(engOffset + engLimit, engTotal);
-      $("#engSummary").textContent = `共 ${engTotal} 条 · 显示 ${from}–${to}`;
+      $("#engSummary").textContent =
+        `共 ${engTotal} 条 · 🔴 还没答对过（正确数 0）${data.zeroCount} 条 · 显示 ${from}–${to}`;
       $("#engPageLabel").textContent = `第 ${Math.floor(engOffset / engLimit) + 1} / ${Math.max(1, Math.ceil(engTotal / engLimit))} 页`;
       $("#engPrev").disabled = engOffset <= 0;
       $("#engNext").disabled = engOffset + engLimit >= engTotal;

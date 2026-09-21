@@ -2220,11 +2220,19 @@ const server = http.createServer(async (req, res) => {
       const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
       const total = db.prepare(`SELECT COUNT(*) n FROM english_questions ${whereSql}`).get(...params).n;
+      // Same idea as /api/vocab's zeroCount: correct_count is +1 right / -1 wrong
+      // floored at 0, so 0 means the kid has never answered this one correctly —
+      // the parent's only progress signal here, since the practice list itself
+      // shows questions, not how they're trending. Scoped to the CURRENT filters
+      // so picking a type narrows the number too.
+      const zeroCount = db.prepare(
+        `SELECT COUNT(*) n FROM english_questions ${where.length ? whereSql + " AND" : "WHERE"} correct_count = 0`
+      ).get(...params).n;
       const rows = db
         .prepare(`SELECT * FROM english_questions ${whereSql} ORDER BY id DESC LIMIT ? OFFSET ?`)
         .all(...params, limit, offset);
       const questions = rows.map((r) => ({ ...r, options: r.options ? JSON.parse(r.options) : null }));
-      return sendJSON(200, { total, limit, offset, questions });
+      return sendJSON(200, { total, zeroCount, limit, offset, questions });
     }
 
     // create (admin or kid — the macOS app's "add a mistake" form uses this too)
