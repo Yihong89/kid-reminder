@@ -1851,6 +1851,7 @@
         <div>
           <div class="kind ${autoClass}">${SCI_KIND_LABEL[p.pointKind] || p.pointKind} <span style="font-weight:400;color:var(--muted)">（${autoLabel}）</span></div>
           <div class="desc">${escapeHtml(p.description)}</div>
+          ${p.modelAnswerMiss ? '<div class="desc" style="color:#b45309">⚠️ 参考答案本身没写全这个要点，关键词匹配可能漏判 —— 请重点核对孩子的说法</div>' : ''}
         </div>`;
       if (!readOnly) {
         row.querySelector("input").onchange = (e) => {

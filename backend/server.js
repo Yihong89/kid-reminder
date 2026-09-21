@@ -2778,11 +2778,31 @@ const server = http.createServer(async (req, res) => {
       const detailed = items.map((it) => {
         const pts = db.prepare(`
           SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
+                 mp.keywords, mp.any_of, mp.need_n,
                  ip.auto_hit autoHit, ip.final_hit finalHit
             FROM science_mark_points mp
             LEFT JOIN science_item_points ip
                    ON ip.mark_point_id = mp.id AND ip.item_id = ?
-           WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.id, it.question_id);
+           WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.id, it.question_id)
+          .map((p) => {
+            // Does the question's OWN model answer satisfy this mark point's keywords?
+            // If not, the keywords are stricter than the reference answer the parent
+            // is shown, so a child who phrases it like the model answer would be
+            // marked wrong. Surfaced to the parent during review as a "double-check
+            // this one" hint rather than auto-flipping anything — the underlying
+            // cause is sometimes a terse model answer and sometimes a keyword that
+            // needs loosening, and only a human can tell which (2026-09-20 audit:
+            // 45 of 869 mark points failed this test).
+            const modelAnswerMiss = !scienceAutoHit(
+              { keywords: p.keywords, any_of: p.any_of, need_n: p.need_n },
+              it.model_answer
+            );
+            return {
+              markPointId: p.markPointId, seq: p.seq, pointKind: p.pointKind,
+              description: p.description, autoHit: p.autoHit, finalHit: p.finalHit,
+              modelAnswerMiss,
+            };
+          });
         return { ...it, do_not_accept: scienceParse(it.do_not_accept, []), points: pts };
       });
       return sendJSON(200, { session, items: detailed });
