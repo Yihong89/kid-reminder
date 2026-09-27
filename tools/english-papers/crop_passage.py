@@ -33,6 +33,9 @@ PAGES = {
     "acsj": 10, "aitong": 13, "catholichigh": 14, "henrypark": 11, "mgs": 9,
     "nanhua": 13, "nanyang": 13, "plmgs": 21, "raffles": 11, "redswastika": 16,
     "rosyth": 11, "scgs": 15, "stnicholas": 18, "taonan": 23,
+    # rulang: the reading passage for Q66-75 is printed at the very end of
+    # Booklet A (printed pages 10-11), not in Booklet B.
+    "rulang": 14,
 }
 
 # slug -> second page, for passages long enough to spill onto the next
@@ -40,6 +43,7 @@ PAGES = {
 # paper's questions against how many lines PAGES[slug] alone actually shows.
 CONT_PAGES = {
     "catholichigh": 15, "henrypark": 12, "nanhua": 14, "plmgs": 22,
+    "rulang": 15,
 }
 
 # (slug, page_no) -> manual (x0,y0,x1,y1) in the survey PNG's own pixel space,
