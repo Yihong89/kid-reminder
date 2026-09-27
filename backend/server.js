@@ -769,8 +769,8 @@ const SETTING_DEFS = {
     hint: "打开后只抽「识写字」（category=write），跳过认读字。",
   },
   "dictation.zh.charCap": {
-    type: "int", def: 2, min: 1, max: 10, label: "同一个字答对几个词后不再抽",
-    hint: "某个字只要有这么多词答对过，它剩下的词就不再抽。每个字一般带 5 个词，填 10 相当于不限制。",
+    type: "int", def: 2, min: 1, max: 10, label: "同一个字答对几个词后往后排",
+    hint: "某个字只要有这么多词答对过，它剩下的词不会被删掉，只是在「正确数相同」的词里排到最后。填 10 相当于不降权。",
   },
 };
 // Levels actually present in the Chinese bank, so the picker can never offer a
@@ -1988,28 +1988,31 @@ const server = http.createServer(async (req, res) => {
       const priorityLevel = language === "en" ? "" : getSetting("dictation.zh.priorityLevel");
       // 期末临时规则（Chinese only, both default OFF — 考完关掉即恢复原样）:
       //   writeOnly 只抽识写字 (category='write')，跳过认读字
-      //   charCap   同一个字已有 N 个词答对过，这个字剩下的词就都不再抽
+      //   charCap   同一个字已有 N 个词答对过 —— 这个字剩下的词不删除，只是
+      //             在「相同正确数」里排到最后，所以池子永远不会抽空，已经学会
+      //             的字也只是暂时让位给更该练的词。
       const writeOnly = language !== "en" && getSetting("dictation.zh.writeOnly");
       const charCap = language === "en" ? 0 : getSetting("dictation.zh.charCap");
       const where = ["language = ?"];
       const params = [language];
       if (writeOnly) where.push("category = 'write'");
+      // 正确数最低的永远排最前；降权只发生在正确数相同的时候。
+      const orderParts = [];
+      if (priorityLevel) { orderParts.push("CASE WHEN level = ? THEN 0 ELSE 1 END"); params.push(priorityLevel); }
+      orderParts.push("correct_count ASC");
       if (charCap > 0) {
-        where.push(
-          `(SELECT COUNT(*) FROM vocab_words w
-             WHERE w.language = vocab_words.language
-               AND w.character = vocab_words.character
-               AND w.correct_count > 0) < ?`
+        orderParts.push(
+          `CASE WHEN (SELECT COUNT(*) FROM vocab_words w
+                        WHERE w.language = vocab_words.language
+                          AND w.character = vocab_words.character
+                          AND w.correct_count > 0) >= ? THEN 1 ELSE 0 END`
         );
         params.push(charCap);
       }
-      const orderBy = priorityLevel
-        ? "CASE WHEN level = ? THEN 0 ELSE 1 END, correct_count ASC, level ASC, RANDOM() ASC"
-        : "correct_count ASC, level ASC, RANDOM() ASC";
-      if (priorityLevel) params.push(priorityLevel);
+      orderParts.push("level ASC", "RANDOM() ASC");
       params.push(setSize);
       const wordIds = db
-        .prepare(`SELECT id FROM vocab_words WHERE ${where.join(" AND ")} ORDER BY ${orderBy} LIMIT ?`)
+        .prepare(`SELECT id FROM vocab_words WHERE ${where.join(" AND ")} ORDER BY ${orderParts.join(", ")} LIMIT ?`)
         .all(...params)
         .map((r) => r.id);
       if (wordIds.length === 0) {
