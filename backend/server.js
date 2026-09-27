@@ -769,8 +769,8 @@ const SETTING_DEFS = {
     hint: "打开后只抽「识写字」（category=write），跳过认读字。",
   },
   "dictation.zh.charCap": {
-    type: "int", def: 0, min: 0, max: 20, label: "同一个字答对几个词后不再抽",
-    hint: "例如填 2：某个字只要有 2 个词答对过，这个字剩下的词就都不再抽了。0=关闭。",
+    type: "int", def: 2, min: 1, max: 10, label: "同一个字答对几个词后不再抽",
+    hint: "某个字只要有这么多词答对过，它剩下的词就不再抽。每个字一般带 5 个词，填 10 相当于不限制。",
   },
 };
 // Levels actually present in the Chinese bank, so the picker can never offer a
