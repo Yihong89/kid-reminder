@@ -1201,15 +1201,30 @@
         const label = document.createElement("label");
         label.textContent = f.label;
         label.style.minWidth = "180px";
-        const input = document.createElement("input");
-        input.type = "number";
-        input.min = f.min; input.max = f.max; input.value = f.value;
-        input.id = "setting-" + f.key;
-        input.style.width = "110px";
         const unit = document.createElement("span");
         unit.style.cssText = "color:var(--muted);font-size:13px;margin-left:8px";
-        unit.textContent = `个（可填 ${f.min}–${f.max}）`;
-        row.append(label, input, unit);
+        let control;
+        if (f.type === "level") {
+          // 从 GET /api/settings 的 options 渲染，所以改 SETTING_DEFS 就够了，不用动这里
+          control = document.createElement("select");
+          control.style.width = "150px";
+          for (const o of f.options || []) {
+            const opt = document.createElement("option");
+            opt.value = o;
+            opt.textContent = o === "" ? "（不特别优先）" : o;
+            control.appendChild(opt);
+          }
+          control.value = f.value == null ? "" : f.value;
+          unit.textContent = f.hint || "";
+        } else {
+          control = document.createElement("input");
+          control.type = "number";
+          control.min = f.min; control.max = f.max; control.value = f.value;
+          control.style.width = "110px";
+          unit.textContent = `个（可填 ${f.min}–${f.max}）`;
+        }
+        control.id = "setting-" + f.key;
+        row.append(label, control, unit);
         el.appendChild(row);
       }
       $("#settingsMsg").textContent = `当前：中文 ${data.dictation.zh} 个 / 英文 ${data.dictation.en} 个`;
@@ -1219,7 +1234,10 @@
   async function saveSettings() {
     try {
       const settings = {};
-      for (const f of settingsFields) settings[f.key] = Number($("#setting-" + f.key).value);
+      for (const f of settingsFields) {
+        const el = $("#setting-" + f.key);
+        settings[f.key] = f.type === "level" ? el.value : Number(el.value);
+      }
       const r = await api("/api/settings", { method: "PATCH", body: JSON.stringify({ settings }) });
       $("#settingsMsg").textContent = `已保存 · 中文 ${r.dictation.zh} 个 / 英文 ${r.dictation.en} 个`;
       refreshSettings();

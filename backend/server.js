@@ -749,38 +749,74 @@ console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 // ---------------------------------------------------------------- settings
 // Parent-editable runtime settings, stored in app_settings (key/value). Read
 // through getSetting() so a missing/corrupt row falls back to the default
-// instead of breaking a request.
+// instead of breaking a request, and so an out-of-range value can never reach
+// a query.
+//
+// Three shapes so far:
+//   type "int"   — a bounded number          (dictation set sizes)
+//   type "level" — one of the levels present in the bank, or "" for no priority
 const SETTING_DEFS = {
-  "dictation.zh.size": { def: 40, min: 1, max: 200, label: "中文听写每套词数" },
-  "dictation.en.size": { def: 20, min: 1, max: 200, label: "英语听写每套词数" },
+  "dictation.zh.size": { type: "int", def: 40, min: 1, max: 200, label: "中文听写每套词数" },
+  "dictation.en.size": { type: "int", def: 20, min: 1, max: 200, label: "英语听写每套词数" },
+  "dictation.zh.priorityLevel": {
+    type: "level", def: "", label: "中文听写优先年级",
+    hint: "选了以后，这个年级的词会排在抽题最前面（该年级内部仍是没答对的优先）。空=不特别优先。",
+  },
 };
-function getSettingInt(key) {
-  const meta = SETTING_DEFS[key];
-  if (!meta) throw new Error(`unknown setting: ${key}`);
-  const row = db.prepare("SELECT value FROM app_settings WHERE key = ?").get(key);
-  const n = row ? parseInt(row.value, 10) : NaN;
-  if (!Number.isInteger(n) || n < meta.min || n > meta.max) return meta.def;
-  return n;
+// Levels actually present in the Chinese bank, so the picker can never offer a
+// level with no words in it (and "" for "no priority").
+function levelChoices() {
+  return ["", ...db.prepare(
+    "SELECT DISTINCT level FROM vocab_words WHERE language = 'zh' ORDER BY level"
+  ).all().map((r) => r.level)];
 }
-function setSettingInt(key, value) {
+function getSettingRaw(key) {
+  const row = db.prepare("SELECT value FROM app_settings WHERE key = ?").get(key);
+  return row ? row.value : null;
+}
+function getSetting(key) {
   const meta = SETTING_DEFS[key];
   if (!meta) throw new Error(`unknown setting: ${key}`);
-  const n = parseInt(value, 10);
-  if (!Number.isInteger(n) || n < meta.min || n > meta.max) {
-    return { ok: false, error: `${meta.label}要在 ${meta.min}–${meta.max} 之间` };
+  const raw = getSettingRaw(key);
+  if (meta.type === "int") {
+    const n = parseInt(raw, 10);
+    return (!Number.isInteger(n) || n < meta.min || n > meta.max) ? meta.def : n;
+  }
+  if (meta.type === "level") {
+    const v = String(raw == null ? "" : raw).trim().toUpperCase();
+    return levelChoices().includes(v) ? v : meta.def;
+  }
+  throw new Error(`unhandled setting type: ${meta.type}`);
+}
+function setSetting(key, value) {
+  const meta = SETTING_DEFS[key];
+  if (!meta) throw new Error(`unknown setting: ${key}`);
+  let stored;
+  if (meta.type === "int") {
+    const n = parseInt(value, 10);
+    if (!Number.isInteger(n) || n < meta.min || n > meta.max) {
+      return { ok: false, error: `${meta.label}要在 ${meta.min}–${meta.max} 之间` };
+    }
+    stored = String(n);
+  } else if (meta.type === "level") {
+    const v = String(value == null ? "" : value).trim().toUpperCase();
+    if (!levelChoices().includes(v)) return { ok: false, error: `${meta.label}只能是 ${levelChoices().filter(Boolean).join(" / ")}，或留空` };
+    stored = v;
+  } else {
+    throw new Error(`unhandled setting type: ${meta.type}`);
   }
   db.prepare(
     `INSERT INTO app_settings (key, value, updated_at) VALUES (?, ?, datetime('now'))
      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at`
-  ).run(key, String(n));
-  return { ok: true, value: n };
+  ).run(key, stored);
+  return { ok: true, value: getSetting(key) };
 }
 // The dictation sizes the kid's app should advertise. Both the GET endpoint and
 // the session response use this, so the two can never disagree.
 function dictationSizes() {
   return {
-    zh: getSettingInt("dictation.zh.size"),
-    en: getSettingInt("dictation.en.size"),
+    zh: getSetting("dictation.zh.size"),
+    en: getSetting("dictation.en.size"),
   };
 }
 
@@ -1511,11 +1547,13 @@ const server = http.createServer(async (req, res) => {
       const sizes = dictationSizes();
       return sendJSON(200, {
         dictation: sizes,
-        // what the admin panel renders its inputs from, so labels/limits live in
-        // one place (SETTING_DEFS) instead of being duplicated in the HTML
+        // what the admin panel renders its inputs from, so labels/limits/types live
+        // in one place (SETTING_DEFS) instead of being duplicated in the HTML
         fields: Object.entries(SETTING_DEFS).map(([key, m]) => ({
-          key, label: m.label, min: m.min, max: m.max,
-          value: getSettingInt(key),
+          key, label: m.label, type: m.type || "int", hint: m.hint || "",
+          min: m.min, max: m.max,
+          options: m.type === "level" ? levelChoices() : undefined,
+          value: getSetting(key),
         })),
       });
     }
@@ -1526,7 +1564,7 @@ const server = http.createServer(async (req, res) => {
       const applied = {};
       for (const [key, value] of Object.entries(updates)) {
         if (!SETTING_DEFS[key]) return sendJSON(400, { error: `unknown setting: ${key}` });
-        const r = setSettingInt(key, value);
+        const r = setSetting(key, value);
         if (!r.ok) return sendJSON(400, { error: r.error });
         applied[key] = r.value;
       }
@@ -1926,14 +1964,25 @@ const server = http.createServer(async (req, res) => {
       // query, not re-rolled per comparison. The set size is a parent-editable setting
       // (app_settings, 网页端「听写设置」) rather than a constant, so changing it needs
       // no code change; defaults are 40 Chinese / 20 English.
-      const setSize = getSettingInt(language === "en" ? "dictation.en.size" : "dictation.zh.size");
-      const wordIds = db
-        .prepare(
-          `SELECT id FROM vocab_words WHERE language = ?
-           ORDER BY correct_count ASC, level ASC, RANDOM() ASC LIMIT ?`
-        )
-        .all(language, setSize)
-        .map((r) => r.id);
+      const setSize = getSetting(language === "en" ? "dictation.en.size" : "dictation.zh.size");
+      // 优先年级 (Chinese only): a family-set level whose words are drawn first —
+      // end-of-year revision wants the current year's words, not whatever the
+      // oldest unanswered level happens to be. Within the priority level the
+      // usual weakest-first rule still applies, and everything else only fills
+      // in once that level is exhausted. Empty = the original behaviour.
+      const priorityLevel = language === "en" ? "" : getSetting("dictation.zh.priorityLevel");
+      const wordIds = (
+        priorityLevel
+          ? db.prepare(
+              `SELECT id FROM vocab_words WHERE language = ?
+               ORDER BY CASE WHEN level = ? THEN 0 ELSE 1 END,
+                        correct_count ASC, level ASC, RANDOM() ASC LIMIT ?`
+            ).all(language, priorityLevel, setSize)
+          : db.prepare(
+              `SELECT id FROM vocab_words WHERE language = ?
+               ORDER BY correct_count ASC, level ASC, RANDOM() ASC LIMIT ?`
+            ).all(language, setSize)
+      ).map((r) => r.id);
       if (wordIds.length === 0) {
         return sendJSON(400, { error: language === "en" ? "英语听写词库还是空的，请先在网页端添加单词" : "vocab bank is empty" });
       }
