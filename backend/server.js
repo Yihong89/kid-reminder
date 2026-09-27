@@ -769,7 +769,8 @@ const SETTING_DEFS = {
     hint: "打开后只抽「识写字」（category=write），跳过认读字。",
   },
   "dictation.zh.charCap": {
-    type: "int", def: 2, min: 1, max: 10, label: "同一个字答对几个词后往后排",
+    // def 10 = 从不降权，也就是这个功能出现之前的行为。期末复习才调成 2。
+    type: "int", def: 10, min: 1, max: 10, label: "同一个字答对几个词后往后排",
     hint: "某个字只要有这么多词答对过，它剩下的词不会被删掉，只是在「正确数相同」的词里排到最后。填 10 相当于不降权。",
   },
 };

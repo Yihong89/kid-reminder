@@ -118,15 +118,21 @@ Admin panel features:
 A vocabulary word bank (character, compound word, pinyin, example sentence — tagged
 识读/识写 and by grade level) drives adaptive listening-test sessions:
 
-- **Weakest-first** — each session pulls 10 words from the characters the kid has
-  gotten wrong most often (lowest `correct_count`), shuffled.
+- **Weakest-first** — each session pulls N words from the characters the kid has
+  gotten wrong most often (lowest `correct_count`), shuffled. N is a
+  parent-editable server setting (default 40).
+- **Parent-editable settings** — set size, an optional priority grade level, a
+  识写字-only mode, and a per-character demotion threshold, all from the web
+  admin's `⚙️ 设置` tab. No code change, no app rebuild. See
+  [docs/dictation-settings.md](docs/dictation-settings.md).
 - **Audio only, no text** — the kid hears the word + sentence read aloud (TTS, see
   below) and writes it down; nothing is shown on screen during the test.
 - **Parent grading** — once the kid finishes, the session sits as *pending grading*
   until the parent marks each word ✓/✗ on the web admin, which updates that word's
   weak/strong count for future sessions.
-- **Web admin** — `📚 生词库` tab (full word-bank CRUD) and `📝 听写记录` tab (session
-  history: graded / pending / abandoned, with a delete button for cleanup).
+- **Web admin** — `📚 生词库` tab (full word-bank CRUD), `📝 听写记录` tab (session
+  history: graded / pending / abandoned, with a delete button for cleanup), and
+  `⚙️ 设置` for the settings above.
 
 ## English wrong-answer practice (英语错题练习)
 
