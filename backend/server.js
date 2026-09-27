@@ -755,12 +755,22 @@ console.log(`[kid-reminder] db ready at ${DB_PATH}`);
 // Three shapes so far:
 //   type "int"   — a bounded number          (dictation set sizes)
 //   type "level" — one of the levels present in the bank, or "" for no priority
+//   type "bool"  — an on/off switch
 const SETTING_DEFS = {
   "dictation.zh.size": { type: "int", def: 40, min: 1, max: 200, label: "中文听写每套词数" },
   "dictation.en.size": { type: "int", def: 20, min: 1, max: 200, label: "英语听写每套词数" },
   "dictation.zh.priorityLevel": {
     type: "level", def: "", label: "中文听写优先年级",
     hint: "选了以后，这个年级的词会排在抽题最前面（该年级内部仍是没答对的优先）。空=不特别优先。",
+  },
+  // --- 期末临时规则：考完把这俩关掉就恢复原样 -----------------------------
+  "dictation.zh.writeOnly": {
+    type: "bool", def: false, label: "只听写识写字",
+    hint: "打开后只抽「识写字」（category=write），跳过认读字。",
+  },
+  "dictation.zh.charCap": {
+    type: "int", def: 0, min: 0, max: 20, label: "同一个字答对几个词后不再抽",
+    hint: "例如填 2：某个字只要有 2 个词答对过，这个字剩下的词就都不再抽了。0=关闭。",
   },
 };
 // Levels actually present in the Chinese bank, so the picker can never offer a
@@ -786,6 +796,9 @@ function getSetting(key) {
     const v = String(raw == null ? "" : raw).trim().toUpperCase();
     return levelChoices().includes(v) ? v : meta.def;
   }
+  if (meta.type === "bool") {
+    return raw === "1" || raw === "true";
+  }
   throw new Error(`unhandled setting type: ${meta.type}`);
 }
 function setSetting(key, value) {
@@ -802,6 +815,8 @@ function setSetting(key, value) {
     const v = String(value == null ? "" : value).trim().toUpperCase();
     if (!levelChoices().includes(v)) return { ok: false, error: `${meta.label}只能是 ${levelChoices().filter(Boolean).join(" / ")}，或留空` };
     stored = v;
+  } else if (meta.type === "bool") {
+    stored = (value === true || value === 1 || value === "1" || value === "true") ? "1" : "0";
   } else {
     throw new Error(`unhandled setting type: ${meta.type}`);
   }
@@ -1971,18 +1986,32 @@ const server = http.createServer(async (req, res) => {
       // usual weakest-first rule still applies, and everything else only fills
       // in once that level is exhausted. Empty = the original behaviour.
       const priorityLevel = language === "en" ? "" : getSetting("dictation.zh.priorityLevel");
-      const wordIds = (
-        priorityLevel
-          ? db.prepare(
-              `SELECT id FROM vocab_words WHERE language = ?
-               ORDER BY CASE WHEN level = ? THEN 0 ELSE 1 END,
-                        correct_count ASC, level ASC, RANDOM() ASC LIMIT ?`
-            ).all(language, priorityLevel, setSize)
-          : db.prepare(
-              `SELECT id FROM vocab_words WHERE language = ?
-               ORDER BY correct_count ASC, level ASC, RANDOM() ASC LIMIT ?`
-            ).all(language, setSize)
-      ).map((r) => r.id);
+      // 期末临时规则（Chinese only, both default OFF — 考完关掉即恢复原样）:
+      //   writeOnly 只抽识写字 (category='write')，跳过认读字
+      //   charCap   同一个字已有 N 个词答对过，这个字剩下的词就都不再抽
+      const writeOnly = language !== "en" && getSetting("dictation.zh.writeOnly");
+      const charCap = language === "en" ? 0 : getSetting("dictation.zh.charCap");
+      const where = ["language = ?"];
+      const params = [language];
+      if (writeOnly) where.push("category = 'write'");
+      if (charCap > 0) {
+        where.push(
+          `(SELECT COUNT(*) FROM vocab_words w
+             WHERE w.language = vocab_words.language
+               AND w.character = vocab_words.character
+               AND w.correct_count > 0) < ?`
+        );
+        params.push(charCap);
+      }
+      const orderBy = priorityLevel
+        ? "CASE WHEN level = ? THEN 0 ELSE 1 END, correct_count ASC, level ASC, RANDOM() ASC"
+        : "correct_count ASC, level ASC, RANDOM() ASC";
+      if (priorityLevel) params.push(priorityLevel);
+      params.push(setSize);
+      const wordIds = db
+        .prepare(`SELECT id FROM vocab_words WHERE ${where.join(" AND ")} ORDER BY ${orderBy} LIMIT ?`)
+        .all(...params)
+        .map((r) => r.id);
       if (wordIds.length === 0) {
         return sendJSON(400, { error: language === "en" ? "英语听写词库还是空的，请先在网页端添加单词" : "vocab bank is empty" });
       }

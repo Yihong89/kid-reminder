@@ -1216,6 +1216,12 @@
           }
           control.value = f.value == null ? "" : f.value;
           unit.textContent = f.hint || "";
+        } else if (f.type === "bool") {
+          control = document.createElement("input");
+          control.type = "checkbox";
+          control.checked = !!f.value;
+          control.style.width = "auto";
+          unit.textContent = f.hint || "";
         } else {
           control = document.createElement("input");
           control.type = "number";
@@ -1236,7 +1242,9 @@
       const settings = {};
       for (const f of settingsFields) {
         const el = $("#setting-" + f.key);
-        settings[f.key] = f.type === "level" ? el.value : Number(el.value);
+        if (f.type === "level") settings[f.key] = el.value;
+        else if (f.type === "bool") settings[f.key] = el.checked;
+        else settings[f.key] = Number(el.value);
       }
       const r = await api("/api/settings", { method: "PATCH", body: JSON.stringify({ settings }) });
       $("#settingsMsg").textContent = `已保存 · 中文 ${r.dictation.zh} 个 / 英文 ${r.dictation.en} 个`;
