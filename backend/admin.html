@@ -2294,7 +2294,12 @@
             epaperDecisions[it.id].points[p.markPointId] = finalKnown ? !!p.finalHit : !!suggest;
           }
         } else {
-          epaperDecisions[it.id] = { finalCorrect: !!it.final_correct };
+          // Auto-grading says wrong, but the sentence-level AI check may say
+          // otherwise; pre-tick its verdict so a parent who agrees just saves.
+          const aiKnown = it.ai_correct === 0 || it.ai_correct === 1;
+          epaperDecisions[it.id] = {
+            finalCorrect: it.final_correct ? true : (aiKnown ? !!it.ai_correct : false),
+          };
         }
       }
       const dlgDur = fmtDuration(data.session.created_at, data.session.completed_at);
@@ -2361,6 +2366,9 @@
         <div>
           <div class="kind">判定：答对了吗？</div>
           <div class="desc">正确答案：${escapeHtml(it.correct_answer || "")}${it.explanation ? " — " + escapeHtml(it.explanation) : ""}</div>
+          ${(it.ai_correct === 0 || it.ai_correct === 1)
+            ? `<div class="desc" style="color:${it.ai_correct ? "#047857" : "#b45309"};font-style:italic">🤖 AI 复核：这句话${it.ai_correct ? "意思对、语法也对" : "与原句意思不符"}${it.ai_correct ? "，建议给分" : ""}（自动判分只看字面，仅供参考）</div>`
+            : ""}
         </div>`;
       if (!readOnly) {
         row.querySelector("input").onchange = (e) => { epaperDecisions[it.id].finalCorrect = e.target.checked; };

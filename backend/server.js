@@ -733,6 +733,12 @@ try { db.exec("ALTER TABLE epaper_questions ADD COLUMN correct_count INTEGER NOT
 // review falls back to auto_hit exactly as it did before this existed.
 try { db.exec("ALTER TABLE epaper_item_points ADD COLUMN ai_hit INTEGER"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE epaper_item_points ADD COLUMN ai_reason TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
+// Same second opinion, for sentence-level fill_blank items (synthesis). Those
+// have no mark points to hang ai_hit on, and equality-based grading cannot tell
+// a correct paraphrase from a wrong sentence — so the verdict lives on the item.
+// NULL = not analysed. Additive: NULL leaves final_correct exactly as it was.
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN ai_correct INTEGER"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN ai_reason TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 // Created here, not in the CREATE TABLE block above: on an already-deployed DB,
 // "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
 // exists without paper_key/paper_seq), so an index on those columns placed in
@@ -1044,9 +1050,34 @@ function scienceAutoHit(markPoint, answer) {
 // mcq/fill_blank: identical rule to the existing English wrong-answer bank —
 // "alt1 / alt2" in correct_answer means either counts, compared after the
 // same normalization (lowercase, collapsed whitespace, stripped punctuation).
-function epaperGradeObjective(answer, correctAnswer) {
-  const alts = String(correctAnswer || "").split("/").map((a) => normalizeEnglishAnswer(a));
-  return alts.includes(normalizeEnglishAnswer(answer));
+//
+// `tolerant` is for sentence-level answers (synthesis) only. Two things a human
+// marker accepts but exact equality does not:
+//   - the answer repeats words the prompt ALREADY printed. "Neither ________"
+//     answered with the whole "Neither the players nor the coach was pleased..."
+//     is the right sentence, not a wrong one. Same for a blank whose stem is
+//     "Mrs Chan told the pupils ______" and an answer starting "Mrs Chan told
+//     her pupils ...".
+//   - a synonymous word or two inside an otherwise correct sentence.
+// So a sentence answer also counts when it CONTAINS an accepted alternative, or
+// is contained by one. The length ratio stops that from swallowing a long
+// rambling answer that merely mentions the key words.
+//
+// Measured 2026-09-28 on the Rulang paper: a synthesis set that a marker would
+// have scored 8/10 was scored 2/10 by equality alone. Single-word sections
+// (editing / cloze_open / cloze_wordbank) stay exact — "the dries" must not pass
+// for "dries".
+const SENTENCE_ANSWER_MAX_RATIO = 2.0;
+function epaperGradeObjective(answer, correctAnswer, { tolerant = false } = {}) {
+  const alts = String(correctAnswer || "").split("/").map((a) => normalizeEnglishAnswer(a)).filter(Boolean);
+  const got = normalizeEnglishAnswer(answer);
+  if (!got) return false;
+  if (alts.includes(got)) return true;
+  if (!tolerant) return false;
+  return alts.some((alt) =>
+    (got.includes(alt) && got.length <= alt.length * SENTENCE_ANSWER_MAX_RATIO) ||
+    alt.includes(got)
+  );
 }
 
 // cloze_wordbank answer keys are stored inconsistently across imported papers:
@@ -1180,6 +1211,67 @@ function epaperRunAiSuggest(itemId, question, answer, missed) {
       } catch { /* row re-graded or session deleted while we were thinking */ }
     }
     if (AI_GRADING) console.log(`[ai] session item ${itemId}: suggested on ${missed.length} missed point(s)`);
+  }).catch(() => { /* never let an AI failure surface anywhere */ });
+}
+
+// Sentence-level fill_blank (synthesis) carries no mark points, so the OEQ
+// helper above cannot be reused as-is. Ask the same local model one direct
+// yes/no question instead. Only fires after the deterministic comparison has
+// already said "wrong", and only for synthesis — every other fill_blank section
+// is a single word, which equality (plus the containment rule) handles fine.
+const AI_OBJECTIVE_PROMPT =
+  "A pupil rewrote a sentence for a school English test. Decide whether the " +
+  "pupil's sentence means the same as the reference answer and is grammatically " +
+  "correct. Ignore differences in spelling. Answer with exactly one line: " +
+  "VERDICT: YES or VERDICT: NO. No other text.";
+
+async function epaperAiJudgeObjective(question, answer) {
+  if (!AI_GRADING) return null;
+  const content =
+    `Original sentence(s): ${question.context || "(not given)"}\n` +
+    `The pupil was told to write: ${question.prompt}\n` +
+    `Reference answer: ${question.correct_answer}\n` +
+    `Pupil's sentence: ${answer || "(blank)"}\n\n` + AI_OBJECTIVE_PROMPT;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${OLLAMA_URL}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        stream: false,
+        think: false,
+        keep_alive: AI_KEEP_ALIVE,
+        options: { temperature: 0, num_predict: 32 },
+        messages: [{ role: "user", content }],
+      }),
+    });
+    if (!res.ok) return null;
+    const out = await res.json();
+    const text = (out && out.message && out.message.content) || "";
+    const m = text.match(/VERDICT\s*[:\-]\s*(YES|NO)/i);
+    if (!m) return null;
+    return { hit: m[1].toUpperCase() === "YES" ? 1 : 0, raw: text.trim().slice(0, 200) };
+  } catch {
+    return null;   // Ollama down, timed out, or disabled — simply no suggestion
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// Fire-and-forget, same policy as epaperRunAiSuggest: the answer is already
+// stored and scored, so a 10-30s model call must never sit on the kid's request.
+function epaperRunAiJudgeObjective(itemId, question, answer) {
+  if (!AI_GRADING) return;
+  epaperAiJudgeObjective(question, answer).then((r) => {
+    if (!r) return;
+    try {
+      db.prepare("UPDATE epaper_session_items SET ai_correct = ?, ai_reason = ? WHERE id = ?")
+        .run(r.hit, r.raw, itemId);
+    } catch { /* item re-graded or session deleted while we were thinking */ }
+    if (r.hit) console.log(`[ai] item ${itemId}: sentence answer judged correct`);
   }).catch(() => { /* never let an AI failure surface anywhere */ });
 }
 
@@ -3160,7 +3252,11 @@ const server = http.createServer(async (req, res) => {
       // re-posting returns the stored verdict instead of re-scoring and
       // double-counting attempts/score_total.
       if (item.final_correct === null) {
-        const correct = epaperGradeObjective(answer, epaperAcceptedAnswers(db, q));
+        const correct = epaperGradeObjective(
+          answer,
+          epaperAcceptedAnswers(db, q),
+          { tolerant: q.section === "synthesis" }
+        );
         db.prepare(
           "UPDATE epaper_session_items SET answer = ?, auto_correct = ?, final_correct = ? WHERE id = ?"
         ).run(answer, correct ? 1 : 0, correct ? 1 : 0, itemId);
@@ -3172,6 +3268,13 @@ const server = http.createServer(async (req, res) => {
         // enters the mistake bank after the parent reviews/flags it (see the
         // /review handler below), so test runs don't pollute the bank.
         item.final_correct = correct ? 1 : 0;
+        // Sentence rewrites that the string comparison rejected get a second
+        // opinion from the local model, off the request path — same fire-and-
+        // forget policy as the OEQ points above. It only ever writes a hint
+        // (ai_correct) for the parent; final_correct stays as auto-scored.
+        if (!correct && q.section === "synthesis") {
+          epaperRunAiJudgeObjective(itemId, q, answer);
+        }
       }
       // Kid never sees correct/wrong or the answer key at submit time (2026-09-09,
       // same cheating-incident decision as the oeq branch above) — grading above is
