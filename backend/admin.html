@@ -2282,7 +2282,7 @@
       epaperDecisions = {};
       for (const it of data.items) {
         if (it.question_type === "oeq") {
-          epaperDecisions[it.id] = { points: {} };
+          epaperDecisions[it.id] = { points: {}, grammarErrors: it.grammar_errors || 0 };
           for (const p of it.points) {
             const finalKnown = p.finalHit === 0 || p.finalHit === 1;
             // autoHit is a precise keyword match with poor recall. When it MISSED,
@@ -2336,6 +2336,34 @@
 
     const area = card.querySelector(".grade-area");
     if (it.question_type === "oeq") {
+      // 语法扣分：内容分照给，但每个语言错误倒扣 0.5 分。正式 PSLE 的 OEQ 是
+      // 纯内容给分，这是家里更严的规则，所以由家长逐个数、不做自动判定。
+      const gRow = document.createElement("div");
+      gRow.className = "sci-point-row";
+      gRow.innerHTML = `
+        <div>
+          <div class="kind">语法扣分（每个语言错误扣 0.5 分）</div>
+          <div class="desc">孩子这句话里有几处拼写／语法／用词错误？
+            <input type="number" min="0" max="20" step="1" value="${it.grammar_errors || 0}"
+                   ${readOnly ? "disabled" : ""} style="width:64px;margin-left:6px" />
+            处 <span class="epaper-grammar-out" style="color:var(--muted)"></span>
+          </div>
+        </div>`;
+      const gInput = gRow.querySelector("input");
+      const gOut = gRow.querySelector(".epaper-grammar-out");
+      const sync = () => {
+        const n = Math.max(0, parseInt(gInput.value, 10) || 0);
+        const hits = Object.values(epaperDecisions[it.id].points).filter(Boolean).length;
+        gOut.textContent = n ? `（本題得分 ${Math.max(0, hits - n * 0.5)} / ${it.marks}）` : "";
+      };
+      if (!readOnly) {
+        gInput.onchange = (e) => {
+          epaperDecisions[it.id].grammarErrors = Math.max(0, parseInt(e.target.value, 10) || 0);
+          sync();
+        };
+      }
+      sync();
+      area.appendChild(gRow);
       for (const p of it.points) {
         const row = document.createElement("label");
         row.className = "sci-point-row";
@@ -2383,7 +2411,11 @@
     const sessionId = $("#epaperGradeDialog").dataset.sessionId;
     const items = Object.entries(epaperDecisions).map(([itemId, d]) => {
       if ("points" in d) {
-        return { itemId: Number(itemId), points: Object.entries(d.points).map(([markPointId, hit]) => ({ markPointId: Number(markPointId), hit })) };
+        return {
+          itemId: Number(itemId),
+          points: Object.entries(d.points).map(([markPointId, hit]) => ({ markPointId: Number(markPointId), hit })),
+          grammarErrors: d.grammarErrors || 0,
+        };
       }
       return { itemId: Number(itemId), finalCorrect: d.finalCorrect };
     });

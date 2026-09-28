@@ -739,6 +739,9 @@ try { db.exec("ALTER TABLE epaper_item_points ADD COLUMN ai_reason TEXT NOT NULL
 // NULL = not analysed. Additive: NULL leaves final_correct exactly as it was.
 try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN ai_correct INTEGER"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN ai_reason TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
+// 语法扣分：OEQ 按内容给分，但批改时每个语言错误扣 0.5 分，所以每题的
+// 错误个数要单独存。0 = 没扣。总分是 sum(要点命中) - 0.5 × grammar_errors。
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN grammar_errors INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 // Created here, not in the CREATE TABLE block above: on an already-deployed DB,
 // "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
 // exists without paper_key/paper_seq), so an index on those columns placed in
@@ -1068,6 +1071,11 @@ function scienceAutoHit(markPoint, answer) {
 // (editing / cloze_open / cloze_wordbank) stay exact — "the dries" must not pass
 // for "dries".
 const SENTENCE_ANSWER_MAX_RATIO = 2.0;
+
+// 英语试卷 OEQ：内容分照给，但每个语言错误（拼写/语法/错词）倒扣 0.5 分。
+// 正式 PSLE 的 OEQ 是纯内容给分（语法另有改错题），这是家里要求更严的规则，
+// 所以在家长批改时由家长逐个标出错误数，不做自动判定。
+const EPAPER_GRAMMAR_PENALTY = 0.5;
 function epaperGradeObjective(answer, correctAnswer, { tolerant = false } = {}) {
   const alts = String(correctAnswer || "").split("/").map((a) => normalizeEnglishAnswer(a)).filter(Boolean);
   const got = normalizeEnglishAnswer(answer);
@@ -1280,7 +1288,7 @@ function epaperRunAiJudgeObjective(itemId, question, answer) {
 // items/points actually say. Called at both complete and review.
 function epaperComputeScore(db, sessionId) {
   const items = db.prepare(`
-    SELECT i.id, i.final_correct, q.marks, q.question_type
+    SELECT i.id, i.final_correct, i.grammar_errors, q.marks, q.question_type
       FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
      WHERE i.session_id = ?`).all(sessionId);
   let marksTotal = 0, scoreEarned = 0;
@@ -1290,7 +1298,10 @@ function epaperComputeScore(db, sessionId) {
       const pts = db.prepare(
         "SELECT auto_hit, final_hit FROM epaper_item_points WHERE item_id = ?"
       ).all(it.id);
-      scoreEarned += pts.reduce((s, p) => s + (p.final_hit !== null ? p.final_hit : p.auto_hit), 0);
+      const hits = pts.reduce((s, p) => s + (p.final_hit !== null ? p.final_hit : p.auto_hit), 0);
+      // 语法错误倒扣，但一题不会被扣成负分
+      const penalty = (it.grammar_errors || 0) * EPAPER_GRAMMAR_PENALTY;
+      scoreEarned += Math.max(0, hits - penalty);
     } else {
       scoreEarned += it.final_correct ? it.marks : 0;
     }
@@ -3384,6 +3395,12 @@ const server = http.createServer(async (req, res) => {
         ).get(itemId, sessionId);
         if (!item) continue;
         const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(item.question_id);
+
+        // 语法错误数：与要点独立，家长逐个标；只影响本卷总分，不进题目统计。
+        if (entry.grammarErrors !== undefined) {
+          const n = Math.max(0, Math.min(20, parseInt(entry.grammarErrors, 10) || 0));
+          db.prepare("UPDATE epaper_session_items SET grammar_errors = ? WHERE id = ?").run(n, itemId);
+        }
 
         if (Array.isArray(entry.points)) {
           // oeq: mirrors science's review delta exactly — attempts only
