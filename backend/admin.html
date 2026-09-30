@@ -2336,6 +2336,24 @@
 
     const area = card.querySelector(".grade-area");
     if (it.question_type === "oeq") {
+      // 照抄检测：只提示、不扣分。题目要求"用自己的话"或抄了一大段夹带无关内容时，
+      // 阅卷老师会当作 "lifting from text" 扣分；但"从文中摘录"的题照抄是对的。
+      if (it.liftRatio !== null && it.liftRatio !== undefined) {
+        const pct = Math.round(it.liftRatio * 100);
+        // 题目要求摘录原文时不报警 —— 那时照抄就是正确做法
+        const high = it.liftRatio >= 0.6 && !it.liftExpected;
+        const lRow = document.createElement("div");
+        lRow.className = "sci-point-row";
+        lRow.innerHTML = `
+          <div>
+            <div class="kind">原文重合度</div>
+            <div class="desc" style="color:${high ? "#b45309" : "var(--muted)"}">
+              ${high ? "⚠️ " : ""}${pct}% 的连续短语与原文一字不差${it.liftExpected ? "（本题要求从文中摘录，属正常）" : high ? " —— 基本是照抄原文，讲评时老师会当作 “lifting from text” 扣分" : ""}
+            </div>
+          </div>`;
+        area.appendChild(lRow);
+      }
+
       // 语法扣分：内容分照给，但每个语言错误倒扣 0.5 分。正式 PSLE 的 OEQ 是
       // 纯内容给分，这是家里更严的规则，所以由家长逐个数、不做自动判定。
       const gRow = document.createElement("div");

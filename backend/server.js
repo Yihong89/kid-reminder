@@ -1088,6 +1088,32 @@ function epaperGradeObjective(answer, correctAnswer, { tolerant = false } = {}) 
   );
 }
 
+// OEQ 的"照抄检测"。老师说 "Lifting too much from text — out of point"，但新加坡的
+// 评分要点是**有条件**的：题目要求"用自己的话"、或照抄段落里夹带无关内容时才扣；
+// 而"从文中摘录"的题（例如 "pick out a five-word phrase"）照抄反而是正确做法。
+// 所以这里只**测量**：滑窗取 5 个连续词，看有多少能在原文里原样找到。
+// 返回 0–1，null = 答案太短/没原文，谈不上照抄。不做任何自动判分。
+// 有些题本来就要求"从文中摘录"，这时照抄是对的，重合度高不该报警。
+// 判据只看题目的措辞 —— 宁可漏报也不要错报，真正的判断留给家长。
+const EPAPER_LIFT_EXPECTED_RE =
+  /\b(pick out|quote|copy out|which (phrase|words?|sentence)|what evidence|state what .{0,40}(observed|saw|said)|complete the sentence with words from)\b/i;
+function epaperLiftExpected(prompt) {
+  return EPAPER_LIFT_EXPECTED_RE.test(String(prompt || ""));
+}
+
+function epaperLiftRatio(answer, passage) {
+  const words = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
+  const a = words(answer);
+  if (a.length < 5) return null;
+  const p = " " + words(passage).join(" ") + " ";
+  let hit = 0, total = 0;
+  for (let i = 0; i + 5 <= a.length; i++) {
+    total++;
+    if (p.includes(" " + a.slice(i, i + 5).join(" ") + " ")) hit++;
+  }
+  return total ? hit / total : null;
+}
+
 // cloze_wordbank answer keys are stored inconsistently across imported papers:
 // some hold the word ("can"), others hold the option letter ("D") — while the
 // paper itself always lets the child give either, because the word bank prints
@@ -3353,13 +3379,16 @@ const server = http.createServer(async (req, res) => {
       const session = db.prepare("SELECT * FROM epaper_sessions WHERE id = ?").get(id);
       if (!session) return sendJSON(404, { error: "session not found" });
       const items = db.prepare(`
-        SELECT i.*, q.section, q.question_type, q.context, q.prompt, q.options,
+        SELECT i.*, q.section, q.question_type, q.context, q.passage, q.prompt, q.options,
                q.correct_answer, q.explanation, q.marks, q.image, q.school, q.year
           FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
          WHERE i.session_id = ? ORDER BY i.seq`).all(id);
       const detailed = items.map((it) => {
         let points = null;
         if (it.question_type === "oeq") {
+          // 照抄比例：只呈现给家长看，不影响任何分数 —— 摘录题照抄是对的。
+          it.liftRatio = epaperLiftRatio(it.answer, it.passage);
+          it.liftExpected = epaperLiftExpected(it.prompt);
           points = db.prepare(`
             SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
                    ip.auto_hit autoHit, ip.final_hit finalHit,
