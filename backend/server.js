@@ -1101,6 +1101,15 @@ function epaperLiftExpected(prompt) {
   return EPAPER_LIFT_EXPECTED_RE.test(String(prompt || ""));
 }
 
+// 老师还会写 "Simplify" —— OEQ 答案写太长会把要点淹没，而且往往就是照抄造成的。
+// 经验值：一个得分点大约 15 个词（2 分题 ≈ 两句话 30 词）。只作提示，不扣分；
+// 带 (a)(b)(c) 分小问的题目本来就需要更多词，家长看到题面自己会判断。
+const EPAPER_WORDS_PER_MARK = 15;
+function epaperAnswerWords(answer) {
+  const m = String(answer || "").match(/[A-Za-z][A-Za-z'\u2019-]*/g);
+  return m ? m.length : 0;
+}
+
 function epaperLiftRatio(answer, passage) {
   const words = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
   const a = words(answer);
@@ -3389,6 +3398,7 @@ const server = http.createServer(async (req, res) => {
           // 照抄比例：只呈现给家长看，不影响任何分数 —— 摘录题照抄是对的。
           it.liftRatio = epaperLiftRatio(it.answer, it.passage);
           it.liftExpected = epaperLiftExpected(it.prompt);
+          it.wordCount = epaperAnswerWords(it.answer);
           points = db.prepare(`
             SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
                    ip.auto_hit autoHit, ip.final_hit finalHit,
