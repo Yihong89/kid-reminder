@@ -2282,7 +2282,16 @@
       epaperDecisions = {};
       for (const it of data.items) {
         if (it.question_type === "oeq") {
-          epaperDecisions[it.id] = { points: {}, grammarErrors: it.grammar_errors || 0 };
+          // 前两条检测器预勾（但只在本卷还没批改过时 —— 家长手动取消的不会被重新勾上）；
+          // 时态/语法不符机器判断不了，必须家长自己勾。
+          const reviewed = it.points.some((p) => p.finalHit === 0 || p.finalHit === 1);
+          const sug = it.suggest || {};
+          epaperDecisions[it.id] = {
+            points: {},
+            liftZero: reviewed ? !!it.lift_zero : !!sug.liftZero,
+            simplifyHalf: reviewed ? !!it.simplify_half : !!sug.simplifyHalf,
+            tenseError: !!it.tense_error,
+          };
           for (const p of it.points) {
             const finalKnown = p.finalHit === 0 || p.finalHit === 1;
             // autoHit is a precise keyword match with poor recall. When it MISSED,
@@ -2373,29 +2382,48 @@
 
       // 语法扣分：内容分照给，但每个语言错误倒扣 0.5 分。正式 PSLE 的 OEQ 是
       // 纯内容给分，这是家里更严的规则，所以由家长逐个数、不做自动判定。
+      // 老师的三条扣分规则，逐题勾选；前两条由检测器预勾，第三条要家长自己判断。
       const gRow = document.createElement("div");
       gRow.className = "sci-point-row";
       gRow.innerHTML = `
-        <div>
-          <div class="kind">语法扣分（每个语言错误扣 0.5 分）</div>
-          <div class="desc">孩子这句话里有几处拼写／语法／用词错误？
-            <input type="number" min="0" max="20" step="1" value="${it.grammar_errors || 0}"
-                   ${readOnly ? "disabled" : ""} style="width:64px;margin-left:6px" />
-            处 <span class="epaper-grammar-out" style="color:var(--muted)"></span>
-          </div>
+        <div style="width:100%">
+          <div class="kind">扣分项（老师的三条规则）</div>
+          <label class="desc" style="display:block">
+            <input type="checkbox" class="ep-lift" ${epaperDecisions[it.id] && epaperDecisions[it.id].liftZero ? "checked" : ""} ${readOnly ? "disabled" : ""} />
+            照抄原文 —— <b>本题直接 0 分</b>${high ? "（检测器已预勾）" : ""}
+          </label>
+          <label class="desc" style="display:block">
+            <input type="checkbox" class="ep-simp" ${epaperDecisions[it.id] && epaperDecisions[it.id].simplifyHalf ? "checked" : ""} ${readOnly ? "disabled" : ""} />
+            无关内容／偏长 —— <b>扣一半分（${(it.marks * 0.5)} 分）</b>${off && off.ratio >= 0.4 ? "（检测器已预勾）" : ""}
+          </label>
+          <label class="desc" style="display:block">
+            <input type="checkbox" class="ep-tense" ${epaperDecisions[it.id] && epaperDecisions[it.id].tenseError ? "checked" : ""} ${readOnly ? "disabled" : ""} />
+            语法／时态与题目不符 —— <b>扣 1 分</b>（需自己判断：题目是过去时却用现在时等）
+          </label>
+          <div class="desc" style="margin-top:4px"><b class="ep-out"></b></div>
         </div>`;
-      const gInput = gRow.querySelector("input");
-      const gOut = gRow.querySelector(".epaper-grammar-out");
+      const gLift = gRow.querySelector(".ep-lift");
+      const gSimp = gRow.querySelector(".ep-simp");
+      const gTense = gRow.querySelector(".ep-tense");
+      const gOut = gRow.querySelector(".ep-out");
       const sync = () => {
-        const n = Math.max(0, parseInt(gInput.value, 10) || 0);
-        const hits = Object.values(epaperDecisions[it.id].points).filter(Boolean).length;
-        gOut.textContent = n ? `（本題得分 ${Math.max(0, hits - n * 0.5)} / ${it.marks}）` : "";
+        const d = epaperDecisions[it.id];
+        const hits = Object.values(d.points).filter(Boolean).length;
+        let score;
+        if (d.liftZero) score = 0;
+        else {
+          let p = 0;
+          if (d.simplifyHalf) p += it.marks * 0.5;
+          if (d.tenseError) p += 1;
+          score = Math.max(0, hits - p);
+        }
+        gOut.textContent = `本题得分：${score} / ${it.marks}` +
+          (d.liftZero ? "（照抄，归零）" : "");
+        gOut.style.color = score < hits ? "#b45309" : "var(--muted)";
       };
       if (!readOnly) {
-        gInput.onchange = (e) => {
-          epaperDecisions[it.id].grammarErrors = Math.max(0, parseInt(e.target.value, 10) || 0);
-          sync();
-        };
+        const bind = (el, key) => { el.onchange = () => { epaperDecisions[it.id][key] = el.checked; sync(); }; };
+        bind(gLift, "liftZero"); bind(gSimp, "simplifyHalf"); bind(gTense, "tenseError");
       }
       sync();
       area.appendChild(gRow);
@@ -2449,7 +2477,9 @@
         return {
           itemId: Number(itemId),
           points: Object.entries(d.points).map(([markPointId, hit]) => ({ markPointId: Number(markPointId), hit })),
-          grammarErrors: d.grammarErrors || 0,
+          liftZero: !!d.liftZero,
+          simplifyHalf: !!d.simplifyHalf,
+          tenseError: !!d.tenseError,
         };
       }
       return { itemId: Number(itemId), finalCorrect: d.finalCorrect };

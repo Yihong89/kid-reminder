@@ -742,6 +742,13 @@ try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN ai_reason TEXT NOT NU
 // 语法扣分：OEQ 按内容给分，但批改时每个语言错误扣 0.5 分，所以每题的
 // 错误个数要单独存。0 = 没扣。总分是 sum(要点命中) - 0.5 × grammar_errors。
 try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN grammar_errors INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+// 老师的三条扣分规则，逐题由家长勾选（前两条由检测器预勾）：
+//   照抄原文          -> 该题直接 0 分
+//   无关内容/偏长      -> 扣该题一半的分（"simplify"）
+//   语法/时态与题目不符 -> 扣 1 分
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN lift_zero INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN simplify_half INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN tense_error INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 // Created here, not in the CREATE TABLE block above: on an already-deployed DB,
 // "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
 // exists without paper_key/paper_seq), so an index on those columns placed in
@@ -1360,7 +1367,8 @@ function epaperRunAiJudgeObjective(itemId, question, answer) {
 // items/points actually say. Called at both complete and review.
 function epaperComputeScore(db, sessionId) {
   const items = db.prepare(`
-    SELECT i.id, i.final_correct, i.grammar_errors, q.marks, q.question_type
+    SELECT i.id, i.final_correct, i.grammar_errors, i.lift_zero, i.simplify_half, i.tense_error,
+           q.marks, q.question_type
       FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
      WHERE i.session_id = ?`).all(sessionId);
   let marksTotal = 0, scoreEarned = 0;
@@ -1371,9 +1379,17 @@ function epaperComputeScore(db, sessionId) {
         "SELECT auto_hit, final_hit FROM epaper_item_points WHERE item_id = ?"
       ).all(it.id);
       const hits = pts.reduce((s, p) => s + (p.final_hit !== null ? p.final_hit : p.auto_hit), 0);
-      // 语法错误倒扣，但一题不会被扣成负分
-      const penalty = (it.grammar_errors || 0) * EPAPER_GRAMMAR_PENALTY;
-      scoreEarned += Math.max(0, hits - penalty);
+      // 照抄直接归零；其余按项倒扣，一题不会被扣成负分
+      if (it.lift_zero) {
+        scoreEarned += 0;
+      } else {
+        // 老师的三条规则。原先还有一条"每个语法错误扣 0.5"，实测会和新规则在同一批题上
+        // 重叠，把分数压到老师给的分以下（老师并不为拼写/用词小错扣分），已去掉。
+        let penalty = 0;
+        if (it.simplify_half) penalty += it.marks * 0.5;   // "simplify" 扣一半
+        if (it.tense_error) penalty += 1;                  // 语法/时态与题目不符
+        scoreEarned += Math.max(0, hits - penalty);
+      }
     } else {
       scoreEarned += it.final_correct ? it.marks : 0;
     }
@@ -3445,6 +3461,11 @@ const server = http.createServer(async (req, res) => {
              WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.id, it.question_id);
           // 无关内容：拆句后没有任何一个得分点用得上 —— 老师说的 "out of point"
           it.offPoint = epaperOffPoint(it.answer, points, it.passage);
+          // 预勾建议：照抄 → 归零；无关内容 → 扣一半。家长未批改过时前端才用它。
+          it.suggest = {
+            liftZero: it.liftRatio !== null && it.liftRatio >= 0.6 && !it.liftExpected,
+            simplifyHalf: !!(it.offPoint && it.offPoint.ratio >= 0.4),
+          };
         }
         return {
           ...it,
@@ -3479,10 +3500,13 @@ const server = http.createServer(async (req, res) => {
         if (!item) continue;
         const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(item.question_id);
 
-        // 语法错误数：与要点独立，家长逐个标；只影响本卷总分，不进题目统计。
-        if (entry.grammarErrors !== undefined) {
-          const n = Math.max(0, Math.min(20, parseInt(entry.grammarErrors, 10) || 0));
-          db.prepare("UPDATE epaper_session_items SET grammar_errors = ? WHERE id = ?").run(n, itemId);
+        // 老师那三条扣分规则，逐题勾选
+        for (const [field, col] of [["liftZero", "lift_zero"], ["simplifyHalf", "simplify_half"],
+                                    ["tenseError", "tense_error"]]) {
+          if (entry[field] !== undefined) {
+            db.prepare(`UPDATE epaper_session_items SET ${col} = ? WHERE id = ?`)
+              .run(entry[field] ? 1 : 0, itemId);
+          }
         }
 
         if (Array.isArray(entry.points)) {
