@@ -1,0 +1,8 @@
+{
+  "name": "kidreminder-backend",
+  "private": true,
+  "description": "Kid Reminder backend. node:sqlite is built in, so pdfkit is the only third-party dependency — it renders the parent-facing \"child's answers\" PDF (backend/server.js, epaperAnswersPdf).",
+  "dependencies": {
+    "pdfkit": "^0.20.2"
+  }
+}

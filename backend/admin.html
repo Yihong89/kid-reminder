@@ -660,6 +660,7 @@
   <div class="msg err" id="epaperDlgErr"></div>
   <div class="row">
     <button class="ghost" id="epaperDlgCancel">Cancel</button>
+    <button class="ghost" id="epaperDlgPdf">⬇️ 下载孩子作答 PDF</button>
     <button class="primary" id="epaperDlgSubmit">保存批改</button>
   </div>
 </dialog>
@@ -2511,6 +2512,40 @@
   }
 
   $("#epaperDlgCancel").onclick = () => $("#epaperGradeDialog").close();
+  // PDF 在后台生成，这里只负责下载。PIN 走请求头，不放 URL。
+  $("#epaperDlgPdf").onclick = async () => {
+    const id = $("#epaperGradeDialog").dataset.sessionId;
+    if (!id) return;
+    const btn = $("#epaperDlgPdf"), label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "⏳ 正在生成…";
+    try {
+      const res = await fetch(`/api/epaper/sessions/${id}/answers.pdf`, {
+        headers: pin ? { "X-Admin-Pin": pin } : {},
+      });
+      if (!res.ok) {
+        let msg = "request failed";
+        try { msg = (await res.json()).error || msg; } catch {}
+        throw new Error(msg);
+      }
+      const cd = res.headers.get("Content-Disposition") || "";
+      const m = /filename="?([^"]+)"?/.exec(cd);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = m ? m[1] : "answers.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    } catch (e) {
+      $("#epaperDlgErr").textContent = "生成 PDF 失败：" + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  };
   $("#epaperDlgSubmit").onclick = async () => {
     const sessionId = $("#epaperGradeDialog").dataset.sessionId;
     const items = Object.entries(epaperDecisions).map(([itemId, d]) => {

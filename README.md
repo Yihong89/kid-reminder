@@ -307,9 +307,14 @@ sqlite3 -header -column ~/kidreminder/kidreminder.db \
 - Server auto-starts via launchd (`com.kidreminder.server`).
 - LAN-only; set a DHCP reservation for the Mac Mini so its IP stays stable.
 - Full setup guide: [backend-setup.md](backend-setup.md)
-- Deploy = `scp backend/server.js robot@<mini>:~/kidreminder/server.js` then
+- Deploy = `scp backend/server.js backend/admin.html backend/package.json
+  robot@<mini>:~/kidreminder/` then `cd ~/kidreminder && npm install` (once, and again
+  whenever `backend/package.json` changes), then
   `launchctl kickstart -k gui/$(id -u)/com.kidreminder.server`. New tables are created
   on startup by the `CREATE TABLE IF NOT EXISTS` block, so no migration step.
+- **The one npm dependency is `pdfkit`**, used only by the parent-facing
+  "child's answers" PDF. `require` is lazy, so a deployment that skipped
+  `npm install` still boots — only that one download button reports the error.
 - The backend is not macOS-only; see
   [docs/cross-platform-portability.md](docs/cross-platform-portability.md) for what
   would be needed to run it on Windows / Linux.

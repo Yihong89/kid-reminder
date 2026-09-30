@@ -1,8 +1,9 @@
 # Kid Reminder — Backend Setup
 
-A tiny, dependency-free Node.js server that stores a daily checklist and serves a
-web admin panel. No database to install, no npm packages — only Node's built-in
-`node:http` + `node:sqlite`.
+A tiny Node.js server that stores a daily checklist and serves a web admin panel.
+No database to install, and no npm packages except **`pdfkit`** (pure JS, no build
+step) which renders the parent-facing "child's answers" PDF. Everything else is
+Node's built-in `node:http` + `node:sqlite`.
 
 ## Requirements
 

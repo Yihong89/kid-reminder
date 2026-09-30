@@ -1409,6 +1409,162 @@ function epaperComputeScore(db, sessionId) {
   return { marksTotal, scoreEarned };
 }
 
+// ------------------------------------------------- 家长端「孩子作答 PDF」
+// 只放需要手写答案的三段：cloze_open / synthesis / comprehension_oeq，内容是
+// 原题 + 孩子的答案（不含正确答案、不含分数）。阅读理解用扫描图，因为题目会
+// 引用行号。
+//
+// 用 pdfkit 在后台生成 —— 这是本仓库唯一的第三方依赖（纯 JS，不需要编译）。
+// 惰性 require：万一部署时忘了 npm install，服务器照样起得来，只有这个接口报错。
+const EPAPER_PDF_SECTIONS = [
+  { key: "cloze_open", title: "Cloze Passage (open)", range: "Questions 46\u201360",
+    marks: 15, shareContext: true,
+    instr: "Fill in each blank with a suitable word. (15 marks)" },
+  { key: "synthesis", title: "Sentence Synthesis", range: "Questions 61\u201365",
+    marks: 10, shareContext: false,
+    instr: "For each of the questions 61 to 65, rewrite the given sentence(s) using the " +
+           "word(s) provided. Your answer must be in one sentence. The meaning of your " +
+           "sentence must be the same as the meaning(s) of the given sentence(s). (10 marks)" },
+  { key: "comprehension_oeq", title: "Comprehension (written answers)", range: "Questions 66\u201375",
+    marks: 20, shareContext: false, showImage: true,
+    instr: "Read the passage and answer questions 66 to 75. (20 marks)" },
+];
+
+function epaperAnswersPdf(db, sessionId) {
+  return new Promise((resolve, reject) => {
+    let PDFDocument;
+    try {
+      PDFDocument = require("pdfkit");
+    } catch {
+      return reject(new Error("pdfkit 未安装 —— 在部署目录执行 npm install"));
+    }
+
+    const session = db.prepare("SELECT * FROM epaper_sessions WHERE id = ?").get(sessionId);
+    if (!session) return reject(new Error("session not found"));
+    const rows = db.prepare(`
+      SELECT i.answer, q.paper_seq, q.section, q.marks, q.prompt, q.context, q.image
+        FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
+       WHERE i.session_id = ?
+         AND q.section IN ('cloze_open', 'synthesis', 'comprehension_oeq')
+       ORDER BY q.paper_seq`).all(sessionId);
+    if (!rows.length) return reject(new Error("这份卷子没有需要手写答案的三段"));
+
+    const W = 595.28, H = 841.89, ML = 52, MR = 52, MT = 54, MB = 56, CW = W - ML - MR;
+    const INK = "#1a1a1a", GRAY = "#6b7280", ACCENT = "#0f766e";
+    const ANS_BG = "#f0f9ff", ANS_BD = "#bae6fd", ANS_LB = "#0369a1", RULE = "#e5e7eb";
+
+    const doc = new PDFDocument({
+      size: [W, H], autoFirstPage: false, bufferPages: false,
+      margins: { top: MT, bottom: MB, left: ML, right: MR },
+      info: { Title: session.paper_key + " — my answers", Author: "Kid Reminder" },
+    });
+    const chunks = [];
+    doc.on("data", (c) => chunks.push(c));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    let y = MT;
+    const newPage = () => { doc.addPage(); y = MT; };
+    const need = (h) => { if (y + h > H - MB) newPage(); };
+    const put = (str, o = {}) => {
+      const width = o.width === undefined ? CW : o.width;
+      doc.font(o.font || "Helvetica").fontSize(o.size || 10)
+         .fillColor(o.color || INK)
+         .text(String(str == null ? "" : str), o.x === undefined ? ML : o.x, y,
+               { width, align: o.align || "left", lineGap: o.lineGap || 0 });
+      y = doc.y + (o.after || 0);
+    };
+    const para = (str, font, size, color, after) => {
+      const h = doc.font(font).fontSize(size).heightOfString(String(str), { width: CW });
+      need(h + 2);
+      put(str, { font, size, color, after });
+    };
+
+    // ---- 抬头 ----
+    newPage();
+    put(String(session.paper_key || "paper").toUpperCase().replace(/-/g, " "),
+        { font: "Helvetica-Bold", size: 13.5, after: 7 });
+    put("English Language \u00b7 Paper 2 \u00b7 my own answers", { size: 9.5, color: GRAY, after: 2 });
+    put("Cloze (open) \u00b7 Sentence Synthesis \u00b7 Comprehension (written answers)",
+        { size: 9, color: ACCENT, after: 9 });
+    doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1.4).strokeColor(INK).stroke(); y += 3;
+    doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(0.5).strokeColor(INK).stroke(); y += 12;
+
+    for (const sec of EPAPER_PDF_SECTIONS) {
+      const list = rows.filter((r) => r.section === sec.key);
+      if (!list.length) continue;
+
+      // 小标题
+      need(52);
+      y += 10;
+      doc.rect(ML, y - 2, 4.5, 17).fill(ACCENT);
+      doc.font("Helvetica-Bold").fontSize(12).fillColor(INK)
+         .text(sec.title, ML + 12, y + 1, { width: CW - 90, lineBreak: false });
+      doc.font("Helvetica").fontSize(9).fillColor(GRAY)
+         .text(sec.range, W - MR - 90, y + 3, { width: 90, align: "right", lineBreak: false });
+      y += 22;
+      para(sec.instr, "Helvetica-Oblique", 8.6, GRAY, 9);
+
+      // 阅读理解：照原样放扫描图（题目引用行号）
+      if (sec.showImage) {
+        const name = (list.find((r) => r.image) || {}).image;
+        const full = name ? path.join(EPAPER_IMAGES_DIR, path.basename(name)) : null;
+        if (full && fs.existsSync(full)) {
+          const img = doc.openImage(full);
+          const avail = H - MT - MB - 8;
+          const scale = Math.min(CW / img.width, avail / img.height);
+          const dw = img.width * scale, dh = img.height * scale;
+          need(dh);
+          doc.image(full, ML + (CW - dw) / 2, y, { width: dw, height: dh });
+          y += dh + 12;
+        }
+      }
+
+      // 共享的原文（开放填空的整篇短文只出现一次）
+      if (sec.shareContext) {
+        const ctx = (list.find((r) => r.context) || {}).context;
+        if (ctx) para(ctx, "Helvetica", 9.2, INK, 9);
+      }
+
+      for (const it of list) {
+        need(66);
+        y += 12;
+        // 题号方块
+        const num = String(it.paper_seq);
+        doc.rect(ML, y, 26, 17).fill(INK);
+        doc.font("Helvetica-Bold").fontSize(9.5).fillColor("#ffffff")
+           .text(num, ML, y + 4.5, { width: 26, align: "center", lineBreak: false });
+        doc.font("Helvetica").fontSize(8).fillColor(GRAY)
+           .text(it.marks + (it.marks > 1 ? " marks" : " mark"), ML + 33, y + 5,
+                 { width: 80, lineBreak: false });
+        y += 24;
+
+        para(it.prompt, "Helvetica", 9.6, INK, 5);
+
+        // 答案框
+        const label = "My answer", fs2 = 8;
+        const indent = doc.font("Helvetica-Bold").fontSize(fs2).widthOfString(label) + 26;
+        const ans = String(it.answer || "").trim() || "(no answer)";
+        const lines = doc.font("Helvetica").fontSize(9.6)
+                        .heightOfString(ans, { width: CW - 24 - indent });
+        const boxH = Math.max(26, lines + 14);
+        if (y + boxH > H - MB) newPage();
+        const top = y;
+        doc.roundedRect(ML, top, CW, boxH, 4).fillAndStroke(ANS_BG, ANS_BD);
+        doc.font("Helvetica-Bold").fontSize(fs2).fillColor(ANS_LB)
+           .text(label, ML + 10, top + 9, { width: 80, lineBreak: false });
+        doc.font("Helvetica").fontSize(9.6).fillColor(INK)
+           .text(ans, ML + 10 + indent, top + 8, { width: CW - 24 - indent });
+        y = top + boxH + 12;
+
+        doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(0.6).strokeColor(RULE).stroke();
+        y += 6;
+      }
+    }
+    doc.end();
+  });
+}
+
 // ------------------------------------------------- 英语试卷 mistake report (HTML)
 // Renders a self-contained, kid-facing HTML page for one *reviewed* paper-mode
 // session: every wrong mcq/fill_blank item, plus every missed oeq mark point,
@@ -3487,6 +3643,27 @@ const server = http.createServer(async (req, res) => {
         };
       });
       return sendJSON(200, { session, items: detailed });
+    }
+
+    // --- 家长端下载「孩子作答 PDF」（原题 + 孩子的答案）------------------------
+    const epaperAnswersPdfMatch = pathname.match(/^\/api\/epaper\/sessions\/(\d+)\/answers\.pdf$/);
+    if (epaperAnswersPdfMatch && method === "GET") {
+      if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+      try {
+        const buf = await epaperAnswersPdf(db, Number(epaperAnswersPdfMatch[1]));
+        const s = db.prepare("SELECT paper_key FROM epaper_sessions WHERE id = ?")
+                    .get(Number(epaperAnswersPdfMatch[1]));
+        const name = ((s && s.paper_key) || "paper") + "-my-answers.pdf";
+        res.writeHead(200, {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename="${name}"`,
+          "Content-Length": buf.length,
+          "Cache-Control": "no-store",
+        });
+        return res.end(buf);
+      } catch (e) {
+        return sendJSON(400, { error: e.message });
+      }
     }
 
     // --- parent review: can correct EITHER tier, on ANY completed session ------
