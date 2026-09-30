@@ -1101,6 +1101,43 @@ function epaperLiftExpected(prompt) {
   return EPAPER_LIFT_EXPECTED_RE.test(String(prompt || ""));
 }
 
+// 真正的问题不是字数，而是**答案里混进了与任何得分点都无关的内容** —— 老师写的是
+// "Lifting too much from text — out of point"。这些无关内容通常就是照抄来的场景句：
+//   "Gita stood nearby, pretending to use her phone though the signal was weak."
+// 做法：把答案拆成句子/小问，逐句看它有没有为**任何一个**得分点贡献关键词；
+// 一句都不贡献的就算无关。返回 null = 答案只有一句，看不出冗余（交给字数提示）。
+function epaperAnswerParts(answer) {
+  return String(answer || "")
+    .split(/\n+|(?<=[.!?])\s+|(?=\b[a-d]\)\s)/i)   // 换行、(a)(b) 标记、句末标点
+    .map((s) => s.trim())
+    .filter((s) => s.replace(/[^A-Za-z]/g, "").length >= 3);
+}
+// 带 (a)/(b)/(c) 标记的句子按**结构**就绑定了对应小问 —— 它可能在答错，但不可能
+// "无关"。只有没有标记的自由句才检查无关性，否则会把"答错"误报成"离题"
+// （实测：acsj-2025 Q71 的 "a) The author felt nervous." 就被误报过）。
+const EPAPER_SUBPART_RE = /^\s*\(?\s*[a-d]\s*\)\s*/i;
+function epaperOffPoint(answer, markPoints, passage) {
+  const parts = epaperAnswerParts(answer).filter((p) => !EPAPER_SUBPART_RE.test(p));
+  if (parts.length < 2) return null;
+  let idle = 0;
+  const samples = [];
+  for (const part of parts) {
+    const text = normalizeEnglishAnswer(part);
+    const useful = markPoints.some((mp) =>
+      scienceParse(mp.keywords, []).some((g) => scienceGroupHit(text, g)));
+    if (useful) continue;
+    // 只有"既没贡献得分点、又是从原文抄来的"才算填充 —— 单纯用词不同（把 terrified
+    // 答成 nervous）是答错，不是离题。实测：没有这个条件时 acsj-2025 Q71 会被误报。
+    const lifted = epaperLiftRatio(part, passage);
+    if (lifted !== null && lifted >= 0.6) {
+      idle++;
+      if (samples.length < 3) samples.push(part.slice(0, 90));
+    }
+  }
+  if (!idle) return { idle: 0, total: parts.length, ratio: 0, samples: [] };
+  return { idle, total: parts.length, ratio: idle / parts.length, samples };
+}
+
 // 老师还会写 "Simplify" —— OEQ 答案写太长会把要点淹没，而且往往就是照抄造成的。
 // 经验值：一个得分点大约 15 个词（2 分题 ≈ 两句话 30 词）。只作提示，不扣分；
 // 带 (a)(b)(c) 分小问的题目本来就需要更多词，家长看到题面自己会判断。
@@ -3400,14 +3437,21 @@ const server = http.createServer(async (req, res) => {
           it.liftExpected = epaperLiftExpected(it.prompt);
           it.wordCount = epaperAnswerWords(it.answer);
           points = db.prepare(`
-            SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
+            SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description, mp.keywords,
                    ip.auto_hit autoHit, ip.final_hit finalHit,
                    ip.ai_hit aiHit, ip.ai_reason aiReason
               FROM epaper_mark_points mp
               LEFT JOIN epaper_item_points ip ON ip.mark_point_id = mp.id AND ip.item_id = ?
              WHERE mp.question_id = ? ORDER BY mp.seq`).all(it.id, it.question_id);
+          // 无关内容：拆句后没有任何一个得分点用得上 —— 老师说的 "out of point"
+          it.offPoint = epaperOffPoint(it.answer, points, it.passage);
         }
-        return { ...it, options: it.options ? JSON.parse(it.options) : null, points };
+        return {
+          ...it,
+          options: it.options ? JSON.parse(it.options) : null,
+          // keywords 只在服务端用来判分，不必发给前端
+          points: points ? points.map(({ keywords, ...rest }) => rest) : null,
+        };
       });
       return sendJSON(200, { session, items: detailed });
     }

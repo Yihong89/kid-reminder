@@ -2343,17 +2343,28 @@
         // 题目要求摘录原文时不报警 —— 那时照抄就是正确做法
         const high = it.liftRatio >= 0.6 && !it.liftExpected;
         const long = (it.wordCount || 0) > it.marks * 15;
+        const off = it.offPoint || null;
         const lRow = document.createElement("div");
         lRow.className = "sci-point-row";
         lRow.innerHTML = `
           <div>
-            <div class="kind">原文重合度 · 答案长度</div>
+            <div class="kind">答案质量：无关内容 · 照抄 · 长度</div>
+            ${off
+              ? `<div class="desc" style="color:${off.ratio >= 0.4 ? "#b45309" : "var(--muted)"}">
+                   ${off.ratio >= 0.4 ? "⚠️ " : ""}${off.idle}/${off.total} 句与其他得分点都无关（${Math.round(off.ratio * 100)}%）${off.ratio >= 0.4 ? " —— 老师会当作 “out of point” 扣分" : ""}
+                 </div>`
+              : ""}
             <div class="desc" style="color:${high ? "#b45309" : "var(--muted)"}">
-              ${high ? "⚠️ " : ""}${pct}% 的连续短语与原文一字不差${it.liftExpected ? "（本题要求从文中摘录，属正常）" : high ? " —— 基本是照抄原文，讲评时老师会当作 “lifting from text” 扣分" : ""}
+              ${high ? "⚠️ " : ""}原文重合度 ${pct}%${it.liftExpected ? "（本题要求从文中摘录，属正常）" : high ? " —— 基本是照抄原文，老师会当作 “lifting from text” 扣分" : ""}
             </div>
             ${(it.wordCount !== null && it.wordCount !== undefined && it.wordCount > 0)
               ? `<div class="desc" style="color:${long ? "#b45309" : "var(--muted)"}">
-                   ${long ? "⚠️ " : ""}${it.wordCount} 词 / ${it.marks} 分题（建议 ${it.marks * 15} 词以内）${long ? " —— 写太长会把要点淹没，老师会要求 “simplify”" : ""}
+                   ${long ? "⚠️ " : ""}${it.wordCount} 词 / ${it.marks} 分题（建议 ${it.marks * 15} 词以内）${long ? " —— 偏长，老师会要求 “simplify”" : ""}
+                 </div>`
+              : ""}
+            ${off && off.samples && off.samples.length
+              ? `<div class="desc" style="color:var(--muted);font-size:12px">
+                   无关的句子：${off.samples.map((x) => "“" + x + "…”").join("　")}
                  </div>`
               : ""}
           </div>`;
