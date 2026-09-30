@@ -539,10 +539,12 @@ db.exec(`
     -- it, so "做完整张卷子" can replay the exam's own question order.
     paper_key     TEXT NOT NULL DEFAULT '',
     paper_seq     INTEGER NOT NULL DEFAULT 0,
-    -- Sticky on purpose: a parent-reviewed miss sets this to 1, and it is NEVER
-    -- auto-cleared by a later correct answer — only an explicit parent action
-    -- (PATCH inMistakeBank:false) removes a question from 错题本. The parent
-    -- decides when something is actually mastered, not the keyword matcher.
+    -- Follows the final verdict: a reviewed miss sets this to 1, and a reviewed
+    -- full-marks answer sets it back to 0. It used to be sticky (never
+    -- auto-cleared) so the parent alone decided when something was mastered, but
+    -- that left questions in 错题本 long after they had been re-graded correct —
+    -- 34 of 123 flags across the prelim papers. PATCH inMistakeBank still works
+    -- for an explicit parent override in either direction.
     in_mistake_bank INTEGER NOT NULL DEFAULT 0,
     created_at    TEXT NOT NULL DEFAULT (datetime('now'))
   );
@@ -629,7 +631,7 @@ db.exec(`
     explanation   TEXT NOT NULL DEFAULT '',  -- shown after grading; doubles as oeq model answer
     attempts      INTEGER NOT NULL DEFAULT 0,
     score_total   INTEGER NOT NULL DEFAULT 0,   -- unfloored, same reasoning as science
-    in_mistake_bank INTEGER NOT NULL DEFAULT 0, -- sticky; parent-clear only, all tiers
+    in_mistake_bank INTEGER NOT NULL DEFAULT 0, -- follows the final verdict, all tiers
     created_at    TEXT NOT NULL DEFAULT (datetime('now'))
   );
   CREATE UNIQUE INDEX IF NOT EXISTS epaper_questions_ref ON epaper_questions(source_ref);
@@ -3539,7 +3541,23 @@ const server = http.createServer(async (req, res) => {
           const prevAttempt = alreadyReviewed ? 1 : 0;
           db.prepare("UPDATE epaper_questions SET attempts = attempts + ?, score_total = score_total + ? WHERE id = ?")
             .run(1 - prevAttempt, final - prev, q.id);
-          if (final < q.marks) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+          // 错题本标记跟随最终判定：没拿满分就进，拿了满分就摘掉。
+          // 曾经是"只增不减"（sticky），结果是早期判错、后来改对的题永远留在错题本里
+          // —— 实测 6 份 prelim 卷 123 个标记里有 34 个已经不再是错题。
+          //
+          // 注意这里要按**实际得分**判断，不能只看命中几个得分点：照抄归零
+          // (lift_zero)、simplify 扣半、时态扣 1 分都不改 final_hit，只看 final
+          // 会漏掉"两个点都命中但整题被判 0 分"这种情况（Rulang Q67 就是）。
+          const fresh = db.prepare("SELECT * FROM epaper_session_items WHERE id = ?").get(itemId);
+          let earned = final;
+          if (fresh.lift_zero) earned = 0;
+          else {
+            if (fresh.simplify_half) earned -= q.marks * 0.5;
+            if (fresh.tense_error) earned -= 1;
+            earned = Math.max(0, earned);
+          }
+          db.prepare("UPDATE epaper_questions SET in_mistake_bank = ? WHERE id = ?")
+            .run(earned < q.marks ? 1 : 0, q.id);
           // correct_count: +1/-1 the first time this question is reviewed (mirrors
           // the objective submit-time bump below); a later re-review that flips
           // "full marks" either way nets ±2, same convention as english_questions'
@@ -3551,14 +3569,16 @@ const server = http.createServer(async (req, res) => {
         } else if (typeof entry.finalCorrect === "boolean") {
           // objective: a pure correction to what submit already counted once —
           // attempts never changes here, only score_total's delta and the
-          // sticky mistake-bank flag.
+          // mistake-bank flag.
           const prev = item.final_correct ? q.marks : 0;
           const now = entry.finalCorrect ? q.marks : 0;
           db.prepare("UPDATE epaper_session_items SET final_correct = ? WHERE id = ?")
             .run(entry.finalCorrect ? 1 : 0, itemId);
           db.prepare("UPDATE epaper_questions SET score_total = score_total + ? WHERE id = ?")
             .run(now - prev, q.id);
-          if (!entry.finalCorrect) db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+          // 和阅读理解一样跟随最终判定：判错进错题本，判对摘掉。
+          db.prepare("UPDATE epaper_questions SET in_mistake_bank = ? WHERE id = ?")
+            .run(entry.finalCorrect ? 0 : 1, q.id);
           // correct_count: submit already applied the initial +1/-1, so a
           // correction here (if any) is always a flip — net ±2.
           if (entry.finalCorrect !== !!item.final_correct) {
