@@ -169,6 +169,77 @@ the written score sits in the margin beside each question. Crop and zoom
 ambiguous. Assuming a ✓ means full marks cost me 0.5 on Q75; the margin number
 is the authority.
 
+## Calibrating mark points against official answers
+
+When you can get the official model answers, use them. Comparing ours against the
+official set for one paper turned up one hard error and three points that were
+too loose — every one of them had been awarding marks the teacher refused.
+
+### A keyword can live inside the WRONG answer
+
+The worst failure, because it looks like it is working.
+
+> Official for Q69(b): *The person who made the post.*
+> Our keywords: `post | photo | message`
+> Pupil wrote: *the **post** made by Eileen* → matched `post` → full marks.
+> Teacher: ✗. The question asked what "it" refers to; the answer is the **person**.
+
+Any keyword drawn from the passage can appear in a wrong answer, because a wrong
+answer usually quotes the passage. Never write a keyword for the thing being
+*asked about* — write it for the **shape of the correct reply**. Here that means
+`the person | person who | who posted | who put up | <the person's full name>`,
+and deliberately **not** the bare name either: the pupil's wrong answer contained
+"Eileen" too.
+
+### Pin the preposition — double negatives invert meaning
+
+> Official for Q74: *not being afraid **to tell** her schoolmates…*
+> Pupil wrote: *not being afraid **of hiding** the fact…* → means the opposite.
+> Teacher: "meaning incorrect".
+
+A keyword of `not being afraid` matches both. Keywords cannot see negation, so
+where a phrase turns on a preposition or particle, spell it out: `not afraid to`,
+`afraid to tell`. The narrower phrase rejects the inverted sentence and still
+accepts the official wording.
+
+### Match the stem, not the spelling, when the teacher did
+
+> Pupil wrote: *Eileen **do not belief** that the reason…*
+> Teacher: ✓, correcting it to *did believe*.
+
+He marked the content, not the spelling. A keyword of `did not believe` misses
+this entirely. Use the stem — `not belie` covers *believe*, *belief*,
+*believes*, and the misspellings — and keep `disbeliev | not convinced | doubt`.
+
+### Rewrite the point description too, not just the keywords
+
+The description is what the parent and the mistake report read. Put the official
+wording in it and drop the parts the official answer does not require. Two points
+that were over-specified:
+
+- Q70(d) — ours listed "her sister's exhaustion, the bruises on her hands and the
+  classes she missed" as alternatives. The official point is only *she recalled
+  how Ramani had taken on the stall during their mother's recovery*. The pupil
+  answered with the effects and nothing else, and scored.
+- Q71(b) — ours accepted `proud` or `accept` on their own. The official requires
+  the **change**: *used to be ashamed … but she was not anymore*. So require a
+  before/after pair, not a single approving word.
+
+### Then verify against a real script
+
+After rewriting, test every point against the answers the teacher actually
+marked, and count the agreements:
+
+```
+Q68.1 自动未中 老师✗ ✅     一致 14 / 不一致 0
+Q69.2 自动未中 老师✗ ✅
+...
+```
+
+If a point disagrees, the point is wrong — not the teacher. Do this **read-only**;
+a verification script that also writes will silently clobber the fix you are
+verifying. That mistake cost a full round here.
+
 ## Calibration history
 
 Keeping this honest matters more than looking good. On the Rulang script:
@@ -178,6 +249,11 @@ Keeping this honest matters more than looking good. On the Rulang script:
 | Keyword matcher + AI review | 15/20 |
 | After applying rules 1–4 | **8/20** |
 | Teacher | **8/20** |
+
+Once the official model answers arrived, the four rules were re-checked against
+the pupil's real answers point by point: **14 agreements, 0 disagreements**. That
+is the standard to hold — not "the section total matches", but every mark point
+in the section deciding the same way the teacher did.
 
 Two false-positive lessons, both from scanning the six papers done so far:
 

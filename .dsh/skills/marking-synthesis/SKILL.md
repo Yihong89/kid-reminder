@@ -94,6 +94,24 @@ So `final_correct` still decides whether the rewrite is acceptable at all (the
 auto-grader plus the sentence-level AI check, overridden by the parent), and the
 two flags then adjust it.
 
+## Store the answer in the form the pupil writes
+
+The prompt shows the stem and the blank (*"The cheese \_\_\_\_."*), so a pupil
+writes the **whole sentence**, and that is what gets stored and compared. Keep
+the model answer in both forms:
+
+```
+on the plate was eaten by the mouse
+  / The cheese on the plate was eaten by the mouse
+```
+
+The official answers for Q61, Q62 and Q64 all arrived as full sentences; our keys
+held only the blank-fill fragment, which the tolerant containment rule happens to
+accept but which makes the accepted-answer list harder to read and to check. The
+official set confirmed all three of our strips — Q61 *on the plate was eaten by
+the mouse*, Q62 *moved away in time, the cat would not have clawed her*, Q64
+*eagerness that the children started their holiday*.
+
 ## The two flags are not auto-detected
 
 Unlike the comprehension detectors, neither can be measured:
