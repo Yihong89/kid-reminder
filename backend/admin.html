@@ -2387,14 +2387,20 @@
 
     const area = card.querySelector(".grade-area");
     if (it.question_type === "oeq") {
+      // 这几个量在下面两处都要用（检测器提示 + 扣分项预勾），所以必须在
+      // oeq 分支的作用域里声明。之前声明在上面的 if 块里，块外引用不到，
+      // 一渲染 OEQ 卡片就抛 ReferenceError，整份卷子的对话框都打不开。
+      const pct = it.liftRatio === null || it.liftRatio === undefined
+        ? null : Math.round(it.liftRatio * 100);
+      // 题目要求摘录原文时不报警 —— 那时照抄就是正确做法
+      const high = it.liftRatio !== null && it.liftRatio !== undefined &&
+                   it.liftRatio >= 0.6 && !it.liftExpected;
+      const long = (it.wordCount || 0) > it.marks * 15;
+      const off = it.offPoint || null;
+
       // 照抄检测：只提示、不扣分。题目要求"用自己的话"或抄了一大段夹带无关内容时，
       // 阅卷老师会当作 "lifting from text" 扣分；但"从文中摘录"的题照抄是对的。
-      if (it.liftRatio !== null && it.liftRatio !== undefined) {
-        const pct = Math.round(it.liftRatio * 100);
-        // 题目要求摘录原文时不报警 —— 那时照抄就是正确做法
-        const high = it.liftRatio >= 0.6 && !it.liftExpected;
-        const long = (it.wordCount || 0) > it.marks * 15;
-        const off = it.offPoint || null;
+      if (pct !== null) {
         const lRow = document.createElement("div");
         lRow.className = "sci-point-row";
         lRow.innerHTML = `
