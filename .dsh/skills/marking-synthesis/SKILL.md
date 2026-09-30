@@ -20,7 +20,8 @@ Read this before touching any synthesis score.
 |---|------|--------|-----------------|
 | 1 | **Meaning changed** by the rewrite | **Question scores 0** | "(meaning changed)" |
 | 2 | **Grammar or punctuation error** | **Lose 1 mark** | inserted the missing comma, gave 1/2 |
-| 3 | Faithful rewrite, even if wording differs from the model | **Full marks** | ✓✓ on two answers that did not match the key verbatim |
+| 3 | Repeats wording the question itself supplied | **Not charged** | ✓✓ on *her pupils* and the repeated *Neither* |
+| 4 | Restructures the sentence, or misses the construction the key is testing | **0** — faithful meaning does not save it | confirmed with the teacher on acsj Q65 and catholichigh Q61 |
 
 ### Rule 1 — meaning, not wording
 
@@ -50,7 +51,7 @@ zero**.
 A comma after an introductory clause, subject-verb agreement, and a missing
 full stop are the usual culprits.
 
-### Rule 3 — be tolerant of everything the question itself supplied
+### Rule 3 — repeating what the question gave you is free. Restructuring is not.
 
 The teacher accepted these at full marks:
 
@@ -64,6 +65,43 @@ so repeating it adds nothing and should not be charged. Likewise a possessive
 that shifts with the reported speech ("the pupils" → "her pupils"). The app
 handles this with a containment rule in `epaperGradeObjective(..., { tolerant:
 true })` — keep it.
+
+**But being faithful is not sufficient.** Two answers that read as perfectly good
+English to me, and which I flagged as wrongly marked, were checked with the
+teacher and confirmed **wrong**:
+
+| Q | Key | Pupil wrote | Mark |
+|---|---|---|---|
+| acsj Q65 | *Much to my annoyance, my brother **had broken** my phone.* | *…my brother **broke** my phone.* | **0/2** |
+| catholichigh Q61 | ***Mrs Ramu invited** the musician whose song became a hit.* | *The musician whose song became a hit **was invited by** Mrs Ramu to perform.* | **0/2** |
+
+Both preserve the meaning. Both are still wrong. Two conventions the key encodes
+and the prompt does not spell out:
+
+- **Keep the given sentence's main clause.** Combine by subordinating the second
+  sentence; do not invert to the passive or promote the second sentence into the
+  main clause. That is exactly what Q61's pupil did.
+- **The transformation may require a specific tense.** Q65's key wants the past
+  perfect, because the breaking happened *before* the annoyance. "broke" is
+  idiomatic, matches the tense of the original sentence, and is still not what
+  the question is testing.
+
+So do not substitute your own grammatical judgement for the key. When a pupil's
+answer differs, the question to ask is **"which construction is this question
+testing?"** — never *"is this also good English?"*. The second question is how a
+marker talks themselves into awarding a mark the school will not.
+
+### When a slip could be −1 or 0, mark it 0
+
+Rule 2 gives a fixed one-mark deduction, but that comes from a single teacher
+example — a missing comma. For anything more substantive (a wrong tense, a wrong
+preposition, a missing correlative conjunction) you cannot tell from the prompt
+whether the school treats it as a slip or as a failed transformation.
+
+Default to 0. A too-generous mark gives the pupil a false picture of their level,
+which is the failure the parent cares about most; wrongly failing a genuinely
+correct answer is the rarer error, and the key is a better guide than your
+instinct. The parent's instruction, 2026-09-30: **when unsure, be strict.**
 
 ## Worked example — the whole section
 

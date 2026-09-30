@@ -63,6 +63,21 @@ spelling and word-choice slips. He only deducted for lifting, padding and wrong
 content. Do not invent extra deductions — an earlier "0.5 per language error"
 rule pushed three questions *below* the teacher's marks and had to be removed.
 
+### When a call could go either way, mark the pupil down
+
+Two synthesis answers that read as perfectly good English — a passive
+restructure, and an idiomatic tense that matched the original sentence — were
+checked with the teacher and confirmed **wrong**. The key was encoding a
+construction the prompt never named, and the meaning being intact did not save
+them. (See the `marking-synthesis` skill for the pair.)
+
+The same instinct applies here. If you are weighing whether an answer earns a
+point, or whether a slip is "grammar, lose 1" or "fails the question, lose all",
+take the lower score. A too-generous mark gives the pupil a false picture of
+their level, which is the failure that matters most; wrongly failing a correct
+answer is the rarer error, and the mark scheme is a better guide than instinct.
+The parent's instruction, 2026-09-30: **when unsure, be strict.**
+
 ## The detectors
 
 Two of the three rules are measurable. `backend/server.js` exposes them on every
