@@ -749,6 +749,11 @@ try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN grammar_errors INTEGE
 try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN lift_zero INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN simplify_half INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN tense_error INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+// 句子改写（synthesis）老师的两条规则：
+//   意思改变（meaning changed）-> 本题 0 分（例：把 "on the plate" 挪到句尾，变成修饰 mouse）
+//   语法／标点错误            -> 扣 1 分（例：Had Aidah not moved away in time 后面漏了逗号）
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN syn_meaning_changed INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE epaper_session_items ADD COLUMN syn_lang_error INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 // Created here, not in the CREATE TABLE block above: on an already-deployed DB,
 // "CREATE TABLE IF NOT EXISTS science_questions" is a no-op (the table already
 // exists without paper_key/paper_seq), so an index on those columns placed in
@@ -1368,7 +1373,8 @@ function epaperRunAiJudgeObjective(itemId, question, answer) {
 function epaperComputeScore(db, sessionId) {
   const items = db.prepare(`
     SELECT i.id, i.final_correct, i.grammar_errors, i.lift_zero, i.simplify_half, i.tense_error,
-           q.marks, q.question_type
+           i.syn_meaning_changed, i.syn_lang_error,
+           q.marks, q.question_type, q.section
       FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
      WHERE i.session_id = ?`).all(sessionId);
   let marksTotal = 0, scoreEarned = 0;
@@ -1390,6 +1396,10 @@ function epaperComputeScore(db, sessionId) {
         if (it.tense_error) penalty += 1;                  // 语法/时态与题目不符
         scoreEarned += Math.max(0, hits - penalty);
       }
+    } else if (it.section === "synthesis") {
+      // 意思改变直接 0 分；句子对但语法/标点有错，扣 1 分（老师给 Q62 的 1/2 就是这么来的）
+      if (it.syn_meaning_changed || !it.final_correct) scoreEarned += 0;
+      else scoreEarned += Math.max(0, it.marks - (it.syn_lang_error ? 1 : 0));
     } else {
       scoreEarned += it.final_correct ? it.marks : 0;
     }
@@ -3500,9 +3510,11 @@ const server = http.createServer(async (req, res) => {
         if (!item) continue;
         const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(item.question_id);
 
-        // 老师那三条扣分规则，逐题勾选
+        // 扣分规则，逐题勾选
         for (const [field, col] of [["liftZero", "lift_zero"], ["simplifyHalf", "simplify_half"],
-                                    ["tenseError", "tense_error"]]) {
+                                    ["tenseError", "tense_error"],
+                                    ["meaningChanged", "syn_meaning_changed"],
+                                    ["langError", "syn_lang_error"]]) {
           if (entry[field] !== undefined) {
             db.prepare(`UPDATE epaper_session_items SET ${col} = ? WHERE id = ?`)
               .run(entry[field] ? 1 : 0, itemId);

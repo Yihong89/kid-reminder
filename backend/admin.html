@@ -2040,6 +2040,42 @@
               ${it.explanation ? `<div class="desc">${escapeHtml(it.explanation)}</div>` : ""}
             </div>
           </div>`;
+        if (it.section === "synthesis") {
+          // 老师对句子改写的两条规则：意思变了就 0 分；句子对但语法/标点有错扣 1 分。
+          // 都判断不了，只给家长勾 —— 全对/全错是答不出来的。
+          const d = epaperDecisions[it.id] || {};
+          const row = document.createElement("div");
+          row.className = "sci-point-row";
+          row.innerHTML = `
+            <div style="width:100%">
+              <div class="kind">扣分项（老师对句子改写的规则）</div>
+              <label class="desc" style="display:block">
+                <input type="checkbox" class="sy-mean" ${d.meaningChanged ? "checked" : ""} ${readOnly ? "disabled" : ""} />
+                意思改变（meaning changed）—— <b>本题 0 分</b>
+              </label>
+              <label class="desc" style="display:block">
+                <input type="checkbox" class="sy-lang" ${d.langError ? "checked" : ""} ${readOnly ? "disabled" : ""} />
+                语法／标点错误 —— <b>扣 1 分</b>
+              </label>
+              <div class="desc" style="margin-top:4px"><b class="sy-out"></b></div>
+            </div>`;
+          const mEl = row.querySelector(".sy-mean");
+          const lEl = row.querySelector(".sy-lang");
+          const out = row.querySelector(".sy-out");
+          const sync = () => {
+            const dd = epaperDecisions[it.id];
+            let sc = 0;
+            if (!dd.meaningChanged && dd.finalCorrect) sc = Math.max(0, it.marks - (dd.langError ? 1 : 0));
+            out.textContent = `本题得分：${sc} / ${it.marks}` + (dd.meaningChanged ? "（意思改变，归零）" : "");
+            out.style.color = sc < it.marks ? "#b45309" : "var(--muted)";
+          };
+          if (!readOnly) {
+            mEl.onchange = () => { epaperDecisions[it.id].meaningChanged = mEl.checked; sync(); };
+            lEl.onchange = () => { epaperDecisions[it.id].langError = lEl.checked; sync(); };
+          }
+          sync();
+          area.appendChild(row);
+        }
       }
       return card;
     }
@@ -2309,6 +2345,11 @@
           epaperDecisions[it.id] = {
             finalCorrect: it.final_correct ? true : (aiKnown ? !!it.ai_correct : false),
           };
+          // 句子改写老师的两条规则，机器判断不了，一律不预勾。
+          if (it.section === "synthesis") {
+            epaperDecisions[it.id].meaningChanged = !!it.syn_meaning_changed;
+            epaperDecisions[it.id].langError = !!it.syn_lang_error;
+          }
         }
       }
       const dlgDur = fmtDuration(data.session.created_at, data.session.completed_at);
@@ -2482,7 +2523,10 @@
           tenseError: !!d.tenseError,
         };
       }
-      return { itemId: Number(itemId), finalCorrect: d.finalCorrect };
+      const out = { itemId: Number(itemId), finalCorrect: d.finalCorrect };
+      if (d.meaningChanged !== undefined) out.meaningChanged = !!d.meaningChanged;
+      if (d.langError !== undefined) out.langError = !!d.langError;
+      return out;
     });
     try {
       await api(`/api/epaper/sessions/${sessionId}/review`, { method: "POST", body: JSON.stringify({ items }) });
