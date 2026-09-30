@@ -1417,6 +1417,10 @@ function epaperComputeScore(db, sessionId) {
 // 用 pdfkit 在后台生成 —— 这是本仓库唯一的第三方依赖（纯 JS，不需要编译）。
 // 惰性 require：万一部署时忘了 npm install，服务器照样起得来，只有这个接口报错。
 const EPAPER_PDF_SECTIONS = [
+  { key: "editing", title: "Editing", range: "Questions 36\u201345",
+    marks: 10, shareContext: true, compact: true,
+    instr: "Each numbered word contains either a spelling or grammatical error. " +
+           "Write the correct word in each box. (10 marks)" },
   { key: "cloze_open", title: "Cloze Passage (open)", range: "Questions 46\u201360",
     marks: 15, shareContext: true,
     instr: "Fill in each blank with a suitable word. (15 marks)" },
@@ -1445,9 +1449,9 @@ function epaperAnswersPdf(db, sessionId) {
       SELECT i.answer, q.paper_seq, q.section, q.marks, q.prompt, q.context, q.image
         FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
        WHERE i.session_id = ?
-         AND q.section IN ('cloze_open', 'synthesis', 'comprehension_oeq')
+         AND q.section IN ('editing', 'cloze_open', 'synthesis', 'comprehension_oeq')
        ORDER BY q.paper_seq`).all(sessionId);
-    if (!rows.length) return reject(new Error("这份卷子没有需要手写答案的三段"));
+    if (!rows.length) return reject(new Error("这份卷子没有需要手写答案的部分"));
 
     const W = 595.28, H = 841.89, ML = 52, MR = 52, MT = 54, MB = 56, CW = W - ML - MR;
     const INK = "#1a1a1a", GRAY = "#6b7280", ACCENT = "#0f766e";
@@ -1485,7 +1489,7 @@ function epaperAnswersPdf(db, sessionId) {
     put(String(session.paper_key || "paper").toUpperCase().replace(/-/g, " "),
         { font: "Helvetica-Bold", size: 13.5, after: 7 });
     put("English Language \u00b7 Paper 2 \u00b7 my own answers", { size: 9.5, color: GRAY, after: 2 });
-    put("Cloze (open) \u00b7 Sentence Synthesis \u00b7 Comprehension (written answers)",
+    put("Editing \u00b7 Cloze (open) \u00b7 Sentence Synthesis \u00b7 Comprehension (written answers)",
         { size: 9, color: ACCENT, after: 9 });
     doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1.4).strokeColor(INK).stroke(); y += 3;
     doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(0.5).strokeColor(INK).stroke(); y += 12;
@@ -1539,7 +1543,10 @@ function epaperAnswersPdf(db, sessionId) {
                  { width: 80, lineBreak: false });
         y += 24;
 
-        para(it.prompt, "Helvetica", 9.6, INK, 5);
+        // 改错那 10 题的题干是同一句"Write the correct word."，重复印十遍只是噪音；
+        // 要考哪个词，看原文里那个 (36) (37) 的编号就够了。
+        if (!sec.compact) para(it.prompt, "Helvetica", 9.6, INK, 5);
+        else y += 2;
 
         // 答案框
         const label = "My answer", fs2 = 8;
