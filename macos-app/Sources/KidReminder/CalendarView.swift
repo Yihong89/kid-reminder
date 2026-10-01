@@ -104,15 +104,48 @@ struct CalendarView: View {
 
     // MARK: - month grid
 
+    /// One cell of the month grid. Weekday headers, the leading blanks and the
+    /// day cells all live in ONE array so every cell gets a unique id.
+    ///
+    /// They used to be three separate `ForEach`es keyed on `id: \.self`, which
+    /// collided two ways: the weekday labels are ["S","M","T","W","T","F","S"], so
+    /// "S" and "T" each appear twice, and the blanks and the day cells were both
+    /// keyed on Int (blanks 0,1,2…, days 1,2,3…). SwiftUI de-duplicates children by
+    /// id, so the colliding cells were dropped — which showed up as the first few
+    /// days of every month never appearing in the grid.
+    private enum GridCell: Identifiable {
+        case weekday(Int)   // index into weekdayNames, so the two "S"/"T" stay distinct
+        case blank(Int)
+        case day(Int)
+
+        var id: String {
+            switch self {
+            case .weekday(let i): return "w\(i)"
+            case .blank(let i):   return "b\(i)"
+            case .day(let d):     return "d\(d)"
+            }
+        }
+    }
+
     private var monthGrid: some View {
         let first = dateFor(viewYear, viewMonth, 1)
         let firstWeekday = Calendar.current.component(.weekday, from: first) // 1=Sun ... 7=Sat
         let days = Calendar.current.range(of: .day, in: .month, for: first)?.count ?? 30
         let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
+        var cells: [GridCell] = (0..<weekdayNames.count).map { .weekday($0) }
+        cells += (0..<max(0, firstWeekday - 1)).map { .blank($0) }
+        cells += (1...days).map { .day($0) }
         return LazyVGrid(columns: columns, spacing: 6) {
-            ForEach(weekdayNames, id: \.self) { Text($0).font(.caption).foregroundStyle(.secondary) }
-            ForEach(0..<(firstWeekday - 1), id: \.self) { _ in Color.clear.frame(height: 38) }
-            ForEach(1...days, id: \.self) { day in dayCell(day: day) }
+            ForEach(cells) { cell in
+                switch cell {
+                case .weekday(let i):
+                    Text(weekdayNames[i]).font(.caption).foregroundStyle(.secondary)
+                case .blank:
+                    Color.clear.frame(height: 38)
+                case .day(let d):
+                    dayCell(day: d)
+                }
+            }
         }
     }
 
