@@ -74,12 +74,24 @@ cat > "$BUNDLE/Contents/Info.plist" <<PLIST
     <key>CFBundleDisplayName</key><string>Kid Reminder</string>
     <key>CFBundleIdentifier</key><string>com.kidreminder.mac</string>
     <key>CFBundleVersion</key><string>1</string>
-    <key>CFBundleShortVersionString</key><string>1.18.5</string>
+    <key>CFBundleShortVersionString</key><string>1.18.6</string>
     <key>CFBundleExecutable</key><string>$APP_NAME</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
     <key>NSHighResolutionCapable</key><true/>
+    <!--
+      ATS exemption: the user types an arbitrary server IP/hostname in Settings,
+      so the set of hosts cannot be enumerated in advance. Without this, ATS
+      treats non-RFC1918 literals (e.g. Tailscale's 100.64.0.0/10 CGNAT range)
+      as public and forces HTTPS, while APIClient.swift hardcodes the http
+      scheme — the connection then fails with "requires the use of a secure
+      connection". APIClient speaks plain HTTP to the LAN/Tailscale server only.
+    -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key><true/>
+    </dict>
 </dict>
 </plist>
 PLIST
