@@ -53,6 +53,13 @@ Set a top-level `"school"` in the JSON (`"school": "Catholic High School"`). The
 importer falls back to trimming `_source` at " P5"/" P6", which is only a guess;
 an explicit field is what the app's paper list shows.
 
+**The `school` string is the whole label the kid sees.** The paper lists (macOS
+app and admin) render `school` + `year` and nothing else, so a P5 paper carries
+its level inside that string: `"Catholic High School (P5)"`. Nothing matches on
+the school name, so this is display-only — but it does mean the level is part of
+`school` rather than a field of its own. If a P4/P6 paper ever needs labelling
+too, do it as a real column instead of piling more onto this string.
+
 ### 2. Render pages for vision reading
 
 ```bash
