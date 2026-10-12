@@ -40,6 +40,18 @@ component are skipped entirely — neither can be auto-graded, and listening nee
 
 Drop it in `papers/` as `2025-english-<slug>.pdf` (bump the year when it's a 2026
 paper — the rest of this doc says `2025` because that's what's live today).
+The scripts read the year off this filename and off the JSON's filename, so a
+paper from another year works as long as the two agree.
+
+**P5 papers**: the same pipeline handles them (Booklet A + Booklet B, same nine
+sections, same 75 items / 90 marks), but give the slug a `-p5` suffix —
+`acsj-p5`, `redswastika-p5`, `catholichigh-p5`. Without it a P5 2025 EOY paper
+would take `paper_key` `acsj-2025`, which is already the *P6* prelim from the
+same school and year.
+
+Set a top-level `"school"` in the JSON (`"school": "Catholic High School"`). The
+importer falls back to trimming `_source` at " P5"/" P6", which is only a guess;
+an explicit field is what the app's paper list shows.
 
 ### 2. Render pages for vision reading
 
@@ -286,6 +298,7 @@ caught by a number that doesn't match, not discovered later.
 | `render_paper.py` | Renders every PDF page to `survey/<slug>/pNNN.png` for vision reading. |
 | `validate.py` | Checks an extracted questions JSON against the schema above. |
 | `crop_passage.py` | Auto-crops the comprehension_oeq passage (with line numbers) from the PDF; stitches a two-page passage into one image. |
+| `crop_poster.py` | Crops the comprehension_mcq Text 1 stimulus (poster / web page) page, for the Q21-25 questions that refer to it. |
 | `import.js` | Direct-SQLite importer — UPDATE-in-place on `source_ref`, preserves attempts/score/mistake-bank on re-import. **On the Mac Mini this same file is deployed as `epaper-import.js`** (see the warning above). |
 | `process_epaper.sh <slug>` | validate → copy JSON + poster to Mac Mini → dry-run import there. First-time import of a new paper. |
 | `import_passage.sh <slug>` | validate → copy → real import → confirms `passage` landed. Re-import after fixing passage/image data. |

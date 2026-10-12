@@ -63,7 +63,12 @@ db.exec(`
 
 const paperKey = path.basename(file, ".json").replace(/-questions$/, "");
 const meta = String(data._source || "");
-const schoolGuess = meta.split(" P6")[0] || "";
+// `_source` is a free-text description. The guess used to split on " P6", so on
+// any P5 paper the split never matched and the whole description became the
+// school name in the app's paper list. Prefer an explicit top-level `school`,
+// then trim at " P5" or " P6".
+const schoolGuess = String(data.school || "").trim()
+  || meta.split(/\s+P[56]\b/)[0].trim() || "";
 const yearGuess = (meta.match(/\b(20\d\d)\b/) || [])[1];
 
 let inserted = 0, updated = 0, points = 0, skipped = 0;

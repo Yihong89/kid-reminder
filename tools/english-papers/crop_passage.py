@@ -39,6 +39,9 @@ PAGES = {
     # peihwa: passage for Q66-75 sits at the end of Booklet A (printed page 10),
     # complete on one page -- lines 1-45, no continuation page.
     "peihwa": 12,
+    # P5 EOY papers: same slot as the P6 prelims -- the passage sits at the end
+    # of Booklet A, immediately before the Booklet B cover.
+    "acsj-p5": 9, "redswastika-p5": 9, "catholichigh-p5": 10,
 }
 
 # slug -> second page, for passages long enough to spill onto the next
@@ -47,6 +50,9 @@ PAGES = {
 CONT_PAGES = {
     "catholichigh": 15, "henrypark": 12, "nanhua": 14, "plmgs": 22,
     "rulang": 15,
+    # catholichigh-p5: its questions say "Read the passage on pages 11 and 12
+    # of Booklet A" -- survey p010 + p011.
+    "catholichigh-p5": 11,
 }
 
 # (slug, page_no) -> manual (x0,y0,x1,y1) in the survey PNG's own pixel space,
@@ -191,12 +197,29 @@ def stitch(top: Image.Image, bottom: Image.Image) -> Image.Image:
     return combined
 
 
+def paper_pdf(slug):
+    """Find papers/<year>-english-<slug>.pdf and return (path, year).
+
+    The year used to be hardcoded to 2025 in both the input and the output name,
+    which quietly ruled out any paper from another year (the P5 2024 EOY set).
+    """
+    hits = sorted((BASE / "papers").glob(f"*-english-{slug}.pdf"))
+    if not hits:
+        return None, None
+    year = hits[0].name.split("-", 1)[0]
+    return hits[0], year
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     ok, fail = [], []
     slugs = sys.argv[1:] or list(PAGES.keys())
     for slug in slugs:
-        pdf = BASE / "papers" / f"2025-english-{slug}.pdf"
+        pdf, year = paper_pdf(slug)
+        if pdf is None:
+            print(f"{slug}: NO PDF in papers/")
+            fail.append(slug)
+            continue
         doc = fitz.open(pdf)
         img = crop_page(slug, PAGES[slug], doc)
         if img is None:
@@ -208,9 +231,9 @@ def main():
                 fail.append(slug)
                 continue
             img = stitch(img, img2)
-        out_path = OUT / f"{slug}-2025-passage.png"
+        out_path = OUT / f"{slug}-{year}-passage.png"
         img.save(out_path)
-        print(f"{slug}: -> {out_path} ({img.width}x{img.height})")
+        print(f"{slug}: {pdf.name} -> {out_path} ({img.width}x{img.height})")
         ok.append(slug)
 
     print(f"\n{len(ok)} ok, {len(fail)} failed: {fail}")
