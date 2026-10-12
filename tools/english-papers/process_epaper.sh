@@ -6,9 +6,12 @@ cd "$(dirname "$0")"
 
 SLUG="${1:?usage: process_epaper.sh <slug>}"
 
-# Year comes from the JSON's own filename -- it used to be hardcoded to 2025,
-# which silently ruled out any other year (the P5 2024 EOY set).
-mapfile -t MATCHES < <(ls -1 "$SLUG"-*-questions.json 2>/dev/null || true)
+# Year comes from the JSON's own filename. This used to be hardcoded to 2025,
+# which silently ruled out any other year (the P5 2024 EOY set). No `mapfile`
+# here: macOS ships bash 3.2, which does not have it.
+shopt -s nullglob
+MATCHES=("$SLUG"-*-questions.json)
+shopt -u nullglob
 if [ "${#MATCHES[@]}" -eq 0 ]; then
   echo "no $SLUG-<year>-questions.json here"; exit 1
 elif [ "${#MATCHES[@]}" -gt 1 ]; then

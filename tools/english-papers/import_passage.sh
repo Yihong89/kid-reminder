@@ -7,8 +7,12 @@ cd "$(dirname "$0")"
 
 SLUG="${1:?usage: import_passage.sh <slug>}"
 
-# Year from the JSON's filename -- was hardcoded to 2025 (see process_epaper.sh).
-mapfile -t MATCHES < <(ls -1 "$SLUG"-*-questions.json 2>/dev/null || true)
+# Year comes from the JSON's own filename. This used to be hardcoded to 2025,
+# which silently ruled out any other year (the P5 2024 EOY set). No `mapfile`
+# here: macOS ships bash 3.2, which does not have it.
+shopt -s nullglob
+MATCHES=("$SLUG"-*-questions.json)
+shopt -u nullglob
 if [ "${#MATCHES[@]}" -eq 0 ]; then
   echo "no $SLUG-<year>-questions.json here"; exit 1
 elif [ "${#MATCHES[@]}" -gt 1 ]; then
@@ -27,8 +31,14 @@ echo "=== copy to Mac mini ==="
 scp "$JSON" "$MINI:/Users/robot/kidreminder/$JSON"
 for kind in q21 passage; do
   IMG="$IMGDIR/$SLUG-$YEAR-$kind.png"
-  [ -f "$IMG" ] && scp "$IMG" "$MINI:/Users/robot/kidreminder/epaper-images/$SLUG-$YEAR-$kind.png" \
-    && echo "  copied $kind image"
+  # if/else, not `[ -f ] && scp`: under `set -e` a missing image would make the
+  # whole test-chain non-zero and abort the script.
+  if [ -f "$IMG" ]; then
+    scp "$IMG" "$MINI:/Users/robot/kidreminder/epaper-images/$SLUG-$YEAR-$kind.png"
+    echo "  copied $kind image"
+  else
+    echo "  (no $kind image at $IMG)"
+  fi
 done
 
 echo "=== import (real) ==="
