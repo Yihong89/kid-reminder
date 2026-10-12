@@ -1,0 +1,1147 @@
+{
+  "_source": "Raffles Girls' Primary School P6 English Paper 2 2025 Prelim (Booklet A 25 marks + Booklet B 65 marks, total 90). Downloaded from https://www.etestpaper.com.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image is authoritative for the Visual Text Comprehension (Q21-25). Answers are from the paper's own compiled answer key.",
+  "questions": [
+    {
+      "source_ref": "raffles-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "He'd be ready to face any challenge that came his way after months of hard work, ________?",
+      "options": [
+        "didn't he",
+        "hadn't he",
+        "couldn't he",
+        "wouldn't he"
+      ],
+      "correct_answer": "wouldn't he",
+      "marks": 1,
+      "explanation": "Tag question: 'He'd be ready' (he would be ready) takes the positive tag 'wouldn't he'."
+    },
+    {
+      "source_ref": "raffles-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Martha is keen ________ painting. Her works have won many art competitions.",
+      "options": [
+        "to",
+        "of",
+        "on",
+        "for"
+      ],
+      "correct_answer": "on",
+      "marks": 1,
+      "explanation": "'keen on' is the correct preposition."
+    },
+    {
+      "source_ref": "raffles-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "At the upcoming competition, the team ________ to showcase their skills and prove their dedication to the panel of judges.",
+      "options": [
+        "was excited",
+        "were excited",
+        "will be excited",
+        "are being excited"
+      ],
+      "correct_answer": "will be excited",
+      "marks": 1,
+      "explanation": "'At the upcoming competition' points to future time, so 'will be excited' is correct; 'the team' is singular."
+    },
+    {
+      "source_ref": "raffles-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Whether the students achieve their goals ________ on the effort they put in.",
+      "options": [
+        "hinge",
+        "hinges",
+        "hinged",
+        "hinging"
+      ],
+      "correct_answer": "hinges",
+      "marks": 1,
+      "explanation": "The noun clause 'Whether the students achieve their goals' is a singular subject, so it takes 'hinges'."
+    },
+    {
+      "source_ref": "raffles-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Lucy ________ better take an umbrella because it is going to rain soon.",
+      "options": [
+        "has",
+        "had",
+        "have",
+        "having"
+      ],
+      "correct_answer": "had",
+      "marks": 1,
+      "explanation": "'had better' (with bare infinitive) is the fixed idiom."
+    },
+    {
+      "source_ref": "raffles-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "She had been practising her dance routine tirelessly until she ________ ready and confident to perform last week.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "was",
+      "marks": 1,
+      "explanation": "Past tense ('had been practising', 'last week') requires 'was'."
+    },
+    {
+      "source_ref": "raffles-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Yesterday, my mother and ________ baked a delicious chocolate cake.",
+      "options": [
+        "I",
+        "me",
+        "my",
+        "mine"
+      ],
+      "correct_answer": "I",
+      "marks": 1,
+      "explanation": "The subject of the verb 'baked' takes the subject pronoun 'I'."
+    },
+    {
+      "source_ref": "raffles-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "From the corner of his eye, he saw the vase ________, crashing loudly onto the floor.",
+      "options": [
+        "fall",
+        "fell",
+        "falls",
+        "was falling"
+      ],
+      "correct_answer": "fall",
+      "marks": 1,
+      "explanation": "'saw' (a verb of perception) takes the bare infinitive 'fall'."
+    },
+    {
+      "source_ref": "raffles-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"I ________ the school if it had the CCA I wanted,\" Ken sighed.",
+      "options": [
+        "must choose",
+        "am choosing",
+        "would choose",
+        "have been choosing"
+      ],
+      "correct_answer": "would choose",
+      "marks": 1,
+      "explanation": "Second conditional ('if it had') requires 'would choose'."
+    },
+    {
+      "source_ref": "raffles-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "________ studying hard for her examinations, Siti also volunteers regularly, helping those in need and making a positive impact on others.",
+      "options": [
+        "Due to",
+        "Whereas",
+        "In spite of",
+        "Other than"
+      ],
+      "correct_answer": "Other than",
+      "marks": 1,
+      "explanation": "'Other than' means 'in addition to / besides' here, fitting the sense of doing more than studying."
+    },
+    {
+      "source_ref": "raffles-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Claire was very careful and put in much effort to ________ complete the project.",
+      "options": [
+        "warily",
+        "hastily",
+        "consciously",
+        "painstakingly"
+      ],
+      "correct_answer": "painstakingly",
+      "marks": 1,
+      "explanation": "'painstakingly' = with great care and effort."
+    },
+    {
+      "source_ref": "raffles-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The doctor advised Amy to cut ________ on sugar to improve her health.",
+      "options": [
+        "in",
+        "off",
+        "away",
+        "down"
+      ],
+      "correct_answer": "down",
+      "marks": 1,
+      "explanation": "'cut down on' = reduce."
+    },
+    {
+      "source_ref": "raffles-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The artist carefully examined the ________ details of the painting, ensuring every brushstroke captured the essence of the scene.",
+      "options": [
+        "dainty",
+        "clarified",
+        "intricate",
+        "polished"
+      ],
+      "correct_answer": "intricate",
+      "marks": 1,
+      "explanation": "'intricate' = very detailed and complicated."
+    },
+    {
+      "source_ref": "raffles-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The student spoke with ________ enthusiasm during the presentation, hoping to impress the judges with her thoughtful ideas.",
+      "options": [
+        "earnest",
+        "agitated",
+        "reserved",
+        "industrious"
+      ],
+      "correct_answer": "earnest",
+      "marks": 1,
+      "explanation": "'earnest' = sincere and serious."
+    },
+    {
+      "source_ref": "raffles-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "We must find a way to ________ our differences and work together to build a better and brighter future.",
+      "options": [
+        "restore",
+        "resolve",
+        "recharge",
+        "reconnect"
+      ],
+      "correct_answer": "resolve",
+      "marks": 1,
+      "explanation": "'resolve differences' = settle/organise differences."
+    },
+    {
+      "source_ref": "raffles-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "As a national para-swimmer, Yip Pin Xiu juggles 13 training sessions a week, school and family commitments. She often sacrifices time with loved ones for training but the experience has (16) her morale and taught her resilience. Recently, at the One Team Singapore Roadshow in Zhonghua Primary School, she shared her experiences with enthusiastic students. The event included hands-on activities and is part of an engaging Team Singapore school outreach programme to (17) the upcoming Olympic and Paralympic Games. Yip, who set two world records in quick (18) at the International Paralympic Committee Swimming European Open Championship, enjoyed speaking to the young audience. She believes such an event gives a good (19) of Singapore's sports and teaches valuable lessons like time management. Although she does not see herself as a role model, Yip hopes to pass on moral values. Her dedication is (20) as an inspiration to many. Yip's story is one that shows that with perseverance, one can succeed.",
+      "prompt": "The word \"raised\" is closest in meaning to:",
+      "options": [
+        "boosted",
+        "advanced",
+        "celebrated",
+        "progressed"
+      ],
+      "correct_answer": "boosted",
+      "marks": 1,
+      "explanation": "\"raised her morale\" = boosted it."
+    },
+    {
+      "source_ref": "raffles-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "She often sacrifices time with loved ones for training but the experience has (16) her morale and taught her resilience. Recently, at the One Team Singapore Roadshow in Zhonghua Primary School, she shared her experiences with enthusiastic students. The event included hands-on activities and is part of an engaging Team Singapore school outreach programme to (17) the upcoming Olympic and Paralympic Games.",
+      "prompt": "The word \"promote\" is closest in meaning to:",
+      "options": [
+        "improve",
+        "publicise",
+        "contribute",
+        "encourage"
+      ],
+      "correct_answer": "publicise",
+      "marks": 1,
+      "explanation": "\"publicise\" = draw attention to / promote."
+    },
+    {
+      "source_ref": "raffles-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "Yip, who set two world records in quick (18) at the International Paralympic Committee Swimming European Open Championship, enjoyed speaking to the young audience.",
+      "prompt": "The phrase \"in quick succession\" (written as \"in quick (18)\") is closest in meaning to:",
+      "options": [
+        "briefly",
+        "rapidly",
+        "intermittently",
+        "consecutively"
+      ],
+      "correct_answer": "consecutively",
+      "marks": 1,
+      "explanation": "\"in quick succession\" = one after another / consecutively."
+    },
+    {
+      "source_ref": "raffles-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "She believes such an event gives a good (19) of Singapore's sports and teaches valuable lessons like time management.",
+      "prompt": "The word \"sense\" is closest in meaning to:",
+      "options": [
+        "feel",
+        "sight",
+        "touch",
+        "sound"
+      ],
+      "correct_answer": "feel",
+      "marks": 1,
+      "explanation": "\"a good sense of\" = a good feel/understanding of."
+    },
+    {
+      "source_ref": "raffles-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "Her dedication is (20) as an inspiration to many. Yip's story is one that shows that with perseverance, one can succeed.",
+      "prompt": "The word \"regarded\" is closest in meaning to:",
+      "options": [
+        "viewed",
+        "favoured",
+        "observed",
+        "approved"
+      ],
+      "correct_answer": "viewed",
+      "marks": 1,
+      "explanation": "\"regarded as\" = viewed as."
+    },
+    {
+      "source_ref": "raffles-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "raffles-2025-q21.png",
+      "context": "Text 1 is a poster for Midvalley Sleep Clinic for Teenagers. It asks \"DO YOU HAVE ENOUGH SLEEP?\" and tells us nearly 3 in 4 teenagers are constantly sleep-deprived.",
+      "prompt": "\"DO YOU HAVE ENOUGH SLEEP?\" Why did the writer ask the question in Text 1?",
+      "options": [
+        "to make readers reflect on their sleeping habits",
+        "to persuade readers to improve their sleep schedule",
+        "to warn readers about the dangers of sleep deprivation",
+        "to emphasise to readers the importance of sleeping well"
+      ],
+      "correct_answer": "to make readers reflect on their sleeping habits",
+      "marks": 1,
+      "explanation": "A rhetorical question gets the reader thinking about their own sleep.",
+      "passage": "Sleep is a vital part of our daily lives serving as a foundation for physical and mental health. During sleep, our bodies repair tissues, strengthen the immune system and consolidate memories.\n\nTo improve sleep quality, try keeping a consistent sleep schedule by going to bed and waking up at the same time every day. Create a relaxing bedtime routine to wind down, such as reading or taking a warm bath. Make sure your sleep environment is comfortable, cool and dark.\n\nLimit exposure to screens and bright lights before bed as they can interfere with your body's natural sleep-wake cycle. Additionally, avoid caffeine and heavy meals close to bedtime.\n\nPrioritising these habits can help ensure a restful night's sleep and overall well-being."
+    },
+    {
+      "source_ref": "raffles-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "raffles-2025-q21.png",
+      "context": "The poster shows a tired teenager asleep at a desk. Text 1 states teens get only an average of 7 hours of sleep a night.",
+      "prompt": "The image in the poster is used to show that those who do not get enough sleep will be ________.",
+      "options": [
+        "tired",
+        "upset",
+        "worried",
+        "restless"
+      ],
+      "correct_answer": "tired",
+      "marks": 1,
+      "explanation": "The sleeping student with the caption links insufficient sleep to being tired.",
+      "passage": "Sleep is a vital part of our daily lives serving as a foundation for physical and mental health. During sleep, our bodies repair tissues, strengthen the immune system and consolidate memories.\n\nTo improve sleep quality, try keeping a consistent sleep schedule by going to bed and waking up at the same time every day. Create a relaxing bedtime routine to wind down, such as reading or taking a warm bath. Make sure your sleep environment is comfortable, cool and dark.\n\nLimit exposure to screens and bright lights before bed as they can interfere with your body's natural sleep-wake cycle. Additionally, avoid caffeine and heavy meals close to bedtime.\n\nPrioritising these habits can help ensure a restful night's sleep and overall well-being."
+    },
+    {
+      "source_ref": "raffles-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "raffles-2025-q21.png",
+      "context": "Text 1: 'Sleep-deprived adolescents are also less likely to retain new information.'",
+      "prompt": "According to Text 1, which of the following statements is true?",
+      "options": [
+        "It is natural for teenagers to be impulsive.",
+        "Teenagers only need 7 hours of sleep a day.",
+        "A small percentage of teenagers have sleep issues.",
+        "Well-rested teenagers are more likely to remember information."
+      ],
+      "correct_answer": "Well-rested teenagers are more likely to remember information.",
+      "marks": 1,
+      "explanation": "Text 1 says sleep-deprived teens are less likely to retain new information, so well-rested teens are more likely to.",
+      "passage": "Sleep is a vital part of our daily lives serving as a foundation for physical and mental health. During sleep, our bodies repair tissues, strengthen the immune system and consolidate memories.\n\nTo improve sleep quality, try keeping a consistent sleep schedule by going to bed and waking up at the same time every day. Create a relaxing bedtime routine to wind down, such as reading or taking a warm bath. Make sure your sleep environment is comfortable, cool and dark.\n\nLimit exposure to screens and bright lights before bed as they can interfere with your body's natural sleep-wake cycle. Additionally, avoid caffeine and heavy meals close to bedtime.\n\nPrioritising these habits can help ensure a restful night's sleep and overall well-being."
+    },
+    {
+      "source_ref": "raffles-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "raffles-2025-q21.png",
+      "context": "Text 1 is a poster for the Midvalley Sleep Clinic for Teenagers.",
+      "prompt": "Who is the main target audience of the poster?",
+      "options": [
+        "adults who have sleep issues",
+        "women who do not sleep enough",
+        "youths who have trouble sleeping",
+        "children who want to sleep better"
+      ],
+      "correct_answer": "youths who have trouble sleeping",
+      "marks": 1,
+      "explanation": "The poster is aimed at teenagers ('teenagers need 8 to 9 hours'), i.e. youths who have trouble sleeping.",
+      "passage": "Sleep is a vital part of our daily lives serving as a foundation for physical and mental health. During sleep, our bodies repair tissues, strengthen the immune system and consolidate memories.\n\nTo improve sleep quality, try keeping a consistent sleep schedule by going to bed and waking up at the same time every day. Create a relaxing bedtime routine to wind down, such as reading or taking a warm bath. Make sure your sleep environment is comfortable, cool and dark.\n\nLimit exposure to screens and bright lights before bed as they can interfere with your body's natural sleep-wake cycle. Additionally, avoid caffeine and heavy meals close to bedtime.\n\nPrioritising these habits can help ensure a restful night's sleep and overall well-being."
+    },
+    {
+      "source_ref": "raffles-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "raffles-2025-q21.png",
+      "context": "Text 1 (poster) and Text 2 (article) both discuss sleep. Text 2 says 'Sleep is a vital part of our daily lives serving as a foundation for physical and mental health.'",
+      "prompt": "Both Text 1 and Text 2 emphasise that ________.",
+      "options": [
+        "sleep is important for our mental health",
+        "our body repairs tissues when we are sleeping",
+        "everyone should have a consistent sleep schedule",
+        "getting enough sleep strengthens our immune system"
+      ],
+      "correct_answer": "sleep is important for our mental health",
+      "marks": 1,
+      "explanation": "Both texts highlight the benefit of sleep for mental health; Text 2 calls sleep 'a foundation for physical and mental health.'",
+      "passage": "Sleep is a vital part of our daily lives serving as a foundation for physical and mental health. During sleep, our bodies repair tissues, strengthen the immune system and consolidate memories.\n\nTo improve sleep quality, try keeping a consistent sleep schedule by going to bed and waking up at the same time every day. Create a relaxing bedtime routine to wind down, such as reading or taking a warm bath. Make sure your sleep environment is comfortable, cool and dark.\n\nLimit exposure to screens and bright lights before bed as they can interfere with your body's natural sleep-wake cycle. Additionally, avoid caffeine and heavy meals close to bedtime.\n\nPrioritising these habits can help ensure a restful night's sleep and overall well-being."
+    },
+    {
+      "source_ref": "raffles-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A) a (B) an (C) and (D) are (E) by (F) either (G) is (H) neither (J) of (K) off (L) on (M) than (N) then (P) where (Q) within\n\nAt some point or another, perhaps during dinner at your neighbourhood restaurant, you might have wondered how Asians could ever survive a meal without our delectable, umami-filled soy sauce. Who could blame you? Present in every Asian household, it is perhaps even more recognisable ___(26)___ hot sauce itself.\n\nHow is soy sauce made? Firstly, soy sauce is made ___(27)___ combining cooked soybeans and cooked wheat grains, forming them into a paste. Next, ___(28)___ *Aspergillus oryzae or *Sojae moulds are added to begin fermentation. The culture is added to ___(29)___ salt solution and left to ferment further. Finally, the mixture is ___(30)___ pressed to produce the liquid condiment or sauce.\n\nCommercial producers use ___(31)___ ordinary vegetable protein in place of bacterial cultures to speed up the process, creating batches ___(32)___ a few days. Traditional methods can take as long as six months. The longer the fermentation process, the deeper ___(33)___ more complex flavours the soy sauce will have.\n\nThere are hundreds of varieties of soy sauce that ___(34)___ available on the market today. These varieties depend ___(35)___ the ingredients used, the method used to create the sauce and the region in which it is made. There are four main types of soy sauce that can be found in your local supermarket, including tamari, shōyu, light, and dark.",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "M",
+      "marks": 1,
+      "explanation": "\"more recognisable than hot sauce\" - comparison (M = than)."
+    },
+    {
+      "source_ref": "raffles-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "E",
+      "marks": 1,
+      "explanation": "\"made by combining\" - agentive 'by' (E = by)."
+    },
+    {
+      "source_ref": "raffles-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "\"either ... or ...\" (F = either)."
+    },
+    {
+      "source_ref": "raffles-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "A",
+      "marks": 1,
+      "explanation": "\"to a salt solution\" - indefinite article 'a' (A = a)."
+    },
+    {
+      "source_ref": "raffles-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "N",
+      "marks": 1,
+      "explanation": "\"is then pressed\" - sequence word 'then' (N = then)."
+    },
+    {
+      "source_ref": "raffles-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "B",
+      "marks": 1,
+      "explanation": "\"use an ordinary vegetable protein\" - 'an' before vowel sound (B = an)."
+    },
+    {
+      "source_ref": "raffles-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "Q",
+      "marks": 1,
+      "explanation": "\"creating batches within a few days\" (Q = within)."
+    },
+    {
+      "source_ref": "raffles-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "C",
+      "marks": 1,
+      "explanation": "\"the deeper and more complex flavours\" - correlative 'and' (C = and)."
+    },
+    {
+      "source_ref": "raffles-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "D",
+      "marks": 1,
+      "explanation": "\"varieties ... that are available\" - plural 'are' (D = are)."
+    },
+    {
+      "source_ref": "raffles-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "L",
+      "marks": 1,
+      "explanation": "\"depend on\" (L = on)."
+    },
+    {
+      "source_ref": "raffles-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "Expressing dissatisfaction might just be one of the surprising ways that connect us as human beings. A quick glance at the internet reveels(36) that many of us appear to be happiest while(37) we are annoyed—a curious but oddly unifying trait. Interestingly, consumer feedback have(38) remained consistent across millennia. Whether it is delayed delivery, damaged or insuficient(39) goods, pricing disagreements or a slow (or no) response to(40) the supplier, these familiar concerns show that people have long cared deeply about getting what they paid for—something that also rankled with our ancestours(41).\n\nThe British Museum houses severul(42) such letters and proudly displays the oldest written customer complain(43). Written on a clay tablet about 3,770 years ago by Nanni, which(44) was a disgruntled trader, this ancient message offers a vivid glimpse into historical business interactions. In it, Nanni expressed his frustrations over a transaction, directing sharp words to the allegedly unscrewpulus(45) copper merchant—a fellow Babylonian named Ea-nāṣir. Today, Nanni's angry letter from thousands of years ago is now making people laugh and think about it.",
+      "prompt": "Write the correct word.",
+      "correct_answer": "reveals",
+      "marks": 1,
+      "explanation": "\"reveals\" (a glance reveals) is the correct present-tense form."
+    },
+    {
+      "source_ref": "raffles-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "when",
+      "marks": 1,
+      "explanation": "\"happiest when we are annoyed\" - 'when' is required, not 'while'."
+    },
+    {
+      "source_ref": "raffles-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "has",
+      "marks": 1,
+      "explanation": "\"feedback\" is uncountable and takes a singular verb, so 'has'."
+    },
+    {
+      "source_ref": "raffles-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "insufficient",
+      "marks": 1,
+      "explanation": "Correct spelling 'insufficient'."
+    },
+    {
+      "source_ref": "raffles-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "from",
+      "marks": 1,
+      "explanation": "\"a ... response from the supplier\"."
+    },
+    {
+      "source_ref": "raffles-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "ancestors",
+      "marks": 1,
+      "explanation": "Correct spelling 'ancestors'."
+    },
+    {
+      "source_ref": "raffles-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "several",
+      "marks": 1,
+      "explanation": "Correct spelling 'several'."
+    },
+    {
+      "source_ref": "raffles-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "complaint",
+      "marks": 1,
+      "explanation": "The noun 'complaint' is needed, not the verb 'complain'."
+    },
+    {
+      "source_ref": "raffles-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "who",
+      "marks": 1,
+      "explanation": "A person (Nanni) requires the relative pronoun 'who'."
+    },
+    {
+      "source_ref": "raffles-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "unscrupulous",
+      "marks": 1,
+      "explanation": "Correct spelling 'unscrupulous'."
+    },
+    {
+      "source_ref": "raffles-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "Expressing appreciation is a simple yet powerful way to strengthen relationships. Many overlook the kindness they receive daily. On one hand, it is easy to take things for granted. ___(46)___, making the effort to be grateful can brighten someone's day and create a positive atmosphere. Even in the midst of responsibilities, taking time to acknowledge kindness can make an improvement in ___(47)___ we connect with others.\n\nBuilding gratitude ___(48)___ with recognising the good in our lives. First think about the times when people have helped us. This reminds us to be appreciative. Next instead of focusing on ___(49)___ we lack, we should value what we already have. ___(50)___ to studies, grateful individuals are happier and have a clearer ___(51)___ of purpose in life. Choosing appreciation over negativity helps in personal growth.\n\nActions matter as much as words. Being committed to gratitude means giving ___(52)___ or paying it forward. Acknowledging those who have helped us recover from hardships strengthens relationships. Expressing thanks does ___(53)___ require big gestures—small actions like kind words and helpful deeds build connections ___(54)___ friends and the community. These simple acts create lasting bonds.\n\nAs we grow older, we see the deeper impact of gratitude. Its value becomes clearer later on in ___(55)___, especially when we reflect on meaningful relationships. People who insist on appreciating others tend to ___(56)___ strong friendships.\n\nThose who stay open-hearted and compassionate have ___(57)___ good friends and relied on support during challenges, experiencing the true ___(58)___ of gratitude. Learning to see the value ___(59)___ kindness, gratitude and generosity can ultimately lead ___(60)___ a more fulfilling life. Let us try to show more appreciation in our lives.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "However",
+      "marks": 1,
+      "explanation": "\"However\" signals a contrast."
+    },
+    {
+      "source_ref": "raffles-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "how",
+      "marks": 1,
+      "explanation": "\"an improvement in how we connect\"."
+    },
+    {
+      "source_ref": "raffles-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "comes",
+      "marks": 1,
+      "explanation": "\"gratitude comes with\"."
+    },
+    {
+      "source_ref": "raffles-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "What",
+      "marks": 1,
+      "explanation": "\"focusing on what we lack\"."
+    },
+    {
+      "source_ref": "raffles-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "According",
+      "marks": 1,
+      "explanation": "\"According to studies\"."
+    },
+    {
+      "source_ref": "raffles-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "understanding",
+      "marks": 1,
+      "explanation": "\"a clearer understanding of purpose\"."
+    },
+    {
+      "source_ref": "raffles-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "appreciation",
+      "marks": 1,
+      "explanation": "\"giving appreciation\"."
+    },
+    {
+      "source_ref": "raffles-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "not",
+      "marks": 1,
+      "explanation": "\"does not require big gestures\"."
+    },
+    {
+      "source_ref": "raffles-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "between",
+      "marks": 1,
+      "explanation": "\"connections between friends and the community\"."
+    },
+    {
+      "source_ref": "raffles-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "life",
+      "marks": 1,
+      "explanation": "\"later on in life\"."
+    },
+    {
+      "source_ref": "raffles-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "have",
+      "marks": 1,
+      "explanation": "\"tend to have strong friendships\"."
+    },
+    {
+      "source_ref": "raffles-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "many",
+      "marks": 1,
+      "explanation": "\"have many good friends\"."
+    },
+    {
+      "source_ref": "raffles-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "meaning",
+      "marks": 1,
+      "explanation": "\"the true meaning of gratitude\"."
+    },
+    {
+      "source_ref": "raffles-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "of",
+      "marks": 1,
+      "explanation": "\"the value of kindness\"."
+    },
+    {
+      "source_ref": "raffles-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "to",
+      "marks": 1,
+      "explanation": "\"lead to a more fulfilling life\"."
+    },
+    {
+      "source_ref": "raffles-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Mazlan believed Jane's story more than Nick's. Mazlan finds ________.",
+      "correct_answer": "Jane's story more believable than Nick's",
+      "marks": 2,
+      "explanation": "Cleft-style rephrase using 'finds ... more believable than'."
+    },
+    {
+      "source_ref": "raffles-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Everyone in class respected the elderly teacher for his wisdom. The elderly teacher ________.",
+      "correct_answer": "was respected by everyone in class for his wisdom",
+      "marks": 2,
+      "explanation": "Passive voice transformation."
+    },
+    {
+      "source_ref": "raffles-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The twins do not like running in the evening. The twins' brother also does not like running in the evening. Neither ________.",
+      "correct_answer": "the twins nor their brother like running in the evening",
+      "marks": 2,
+      "explanation": "Combine with 'neither ... nor'."
+    },
+    {
+      "source_ref": "raffles-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "\"Don't speak to me until you have apologised,\" Jack told his sister. Jack told his sister ________.",
+      "correct_answer": "not to speak to him until she had apologised",
+      "marks": 2,
+      "explanation": "Reported speech: negative command 'not to ...' with backshifted 'until she had apologised'."
+    },
+    {
+      "source_ref": "raffles-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "All the students were given an apple each last week. Every student ________.",
+      "correct_answer": "was given an apple each last week",
+      "marks": 2,
+      "explanation": "Reorder from 'All the students' to 'Every student' with a singular verb."
+    },
+    {
+      "source_ref": "raffles-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a [dingy] area of Portsmouth in England which was to him an improvement compared to what he had been growing up.",
+      "prompt": "Which word in the first paragraph tells you that the area Raj lived in was rather rundown and gloomy? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "dingy",
+          "keywords": [
+            [
+              "dingy"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers.",
+      "prompt": "In line 7, the text tells us that Raj was \"often singled out for compliments\". Based on what you have read, who do you think gave the compliments and why do you think they did that? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Raj's co-workers / the staff gave him compliments because he took care of and helped his co-workers by doing extra shifts when asked.",
+          "keywords": [
+            [
+              "co-workers",
+              "staff",
+              "extra shifts",
+              "helped"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "The cruise liner's passengers gave him compliments because he put chocolates in the rooms.",
+          "keywords": [
+            [
+              "passengers",
+              "chocolates",
+              "rooms"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death.",
+      "prompt": "What does the five-word phrase \"poised between life and death\" in line 10 tell you about Raj's condition after his operation? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "the operation had gone uneventfully but the wound became infected and he was going to die / his condition was very serious and he was close to dying.",
+          "keywords": [
+            [
+              "wound became infected",
+              "going to die",
+              "close to dying",
+              "serious"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. ... The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. ... He then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He sent a letter to his father ... \"I have a very good job now. The pay is good and the duties are light,\" he wrote.",
+      "prompt": "Based on lines 1-17, state whether each statement in the table below is true or false, then give one reason why you think so. (a) Raj's family was well-off. (b) The cruise liner left England without Raj. (c) Raj reassured his father that he had found a good job. [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) False — Raj's family lived in a small dark room with no windows.",
+          "keywords": [
+            [
+              "false",
+              "small dark room",
+              "no windows"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) True — by the time Raj was discharged from the hospital, the cruise liner had sailed on to Norway.",
+          "keywords": [
+            [
+              "true",
+              "discharged",
+              "sailed on to Norway"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) True — the pay was good and Raj's duties were light.",
+          "keywords": [
+            [
+              "true",
+              "pay was good",
+              "duties were light"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Raj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.",
+      "prompt": "(a) With reference to lines 18-21, write down one word in the box below which best describes Raj. (b) Provide evidence from the text to support your answer. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "diligent / hardworking",
+          "keywords": [
+            [
+              "diligent",
+              "hardworking"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "He redecorated the station toilets on his own and worked late into the night.",
+          "keywords": [
+            [
+              "redecorated",
+              "station toilets",
+              "worked late",
+              "on his own"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Members of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\" ... Then the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"",
+      "prompt": "Look at the table below. What do the words in the left column refer to in the passage? (a) They (line 18) (b) it (line 28) (c) He (line 35) [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) They (line 18) — the station toilets.",
+          "keywords": [
+            [
+              "station toilets"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) it (line 28) — the full-page article on the exemplary toilets.",
+          "keywords": [
+            [
+              "full-page article",
+              "exemplary toilets"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) He (line 35) — Raj's father.",
+          "keywords": [
+            [
+              "Raj's father"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Members of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. ... One morning, a policeman came into the toilet and waited by the door. ... However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper.\" ... Raj beamed with pleasure.",
+      "prompt": "Write 1, 2 and 3 in the blanks below to indicate the order in which the events occurred in the story. ___ The local newspaper sent a reporter to see the station toilets. ___ People using the station toilets praised how clean they were. ___ Raj was praised for his diligence by the prime minister. [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "newspaper reporter = 2 ; people praising = 1 ; prime minister = 3",
+          "keywords": [
+            [
+              "2",
+              "1",
+              "3"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "He sent a letter to his father who could not read or write ... \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him. ... Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\" ... Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"",
+      "prompt": "Which two words best describe Raj's relationship with his father? Put a tick in the box beside each of your answers. (strain / affectionate / professional / cordial / supportive / hostile) [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "affectionate",
+          "keywords": [
+            [
+              "affectionate"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "keyword",
+          "description": "supportive",
+          "keywords": [
+            [
+              "supportive"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Members of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. ... The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.",
+      "prompt": "With reference to the text from lines 25-33, complete the chart below to show what the following groups did as a reaction to Raj's redecoration of the station toilets. (a) The public (b) A reporter (c) The prime minister [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) The public — they complimented Raj.",
+          "keywords": [
+            [
+              "complimented",
+              "praised"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) A reporter — he wrote a full-page article on the exemplary toilets.",
+          "keywords": [
+            [
+              "reporter",
+              "full-page article",
+              "exemplary toilets"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) The prime minister — he visited and praised Raj.",
+          "keywords": [
+            [
+              "prime minister",
+              "visited",
+              "praised"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    },
+    {
+      "source_ref": "raffles-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Raj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. He had crossed some line of which he was unaware? Another man in a suit appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "prompt": "Raj pondered over what he had asked of the prime minister and asked himself, \"Had he crossed some line of which he was unaware?\" (line 40). (a) With reference to the text, what was this \"line\" (line 40) Raj was referring to? (b) How had Raj crossed this \"line\" (line 40)? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "(a) the line was that he had asked the prime minister for too much (asking him to bring his father to England).",
+          "keywords": [
+            [
+              "asked for too much",
+              "bring his father",
+              "prime minister"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "(b) he had been rude in asking the prime minister for his help to bring his father to England / he had overstepped by making such a personal request.",
+          "keywords": [
+            [
+              "rude",
+              "overstepped",
+              "personal request",
+              "bring his father"
+            ]
+          ]
+        }
+      ],
+      "passage": "He was called Raj and he came from Kolkata where he lived with his father in a small dark room with no windows. Now he lived in a bright and clean boarding house in a dingy area of Portsmouth in England which was to him an improvement compared to what he had growing up.\n\nRaj had been a cleaner on a cruise liner and part of a team responsible for cleaning cabins. He took great pride in his work, often going above and beyond what was asked of him. He would put little chocolates in the rooms he took care of and help his co-workers by doing extra shifts when asked. Thus, he was often singled out for compliments by both staff and passengers. On his last voyage on the ship, he developed appendicitis and was put ashore in England. The operation had gone uneventfully but the wound became infected and Raj spent two weeks poised between life and death. By the time he was discharged from hospital, his ship had sailed on to Norway. The shipping company managed to arrange permission for him to stay in the country and suggested he work on land for a while until he recovered.\n\nHe then applied to a local employment agency. He was interviewed by a man and after ten minutes, he was offered the job of looking after the toilets at a railway station. He accepted it.\n\nHe sent a letter to his father who could not read or write and would have it read to him by his neighbour. \"I have a very good job now. The pay is good and the duties are light,\" he wrote. The neighbour wrote back to tell him that his father was very proud of him.\n\nRaj was a hard worker and he found there was much to do at the station toilets. They had not been decorated for years and Raj decided to do something about that himself. He bought tins of paint, a folding ladder and the necessary brushes and rollers. He completed the redecoration over a weekend, working late into the night.\n\nThe station manager came to see him, asking if he had done this himself. Raj nodded. He was concerned he might get into trouble for acting without permission but the station manager merely smiled and thanked him, saying he had done a fine job.\n\nMembers of the public began to take note, complimenting Raj on the gleaming taps, the spotless, well-scrubbed floor and the scented flowers that he put out at his own expense. The local newspaper sent a reporter to write a full-page article on the exemplary toilets after hearing about them from many of their readers. Raj sent a copy of it to his father, who wrote back, through the neighbour, to say, \"I am the proudest father.\"\n\nOne morning, a policeman came into the toilet and waited by the door. Raj wondered whether he was planning to arrest somebody. However, another man came in. This was the prime minister. The prime minister said to Raj, \"I read about your work in the paper. Imagine if everybody in this country took this sort of pride in their work.\" Raj beamed with pleasure.\n\nThen the prime minister asked if he needed anything. Raj thought. He bit his lip. Then he said, \"My father, sir. He is on his own in India and I would like to have him here so that I can take care of him.\"\n\nThe sun came in through a high window and shone on the highly polished taps. The prime minister hesitated. Then, he said, \"Sometimes, I can help.\" Then he added, \"Sometimes.\"\n\nRaj looked down at the floor and squeezed his eyes shut as he realised the audacity of his question. Had he crossed some line of which he was unaware? Another man in a suit soon appeared. The prime minister whispered something to him. The man nodded, looked at Raj, and smiled.",
+      "image": "raffles-2025-passage.png"
+    }
+  ]
+}

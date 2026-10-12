@@ -89,6 +89,9 @@ const EPAPER_IMAGES_DIR = path.join(__dirname, "epaper-images");
 const DICTATION_AUDIO_DIR = path.join(__dirname, "dictation-audio");
 const ENGLISH_AUDIO_DIR = path.join(__dirname, "english-audio");
 const CUSTOM_DICTATION_AUDIO_DIR = path.join(__dirname, "custom-dictation-audio");
+// 构建好的客户端安装包（Mac app 等），由工具 scp 上来。同局域网直接从这里下载，
+// 比从 GitHub Releases 快得多；GitHub 那边仍然是自动更新的正式来源。
+const DOWNLOADS_DIR = path.join(__dirname, "downloads");
 fs.mkdirSync(DICTATION_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(ENGLISH_AUDIO_DIR, { recursive: true });
 fs.mkdirSync(CUSTOM_DICTATION_AUDIO_DIR, { recursive: true });
@@ -3340,6 +3343,24 @@ const server = http.createServer(async (req, res) => {
     // ================================================== 英语试卷 (English Paper 2) ==
 
     // --- question images (open; same 3-layer traversal guard as science-images) --
+    // --- 客户端安装包（局域网下载，开放 —— 这些文件本来就是公开的）--------
+    if (method === "GET" && pathname.startsWith("/downloads/")) {
+      const file = path.basename(decodeURIComponent(pathname));
+      const full = path.join(DOWNLOADS_DIR, file);
+      if (!full.startsWith(DOWNLOADS_DIR) || !/^[\w.-]+\.(zip|dmg|pkg)$/.test(file) ||
+          !fs.existsSync(full)) {
+        return sendJSON(404, { error: "file not found" });
+      }
+      const stat = fs.statSync(full);
+      res.writeHead(200, {
+        "Content-Type": "application/zip",
+        "Content-Length": stat.size,
+        "Content-Disposition": `attachment; filename="${file}"`,
+        "Cache-Control": "no-store",
+      });
+      return fs.createReadStream(full).pipe(res);
+    }
+
     if (method === "GET" && pathname.startsWith("/epaper-images/")) {
       const file = path.basename(pathname);
       const full = path.join(EPAPER_IMAGES_DIR, file);

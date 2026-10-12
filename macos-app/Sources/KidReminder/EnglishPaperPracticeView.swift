@@ -5,6 +5,11 @@ import SwiftUI
 /// SciencePracticeView exactly, including opening the runner as its own
 /// top-level window (via openWindow) rather than a sheet, for a real
 /// maximize/zoom-capable title bar.
+private func fmtScore(_ v: Double) -> String {
+    // 76.0 显示成 "76"，76.5 保留成 "76.5" —— Double 直接插值会变成 "76.0"
+    v == v.rounded() ? String(Int(v)) : String(format: "%.1f", v)
+}
+
 struct EnglishPaperPracticeView: View {
     @EnvironmentObject var settings: SettingsStore
     @Environment(\.openWindow) private var openWindow
@@ -106,7 +111,7 @@ struct EnglishPaperPracticeView: View {
                     .font(.caption).foregroundStyle(.secondary)
                 if let last = paper.lastResult {
                     let pct = last.marksTotal > 0 ? Int((Double(last.scoreEarned) / Double(last.marksTotal) * 100).rounded()) : 0
-                    Text("上次成绩：\(last.scoreEarned)/\(last.marksTotal) · \(pct)%")
+                    Text("上次成绩：\(fmtScore(last.scoreEarned))/\(last.marksTotal) · \(pct)%")
                         .font(.caption.bold())
                         .foregroundStyle(pct >= 90 ? .green : .orange)
                 }

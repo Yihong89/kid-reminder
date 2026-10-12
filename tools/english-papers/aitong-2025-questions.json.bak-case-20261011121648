@@ -1,0 +1,1127 @@
+{
+  "_source": "Ai Tong School P6 English Paper 2 2025",
+  "questions": [
+    {
+      "source_ref": "aitong-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The family had come to a decision ___ whether to proceed with the operation for their ailing father.",
+      "options": [
+        "in",
+        "on",
+        "for",
+        "with"
+      ],
+      "correct_answer": "on",
+      "marks": 1,
+      "explanation": "\"decision on\" is the fixed preposition pairing."
+    },
+    {
+      "source_ref": "aitong-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"Where ___ the pants that I left on the ironing board earlier?\" asked Mrs Toh.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "are",
+      "marks": 1,
+      "explanation": "\"pants\" is a plural noun, so it takes \"are\"."
+    },
+    {
+      "source_ref": "aitong-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Mother suggested that Sarah and I go to the park while she stayed home by ___.",
+      "options": [
+        "myself",
+        "herself",
+        "ourselves",
+        "themselves"
+      ],
+      "correct_answer": "herself",
+      "marks": 1,
+      "explanation": "The reflexive pronoun must agree with \"she\"."
+    },
+    {
+      "source_ref": "aitong-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "___ to her surprise, Jeanette crossed the finish line ahead of time, breaking her own record.",
+      "options": [
+        "Any",
+        "Little",
+        "Much",
+        "Many"
+      ],
+      "correct_answer": "Much",
+      "marks": 1,
+      "explanation": "\"Much to her surprise\" is the fixed idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"He'd have submitted his project by now, ___ he?\" Alex asked, looking concerned.",
+      "options": [
+        "don't",
+        "won't",
+        "didn't",
+        "wouldn't"
+      ],
+      "correct_answer": "wouldn't",
+      "marks": 1,
+      "explanation": "The tag question must match \"'d have\" (would have) with \"wouldn't\"."
+    },
+    {
+      "source_ref": "aitong-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Among all the movies I have watched, this is undoubtedly ___ one.",
+      "options": [
+        "an interesting",
+        "a very interesting",
+        "the most interesting",
+        "the more interesting"
+      ],
+      "correct_answer": "the most interesting",
+      "marks": 1,
+      "explanation": "Comparing against \"all the movies\" needs the superlative."
+    },
+    {
+      "source_ref": "aitong-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "By the end of this year, Mr Lim's daughter ___ her studies overseas.",
+      "options": [
+        "finishes",
+        "is finishing",
+        "has finished",
+        "will have finished"
+      ],
+      "correct_answer": "will have finished",
+      "marks": 1,
+      "explanation": "\"By the end of this year\" signals the future perfect tense."
+    },
+    {
+      "source_ref": "aitong-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"Wouldn't Grandma be thrilled if she ___ that we had cooked lunch for her?\" Benjamin asked his sister.",
+      "options": [
+        "knew",
+        "known",
+        "has known",
+        "had known"
+      ],
+      "correct_answer": "knew",
+      "marks": 1,
+      "explanation": "Second conditional \"if she knew\" pairs with \"would be thrilled\"."
+    },
+    {
+      "source_ref": "aitong-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The referee continued with the match ___ the drizzle.",
+      "options": [
+        "owing to",
+        "in spite of",
+        "even though",
+        "resulting from"
+      ],
+      "correct_answer": "in spite of",
+      "marks": 1,
+      "explanation": "\"in spite of\" takes a noun phrase, unlike \"even though\" which needs a clause."
+    },
+    {
+      "source_ref": "aitong-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Intending to surprise Jeremy with a birthday party, his parents insisted he ___ home earlier that day.",
+      "options": [
+        "come",
+        "came",
+        "comes",
+        "coming"
+      ],
+      "correct_answer": "come",
+      "marks": 1,
+      "explanation": "\"insisted\" takes the subjunctive base form \"come\"."
+    },
+    {
+      "source_ref": "aitong-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "After getting a standing ovation, the actress ___ in the limelight, her eyes gleaming with joy.",
+      "options": [
+        "shone",
+        "basked",
+        "radiated",
+        "absorbed"
+      ],
+      "correct_answer": "basked",
+      "marks": 1,
+      "explanation": "\"basked in the limelight\" is the natural collocation."
+    },
+    {
+      "source_ref": "aitong-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Maya showed ___ when she said not to gossip, then talked about June behind her back.",
+      "options": [
+        "discrimination",
+        "hypocrisy",
+        "rudeness",
+        "authority"
+      ],
+      "correct_answer": "hypocrisy",
+      "marks": 1,
+      "explanation": "Saying one thing and doing the opposite is hypocrisy."
+    },
+    {
+      "source_ref": "aitong-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The ___ mother gives her only son anything he wants even when it is not good for him.",
+      "options": [
+        "devoted",
+        "indulgent",
+        "supportive",
+        "extravagant"
+      ],
+      "correct_answer": "indulgent",
+      "marks": 1,
+      "explanation": "Giving a child anything he wants, even when unwise, is indulgent."
+    },
+    {
+      "source_ref": "aitong-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "When I told Josh he was being too aggressive, he finally ___ and stopped yelling.",
+      "options": [
+        "backed into",
+        "backed out",
+        "backed off",
+        "backed up"
+      ],
+      "correct_answer": "backed off",
+      "marks": 1,
+      "explanation": "\"backed off\" means stopped being aggressive/retreated."
+    },
+    {
+      "source_ref": "aitong-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "When asked about the new school rules, Mark replied ___, showing little interest in the changes.",
+      "options": [
+        "casually",
+        "arrogantly",
+        "unfeelingly",
+        "indifferently"
+      ],
+      "correct_answer": "indifferently",
+      "marks": 1,
+      "explanation": "\"showing little interest\" matches \"indifferently\"."
+    },
+    {
+      "source_ref": "aitong-2025-q16",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": "As a student, I find the POSB Smart Buddy programme helpful. Rolled out in 2017, it is now expanding to all schools in Singapore.",
+      "prompt": "Choose the word closest in meaning to the underlined word: \"Rolled out\".",
+      "options": [
+        "Originated",
+        "Embarked",
+        "Launched",
+        "Founded"
+      ],
+      "correct_answer": "Launched",
+      "marks": 1,
+      "explanation": "\"Rolled out\" (a programme introduced) is closest to \"Launched\"."
+    },
+    {
+      "source_ref": "aitong-2025-q17",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": "With Smart Buddy, making payments in school has become so convenient.",
+      "prompt": "Choose the word closest in meaning to the underlined word: \"convenient\".",
+      "options": [
+        "advanced",
+        "creative",
+        "efficient",
+        "flexible"
+      ],
+      "correct_answer": "efficient",
+      "marks": 1,
+      "explanation": "Being convenient to use is closest to being efficient."
+    },
+    {
+      "source_ref": "aitong-2025-q18",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": "They can track my spendings each day, set daily spending limits and even help me create savings goals.",
+      "prompt": "Choose the word closest in meaning to the underlined word: \"limits\".",
+      "options": [
+        "barriers",
+        "guidelines",
+        "restrictions",
+        "allowances"
+      ],
+      "correct_answer": "restrictions",
+      "marks": 1,
+      "explanation": "Spending \"limits\" are spending restrictions."
+    },
+    {
+      "source_ref": "aitong-2025-q19",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": "Whenever I am low on money, they can top up my account through the mobile app remotely.",
+      "prompt": "Choose the word closest in meaning to the underlined word: \"top up\".",
+      "options": [
+        "supplement",
+        "replenish",
+        "increase",
+        "boost"
+      ],
+      "correct_answer": "replenish",
+      "marks": 1,
+      "explanation": "\"top up my account\" means to replenish it."
+    },
+    {
+      "source_ref": "aitong-2025-q20",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": "...through the mobile app remotely, no matter the location, without delay.",
+      "prompt": "Choose the word closest in meaning to the underlined word: \"remotely\".",
+      "options": [
+        "readily",
+        "virtually",
+        "indirectly",
+        "effortlessly"
+      ],
+      "correct_answer": "virtually",
+      "marks": 1,
+      "explanation": "Doing something \"remotely\" (from a distance) is closest to \"virtually\"."
+    },
+    {
+      "source_ref": "aitong-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "context": "Text 1 is a poster for the Nova Sunburst smartphone: \"The Future in Your Hands\" — key features: enhanced camera clarity, unmatched speed, effective battery life; a promotion for purchases before 1 Dec 2025.",
+      "passage": "Every year, new smartphones are released with promises of the latest features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to chase new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise the improved functions in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries. However, as battery performance gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models.",
+      "prompt": "According to the poster in Text 1, which of the following is true?",
+      "options": [
+        "The Sunburst has at least two key features.",
+        "Customers can purchase the Sunburst online.",
+        "The Sunburst is the first smartphone produced in 2025.",
+        "Customers will receive a pair of air tickets after purchasing the Sunburst."
+      ],
+      "correct_answer": "The Sunburst has at least two key features.",
+      "marks": 1,
+      "image": "aitong-2025-q21.png",
+      "explanation": "The poster lists 3 key features (#1-#3), so \"at least two\" is true; the other options overstate the poster's claims."
+    },
+    {
+      "source_ref": "aitong-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "Every year, new smartphones are released with promises of the latest features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to chase new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise the improved functions in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries. However, as battery performance gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models.",
+      "prompt": "The writer made the statement, \"The Future in Your Hands\", in Text 1 to emphasise that the phone ___.",
+      "options": [
+        "helps you control the future",
+        "will set the trend for other phones",
+        "is guaranteed to improve the future",
+        "is better than current phone models"
+      ],
+      "correct_answer": "helps you control the future",
+      "marks": 1,
+      "image": "aitong-2025-q21.png",
+      "explanation": "\"in Your Hands\" implies the phone puts control in the user's hands."
+    },
+    {
+      "source_ref": "aitong-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "Every year, new smartphones are released with promises of the latest features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to chase new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise the improved functions in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries. However, as battery performance gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models.",
+      "prompt": "Based on the poster in Text 1, which of the following best fits the phone you expect to purchase?",
+      "options": [
+        "complicated",
+        "expensive",
+        "superior",
+        "bulky"
+      ],
+      "correct_answer": "superior",
+      "marks": 1,
+      "image": "aitong-2025-q21.png",
+      "explanation": "\"most advanced\", \"enhanced\", \"unmatched\" all imply a superior product."
+    },
+    {
+      "source_ref": "aitong-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "Every year, new smartphones are released with promises of the latest features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to chase new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise the improved functions in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries. However, as battery performance gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models.",
+      "prompt": "\"Take shots like a professional!\" The picture supports this by giving the impression that the camera ___.",
+      "options": [
+        "takes high-quality photographs",
+        "improves facial features of people",
+        "is suitable for professional photographers",
+        "makes the photographer look like an expert"
+      ],
+      "correct_answer": "takes high-quality photographs",
+      "marks": 1,
+      "image": "aitong-2025-q21.png",
+      "explanation": "The picture shows a clear, high-quality photo taken with the phone."
+    },
+    {
+      "source_ref": "aitong-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "context": "Text 2 is an article: new smartphones' actual improvements are often minor while price increases are substantial; marketing emphasises new features, but a simple battery change may be cheaper than a new phone.",
+      "passage": "Every year, new smartphones are released with promises of the latest features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to chase new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise the improved functions in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries. However, as battery performance gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models.",
+      "prompt": "We cannot trust the way Text 1 promotes Nova's new model, the Sunburst, because Text 2 says ___.",
+      "options": [
+        "new models may have significantly larger batteries",
+        "upgrading to new models will significantly improve user experience",
+        "a common marketing strategy is to emphasise better features in new models",
+        "it is worth considering whether the improvements in new models are indeed value for money"
+      ],
+      "correct_answer": "it is worth considering whether the improvements in new models are indeed value for money",
+      "marks": 1,
+      "explanation": "Text 2's core caution is about whether new-model improvements are worth the price."
+    },
+    {
+      "source_ref": "aitong-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A)and (B)are (C)as (D)by (E)can (F)for (G)is (H)or (J)over (K)since (L)so (M)than (N)that (P)then (Q)will.\n\nNestled within the Mandai Wildlife Reserve are renowned zoological parks such as Singapore Zoo, Night Safari, River Wonders and Bird Paradise. Managed ___(26)___ Mandai Wildlife Group, these parks are home to more ___(27)___ 20,000 animals across 1,000 species, of which some are endangered. ___(28)___ the years, the wildlife parks have also become a key habitat ___(29)___ wildlife native to Singapore. The varied landscapes have created living environments ___(30)___ are suitable for reptiles, mammals, amphibians and birds.\n\nSingapore's fifth wildlife park, Rainforest Wild Asia, has opened to the public ___(31)___ March 2025. Filled with animal species and various adventure elements, visitors ___(32)___ look forward to trekking through forest trails scattered with fallen logs, boulders ___(33)___ streams, as well as elevated walkways. One of the park's design considerations ___(34)___ to include a variety of paths with different levels of difficulty, ___(35)___ guests can tailor their visits according to their preferences. Those seeking adrenaline-pumping experiences will definitely find challenge in these rainforest adventures.",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "by",
+      "marks": 1,
+      "explanation": "\"Managed by Mandai Wildlife Group\" — passive voice agent."
+    },
+    {
+      "source_ref": "aitong-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the same word bank as Q26.",
+      "correct_answer": "than",
+      "marks": 1,
+      "explanation": "\"more than 20,000 animals\"."
+    },
+    {
+      "source_ref": "aitong-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the same word bank as Q26.",
+      "correct_answer": "over",
+      "marks": 1,
+      "explanation": "\"Over the years\"."
+    },
+    {
+      "source_ref": "aitong-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the same word bank as Q26.",
+      "correct_answer": "for",
+      "marks": 1,
+      "explanation": "\"a habitat for wildlife\"."
+    },
+    {
+      "source_ref": "aitong-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the same word bank as Q26.",
+      "correct_answer": "that",
+      "marks": 1,
+      "explanation": "\"environments that are suitable\" — relative pronoun."
+    },
+    {
+      "source_ref": "aitong-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the same word bank as Q26.",
+      "correct_answer": "since",
+      "marks": 1,
+      "explanation": "\"opened to the public since March 2025\"."
+    },
+    {
+      "source_ref": "aitong-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the same word bank as Q26.",
+      "correct_answer": "can",
+      "marks": 1,
+      "explanation": "\"visitors can look forward to\"."
+    },
+    {
+      "source_ref": "aitong-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the same word bank as Q26.",
+      "correct_answer": "and",
+      "marks": 1,
+      "explanation": "\"boulders and streams\"."
+    },
+    {
+      "source_ref": "aitong-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the same word bank as Q26.",
+      "correct_answer": "is",
+      "marks": 1,
+      "explanation": "singular \"consideration...is\"."
+    },
+    {
+      "source_ref": "aitong-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the same word bank as Q26.",
+      "correct_answer": "so",
+      "marks": 1,
+      "explanation": "\"difficulty, so guests can tailor...\" — result clause."
+    },
+    {
+      "source_ref": "aitong-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "Sylvia was scrolling through social media on her mobile phone one night. Suddenly, she reciefed(36) an alert on her myResponder mobile application. Someone in the vicinity had lost consciously(37) and urgent help was needed. Imidiatli(38), Sylvia rushed out of her home in response to the unexpected orkeranz(39). Upon reaching the location, she saw the victim, who rezambaled(40) the neighbourhood newspaper seller, lying motionlessly on the ground.\n\nAs Sylvia performed cardiopulmonary resuscitation (CPR) on the victim, she seeking(41) someone's help to fetch the nearest automated external defibrillator (AED). A doctor from the nearby clinic then arrived and he took turns after(42) Sylvia to perform CPR on the motionless man. Minutes later, the man showed signs of life.\n\nThe crowd of curious bystanders are(43) impressed by Sylvia and complimented her. Shyly, Sylvia blushed in embearusmmant(44). Nonetheless, Sylvia was glad to have acted courage(45) even though she was nervous. She vowed to do her best in helping others in future emergencies.",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Received",
+      "marks": 1,
+      "explanation": "\"reciefed\" is a misspelling of \"received\"."
+    },
+    {
+      "source_ref": "aitong-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Consciousness",
+      "marks": 1,
+      "explanation": "\"lost consciousness\" needs the noun form."
+    },
+    {
+      "source_ref": "aitong-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Immediately",
+      "marks": 1,
+      "explanation": "\"Imidiatli\" is a misspelling of \"immediately\"."
+    },
+    {
+      "source_ref": "aitong-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Occurrence",
+      "marks": 1,
+      "explanation": "\"orkeranz\" is a misspelling of \"occurrence\"."
+    },
+    {
+      "source_ref": "aitong-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Resembled",
+      "marks": 1,
+      "explanation": "\"rezambaled\" is a misspelling of \"resembled\"."
+    },
+    {
+      "source_ref": "aitong-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Sought",
+      "marks": 1,
+      "explanation": "The sentence needs the simple past tense \"sought\"."
+    },
+    {
+      "source_ref": "aitong-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "With",
+      "marks": 1,
+      "explanation": "\"took turns with Sylvia\" is the correct preposition."
+    },
+    {
+      "source_ref": "aitong-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Was",
+      "marks": 1,
+      "explanation": "\"crowd\" is treated as singular here, and the tense must match \"complimented\" (past)."
+    },
+    {
+      "source_ref": "aitong-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Embarrassment",
+      "marks": 1,
+      "explanation": "\"embearusmmant\" is a misspelling of \"embarrassment\"."
+    },
+    {
+      "source_ref": "aitong-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Courageously",
+      "marks": 1,
+      "explanation": "\"acted\" needs an adverb, not the noun \"courage\"."
+    },
+    {
+      "source_ref": "aitong-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "In today's world, Artificial Intelligence (AI) is changing how students learn and interact with information. Imagine having a super-smart assistant that can lend a ___(46)___ when you need help with your homework, answer questions or even suggest books that ___(47)___ your reading level and interests. With tools like smart tutoring systems and learning apps, AI can analyse students' ___(48)___ and weaknesses, providing personalised exercises to help improve specific skills. As a result, students can ___(49)___ difficult topics more easily and learn at their own ___(50)___. Furthermore, AI makes learning more accessible. With just a click, students can tap ___(51)___ online resources, no matter where they are — truly breaking ___(52)___ the barriers to education.\n\nOn top of that, AI inspires creativity by pushing students to ___(53)___ outside the box and take creative risks. Whether it is bringing ideas to ___(54)___ through digital art or composing music, students can express their talents in new ways. AI writing assistants can also start the ball ___(55)___ by offering prompts, correcting grammar and recommending words to enhance writing.\n\nStill, there are ___(56)___ sides to every coin. AI is not as ___(57)___ as it seems because there are instances where it might give wrong information. ___(58)___ too much on technology might make some students less motivated to think for ___(59)___. Too much screen time can also be ___(60)___ to students' well-being, as it often results in reduced physical activity and weakens their ability to build real-life social skills. While AI offers many exciting ways to learn, it is important to use it wisely.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "hand",
+      "marks": 1,
+      "explanation": "\"lend a hand\" is the idiom fitting \"help with your homework\". (Note: the paper's own compiled answer key literally prints \"hard\", which does not fit the sentence at all and does not spell a real answer to this cloze; \"hand\" is used here as the only sensible reading.)"
+    },
+    {
+      "source_ref": "aitong-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "suit",
+      "marks": 1,
+      "explanation": "\"books that suit your reading level\"."
+    },
+    {
+      "source_ref": "aitong-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "strengths",
+      "marks": 1,
+      "explanation": "\"strengths and weaknesses\" is the paired phrase."
+    },
+    {
+      "source_ref": "aitong-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "understand",
+      "marks": 1,
+      "explanation": "\"understand difficult topics more easily\"."
+    },
+    {
+      "source_ref": "aitong-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "pace",
+      "marks": 1,
+      "explanation": "\"learn at their own pace\" is the idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "on",
+      "marks": 1,
+      "explanation": "\"tap on online resources\"."
+    },
+    {
+      "source_ref": "aitong-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "down",
+      "marks": 1,
+      "explanation": "\"breaking down barriers\" is the idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "think",
+      "marks": 1,
+      "explanation": "\"think outside the box\" is the idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "life",
+      "marks": 1,
+      "explanation": "\"bringing ideas to life\" is the idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "rolling",
+      "marks": 1,
+      "explanation": "\"start the ball rolling\" is the idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "two",
+      "marks": 1,
+      "explanation": "\"two sides to every coin\" is the idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "intelligent",
+      "marks": 1,
+      "explanation": "Contrasts with AI giving wrong information."
+    },
+    {
+      "source_ref": "aitong-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "relying",
+      "marks": 1,
+      "explanation": "\"relying too much on technology\" starts the sentence."
+    },
+    {
+      "source_ref": "aitong-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "themselves",
+      "marks": 1,
+      "explanation": "\"think for themselves\" is the idiom."
+    },
+    {
+      "source_ref": "aitong-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "detrimental",
+      "marks": 1,
+      "explanation": "\"detrimental to students' well-being\" — harmful."
+    },
+    {
+      "source_ref": "aitong-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Rewrite using the given word(s), keeping the same meaning, in ONE sentence: \"Betty decided not to buy the new phone. She went home.\" Begin with: Instead of ___",
+      "correct_answer": "Instead of buying the new phone, Betty went home.",
+      "marks": 2,
+      "explanation": "\"Instead of\" + gerund combines the two sentences."
+    },
+    {
+      "source_ref": "aitong-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Rewrite using the given word(s), keeping the same meaning, in ONE sentence: \"Jack ignored the severe consequences. Jack regretted it.\" End with: ___ of the consequences.",
+      "correct_answer": "Jack regretted ignoring the severity of the consequences.",
+      "marks": 2,
+      "explanation": "Combines the two sentences using \"regretted ignoring\"."
+    },
+    {
+      "source_ref": "aitong-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Rewrite using the given word(s), keeping the same meaning, in ONE sentence: \"Where did you go just now?\" Father asked me. Begin with: Father asked me ___",
+      "correct_answer": "Father asked me where I had gone just then.",
+      "marks": 2,
+      "explanation": "Reported speech: direct question becomes an indirect clause, tense shifts back."
+    },
+    {
+      "source_ref": "aitong-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Rewrite using the given word(s), keeping the same meaning, in ONE sentence: \"It was evident that Grandmother was upset. She was upset by the bad news.\" Begin with: Grandmother was ___",
+      "correct_answer": "Grandmother was evidently upset by the bad news.",
+      "marks": 2,
+      "explanation": "Combines the two sentences using the adverb \"evidently\"."
+    },
+    {
+      "source_ref": "aitong-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Rewrite using the given word(s), keeping the same meaning, in ONE sentence: \"Ron enjoyed celebrating his birthday. He smiled widely.\" End with: as he enjoyed his ___",
+      "correct_answer": "Ron smiled widely as he enjoyed his birthday celebration.",
+      "marks": 2,
+      "explanation": "Combines the two sentences with an \"as\" clause."
+    },
+    {
+      "source_ref": "aitong-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage (lines 1-6): Shadows stretched long into the void deck as Rose approached with hesitant steps... Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her.",
+      "prompt": "Based on lines 1-6, how did Rose and Lily show that they trusted each other?",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "They sat together at their usual bench sharing whispered secrets, without needing to say a word.",
+          "keywords": [
+            [
+              "secret"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage (paragraph 1): ...this had become their favourite haunt, their refuge and their place for sharing whispered secrets.",
+      "prompt": "Which word in the first paragraph shows that the marble bench was a place that brought relief to Rose and Lily?",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "refuge",
+          "keywords": [
+            [
+              "refuge"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall.",
+      "prompt": "State two physical discomforts Rose had experienced while learning to cycle.",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "the soreness in her thighs as she pedalled",
+          "keywords": [
+            [
+              "sore",
+              "thigh"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "the sting of scraped knees after every fall",
+          "keywords": [
+            [
+              "scrape",
+              "knee"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.",
+      "prompt": "Look at the table below. What do the words in the left column refer to in the passage? a) \"It\" (line 10) b) \"did\" (line 11) c) \"shared space\" (line 13)",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "\"It\" = her father letting go of the back of her seat",
+          "keywords": [
+            [
+              "let go"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "\"did\" = Rose discovering her own balance",
+          "keywords": [
+            [
+              "balance"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "\"shared space\" = the void deck",
+          "keywords": [
+            [
+              "void deck"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: \"Do you remember... when we came here for your grandmother's funeral?\"... The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness.",
+      "prompt": "Explain clearly why there was 'muffled weeping' (line 18).",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "it was Lily's grandmother's funeral",
+          "keywords": [
+            [
+              "funeral"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "many people were sad/grieving and cried",
+          "keywords": [
+            [
+              "sad",
+              "grief"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: your dad assisted in arranging the chairs... Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.",
+      "prompt": "Based on lines 14-21, fill in the table: Rose's father showed helpfulness by a) ___; Rose showed b) ___ by being present for Lily at her grandmother's funeral.",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "he assisted in arranging the chairs at Lily's grandmother's funeral",
+          "keywords": [
+            [
+              "chair"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "keyword",
+          "description": "supportiveness",
+          "keywords": [
+            [
+              "support"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: the void deck came alive with music and the smell of spicy, savoury dishes... the girls had danced ecstatically... the girls tasted every delectable dish twice... Although the tasks were laborious, the sense of purpose... had kept the girls going.",
+      "prompt": "Based on lines 22-35, state whether each statement is true or false, and give a reason: a) The wedding venue was quiet. b) The girls loved the food that was served at the wedding. c) The girls could perform the tasks at the donation drive effortlessly.",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "a) False — the void deck came alive with music",
+          "keywords": [
+            [
+              "false"
+            ],
+            [
+              "music"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "b) True — the girls tasted every delectable dish twice",
+          "keywords": [
+            [
+              "true"
+            ],
+            [
+              "twice"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "c) False — the tasks were laborious",
+          "keywords": [
+            [
+              "false"
+            ],
+            [
+              "laborious"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: Thinking about the difference the food collected would eventually bless the less fortunate — had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.",
+      "prompt": "How did the girls feel after the donation drive and why?",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "they felt proud",
+          "keywords": [
+            [
+              "proud"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "because of the difference they made in the lives of the underprivileged",
+          "keywords": [
+            [
+              "underprivileged",
+              "less fortunate",
+              "difference"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared... Touched by the meaningful gift, Rose teared.",
+      "prompt": "a) What was the \"meaningful gift\" (line 40)? b) With reference to lines 36-44, fill in the blank with a suitable word: \"Rose thought the gift was meaningful\" -> \"It contained memories she would always ___.\"",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "a) a (small) sketchbook with drawings of their shared/cherished memories",
+          "keywords": [
+            [
+              "sketchbook"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "keyword",
+          "description": "b) cherish",
+          "keywords": [
+            [
+              "cherish"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    },
+    {
+      "source_ref": "aitong-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Passage: For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain.",
+      "prompt": "Explain clearly what Rose meant when she thought that \"surroundings might change, but relationships would always remain.\" (line 43)",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "even though she and her family are moving to a new neighbourhood/place",
+          "keywords": [
+            [
+              "move",
+              "new neighbourhood",
+              "leave"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "her friendship with Lily will stay the same / they will remain friends",
+          "keywords": [
+            [
+              "friend"
+            ]
+          ]
+        }
+      ],
+      "passage": "Shadows stretched long into the void deck as Rose approached with hesitant steps. In just an hour, she and her family would leave the familiar behind, moving into a new neighbourhood and a life unknown. Lily, her bosom buddy, was waiting on the marble bench. Over the years, this had become their favourite haunt, their refuge and their place for sharing whispered secrets. Without a word, Rose sank down beside her. The dread of having to part ways soon weighed heavily on their hearts.\n\nJust beyond the bench was where Rose had first learnt to ride a bicycle when she was six. She could recall the soreness in her thighs as she pedalled, her father's steady voice urging her on and the sting of scraped knees after every fall. On a pivotal try, her father had held the back of her seat and promised not to let go. However, he lied. It was the only way Rose could discover her own balance. When she finally did, it opened the door to a new joy – weekend rides with Lily. Together, they laughed, raced and zigzagged between the pillars of the shared space like seasoned riders in their own private arena.\n\nMoments later, Rose and Lily walked on slowly. Near the lift lobby, Rose paused. \"Do you remember ... when we came here for your grandmother's funeral?\" she asked softly. Lily nodded. \"I was nine. You were the first to arrive. Your mum brought curry puffs for my family and your dad assisted in arranging the chairs.\" The evening had been quiet, except for the sound of muffled weeping from time to time. Many were laden with sadness. Yet, there were also moments of laughter, stories and a celebration of the blessed life Lily's grandmother had lived. Rose did not say much that day, but her presence had been Lily's anchor of support in a sea of grief.\n\nWhen they reached the area near the mailboxes, Rose and Lily smiled as they remembered a wedding from when they were eleven. Their neighbours, Ahmad and Nora, had tied the knot. That day, the void deck came alive with music and the smell of spicy, savoury dishes drifted all around them. Dressed in bright colours, the girls had danced ecstatically. With every twirl, joy bubbled up inside them. Best of all, the girls tasted every delectable dish twice. These memories from the wedding were a snapshot of childhood happiness that was ingrained in their minds.\n\nAs they passed the noticeboard, a recent memory surfaced. Just a month ago, Rose and Lily had volunteered at the neighbourhood food donation drive that had been held at that very space. For hours, they had gathered and sorted a variety of food items donated by friendly residents. Although the tasks were laborious, the sense of purpose – to help the food collected would eventually bless the less fortunate – had kept the girls going. Thinking about the difference they had made in the lives of the underprivileged, the girls beamed with pride.\n\n\"Rose, it's time to go,\" her mother called out gently. Hearing that, Lily took out a small sketchbook and handed it to Rose. Inside were drawings of the cherished moments they had shared – Rose's first bicycle, the kind face of Lily's grandmother, the wedding day feast and the donation booth. In the middle of the page was a drawing of a big red heart, a symbol of love the girls had for their shared memories. Touched by the meaningful gift, Rose teared. For Rose, the void deck was not just a space under their flats, but a place filled with laughter, friendship and memories from her childhood. She firmly believed that surroundings might change, but relationships would always remain. \"Bye, Lily. I'll surely be back to visit,\" Rose promised.",
+      "image": "aitong-2025-passage.png"
+    }
+  ]
+}

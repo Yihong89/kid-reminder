@@ -1,0 +1,1177 @@
+{
+  "_source": "Nan Hua Primary School P6 English Paper 2 2025 Prelim (Booklet A 25 marks + Booklet B 65 marks, total 90). Downloaded from https://www.etestpaper.com.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image (nanhua-2025-q21.png) is authoritative for the Visual Text Comprehension Q21-25 (poster Text 1). Answers are taken verbatim from the paper's own compiled answer key (SCHOOL/LEVEL/SUBJECT/TERM table, pages 23-24). Note on Q35: the answer key prints letter 'J' but the printed grammar-cloze word bank labels the word 'so' as option (I); this source discrepancy is flagged so a human can decide, but the answer key letter was kept. The PDF also contains Paper 1 (Writing, pages 1-4) which is not part of this question bank; only Paper 2 items (Q1-75) were extracted.",
+  "questions": [
+    {
+      "source_ref": "nanhua-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "Jasmine ________ a mystery novel when the lights suddenly went out.",
+      "options": [
+        "read",
+        "has read",
+        "had read",
+        "was reading"
+      ],
+      "correct_answer": "was reading",
+      "marks": 1,
+      "explanation": "Past continuous 'was reading' for an action in progress when another past action interrupted.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "Amanda, together with her friends, ________ excited about the surprise party for their teacher next week.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "is",
+      "marks": 1,
+      "explanation": "'Together with' does not change the singular subject 'Amanda'; 'next week' takes the present tense.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "They hardly spoke to each other during the camp, ________ they?",
+      "options": [
+        "do",
+        "did",
+        "don't",
+        "didn't"
+      ],
+      "correct_answer": "did",
+      "marks": 1,
+      "explanation": "'Hardly' gives a negative sense and 'spoke' is past tense, so the positive tag is 'did they'.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "Tim was feeling unwell, but he showed up for the group presentation ________ his illness.",
+      "options": [
+        "due to",
+        "instead of",
+        "apart from",
+        "regardless of"
+      ],
+      "correct_answer": "regardless of",
+      "marks": 1,
+      "explanation": "'Regardless of' = despite/in spite of.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "The coach made the players ________ before starting the match.",
+      "options": [
+        "stretch",
+        "stretches",
+        "stretched",
+        "stretching"
+      ],
+      "correct_answer": "stretch",
+      "marks": 1,
+      "explanation": "A bare infinitive follows the causative 'made'.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "After showing improvement in their English test, the students gained ________ confidence in their ability to do well in their final examination.",
+      "options": [
+        "few",
+        "little",
+        "much",
+        "many"
+      ],
+      "correct_answer": "much",
+      "marks": 1,
+      "explanation": "'Confidence' is uncountable and the improvement gives a positive sense, so 'much' is used.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "I need ________ pair of trousers from the wardrobe across the room.",
+      "options": [
+        "this",
+        "that",
+        "those",
+        "these"
+      ],
+      "correct_answer": "that",
+      "marks": 1,
+      "explanation": "'That' points to something away from the speaker (across the room).",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "\"It was Jenny, and not David, who solved the puzzle all by ________,\" I said.",
+      "options": [
+        "herself",
+        "himself",
+        "ourselves",
+        "themselves"
+      ],
+      "correct_answer": "herself",
+      "marks": 1,
+      "explanation": "The reflexive pronoun refers to Jenny (feminine, singular).",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "By the end of this year, my sister ________ Primary Six.",
+      "options": [
+        "completes",
+        "is completing",
+        "has completed",
+        "will have completed"
+      ],
+      "correct_answer": "will have completed",
+      "marks": 1,
+      "explanation": "Future perfect describes an action completed before a future time.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "Fifteen minutes ________ the examination had started, a student raised his hand.",
+      "options": [
+        "into",
+        "after",
+        "within",
+        "during"
+      ],
+      "correct_answer": "after",
+      "marks": 1,
+      "explanation": "'Fifteen minutes after the examination had started' — 'after' follows the past perfect.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "The team showed true ________ by continuing to try even after many failures to solve the problem.",
+      "options": [
+        "aspiration",
+        "motivation",
+        "cooperation",
+        "determination"
+      ],
+      "correct_answer": "determination",
+      "marks": 1,
+      "explanation": "'Determination' = firmness of purpose / persistence.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "The young painter ________ worked on his watercolour piece, adding lots of details and shades to depict the scene vividly.",
+      "options": [
+        "hastily",
+        "deliberately",
+        "instinctively",
+        "meticulously"
+      ],
+      "correct_answer": "meticulously",
+      "marks": 1,
+      "explanation": "'Meticulously' = very carefully and with great attention to detail.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "The pianist's ________ performance thrilled the audience, drawing everyone in with every note.",
+      "options": [
+        "striking",
+        "imposing",
+        "captivating",
+        "overwhelming"
+      ],
+      "correct_answer": "captivating",
+      "marks": 1,
+      "explanation": "'Captivating' = holding one's attention completely.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "Before going on a school trip, Lisa had to ________ her backpack to make sure she packed everything she needed.",
+      "options": [
+        "look up",
+        "look over",
+        "look after",
+        "look upon"
+      ],
+      "correct_answer": "look over",
+      "marks": 1,
+      "explanation": "'Look over' = examine/check.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "context": null,
+      "prompt": "Hundreds of firefighters are working round the clock to ________ the wildfire.",
+      "options": [
+        "detain",
+        "contain",
+        "restrain",
+        "constrain"
+      ],
+      "correct_answer": "contain",
+      "marks": 1,
+      "explanation": "'Contain' = keep within limits / stop from spreading.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "When we first brought Marley home, he was a tiny puppy with oversized paws and endless energy. He fitted into our hearts in the blink of an eye, becoming a part of our daily routines.",
+      "prompt": "The words \"in the blink of an eye\" is closest in meaning to:",
+      "options": [
+        "instantly",
+        "regularly",
+        "gradually",
+        "eventually"
+      ],
+      "correct_answer": "instantly",
+      "marks": 1,
+      "explanation": "'In the blink of an eye' = very quickly / instantly.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "He looked up at me with his big eyes, as if he comprehended every word.",
+      "prompt": "The word \"comprehended\" is closest in meaning to:",
+      "options": [
+        "felt",
+        "anticipated",
+        "recognised",
+        "understood"
+      ],
+      "correct_answer": "understood",
+      "marks": 1,
+      "explanation": "'Comprehend' = understand.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "His playful antics and boundless enthusiasm brought both chaos and joy to our lives.",
+      "prompt": "The word \"boundless\" is closest in meaning to:",
+      "options": [
+        "intense",
+        "excessive",
+        "unbearable",
+        "inexhaustible"
+      ],
+      "correct_answer": "inexhaustible",
+      "marks": 1,
+      "explanation": "'Boundless' = without limits / inexhaustible.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "Marley was undeniably clumsy, often knocking over vases and scattering newspapers around the house.",
+      "prompt": "The word \"undeniably\" is closest in meaning to:",
+      "options": [
+        "certainly",
+        "extremely",
+        "apparently",
+        "supposedly"
+      ],
+      "correct_answer": "certainly",
+      "marks": 1,
+      "explanation": "'Undeniably' = certainly / beyond doubt.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "Yet, in the evenings, he would curl up beside us, breathing quietly, offering a sense of lasting companionship that words couldn't describe.",
+      "prompt": "The word \"companionship\" is closest in meaning to:",
+      "options": [
+        "warmth",
+        "rapport",
+        "empathy",
+        "friendship"
+      ],
+      "correct_answer": "friendship",
+      "marks": 1,
+      "explanation": "'Companionship' = friendship / the state of having a companion.",
+      "image": null
+    },
+    {
+      "source_ref": "nanhua-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "The extract below is taken from an article on chocolate in a health magazine.\n\nChocolate is increasingly being promoted as a health-boosting superfood. While dark chocolate does contain compounds linked to health benefits, the overall effect of chocolate depends on various factors, including cocoa content, added ingredients and portion size. The truth is that most chocolate products contain high levels of sugar and fats, which reduce or even cancel out any potential health benefits.\n\nClaims about the health benefits of chocolate often lead consumers to believe they should eat chocolate regularly. Unfortunately, those claims largely result from studies on pure cocoa, not the processed and sweetened forms of chocolate commonly found in retail stores. Marketing tactics also influence consumer perception. Some promotions sell the idea that consuming more chocolate leads to greater health benefits. These messages can mislead consumers.",
+      "context": "Text 1 is a poster for 'Chocolate: The Delicious Superfood', claiming it is packed with antioxidants and essential nutrients and that studies suggest it can boost heart health, support brain function and even improve mood.",
+      "prompt": "According to the poster in Text 1, which of the following is true?",
+      "options": [
+        "ChocoHealth only produces premium dark chocolate.",
+        "Chocolate offers both physical and emotional benefits.",
+        "Only natural ingredients are used to make chocolate.",
+        "The promotion allows customers to get $20 off on the spot."
+      ],
+      "correct_answer": "Chocolate offers both physical and emotional benefits.",
+      "marks": 1,
+      "explanation": "The poster states chocolate can boost heart health and brain function (physical) and improve mood (emotional).",
+      "image": "nanhua-2025-q21.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "The extract below is taken from an article on chocolate in a health magazine.\n\nChocolate is increasingly being promoted as a health-boosting superfood. While dark chocolate does contain compounds linked to health benefits, the overall effect of chocolate depends on various factors, including cocoa content, added ingredients and portion size. The truth is that most chocolate products contain high levels of sugar and fats, which reduce or even cancel out any potential health benefits.\n\nClaims about the health benefits of chocolate often lead consumers to believe they should eat chocolate regularly. Unfortunately, those claims largely result from studies on pure cocoa, not the processed and sweetened forms of chocolate commonly found in retail stores. Marketing tactics also influence consumer perception. Some promotions sell the idea that consuming more chocolate leads to greater health benefits. These messages can mislead consumers.",
+      "context": "The poster headline reads 'Chocolate: The Delicious Superfood'.",
+      "prompt": "The writer made the statement, \"Chocolate: The Delicious Superfood\", in Text 1 to ________.",
+      "options": [
+        "draw attention to chocolate",
+        "spark interest in superfoods",
+        "give an example of a superfood",
+        "make chocolate more appealing"
+      ],
+      "correct_answer": "make chocolate more appealing",
+      "marks": 1,
+      "explanation": "The headline paints chocolate in a positive, health-boosting light to make it more appealing.",
+      "image": "nanhua-2025-q21.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "The extract below is taken from an article on chocolate in a health magazine.\n\nChocolate is increasingly being promoted as a health-boosting superfood. While dark chocolate does contain compounds linked to health benefits, the overall effect of chocolate depends on various factors, including cocoa content, added ingredients and portion size. The truth is that most chocolate products contain high levels of sugar and fats, which reduce or even cancel out any potential health benefits.\n\nClaims about the health benefits of chocolate often lead consumers to believe they should eat chocolate regularly. Unfortunately, those claims largely result from studies on pure cocoa, not the processed and sweetened forms of chocolate commonly found in retail stores. Marketing tactics also influence consumer perception. Some promotions sell the idea that consuming more chocolate leads to greater health benefits. These messages can mislead consumers.",
+      "context": "The poster promotes dark chocolate made with 100% natural ingredients as 'a superfood'.",
+      "prompt": "Based on the poster in Text 1, which of the following best fits the chocolate you expect to eat?",
+      "options": [
+        "raw",
+        "sweet",
+        "nutritious",
+        "overpriced"
+      ],
+      "correct_answer": "nutritious",
+      "marks": 1,
+      "explanation": "The poster sells chocolate as a 'superfood' rich in antioxidants and nutrients, so it is presented as nutritious.",
+      "image": "nanhua-2025-q21.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "The extract below is taken from an article on chocolate in a health magazine.\n\nChocolate is increasingly being promoted as a health-boosting superfood. While dark chocolate does contain compounds linked to health benefits, the overall effect of chocolate depends on various factors, including cocoa content, added ingredients and portion size. The truth is that most chocolate products contain high levels of sugar and fats, which reduce or even cancel out any potential health benefits.\n\nClaims about the health benefits of chocolate often lead consumers to believe they should eat chocolate regularly. Unfortunately, those claims largely result from studies on pure cocoa, not the processed and sweetened forms of chocolate commonly found in retail stores. Marketing tactics also influence consumer perception. Some promotions sell the idea that consuming more chocolate leads to greater health benefits. These messages can mislead consumers.",
+      "context": "The poster shows active, healthy people enjoying the chocolate and says 'Treat yourself without guilt!'.",
+      "prompt": "\"Treat yourself without guilt!\" The pictures support this by giving the impression that ChocoHealth's chocolate ________.",
+      "options": [
+        "has a pleasant taste everyone likes",
+        "should only be eaten after a workout",
+        "is a treat health-conscious people should choose",
+        "does not contain any unhealthy ingredients"
+      ],
+      "correct_answer": "is a treat health-conscious people should choose",
+      "marks": 1,
+      "explanation": "The 'without guilt' message and the healthy-active pictures reassure health-conscious consumers that this chocolate is a guilt-free choice.",
+      "image": "nanhua-2025-q21.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "passage": "The extract below is taken from an article on chocolate in a health magazine.\n\nChocolate is increasingly being promoted as a health-boosting superfood. While dark chocolate does contain compounds linked to health benefits, the overall effect of chocolate depends on various factors, including cocoa content, added ingredients and portion size. The truth is that most chocolate products contain high levels of sugar and fats, which reduce or even cancel out any potential health benefits.\n\nClaims about the health benefits of chocolate often lead consumers to believe they should eat chocolate regularly. Unfortunately, those claims largely result from studies on pure cocoa, not the processed and sweetened forms of chocolate commonly found in retail stores. Marketing tactics also influence consumer perception. Some promotions sell the idea that consuming more chocolate leads to greater health benefits. These messages can mislead consumers.",
+      "context": "Text 2 (article) states that most chocolate products contain high levels of sugar and fats, which reduce or even cancel out any potential health benefits.",
+      "prompt": "We cannot trust the way Text 1 portrays chocolate because Text 2 says ________.",
+      "options": [
+        "consumers should eat chocolate regularly",
+        "consuming more chocolate leads to greater health benefits",
+        "most chocolate products contain high levels of sugar and fats",
+        "chocolate is increasingly being promoted as a health-boosting superfood"
+      ],
+      "correct_answer": "most chocolate products contain high levels of sugar and fats",
+      "marks": 1,
+      "explanation": "Text 2 warns that most chocolate products contain high levels of sugar and fats which reduce or cancel out health benefits.",
+      "image": "nanhua-2025-q21.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A) as (B) both (C) by (D) each (E) from (F) had (G) his (H) on (J) so (K) their (L) up (M) was (N) were (P) which (Q) whom\n\nThe night was cold and wet. In the house, the curtains were drawn and the fire burned brightly. ___(26)___ the outside, only a faint glow could be seen. An old man and his son ___(27)___ unmoved by the incoming storm. Just then, the gate banged loudly, and heavy footsteps came ___(28)___ to the door. The old man rose slowly from his seat and opened the door. It was a guest ___(29)___ they had been expecting, a man called Frank.\n\nThe old man motioned Frank to the extra chair. The trio sat ___(30)___ the fire and chatted heartily. As ___(31)___ conversation veered towards recent strange happenings, the visitor dug into his pocket and fished out a dried, little monkey's paw. It was believed that a spell had been cast upon it so that three different men would ___(32)___ receive three wishes from it.\n\nCurious, the old man asked what the previous owner ___(33)___ wished for. Frank replied that he did not know ___(34)___ the man had died. For his part, Frank said the paw had brought him nothing but trouble. His tone was ___(35)___ grave that a silence fell upon the group. Everyone was lost in his own thoughts, and no one spoke for a while.",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "E",
+      "marks": 1,
+      "explanation": "The correct word is 'from' — 'From the outside, only a faint glow could be seen.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "N",
+      "marks": 1,
+      "explanation": "The correct word is 'were' — '...his son were unmoved by the incoming storm.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "L",
+      "marks": 1,
+      "explanation": "The correct word is 'up' — '...heavy footsteps came up to the door.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "Q",
+      "marks": 1,
+      "explanation": "The correct word is 'whom' — 'It was a guest whom they had been expecting.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "C",
+      "marks": 1,
+      "explanation": "The correct word is 'by' — 'The trio sat by the fire.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "K",
+      "marks": 1,
+      "explanation": "The correct word is 'their' — 'As their conversation veered...'"
+    },
+    {
+      "source_ref": "nanhua-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "D",
+      "marks": 1,
+      "explanation": "The correct word is 'each' — '...three different men would each receive three wishes.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "The correct word is 'had' — '...what the previous owner had wished for.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "A",
+      "marks": 1,
+      "explanation": "The correct word is 'as' — '...he did not know, as the man had died.' (as = because)"
+    },
+    {
+      "source_ref": "nanhua-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "J",
+      "marks": 1,
+      "explanation": "The intended word is 'so' — '...was so grave that a silence fell.' (The answer key prints 'J'; the printed word bank labels 'so' as option I.)"
+    },
+    {
+      "source_ref": "nanhua-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "By 8 a.m., we were at the foot of the hill, ready to begin our climb. My younger brother, Ben, was impatient and sprinted ahead of us despite our parents had(36) told him to wait. We had to call out for him to slow down and stay within sight. The trail was steep and rocky, so we walked slowly to avoid slip(37). As we climbed higher, we were rewarded for(38) a breathtaking view of the forest canopy. Birds were heard chirping merily(39) and monkeys could be seen swinging from tree to tree. However, the peace(40) atmosphere was soon ruined by a group of hikers who were playing loud music while walking.\n\nWe stopped in our tracks to let the group walk past us, and my father took the orpotuneity(41) to remind us loudly to be considerate of others and to preserve the trankweelity(42) of nature. The group of hikers seemed to have overheard what my father had said as the disturb(43) from the blaring music was replaced by gentle chirps.\n\nAfter about an hour of hiking, we reached the summit and took a snack break. Just as we were laughing and chatting anematedly(44) about unimportant things, the sudden apearence(45) of dark clouds with strong winds signalled to us that a storm was brewing. So, we quickly gathered our belongings and began our descent.",
+      "prompt": "Write the correct word.",
+      "correct_answer": "having",
+      "marks": 1,
+      "explanation": "Despite is followed by a gerund-like phrase: 'despite our parents having told him to wait.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "slipping",
+      "marks": 1,
+      "explanation": "After 'avoid' a gerund is needed: 'to avoid slipping.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "with",
+      "marks": 1,
+      "explanation": "The correct collocation is 'rewarded with'."
+    },
+    {
+      "source_ref": "nanhua-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "merrily",
+      "marks": 1,
+      "explanation": "Correct spelling: 'merrily'."
+    },
+    {
+      "source_ref": "nanhua-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "peaceful",
+      "marks": 1,
+      "explanation": "An adjective is needed to describe the atmosphere: 'peaceful atmosphere'."
+    },
+    {
+      "source_ref": "nanhua-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "opportunity",
+      "marks": 1,
+      "explanation": "Correct spelling: 'opportunity'."
+    },
+    {
+      "source_ref": "nanhua-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "tranquillity",
+      "marks": 1,
+      "explanation": "Correct British spelling: 'tranquillity'."
+    },
+    {
+      "source_ref": "nanhua-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "disturbance",
+      "marks": 1,
+      "explanation": "A noun is needed: 'the disturbance from the blaring music'."
+    },
+    {
+      "source_ref": "nanhua-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "animatedly",
+      "marks": 1,
+      "explanation": "Correct spelling: 'animatedly'."
+    },
+    {
+      "source_ref": "nanhua-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "appearance",
+      "marks": 1,
+      "explanation": "Correct spelling: 'appearance'."
+    },
+    {
+      "source_ref": "nanhua-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "Many people underestimate the value of a good night's sleep. ___(46)___ hectic schedules and constant screen time, both children and adults often get too little rest. Sleep not ___(47)___ helps the body to heal but also allows the brain to process new information. This is based on ___(48)___ that have shown that students who are well-rested tend to learn better in school than those who are ___(49)___ of sleep.\n\nDespite these benefits, many children still go to bed late. Using devices just before bedtime can be especially ___(50)___ to our sleep. The blue-light emitted from screens can ___(51)___ with the body's ability to produce melatonin—a chemical that helps our bodies to ___(52)___ asleep.\n\nTo sleep well, it's important to have a regular bedtime routine. This could include ___(53)___ off devices at least an hour before bed, reading a book, or taking a warm shower. Parents can encourage good habits from an ___(54)___ age. Experts recommend school-aged children get 9 to 11 hours of sleep every night. Lack of sleep can cause irritability, trouble focusing, and long-term health ___(55)___.\n\nIn some countries, schools start later in the morning to help students get ___(56)___ rest. This change has led to better academic results and improved well-being. Sleep also ___(57)___ the immune system, so children who sleep well are less likely to fall ill. Doctors often advise patients to sleep more when recovering from sickness.\n\nHowever, the ___(58)___ of sleep is as important as its quantity. A person may be in bed for eight hours ___(59)___ still feel tired if his sleep is frequently disrupted by noise, stress or discomfort. Having a calm sleeping environment helps. While many try to sleep more on weekends to make up ___(60)___ lost rest, this does not undo the negative impact of ongoing sleep loss. Consistency is key to developing healthy sleep habits.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "with",
+      "marks": 1,
+      "explanation": "'With hectic schedules...' introduces the cause."
+    },
+    {
+      "source_ref": "nanhua-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "only",
+      "marks": 1,
+      "explanation": "'Not only... but also' is the correlative pair."
+    },
+    {
+      "source_ref": "nanhua-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "studies",
+      "marks": 1,
+      "explanation": "'...based on studies that have shown...'"
+    },
+    {
+      "source_ref": "nanhua-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "deprived",
+      "marks": 1,
+      "explanation": "'Those who are deprived of sleep.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "detrimental",
+      "marks": 1,
+      "explanation": "'Can be especially detrimental to our sleep.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "interfere",
+      "marks": 1,
+      "explanation": "'Can interfere with the body's ability...'"
+    },
+    {
+      "source_ref": "nanhua-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "fall",
+      "marks": 1,
+      "explanation": "'...helps our bodies to fall asleep.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "turning",
+      "marks": 1,
+      "explanation": "'...include turning off devices...'"
+    },
+    {
+      "source_ref": "nanhua-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "early",
+      "marks": 1,
+      "explanation": "'...from an early age.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "problem",
+      "marks": 1,
+      "explanation": "'Long-term health problem' (answer key word)."
+    },
+    {
+      "source_ref": "nanhua-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "more",
+      "marks": 1,
+      "explanation": "'...to help students get more rest.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "strengthens",
+      "marks": 1,
+      "explanation": "'Sleep also strengthens the immune system.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "quality",
+      "marks": 1,
+      "explanation": "'The quality of sleep is as important as its quantity.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "but",
+      "marks": 1,
+      "explanation": "'...be in bed for eight hours but still feel tired.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "for",
+      "marks": 1,
+      "explanation": "'...make up for lost rest.'"
+    },
+    {
+      "source_ref": "nanhua-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": null,
+      "prompt": "\"You should revise this topic regularly,\" the teacher told Peter. The teacher told Peter that ________.",
+      "correct_answer": "he should revise that topic regularly",
+      "marks": 2,
+      "explanation": "Reported speech: pronoun and tense shift back."
+    },
+    {
+      "source_ref": "nanhua-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": null,
+      "prompt": "Both my parents were absent from my performance yesterday. Neither of ________.",
+      "correct_answer": "my parents was present at my performance yesterday",
+      "marks": 2,
+      "explanation": "'Neither of' + plural noun takes a singular verb; 'absent' becomes 'present'."
+    },
+    {
+      "source_ref": "nanhua-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": null,
+      "prompt": "I like reading novels during my free time. ________ what I ________.",
+      "correct_answer": "Reading novels is what I like to do during my free time",
+      "marks": 2,
+      "explanation": "Cleft sentence with 'what I like to do'."
+    },
+    {
+      "source_ref": "nanhua-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": null,
+      "prompt": "John took part in the competition. His mother agreed to it. ________ with his mother's ________.",
+      "correct_answer": "John took part in the competition with his mother's agreement",
+      "marks": 2,
+      "explanation": "Nominalisation: 'His mother agreed' becomes 'with his mother's agreement'."
+    },
+    {
+      "source_ref": "nanhua-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": null,
+      "prompt": "Renee ruined Devi's drawings. Renee was envious. Out of ________.",
+      "correct_answer": "envy, Renee ruined Devi's drawings",
+      "marks": 2,
+      "explanation": "'Out of envy' expresses the reason (envious -> envy)."
+    },
+    {
+      "source_ref": "nanhua-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, Dragon Master, whose unique strategies always intrigued her.",
+      "prompt": "From paragraph 1, what evidence shows that Charlotte was her school's chess 'grandmaster'? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Charlotte had won so many competitions that her trophies filled a cabinet in the school hall",
+          "keywords": [
+            [
+              "won so many competitions",
+              "her trophies filled a cabinet in the school hall"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, Dragon Master, whose unique strategies always intrigued her.",
+      "prompt": "Pick out two different words from paragraph 1 that show Charlotte enjoyed playing chess with Dragon Master. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "relished (the opportunities to spar with her online partner Dragon Master)",
+          "keywords": [
+            [
+              "relished"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "intrigued (whose unique strategies always intrigued her)",
+          "keywords": [
+            [
+              "intrigued"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "That afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member... However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members... Instead, Rachel's eyes sparkled as she replied calmly, 'That would be great.' Charlotte thought she might have found a worthy opponent in Rachel.",
+      "prompt": "What made Charlotte think that Rachel could be a 'worthy opponent' (line 14)? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Rachel had a pin on her school bag that was gifted to all participants at the National Chess Championship, showing competition experience",
+          "keywords": [
+            [
+              "pin",
+              "National Chess Championship",
+              "competition experience"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "Rachel was calm when she spoke and did not have the usual nervous hesitation of an unskilled player",
+          "keywords": [
+            [
+              "calm",
+              "no nervous hesitation",
+              "unskilled player"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Rachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless... She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen.",
+      "prompt": "Refer to lines 15-19. The following statements describe how Charlotte and Rachel felt during their game. Support each statement with evidence from the text. (a) Charlotte was nervous. (b) Rachel was calm. [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a)(i) Charlotte was biting her lips and tapping her foot under the table",
+          "keywords": [
+            [
+              "biting her lips",
+              "tapping her foot"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(a)(ii) She tightened her fingers around her queen",
+          "keywords": [
+            [
+              "tightened her fingers",
+              "around her queen"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(b) Rachel maintained a focused gaze on the dashboard (chessboard) and a relaxed posture",
+          "keywords": [
+            [
+              "focused gaze",
+              "relaxed posture"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Rachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly.",
+      "prompt": "Based on lines 23-27, how can you tell that Charlotte and Rachel considered each other to be good chess players? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Charlotte gave Rachel a small, genuine smile",
+          "keywords": [
+            [
+              "small, genuine smile",
+              "genuine smile"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "Rachel locked eyes with Charlotte and nodded approvingly",
+          "keywords": [
+            [
+              "locked eyes",
+              "nodded approvingly"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Without warning, Rachel whispered, 'Checkmate in five moves.' Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. (line 21) ... She typed, 'Made a new friend at the Chess Club today.' Dragon Master replied, 'That is what I love most about chess.'",
+      "prompt": "Look at the table below. What do the words in the left column refer to in the passage? (a) forewarning (line 21) (b) it (line 25) (c) That (line 30) [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) forewarning: Rachel warning Charlotte that it was checkmate in five moves",
+          "keywords": [
+            [
+              "checkmate in five moves",
+              "warning"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) it: the unexpected attack Rachel made",
+          "keywords": [
+            [
+              "unexpected attack"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) That: making a new friend at the Chess Club",
+          "keywords": [
+            [
+              "new friend",
+              "Chess Club"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "She typed, 'Made a new friend at the Chess Club today.' Dragon Master replied, 'That is what I love most about chess. The best wins in life don't just happen on the chessboard.'",
+      "prompt": "Dragon Master said, \"The best wins in life don't just happen on the chessboard.\" (lines 30-31). Circle the word that best describes her tone. [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "thoughtful",
+          "keywords": [
+            [
+              "thoughtful"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "However, her mind kept returning to Rachel's playstyle. She typed, 'Made a new friend at the Chess Club today.' Dragon Master replied, 'That is what I love most about chess. The best wins in life don't just happen on the chessboard.' Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.",
+      "prompt": "'Suddenly, all the pieces fell into place.' (line 33-34). (a) Based on lines 28-33, what do you think Charlotte had realised about Dragon Master? (b) What prompted Charlotte to think so? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "(a) Dragon Master was Rachel",
+          "keywords": [
+            [
+              "Dragon Master was Rachel",
+              "was Rachel"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) Dragon Master had typed the exact phrase Rachel said at the National Chess Championship, which Rachel had also attended (she had the pin given to all participants)",
+          "keywords": [
+            [
+              "exact phrase",
+              "National Chess Championship",
+              "pin"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "At the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move... 'Would you like another game?' Charlotte asked. 'Of course! I see you have been busy and haven't played a single game,' Rachel replied with a knowing smile.",
+      "prompt": "Based on lines 35-44, state whether each statement in the table below is true or false, then give one reason why you think so. (a) Charlotte watched Rachel play chess with others to learn how to beat her. (b) Rachel knew Charlotte was watching her chess games with others. (c) Rachel did not realise that Charlotte was her online chess partner. [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) False — Charlotte was watching Rachel's game to confirm whether she was Dragon Master",
+          "keywords": [
+            [
+              "false",
+              "confirm whether",
+              "Dragon Master"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) True — during the next chess club session, Rachel saw Charlotte busy observing her chess games with others at different tables",
+          "keywords": [
+            [
+              "true",
+              "observing",
+              "different tables"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) False — Rachel called Charlotte by her online game name 'Chess Queen'",
+          "keywords": [
+            [
+              "false",
+              "Chess Queen"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    },
+    {
+      "source_ref": "nanhua-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "'Thank you, Charlotte... or should I say, \"Chess Queen\"?' she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "prompt": "What does Charlotte's facial expression tell us about how she felt in lines 45-46? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "Charlotte was shocked but happy after that",
+          "keywords": [
+            [
+              "shocked",
+              "happy"
+            ]
+          ]
+        }
+      ],
+      "passage": "Charlotte Wong, Victoria Primary School's chess 'grandmaster', had won so many competitions her trophies filled a cabinet in the school hall. However, she preferred playing chess online, where she could play without the pressure of her reputation, going by the nickname 'Chess Queen'. In particular, she relished the opportunities to spar with her online partner, 'Dragon Master', whose unique strategies always intrigued her.\n\nThat afternoon at the Chess Club, Mrs Lau, their teacher, introduced a new member. \"Everyone, this is Rachel Chen. Charlotte, would you be her buddy?\"\n\nCharlotte nodded distractedly; her thoughts were on her unfinished online game with Dragon Master. However, as Rachel walked towards her, a pin on her school bag caught Charlotte's attention. It was gifted to all participants at the National Chess Championship last year. This new member seemed to have competition experience, unlike the regular new members. \"Hi, buddy! Up for a game?\" Charlotte asked, expecting to see the usual nervous hesitation of unskilled players. Instead, Rachel's eyes sparkled as she replied calmly, \"That would be great.\" Charlotte thought she might have found a worthy opponent in Rachel.\n\nRachel's initial moves felt strangely familiar. As their game progressed, Rachel maintained a focused gaze on the chessboard and a relaxed posture, while Charlotte grew increasingly restless. She studied the board and planned her moves, knowing that one wrong move could prove fatal. She was biting her lip and tapping her foot under the table as she tightened her fingers around her queen. She made a decision and shifted her queen.\n\nWithout warning, Rachel whispered, \"Checkmate in five moves.\" Charlotte's heart skipped a beat. It was the exact forewarning Dragon Master would type in their online chats. And Dragon Master was usually right.\n\nRachel then made an unexpected attack. Seeing the tricky move, Charlotte gave her opponent a small, genuine smile, then refocused on her game. Fortunately, she was able to counter it with a clever move of her own. Rachel locked eyes with the other and nodded approvingly. By the time they finished their game, Charlotte's mind was buzzing with questions about her mysterious new club member.\n\nThat night, Charlotte continued her online game with Dragon Master. However, her mind kept returning to Rachel's playstyle. She typed, \"Made a new friend at the Chess Club today.\" Dragon Master replied, \"That is what I love most about chess. The best wins in life don't just happen on the chessboard.\" Charlotte stared at those words. At her winning speech during last year's National Chess Championship, she had told all the participants that friendship mattered more than winning with that exact phrase. Suddenly, all the pieces fell into place.\n\nAt the next chess club session, Charlotte made it a point to observe Rachel's games at different tables. As suspected, Rachel started the game by moving her knights. It was Dragon Master's favourite opening move—the special knight move they had talked about so many times online. Charlotte was ready to confirm her suspicion.\n\"Would you like another game?\" Charlotte asked.\n\"Of course! I see you have been busy and haven't played a single game,\" Rachel replied with a knowing smile.\n\nAs they began to play, Rachel moved her pieces in that familiar pattern again. Charlotte felt her pulse jump with certainty. \"Nice move, Dragon Master,\" she said softly, just for Rachel to hear. Rachel's hand froze mid-move.\n\n\"Thank you, Charlotte... or should I say, \"Chess Queen\"?\" she chuckled. Charlotte widened her eyes in recognition before breaking into a beaming smile.",
+      "image": "nanhua-2025-passage.png"
+    }
+  ]
+}

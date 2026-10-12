@@ -1,0 +1,13 @@
+{
+  "paper": "2025-english-peihwa.pdf",
+  "slug": "peihwa",
+  "question_pages": {
+    "21": [
+      9
+    ],
+    "66": [
+      12
+    ]
+  },
+  "note": "Q21 poster crop box detected from survey/peihwa/p009.png border lines (survey px x115-744, y203-1052). Passage for Q66-75 is on PDF page 12, cropped by crop_passage.py."
+}

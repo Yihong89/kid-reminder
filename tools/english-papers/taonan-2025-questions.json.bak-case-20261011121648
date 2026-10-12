@@ -1,0 +1,1145 @@
+{
+  "_source": "Tao Nan School P6 English Paper 2 2025 Prelim (Booklet A 25 marks + Booklet B 65 marks, total 90). Downloaded from https://www.etestpaper.com.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image is authoritative for the Visual Text Comprehension (Q21-25). Answers are from the paper's own compiled answer key.",
+  "questions": [
+    {
+      "source_ref": "taonan-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The jury ________ unable to reach a verdict due to the fact that they had different opinions.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "were",
+      "marks": 1,
+      "explanation": "The collective noun 'jury' takes a plural verb in British English usage, 'were'."
+    },
+    {
+      "source_ref": "taonan-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Mei Ling, along with her uncle, ________ chess regularly since she developed a love for the game.",
+      "options": [
+        "plays",
+        "is playing",
+        "has played",
+        "has been playing"
+      ],
+      "correct_answer": "has been playing",
+      "marks": 1,
+      "explanation": "The present perfect continuous ('has been playing') fits an action continuing from the past up to now with 'since'."
+    },
+    {
+      "source_ref": "taonan-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Mrs Rai looked on with pride as her son delivered a speech that he had prepared by ________.",
+      "options": [
+        "herself",
+        "himself",
+        "ourselves",
+        "themselves"
+      ],
+      "correct_answer": "himself",
+      "marks": 1,
+      "explanation": "The reflexive pronoun matches the singular 'son', so 'himself'."
+    },
+    {
+      "source_ref": "taonan-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"Emily never forgets to remind her grandmother to take her medicine, ________?\" remarked Mother.",
+      "options": [
+        "will she",
+        "isn't she",
+        "does she",
+        "doesn't she"
+      ],
+      "correct_answer": "does she",
+      "marks": 1,
+      "explanation": "The statement is negative ('never'), so the tag question is positive: 'does she'."
+    },
+    {
+      "source_ref": "taonan-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"Attend to the guests promptly ________ they need assistance,\" the restaurant manager reminded his staff during his briefing.",
+      "options": [
+        "shall",
+        "must",
+        "could",
+        "should"
+      ],
+      "correct_answer": "should",
+      "marks": 1,
+      "explanation": "'Should they need assistance' is an inverted conditional meaning 'if they should need assistance'."
+    },
+    {
+      "source_ref": "taonan-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The Long Island Project is by far ________ scheme to combat rising sea levels along Singapore's coastline.",
+      "options": [
+        "a significant",
+        "a more significant",
+        "the very significant",
+        "the most significant"
+      ],
+      "correct_answer": "the most significant",
+      "marks": 1,
+      "explanation": "'By far' is used with the superlative: 'the most significant'."
+    },
+    {
+      "source_ref": "taonan-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The government introduced electric buses ________ the high costs as they were committed to a greener public transport system.",
+      "options": [
+        "owing to",
+        "in spite of",
+        "because of",
+        "resulting from"
+      ],
+      "correct_answer": "in spite of",
+      "marks": 1,
+      "explanation": "'In spite of' expresses the contrast between the high costs and the decision to proceed."
+    },
+    {
+      "source_ref": "taonan-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The tour guide, ________ company had conducted the Angkor Wat historical tour, has received excellent reviews.",
+      "options": [
+        "who",
+        "which",
+        "where",
+        "whose"
+      ],
+      "correct_answer": "whose",
+      "marks": 1,
+      "explanation": "The possessive relative pronoun 'whose' links the guide to 'company'."
+    },
+    {
+      "source_ref": "taonan-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "If you have plans to visit this modern city, be sure to put ________ at least two hours for a complete experience.",
+      "options": [
+        "away",
+        "aside",
+        "behind",
+        "across"
+      ],
+      "correct_answer": "aside",
+      "marks": 1,
+      "explanation": "'Put aside' means to set aside or reserve time."
+    },
+    {
+      "source_ref": "taonan-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "There is ________ doubt that Janice will win the award given her outstanding performance.",
+      "options": [
+        "any",
+        "few",
+        "little",
+        "much"
+      ],
+      "correct_answer": "little",
+      "marks": 1,
+      "explanation": "'There is little doubt' = there is almost no doubt."
+    },
+    {
+      "source_ref": "taonan-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "When the tsunami warning alarm went off, residents were told to ________ the area immediately and head for higher ground.",
+      "options": [
+        "depart",
+        "survey",
+        "observe",
+        "evacuate"
+      ],
+      "correct_answer": "evacuate",
+      "marks": 1,
+      "explanation": "'Evacuate' means to leave an area for safety."
+    },
+    {
+      "source_ref": "taonan-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Many tourists are unaware of the ________ effects their visits can have on the heritage sites. A number have suffered irreparable damage.",
+      "options": [
+        "subtle",
+        "unlimited",
+        "temporary",
+        "devastating"
+      ],
+      "correct_answer": "devastating",
+      "marks": 1,
+      "explanation": "'Devastating' means severely damaging, matching 'irreparable damage'."
+    },
+    {
+      "source_ref": "taonan-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The lack of proper shelter during heavy rain has become a major ________ for the school community.",
+      "options": [
+        "lapse",
+        "concern",
+        "obstruction",
+        "interference"
+      ],
+      "correct_answer": "concern",
+      "marks": 1,
+      "explanation": "'A major concern' = an important worry."
+    },
+    {
+      "source_ref": "taonan-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "My little nephew ________ when he saw blood trickling down his grazed knee.",
+      "options": [
+        "passed up",
+        "passed off",
+        "passed out",
+        "passed over"
+      ],
+      "correct_answer": "passed out",
+      "marks": 1,
+      "explanation": "'Passed out' means fainted."
+    },
+    {
+      "source_ref": "taonan-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The students were hesitant to speak ________ in front of the discipline master for fear of being reprimanded.",
+      "options": [
+        "eagerly",
+        "tactfully",
+        "candidly",
+        "deliberately"
+      ],
+      "correct_answer": "candidly",
+      "marks": 1,
+      "explanation": "'Candidly' means honestly and frankly, which is why they feared being scolded."
+    },
+    {
+      "source_ref": "taonan-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "Kiri was on a trip to Cambodia with his granddaughter, Sophea. After months of planning, their dream was finally realised as they travelled to Kampong Thom, where he grew up. Entranced by the beautiful fields and the distant clamour of roosters crowing, Sophea walked to the river where her grandfather had once spent hours fishing. The duo trekked laboriously up the hill, perspiration dotting their brows. They could see the vast countryside stretching before them from the summit. The view mirrored to a great extent the stories Kiri had told her of his childhood — untouched, vivid, and full of quiet wonder. Kiri was confident that although time had passed, the bond he shared with Sophea would stand the test of time with each cherished memory. This trip would be etched in their hearts and minds forever.",
+      "prompt": "The word \"realised\" is closest in meaning to:",
+      "options": [
+        "released",
+        "revealed",
+        "manifested",
+        "materialised"
+      ],
+      "correct_answer": "materialised",
+      "marks": 1,
+      "explanation": "'Realised' (a dream) = materialised / came true."
+    },
+    {
+      "source_ref": "taonan-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"Entranced\" is closest in meaning to:",
+      "options": [
+        "Gratified",
+        "Energised",
+        "Captivated",
+        "Unaffected"
+      ],
+      "correct_answer": "Captivated",
+      "marks": 1,
+      "explanation": "'Entranced' = captivated / completely delighted."
+    },
+    {
+      "source_ref": "taonan-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"laboriously\" is closest in meaning to:",
+      "options": [
+        "hastily",
+        "tirelessly",
+        "strenuously",
+        "purposefully"
+      ],
+      "correct_answer": "strenuously",
+      "marks": 1,
+      "explanation": "'Laboriously' = with great effort, strenuously."
+    },
+    {
+      "source_ref": "taonan-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The words \"to a great extent\" are closest in meaning to:",
+      "options": [
+        "briefly",
+        "visibly",
+        "purely",
+        "mainly"
+      ],
+      "correct_answer": "mainly",
+      "marks": 1,
+      "explanation": "'To a great extent' = to a large degree, mainly."
+    },
+    {
+      "source_ref": "taonan-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The words \"stand the test of time\" are closest in meaning to:",
+      "options": [
+        "last",
+        "endure",
+        "sustain",
+        "deepen"
+      ],
+      "correct_answer": "last",
+      "marks": 1,
+      "explanation": "'Stand the test of time' = last / endure. Per the answer key, 'last' is accepted."
+    },
+    {
+      "source_ref": "taonan-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "taonan-2025-q21.png",
+      "context": "Text 1 is a poster for 'Movie At The Park' — a screening of 'The Mystery of Maplewood Manor' at Willow Park, brought to you by Willow Film Club.",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges.\n\nFamily time offers invaluable benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity, helping them grow into confident and secure adults.\n\nThere are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to admire nature.\n\nAs the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we grow stronger.",
+      "prompt": "According to the poster in Text 1, the movie ________.",
+      "options": [
+        "features Willow Park",
+        "is inspired by true events",
+        "is directed by Elliot Drake",
+        "stars Leo Graham and Felicity Vale"
+      ],
+      "correct_answer": "is inspired by true events",
+      "marks": 1,
+      "explanation": "The poster states 'Based on a true story by Felicity Vale.'"
+    },
+    {
+      "source_ref": "taonan-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "taonan-2025-q21.png",
+      "context": "The poster shows a spooky manor house, 'An abandoned manor in the woods... Many mysteries to unravel... Will he escape?'",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges.\n\nFamily time offers invaluable benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity, helping them grow into confident and secure adults.\n\nThere are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to admire nature.\n\nAs the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we grow stronger.",
+      "prompt": "Based on the poster in Text 1, which of the following best fits the film that will be screened in the park?",
+      "options": [
+        "Thriller",
+        "Animation",
+        "Documentary",
+        "Science Fiction"
+      ],
+      "correct_answer": "Thriller",
+      "marks": 1,
+      "explanation": "The dark, mysterious mood and 'will he escape' tagline suggest a thriller."
+    },
+    {
+      "source_ref": "taonan-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "taonan-2025-q21.png",
+      "context": "\"Many mysteries to unravel... Will he escape?\" The image shows a lone figure facing a dark manor.",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges.\n\nFamily time offers invaluable benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity, helping them grow into confident and secure adults.\n\nThere are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to admire nature.\n\nAs the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we grow stronger.",
+      "prompt": "\"Many mysteries to unravel... Will he escape?\" The image in the poster best supports this by giving the impression that the boy is ________.",
+      "options": [
+        "curious and relaxed",
+        "bored and distracted",
+        "confused and hesitant",
+        "determined and fearless"
+      ],
+      "correct_answer": "determined and fearless",
+      "marks": 1,
+      "explanation": "The lone, upright figure facing the manor suggests bravery and determination."
+    },
+    {
+      "source_ref": "taonan-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "taonan-2025-q21.png",
+      "context": "\"Ready for a magical night under the stars with your loved ones?\" is the opening line of the poster.",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges.\n\nFamily time offers invaluable benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity, helping them grow into confident and secure adults.\n\nThere are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to admire nature.\n\nAs the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we grow stronger.",
+      "prompt": "\"Ready for a magical night under the stars with your loved ones?\" Why did the writer ask the question in Text 1?",
+      "options": [
+        "to spark people's interest in magic",
+        "to make people connect with the movie",
+        "to invite people to join Willow Film Club",
+        "to encourage people to attend the movie screening"
+      ],
+      "correct_answer": "to encourage people to attend the movie screening",
+      "marks": 1,
+      "explanation": "The rhetorical question hooks readers and draws them to the event."
+    },
+    {
+      "source_ref": "taonan-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "taonan-2025-q21.png",
+      "context": "Text 2 is a school talk about the value of family time — 'strong communities... family bonds... together, we grow stronger.'",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges.\n\nFamily time offers invaluable benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity, helping them grow into confident and secure adults.\n\nThere are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to admire nature.\n\nAs the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we grow stronger.",
+      "prompt": "Text 2 supports the message of the poster in Text 1 as it also ________.",
+      "options": [
+        "promotes indoor and outdoor activities",
+        "encourages people to have more picnics",
+        "focusses on the need to build a strong community",
+        "highlights spending fruitful time with family members"
+      ],
+      "correct_answer": "highlights spending fruitful time with family members",
+      "marks": 1,
+      "explanation": "Text 2 stresses spending quality time with family, matching the poster's family theme."
+    },
+    {
+      "source_ref": "taonan-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A)a (B)an (C)behind (D)being (E)had (F)has (G)having (H)on (J)since (K)some (L)still (M)those (N)to (P)while (Q)with.\n\nWithin the Singapore Botanic Gardens stands a living landmark of national pride. Native ___(26)___ Singapore, the Tembusu Tree can grow up to 40 metres tall. Its most distinctive feature — a gently curled, low-hanging branch — reaches outward as if offering a reminder of its presence to ___(27)___ who walk past. Also known affectionately as the \"Five-dollar Tree\", this is the tree that graces the back of the note. Few would expect such ___(28)___ iconic image to be not only real but also ___(29)___ accessible to the public. The image is so ingrained in our everyday life that people often overlook the significance ___(30)___ the symbol.\n\nThis heritage tree is believed to have existed ___(31)___ the Botanic Gardens was officially founded in 1859. Close to two centuries old, this tree ___(32)___ been admired by generations, some of whom return just to marvel at its resilience. ___(33)___ its thick, weathered trunk and an expansive canopy of branches, the tree represents the enduring spirit of a nation. Standing unshaken by storms ___(34)___ remaining deeply grounded in its values, it never forsakes the roots that define it. The Tembusu Tree is truly a symbol of what Singapore takes pride in — ___(35)___ anchored and forward-looking. Such is the spirit of the country.",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "N",
+      "marks": 1,
+      "explanation": "\"Native to Singapore\" — 'to'."
+    },
+    {
+      "source_ref": "taonan-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "M",
+      "marks": 1,
+      "explanation": "\"to those who walk past\" — 'those'."
+    },
+    {
+      "source_ref": "taonan-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "B",
+      "marks": 1,
+      "explanation": "\"such an iconic image\" — 'an'."
+    },
+    {
+      "source_ref": "taonan-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "L",
+      "marks": 1,
+      "explanation": "\"also still accessible\" — 'still'."
+    },
+    {
+      "source_ref": "taonan-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "C",
+      "marks": 1,
+      "explanation": "\"the significance behind the symbol\" — 'behind'."
+    },
+    {
+      "source_ref": "taonan-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "J",
+      "marks": 1,
+      "explanation": "\"existed since the Botanic Gardens was founded\" — 'since'."
+    },
+    {
+      "source_ref": "taonan-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "\"this tree has been admired\" — 'has'."
+    },
+    {
+      "source_ref": "taonan-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "Q",
+      "marks": 1,
+      "explanation": "\"With its thick, weathered trunk\" — 'with'."
+    },
+    {
+      "source_ref": "taonan-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "P",
+      "marks": 1,
+      "explanation": "\"by storms while remaining deeply grounded\" — 'while'."
+    },
+    {
+      "source_ref": "taonan-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "D",
+      "marks": 1,
+      "explanation": "\"— being anchored and forward-looking\" — 'being'."
+    },
+    {
+      "source_ref": "taonan-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "Good morning! I am Daryl, your Head Prefect. I am thrilled to share with you a meaningful project that could really benefit from your invovment(36). Collaborating with the Computer Club, the prefects will be organising a two-day computer litracy(37) workshop for the elderly folks in our neighbourhood. This inntaitive(38) is our first outreach effort to bridge the digital divide by(39) the young and old generations. Thus, we are inviting committed and emphatick(40) student volunteers to guide the elderly participants.\n\nIt is easy for us to take such a skill set for granted because(41) for someone who did not grow up with digital technology, those(42) can be rather intimidating. Do you know how lonely it can be when you can't connect to the digital world around us? By sharing your knowledge and applies(43) your skills, you'll not only empower our seniors, but also sharpen your comunikation(44) and coaching skills. If you're ready to step up and give back, sign up at the booth just outside the General Office today. We look forward to seen(45) you at the workshop! Thank you.",
+      "prompt": "Write the correct word.",
+      "correct_answer": "involvement",
+      "marks": 1,
+      "explanation": "Correct spelling 'involvement'."
+    },
+    {
+      "source_ref": "taonan-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "literacy",
+      "marks": 1,
+      "explanation": "Correct spelling 'literacy'."
+    },
+    {
+      "source_ref": "taonan-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "initiative",
+      "marks": 1,
+      "explanation": "Correct spelling 'initiative'."
+    },
+    {
+      "source_ref": "taonan-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "between",
+      "marks": 1,
+      "explanation": "\"the digital divide between the young and old generations\"."
+    },
+    {
+      "source_ref": "taonan-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "empathetic",
+      "marks": 1,
+      "explanation": "Correct spelling 'empathetic'."
+    },
+    {
+      "source_ref": "taonan-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "but",
+      "marks": 1,
+      "explanation": "\"for granted but for someone who did not grow up…\" — 'but'."
+    },
+    {
+      "source_ref": "taonan-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "this",
+      "marks": 1,
+      "explanation": "\"this can be rather intimidating\" — referring to the situation, 'this'."
+    },
+    {
+      "source_ref": "taonan-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "applying",
+      "marks": 1,
+      "explanation": "\"By sharing your knowledge and applying your skills\" — parallel gerunds."
+    },
+    {
+      "source_ref": "taonan-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Communication",
+      "marks": 1,
+      "explanation": "Correct spelling 'Communication'."
+    },
+    {
+      "source_ref": "taonan-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "seeing",
+      "marks": 1,
+      "explanation": "\"We look forward to seeing you\" — gerund after 'look forward to'."
+    },
+    {
+      "source_ref": "taonan-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "The Museum of Toys is nestled in the heart of our city. Driven by his passion for design and art, Marcus, an enthusiastic toy ___(46)___, often imagined a space where visitors from all ___(47)___ of life could rediscover the past, and rekindle childhood memories of playing with favourite figurines and stuffed toys. His dream finally came true in 2007 when he successfully set up this museum, ___(48)___ his personal collection from more than forty countries.\n\nOffering a fascinating journey through time, the museum displays toys from the 1840s. Toys ___(49)___ action figures, wind-up robots and miniature cars awe children and adults ___(50)___. These toys were carefully designed to move or make sounds when ___(51)___ up with a key in the winding slot, showing the creativity of the toy designers. ___(52)___ of the highlights of the museum is the mechanical toy, which can be powered by winding a key, ___(53)___ a button, or pushing a lever, ___(54)___ of relying on batteries.\n\n\"These toys were not mere ornaments. In fact, they were companions during our childhood days,\" said the museum owner, his ___(55)___ carrying a note of nostalgia. He hoped that the place would provide visitors with a holistic experience, educating them about the stories behind each toy and how toys had gradually evolved ___(56)___ the years. This emotional connection to the past can foster feelings of elation and warmth, and at the same time offer a sense of continuity between generations.\n\nIt is indeed amazing to note ___(57)___ these toy characters were part of the children's playtime ___(58)___ technology took over. Central to the museum's mission of learning and discovery, the place offers an educational experience which helps visitors ___(59)___ to the past in an entertaining and informative way. Truly, the Museum of Toys is a magical place where toys come to ___(60)___. Today, it continues to promote that belief.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "collector",
+      "marks": 1,
+      "explanation": "\"an enthusiastic toy collector\"."
+    },
+    {
+      "source_ref": "taonan-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "walks",
+      "marks": 1,
+      "explanation": "\"from all walks of life\"."
+    },
+    {
+      "source_ref": "taonan-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "displaying",
+      "marks": 1,
+      "explanation": "\"set up this museum, displaying his personal collection\"."
+    },
+    {
+      "source_ref": "taonan-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "like",
+      "marks": 1,
+      "explanation": "\"Toys like action figures…\"."
+    },
+    {
+      "source_ref": "taonan-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "alike",
+      "marks": 1,
+      "explanation": "\"children and adults alike\"."
+    },
+    {
+      "source_ref": "taonan-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "wound",
+      "marks": 1,
+      "explanation": "\"when wound up with a key\"."
+    },
+    {
+      "source_ref": "taonan-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "one",
+      "marks": 1,
+      "explanation": "\"One of the highlights\"."
+    },
+    {
+      "source_ref": "taonan-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "pressing",
+      "marks": 1,
+      "explanation": "\"winding a key, pressing a button, or pushing a lever\"."
+    },
+    {
+      "source_ref": "taonan-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "instead",
+      "marks": 1,
+      "explanation": "\"instead of relying on batteries\"."
+    },
+    {
+      "source_ref": "taonan-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "voice",
+      "marks": 1,
+      "explanation": "\"his voice carrying a note of nostalgia\"."
+    },
+    {
+      "source_ref": "taonan-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "throughout",
+      "marks": 1,
+      "explanation": "\"evolved throughout the years\"."
+    },
+    {
+      "source_ref": "taonan-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "that",
+      "marks": 1,
+      "explanation": "\"amazing to note that these toy characters…\"."
+    },
+    {
+      "source_ref": "taonan-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "before",
+      "marks": 1,
+      "explanation": "\"part of the children's playtime before technology took over\"."
+    },
+    {
+      "source_ref": "taonan-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "relate",
+      "marks": 1,
+      "explanation": "\"helps visitors relate to the past\"."
+    },
+    {
+      "source_ref": "taonan-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "life",
+      "marks": 1,
+      "explanation": "\"where toys come to life\"."
+    },
+    {
+      "source_ref": "taonan-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Our relatives insisted on paying us a visit. It was raining heavily. No matter how ________.",
+      "correct_answer": "No matter how heavy the rain was our relatives insisted on paying us a visit.",
+      "marks": 2,
+      "explanation": "'No matter how' + adjective/clause combines the two sentences."
+    },
+    {
+      "source_ref": "taonan-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The children do not like fried chicken wings. They like fruits and vegetables instead. The children prefer ________.",
+      "correct_answer": "The children prefer fruits and vegetable to fried chicken wings.",
+      "marks": 2,
+      "explanation": "'prefer X to Y' expresses the preference."
+    },
+    {
+      "source_ref": "taonan-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "\"What is your decision after hearing all the available options?\" my mother asked me. My mother asked me ________.",
+      "correct_answer": "My mother asked me what my decision was after hearing all the available options.",
+      "marks": 2,
+      "explanation": "Reported question: tense backshift and no inversion."
+    },
+    {
+      "source_ref": "taonan-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The team members were sorry about not running faster during the final event. The team members wished that ________.",
+      "correct_answer": "The team members wished that they had run faster during the final event.",
+      "marks": 2,
+      "explanation": "'wish' + past perfect for a regret about the past."
+    },
+    {
+      "source_ref": "taonan-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The lifts are maintained regularly to ensure that they function properly. The regular ________.",
+      "correct_answer": "The regular maintenance of the lifts ensures that they function properly.",
+      "marks": 2,
+      "explanation": "Nominalisation of 'maintained' to 'maintenance'."
+    },
+    {
+      "source_ref": "taonan-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume — not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear?",
+      "prompt": "We can infer that the writer did not like his performance outfit. Give two reasons why he felt that way. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "The rabbit costume had neon pink fur.",
+          "keywords": [
+            [
+              "neon pink fur",
+              "pink fur"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "The head of the rabbit costume was oversized.",
+          "keywords": [
+            [
+              "oversized",
+              "oversized head"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others — fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine.",
+      "prompt": "Besides having to wear the costume, state two other reasons for the writer's anxiety about the performance. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "The writer was worried about making a mistake.",
+          "keywords": [
+            [
+              "worried about making a mistake",
+              "mistake"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "The writer was worried about the audience laughing at him.",
+          "keywords": [
+            [
+              "audience laughing",
+              "laughing at him"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "\"A room with an expectant audience... and that was what I had to wear?\" (lines 5–6) and \"Somehow, everyone's outfit looked far more presentable than mine.\" (line 8).",
+      "prompt": "Fill in each blank with a word that best describes the writer's feelings. (a) \"A room with an expectant audience... and that was what I had to wear?\" — This tells me that the writer was afraid of being ________. [1m]  (b) \"Somehow, everyone's outfit looked far more presentable than mine.\" — This tells me that the writer was ________ of his classmates' costumes. [1m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) embarrassed",
+          "keywords": [
+            [
+              "embarrassed",
+              "embarrass"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) jealous",
+          "keywords": [
+            [
+              "jealous",
+              "envious"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "\"He gave a look — the kind that only best friends would give, halfway between challenge and comfort. 'It's okay to be nervous,' he said, his voice filled with quiet determination. 'We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.'\"",
+      "prompt": "Fill in the following table by identifying the correct words or sentence from lines 10–18. (a) Which five-word phrase tells us that Leon did not mind his costume? [1m]  (b) Which sentence suggests that teamwork was valued? [1m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) standing tall all the same",
+          "keywords": [
+            [
+              "standing tall all the same",
+              "standing tall"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) we're all in this together",
+          "keywords": [
+            [
+              "we're all in this together",
+              "all in this together"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "The scene (line 6): the sight of the other performers' far more presentable costumes. Those (line 16): the long rehearsals, endless takes and body aches. 'It' (line 39): wearing the rabbit costume to perform.",
+      "prompt": "Look at the table below. What do the words in the left column refer to in the passage? Write your answers in the column on the right. (a) scene (line 6) [1m]  (b) those (line 16) [1m]  (c) It (line 39) [1m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) The costumes that the writer's classmates were wearing.",
+          "keywords": [
+            [
+              "costumes",
+              "classmates",
+              "classmates were wearing"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) The long rehearsals, the endless takes and the body aches.",
+          "keywords": [
+            [
+              "long rehearsals",
+              "endless takes",
+              "body aches"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) Wearing the rabbit costume to perform.",
+          "keywords": [
+            [
+              "wearing",
+              "rabbit costume",
+              "to perform"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face.",
+      "prompt": "\"Lying there, humiliation scorched my face.\" (line 28). What made the writer feel that way? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "When the writer was exiting the stage after his part, his oversized foot caught on a mess of wires, causing him to trip and land on his knees. The audience started laughing.",
+          "keywords": [
+            [
+              "tripped",
+              "wires",
+              "land on his knees",
+              "audience started laughing"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "The writer felt humiliated and would have gladly vanished if there had been a trapdoor (the practice-session laughter). On the performance night, his stomach churned with butterflies but he welcomed them.",
+      "prompt": "Based on lines 19–36, state whether each statement in the table below is true or false, then give one reason why you think so. (a) Initially, the laughter during the practice session made the writer want to give up acting. [1m]  (b) On the performance night, the writer was not mentally prepared. [1m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) True — The writer felt humiliated and he would have gladly vanished if there had been a trapdoor.",
+          "keywords": [
+            [
+              "true",
+              "humiliated",
+              "trapdoor",
+              "vanished"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) False — The writer was mentally prepared. His stomach churned with butterflies but he welcomed them.",
+          "keywords": [
+            [
+              "false",
+              "mentally prepared",
+              "welcomed them",
+              "butterflies"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "\"Realise this,\" I told myself, \"we all start somewhere.\" I had to face my fears. Slowly, the nerves faded away.",
+      "prompt": "Referring to lines 19–30, what made the writer change his mindset about facing his fears? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "The writer remembered Leon's words \"We all start somewhere\".",
+          "keywords": [
+            [
+              "We all start somewhere",
+              "Leon's words"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "The writer realised that even though the audience laughed at him, he should still face his fears.",
+          "keywords": [
+            [
+              "realised",
+              "should still face his fears",
+              "even though"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "At the performance, the writer made silly twitches on the rabbit's ears to make the audience laugh. After the finale, Leon gave the writer a thumbs-up.",
+      "prompt": "Complete the table below. What is the purpose for each of the characters' actions? (a) Writer — made silly twitches on the rabbit's ears. [1m]  (b) Leon — gave the writer a thumbs-up. [1m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "To make the audience laugh.",
+          "keywords": [
+            [
+              "make the audience laugh",
+              "make them laugh"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "For putting on a good show.",
+          "keywords": [
+            [
+              "good show",
+              "putting on a good show",
+              "congratulate"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    },
+    {
+      "source_ref": "taonan-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "In the beginning, the writer was worried that people would laugh at him. After the performance, the writer thought that the performance was a success and that he had learnt about courage and that the stage was not about perfection.",
+      "prompt": "What doubt did the writer have in the beginning and how had this attitude changed after the performance? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "In the beginning, the writer was worried that people would laugh at him.",
+          "keywords": [
+            [
+              "worried",
+              "laugh at him",
+              "afraid"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "After the performance, the writer thought that the performance was a success and that he had learnt about courage and that the stage was not about perfection.",
+          "keywords": [
+            [
+              "success",
+              "learnt about courage",
+              "not about perfection"
+            ]
+          ]
+        }
+      ],
+      "passage": "Creak... The closet door groaned in protest as I tugged it open, its hinges squealing like they, too, wanted no part in what lay inside. Hanging limply before me was a rabbit costume – not the soft, storybook kind, but a garish ensemble of neon pink fur with ears that drooped like they had given up hope. Its oversized head sagged to one side. My heart sank. This was it. My debut performance. My graduation day. A room with an expectant audience... and that was what I had to wear? Taking in the scene, I noticed the others – fluffy sheep, dignified goats, even cows that looked halfway decent. Somehow, everyone's outfit looked far more presentable than mine. There and then, I had the urge to slip away.\n\n\"Where are you going, Gary?\" Leon's voice stopped me. He was fiddling with the long frayed tail of his goat costume, looking as ridiculous as I felt, yet standing tall all the same. He gave a look – the kind that only best friends would give, halfway between challenge and comfort. \"It's okay to be nervous,\" he said, his voice filled with quiet determination. \"We all start somewhere. You've put in blood, sweat and tears for this. You're not backing out now, are you? We're all in this together.\" His words hit me. The long rehearsals, the endless retakes, the body aches. Had I forgotten all those? I took a deep breath. Not for the costumes but the effort. Not for the pink rabbit but for the people who believed in me. I was not going to run away. Not this time.\n\nTwo days later at the full-dress rehearsal, my confidence cracked. The auditorium was buzzing with quiet chatter. My silly costume made every movement a chore; each hop felt unnatural, blown out of proportion. I shuffled out, my heart pounding like a drum. The spotlight lit the stage as if it were preparing to expose my secret. I began my scene. Then came the giggles. Small at first, then spreading like wildfire. My shoulders slumped when I stumbled over a line. Laughter. More laughter. The gnawing doubt clawed at me – was that failure? What a disaster! If there were a trapdoor, I would gladly vanished. Exiting the stage after my part, my oversized foot caught on a mess of wires. Like a puppet with its strings cut, I tripped and landed on my knees. Laughter exploded. Lying there, humiliation scorched my face. All of a sudden, something changed. I remembered Leon's words. \"We all start somewhere.\" I knew I had to face my fears. Slowly, the nerves faded away.\n\nThen came the opening night. The curtain rose to thunderous applause. My stomach churned with butterflies, but this time, I welcomed them. As I hopped into the spotlight, the audience erupted into laughter – not mockery, but delight. Every exaggerated movement, every silly twitch of my ears added to the joy. I was not being laughed at. Instead, my antics were making the guests laugh. Backstage, Leon flashed me a thumbs-up. The fears were irrational. I had made peace with them.\n\n\"See? You did it! You're a natural,\" he said when the final applause rang out. I smiled, the joy of the moment finally sinking in.\n\n\"Thanks for talking me out of leaving. It isn't so bad after all,\" I replied, tugging at the floppy ears. \"This outfit still looks ridiculous.\" Leon grinned. In that pink fluff, I had learnt about courage and that the stage was not about perfection. It was about showing up, even when I was scared. My debut performance was a success.",
+      "image": "taonan-2025-passage.png"
+    }
+  ]
+}

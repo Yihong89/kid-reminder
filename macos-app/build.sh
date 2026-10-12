@@ -34,6 +34,10 @@ mkdir -p "$BUNDLE/Contents/MacOS"
 cp "$BIN" "$BUNDLE/Contents/MacOS/$APP_NAME"
 
 # app icon (from Resources/AppIcon.svg)
+# 图标生成依赖 Chrome/qlmanage，缺一个就失败。**图标失败不该让整个构建挂掉** ——
+# 二进制和 .app 在这之前就组装好了，而 `set -e` 会让 cp 的失败直接中止脚本，
+# 结果是一个明明可用、却因为没图标而"构建失败"的包。
+set +e
 if [ -f "Resources/AppIcon.svg" ]; then
   echo "=== generating app icon ==="
   WORK=$(mktemp -d)

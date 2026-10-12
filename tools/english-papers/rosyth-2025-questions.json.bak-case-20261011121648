@@ -1,0 +1,1167 @@
+{
+  "_source": "Rosyth School P6 English Paper 2 Preliminary Examination 2025 (Booklet A 25 marks + Booklet B 65 marks, total 90). Rosyth Primary School, Primary 6, Prelim 2025.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image is authoritative for the Visual Text Comprehension (Q21-25). Answers are from the paper's own compiled answer key. In the Grammar Cloze (Q26-35) the official key's letter for blanks 30 and 34 is ambiguous under the watermark; the grammatically-correct letters (G='for', H='but') are recorded. Editing item 41 copies the key verbatim ('accompanies').",
+  "questions": [
+    {
+      "source_ref": "rosyth-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "I asked my mother to pass me ________ stack of books on the shelf over there.",
+      "options": [
+        "this",
+        "that",
+        "those",
+        "these"
+      ],
+      "correct_answer": "that",
+      "marks": 1,
+      "explanation": "'That' is used for a singular object at a distance ('over there'); 'this/these' are for nearer objects."
+    },
+    {
+      "source_ref": "rosyth-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "My teacher has asked Sally and ________ to help out with the class decoration.",
+      "options": [
+        "I",
+        "me",
+        "mine",
+        "myself"
+      ],
+      "correct_answer": "me",
+      "marks": 1,
+      "explanation": "'Me' is the object pronoun after the verb 'has asked'."
+    },
+    {
+      "source_ref": "rosyth-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"She never listens to our advice, ________?\" asked Ali.",
+      "options": [
+        "has",
+        "does",
+        "hasn't",
+        "doesn't"
+      ],
+      "correct_answer": "does",
+      "marks": 1,
+      "explanation": "'Never' makes the statement negative, so the tag must be positive: 'does she'."
+    },
+    {
+      "source_ref": "rosyth-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Although Mindy ________ some hesitation at first, she has agreed to help us complete the project.",
+      "options": [
+        "had",
+        "has",
+        "have",
+        "having"
+      ],
+      "correct_answer": "had",
+      "marks": 1,
+      "explanation": "'At first' signals past time and 'although' introduces a finite clause, so 'had' is correct."
+    },
+    {
+      "source_ref": "rosyth-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Jamie, ________ father works as a banker, is very helpful and considerate.",
+      "options": [
+        "who",
+        "which",
+        "whom",
+        "whose"
+      ],
+      "correct_answer": "whose",
+      "marks": 1,
+      "explanation": "'Whose' is the possessive relative pronoun describing Jamie's father."
+    },
+    {
+      "source_ref": "rosyth-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The rays of the sun streamed ________ the windows, instantly brightening up the room.",
+      "options": [
+        "at",
+        "into",
+        "over",
+        "through"
+      ],
+      "correct_answer": "through",
+      "marks": 1,
+      "explanation": "'Streamed through the windows' describes light passing through an opening."
+    },
+    {
+      "source_ref": "rosyth-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "________ you have proof, I will not believe that Mingxuan has stolen your money.",
+      "options": [
+        "Unless",
+        "Since",
+        "As",
+        "If"
+      ],
+      "correct_answer": "Unless",
+      "marks": 1,
+      "explanation": "'Unless' means 'if ... not': unless proof is provided, the speaker will not believe it."
+    },
+    {
+      "source_ref": "rosyth-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"Please hurry! I do not have ________ time to spare,\" Laura told her friend.",
+      "options": [
+        "few",
+        "little",
+        "much",
+        "some"
+      ],
+      "correct_answer": "much",
+      "marks": 1,
+      "explanation": "'Much' is used with the uncountable noun 'time' in a negative sentence."
+    },
+    {
+      "source_ref": "rosyth-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Yanti saw her friend ________ the classroom during recess.",
+      "options": [
+        "enter",
+        "enters",
+        "entered",
+        "had entered"
+      ],
+      "correct_answer": "enter",
+      "marks": 1,
+      "explanation": "A bare infinitive ('enter') follows the perception verb 'saw'."
+    },
+    {
+      "source_ref": "rosyth-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"It was Celine, not her friends, who drank the soda all by ________,\" I said.",
+      "options": [
+        "herself",
+        "himself",
+        "ourselves",
+        "themselves"
+      ],
+      "correct_answer": "herself",
+      "marks": 1,
+      "explanation": "The reflexive pronoun agrees with the singular feminine subject 'Celine'."
+    },
+    {
+      "source_ref": "rosyth-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Tim ________ weaved through the maze of the playground, dodging his classmates who were determined to catch him in a game of \"Tag\".",
+      "options": [
+        "nimbly",
+        "forcefully",
+        "vigorously",
+        "energetically"
+      ],
+      "correct_answer": "nimbly",
+      "marks": 1,
+      "explanation": "'Nimbly' means quickly and lightly, which suits weaving through a maze."
+    },
+    {
+      "source_ref": "rosyth-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Mandy admires her older sister very much and ________ her for emotional support and advice.",
+      "options": [
+        "looks to",
+        "looks at",
+        "looks into",
+        "looks over"
+      ],
+      "correct_answer": "looks to",
+      "marks": 1,
+      "explanation": "'Looks to (someone) for' means turning to that person for support."
+    },
+    {
+      "source_ref": "rosyth-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "During an emergency drill, moving all students and staff quickly to a safe place is of ________ concern.",
+      "options": [
+        "practical",
+        "prevailing",
+        "precarious",
+        "paramount"
+      ],
+      "correct_answer": "paramount",
+      "marks": 1,
+      "explanation": "'Of paramount concern' means of the utmost importance."
+    },
+    {
+      "source_ref": "rosyth-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "My mother furrowed her brows in ________ when she realised that my sister had gone to bed without taking a bath after a game of basketball.",
+      "options": [
+        "disgrace",
+        "disconnect",
+        "disapproval",
+        "disagreement"
+      ],
+      "correct_answer": "disapproval",
+      "marks": 1,
+      "explanation": "'Furrowed her brows in disapproval' shows displeasure."
+    },
+    {
+      "source_ref": "rosyth-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "When Tim shouted that his pet mouse had escaped its cage, a great ________ of activity erupted in class as everyone ran around in fear.",
+      "options": [
+        "swirl",
+        "flurry",
+        "surge",
+        "bustle"
+      ],
+      "correct_answer": "flurry",
+      "marks": 1,
+      "explanation": "'A flurry of activity' describes a sudden, confused burst of activity."
+    },
+    {
+      "source_ref": "rosyth-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "A gentle breeze ruffled the curtains in Sheila's room. Her brown eyes fluttered open almost instinctively as the chill crept over her. Moonlight cast eerie shadows across her room. Something felt unsettling. She got out from under her blanket and ran across the cold wood floor to close the window. Sheila peered intently at the garden. Even the pale glow from the moon was not enough to keep the darkness from enveloping her. The silence was simply too much for her. Suddenly, Sheila's heart raced when she saw something flicker strangely in the dark like a flame struggling against the wind. She ran back to bed, pulling her blanket over her head immediately. Sheila knew from all the horror movies which she had watched that investigating never ended well.",
+      "prompt": "The word \"instinctively\" is closest in meaning to:",
+      "options": [
+        "indirectly",
+        "inactively",
+        "involuntarily",
+        "inadequately"
+      ],
+      "correct_answer": "involuntarily",
+      "marks": 1,
+      "explanation": "'Instinctively' = done without conscious thought, i.e. involuntarily."
+    },
+    {
+      "source_ref": "rosyth-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"unsettling\" is closest in meaning to:",
+      "options": [
+        "baffling",
+        "appalling",
+        "menacing",
+        "disturbing"
+      ],
+      "correct_answer": "disturbing",
+      "marks": 1,
+      "explanation": "'Unsettling' = causing unease = disturbing."
+    },
+    {
+      "source_ref": "rosyth-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"peered\" is closest in meaning to:",
+      "options": [
+        "scanned",
+        "squinted",
+        "surveyed",
+        "searched"
+      ],
+      "correct_answer": "scanned",
+      "marks": 1,
+      "explanation": "'Peered' = looked at something intently = scanned."
+    },
+    {
+      "source_ref": "rosyth-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"silence\" is closest in meaning to:",
+      "options": [
+        "serenity",
+        "stillness",
+        "isolation",
+        "disturbance"
+      ],
+      "correct_answer": "stillness",
+      "marks": 1,
+      "explanation": "'Silence' = the state of being still/quiet = stillness."
+    },
+    {
+      "source_ref": "rosyth-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"flicker\" is closest in meaning to:",
+      "options": [
+        "sway",
+        "ripple",
+        "waver",
+        "vibrate"
+      ],
+      "correct_answer": "waver",
+      "marks": 1,
+      "explanation": "'Flicker' = to move unsteadily or waver."
+    },
+    {
+      "source_ref": "rosyth-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "rosyth-2025-q21.png",
+      "context": "Text 1 is a poster for Nova's Sunburst X10, a new compact smartphone. The poster's title reads 'The Future is in Your Hands'.",
+      "prompt": "The title of the poster, \"The Future is in Your Hands\", in Text 1 is used to emphasise that the phone is ________.",
+      "options": [
+        "guaranteed to improve in the future",
+        "small enough to fit in anyone's hands",
+        "suitable for professional photographers",
+        "more advanced than current phone models"
+      ],
+      "correct_answer": "more advanced than current phone models",
+      "marks": 1,
+      "explanation": "The title implies the phone is at the cutting edge — more advanced than current models.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, phone companies release new smartphones with promises of faster speeds and better features. Advertisements often show exciting new models with clearer cameras, faster performance and longer battery life.\n\nHowever, such advertising can cause many problems. In many situations, people may feel pressured to upgrade, even if their current phones still work well. This can create a ‘throw-away’ habit where people change their phones frequently and unnecessarily, thereby contributing to environmental problems.\n\nMoreover, as the advertisements make the latest smartphones seem very attractive, many consumers like teenagers may feel pressured to own one. This increases peer pressure, causing those without such devices to feel left out.\n\nAdvertising companies often promote new phone models by highlighting faster processing speeds and higher camera megapixels. Longer battery life is another frequently advertised feature. While new models may have larger batteries or new hardware, these changes are not always necessary.\n\nIn many cases, the actual improvements between old and new models are small, while the price increase is large. It is worth considering whether the improvements in new models truly offer good value for money."
+    },
+    {
+      "source_ref": "rosyth-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "rosyth-2025-q21.png",
+      "context": "The poster's feature list says '1. Enhanced camera clarity - Take shots like a professional'.",
+      "prompt": "\"Take shots like a professional!\" The picture in Text 1 supports this by giving the impression that the camera ________.",
+      "options": [
+        "can last all day",
+        "takes high quality photographs",
+        "helps gamers to win more easily",
+        "captures photographs underwater"
+      ],
+      "correct_answer": "takes high quality photographs",
+      "marks": 1,
+      "explanation": "The crisp scenic photo in the poster reinforces that the camera takes high quality photographs.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, phone companies release new smartphones with promises of faster speeds and better features. Advertisements often show exciting new models with clearer cameras, faster performance and longer battery life.\n\nHowever, such advertising can cause many problems. In many situations, people may feel pressured to upgrade, even if their current phones still work well. This can create a ‘throw-away’ habit where people change their phones frequently and unnecessarily, thereby contributing to environmental problems.\n\nMoreover, as the advertisements make the latest smartphones seem very attractive, many consumers like teenagers may feel pressured to own one. This increases peer pressure, causing those without such devices to feel left out.\n\nAdvertising companies often promote new phone models by highlighting faster processing speeds and higher camera megapixels. Longer battery life is another frequently advertised feature. While new models may have larger batteries or new hardware, these changes are not always necessary.\n\nIn many cases, the actual improvements between old and new models are small, while the price increase is large. It is worth considering whether the improvements in new models truly offer good value for money."
+    },
+    {
+      "source_ref": "rosyth-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "rosyth-2025-q21.png",
+      "context": "The poster lists many strong features (camera clarity, speed, water resistance, battery) and advertises the phone at an 'affordable price'.",
+      "prompt": "Based on the poster in Text 1, which of the following best describes the phone you expect to purchase?",
+      "options": [
+        "popular",
+        "durable",
+        "luxurious",
+        "worthwhile"
+      ],
+      "correct_answer": "worthwhile",
+      "marks": 1,
+      "explanation": "The poster presents a strong set of features at an affordable price, making the phone good value — worthwhile.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, phone companies release new smartphones with promises of faster speeds and better features. Advertisements often show exciting new models with clearer cameras, faster performance and longer battery life.\n\nHowever, such advertising can cause many problems. In many situations, people may feel pressured to upgrade, even if their current phones still work well. This can create a ‘throw-away’ habit where people change their phones frequently and unnecessarily, thereby contributing to environmental problems.\n\nMoreover, as the advertisements make the latest smartphones seem very attractive, many consumers like teenagers may feel pressured to own one. This increases peer pressure, causing those without such devices to feel left out.\n\nAdvertising companies often promote new phone models by highlighting faster processing speeds and higher camera megapixels. Longer battery life is another frequently advertised feature. While new models may have larger batteries or new hardware, these changes are not always necessary.\n\nIn many cases, the actual improvements between old and new models are small, while the price increase is large. It is worth considering whether the improvements in new models truly offer good value for money."
+    },
+    {
+      "source_ref": "rosyth-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "rosyth-2025-q21.png",
+      "context": "Text 2 is an extract from an article about smartphones and advertising.",
+      "prompt": "According to the article in Text 2, what is the main concern about smartphone advertisements?",
+      "options": [
+        "They contribute to unnecessary phone purchases.",
+        "They discourage consumers from trying out new technology.",
+        "They reflect the improvements in new smartphone models only to teenagers.",
+        "They focus too much on technical specifications like camera megapixels and battery life."
+      ],
+      "correct_answer": "They contribute to unnecessary phone purchases.",
+      "marks": 1,
+      "explanation": "Text 2 states advertising can pressure people to upgrade, creating a 'throw-away' habit and unnecessary purchases.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, phone companies release new smartphones with promises of faster speeds and better features. Advertisements often show exciting new models with clearer cameras, faster performance and longer battery life.\n\nHowever, such advertising can cause many problems. In many situations, people may feel pressured to upgrade, even if their current phones still work well. This can create a ‘throw-away’ habit where people change their phones frequently and unnecessarily, thereby contributing to environmental problems.\n\nMoreover, as the advertisements make the latest smartphones seem very attractive, many consumers like teenagers may feel pressured to own one. This increases peer pressure, causing those without such devices to feel left out.\n\nAdvertising companies often promote new phone models by highlighting faster processing speeds and higher camera megapixels. Longer battery life is another frequently advertised feature. While new models may have larger batteries or new hardware, these changes are not always necessary.\n\nIn many cases, the actual improvements between old and new models are small, while the price increase is large. It is worth considering whether the improvements in new models truly offer good value for money."
+    },
+    {
+      "source_ref": "rosyth-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "rosyth-2025-q21.png",
+      "context": "Text 1 advertises the Sunburst X10; Text 2 discusses the problems caused by advertising new smartphone features.",
+      "prompt": "We cannot trust the way Text 1 promotes Nova's new phone because Text 2 says ________.",
+      "options": [
+        "consumers are well-informed and make rational decisions",
+        "phone advertisements are not always truthful about performance",
+        "smartphones with higher processing speed are always worth upgrading to",
+        "promoting new features causes non-essential upgrades and environmental harm"
+      ],
+      "correct_answer": "promoting new features causes non-essential upgrades and environmental harm",
+      "marks": 1,
+      "explanation": "Text 2 warns that advertising new speed and features leads to non-essential upgrades and environmental harm.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, phone companies release new smartphones with promises of faster speeds and better features. Advertisements often show exciting new models with clearer cameras, faster performance and longer battery life.\n\nHowever, such advertising can cause many problems. In many situations, people may feel pressured to upgrade, even if their current phones still work well. This can create a ‘throw-away’ habit where people change their phones frequently and unnecessarily, thereby contributing to environmental problems.\n\nMoreover, as the advertisements make the latest smartphones seem very attractive, many consumers like teenagers may feel pressured to own one. This increases peer pressure, causing those without such devices to feel left out.\n\nAdvertising companies often promote new phone models by highlighting faster processing speeds and higher camera megapixels. Longer battery life is another frequently advertised feature. While new models may have larger batteries or new hardware, these changes are not always necessary.\n\nIn many cases, the actual improvements between old and new models are small, while the price increase is large. It is worth considering whether the improvements in new models truly offer good value for money."
+    },
+    {
+      "source_ref": "rosyth-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A) a (B) against (C) and (D) are (E) at (F) because (G) but (H) for (J) is (K) like (L) that (M) the (N) when (P) which (Q) with\n\nResearch has proven that nature is food for the soul. Spending time outdoors lowers your stress levels and blood pressure. Simply gazing ___(26)___ the greenery outdoors improves your mood. It makes the problems you face feel small ___(27)___ the vast nature.\n\nWhen outdoors, birds and their melodic songs ___(28)___ impossible to drown out too. It has been scientifically proven that birdsong bolsters our mental health. Research has shown ___(29)___ when people listen to birdsong, they have a significantly better sense of mental well-being that lingers ___(30)___ hours. Birdsong refreshes your mind; some studies have indicated that exposure to nature on a whole reduces activity in parts of the brain associated ___(31)___ stress and anxiety. Being out in nature helps us to relax ___(32)___ peaceful surroundings calm our minds.\n\nListening to birdsong is also a form of relaxation as it immerses us in ___(33)___ present moment. Being in nature not only delights your senses ___(34)___ also captures your attention. The sights, smells and sounds of the outdoors are starkly delicate ___(35)___ compared to flashing lights and blaring horns. Watching tree buds unravel, soaking in the smell after rain and hearing the gentle sounds of animals in nature make us feel alive.",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "E",
+      "marks": 1,
+      "explanation": "Gazing at the greenery (E = at)."
+    },
+    {
+      "source_ref": "rosyth-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "B",
+      "marks": 1,
+      "explanation": "Small against the vast nature (B = against)."
+    },
+    {
+      "source_ref": "rosyth-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "D",
+      "marks": 1,
+      "explanation": "The songs are impossible to drown out (D = are)."
+    },
+    {
+      "source_ref": "rosyth-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "L",
+      "marks": 1,
+      "explanation": "Shown that when people listen (L = that)."
+    },
+    {
+      "source_ref": "rosyth-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "H",
+      "marks": 1,
+      "explanation": "Lingers for hours (H = for)."
+    },
+    {
+      "source_ref": "rosyth-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "Q",
+      "marks": 1,
+      "explanation": "Associated with stress and anxiety (Q = with)."
+    },
+    {
+      "source_ref": "rosyth-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "Relax because peaceful surroundings calm our minds (F = because)."
+    },
+    {
+      "source_ref": "rosyth-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "M",
+      "marks": 1,
+      "explanation": "In the present moment (M = the)."
+    },
+    {
+      "source_ref": "rosyth-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "G",
+      "marks": 1,
+      "explanation": "Not only... but also (G = but)."
+    },
+    {
+      "source_ref": "rosyth-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "N",
+      "marks": 1,
+      "explanation": "Delicate when compared to (N = when)."
+    },
+    {
+      "source_ref": "rosyth-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "About two weeks before my birthday, I fell and broke my wrist. I had choose(36) to hold my birthday party at a skating rink but I was dissapointed(37) when I realised that I was unable to skate at my own party. We could not cancel the party at the rink as everything had been planned.\n\nDuring(38) the day of my party, I stood by the front door of the skating rink, greeting my friends. As one of my friends, Sarah, arrived, I immediately noticed that she was limping. Sarah told me that she had hurt her leg accident(39) while going down the stairs.\n\nI assumed that Sarah, just like me, be(40) probably in pain. For the entire time at the party, she akompanied(41) me. Because of Sarah, my party was serprisingly(42) more enjoyable than I had expected.\n\nA few weeks later, I met Sarah's mother at a restrawnt(43). I asked if Sarah's leg was better. Her mother looked astonished and shake(44) her head. She told me that she had never injured her leg. That was when I realised that Sarah had made a sehkrifise(45) and stayed beside me just to make me feel better. My true friend, Sarah, had given me the best present of all.",
+      "prompt": "Write the correct word.",
+      "correct_answer": "chosen",
+      "marks": 1,
+      "explanation": "'Had chosen' (past participle) after the auxiliary 'had'."
+    },
+    {
+      "source_ref": "rosyth-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "disappointed",
+      "marks": 1,
+      "explanation": "Correct spelling is 'disappointed'."
+    },
+    {
+      "source_ref": "rosyth-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "On",
+      "marks": 1,
+      "explanation": "'On the day of my party' is the correct preposition."
+    },
+    {
+      "source_ref": "rosyth-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "accidentally",
+      "marks": 1,
+      "explanation": "An adverb is needed to modify the verb 'hurt': 'hurt her leg accidentally'."
+    },
+    {
+      "source_ref": "rosyth-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "was",
+      "marks": 1,
+      "explanation": "The sentence is in past tense, so 'was' is correct: 'Sarah ... was probably in pain'."
+    },
+    {
+      "source_ref": "rosyth-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "accompanies",
+      "marks": 1,
+      "explanation": "Correct word from the answer key is 'accompanies'."
+    },
+    {
+      "source_ref": "rosyth-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "surprisingly",
+      "marks": 1,
+      "explanation": "Correct spelling is 'surprisingly'."
+    },
+    {
+      "source_ref": "rosyth-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "restaurant",
+      "marks": 1,
+      "explanation": "Correct spelling is 'restaurant'."
+    },
+    {
+      "source_ref": "rosyth-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "shook",
+      "marks": 1,
+      "explanation": "Past tense 'shook' — 'Her mother looked astonished and shook her head'."
+    },
+    {
+      "source_ref": "rosyth-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "sacrifice",
+      "marks": 1,
+      "explanation": "Correct spelling is 'sacrifice'."
+    },
+    {
+      "source_ref": "rosyth-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "What is mindfulness? Mindfulness is the practice of focusing our attention on the present moment. It has been found to ___(46)___ stress, thus enhancing overall happiness. Mindfulness exercises include slowing down ___(47)___ breathing and being calm. ___(48)___ we practise mindfulness, we train our minds to focus and think more clearly. Although it sounds simple in theory, it can be ___(49)___ to switch off our thoughts even for a few seconds without thinking about either work ___(50)___ studies.\n\nMindfulness can ___(51)___ both mental and physical health. Research shows that ___(52)___ mindfulness regularly can bring down our stress level and strengthen immunity. For ___(53)___, a few years ago, twelve boys were stuck in a cave in northern Thailand with their football coach. They were finally rescued ___(54)___ spending more than two weeks in darkness. The coach had taught the boys ___(55)___ to breathe, redirect their thoughts and keep calm. This helped the boys stay mentally and physically strong ___(56)___ their ordeal.\n\nIn ___(57)___, mindfulness can boost our memory and concentration. As such, some schools have started teaching students to do a five-minute mindful breathing exercise during recess every day. At first, the students were not used ___(58)___ the exercise. However, constant encouragement by the teachers helped the students to stay with the routine, and amazingly, they began to enjoy it.\n\nTo cultivate mindfulness, we need to set aside both time and space. Rushing through it would defeat the purpose. ___(59)___, we need to anchor ourselves to the present moment. Next, we must ___(60)___ attention to our breathing and avoid being distracted by our surroundings. It is important to keep practising it until it becomes comfortable. Gradually, we will discover the numerous benefits of mindfulness.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "release",
+      "marks": 1,
+      "explanation": "\"It has been found to release stress\" — release is the word that fits."
+    },
+    {
+      "source_ref": "rosyth-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "our",
+      "marks": 1,
+      "explanation": "\"slowing down our breathing\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "when",
+      "marks": 1,
+      "explanation": "\"When we practise mindfulness\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "hard",
+      "marks": 1,
+      "explanation": "\"it can be hard to switch off our thoughts\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "or",
+      "marks": 1,
+      "explanation": "\"either work or studies\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "enhance",
+      "marks": 1,
+      "explanation": "\"Mindfulness can enhance both mental and physical health\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "practicing",
+      "marks": 1,
+      "explanation": "\"practising (practicing) mindfulness regularly\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "example",
+      "marks": 1,
+      "explanation": "\"For example\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "after",
+      "marks": 1,
+      "explanation": "\"rescued after spending more than two weeks in darkness\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "how",
+      "marks": 1,
+      "explanation": "\"taught the boys how to breathe\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "during",
+      "marks": 1,
+      "explanation": "\"strong during their ordeal\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "fact",
+      "marks": 1,
+      "explanation": "\"In fact\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "to",
+      "marks": 1,
+      "explanation": "\"not used to the exercise\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "Hence",
+      "marks": 1,
+      "explanation": "\"Hence\" (therefore) introduces the conclusion."
+    },
+    {
+      "source_ref": "rosyth-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "give",
+      "marks": 1,
+      "explanation": "\"must give attention to our breathing\"."
+    },
+    {
+      "source_ref": "rosyth-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "John drew a picture of his dog. Then he framed it up. Having ________.",
+      "correct_answer": "Having drawn a picture of his dog, John framed it up.",
+      "marks": 2,
+      "explanation": "Perfect participle 'having drawn' joins the two actions."
+    },
+    {
+      "source_ref": "rosyth-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Aziz told his teacher, \"I wrote the composition yesterday.\" Aziz told his teacher ________.",
+      "correct_answer": "that he had written the composition the previous day.",
+      "marks": 2,
+      "explanation": "Reported speech: tense and time reference shift back."
+    },
+    {
+      "source_ref": "rosyth-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "My brother does not like to play computer games. He likes to go outdoors. ________ would rather ________.",
+      "correct_answer": "My brother would rather go outdoors than play computer games.",
+      "marks": 2,
+      "explanation": "'Would rather ... than' expresses preference."
+    },
+    {
+      "source_ref": "rosyth-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Many people like speaking with him because he is sincere. Due to his ________.",
+      "correct_answer": "Due to his sincerity, many people like speaking with him.",
+      "marks": 2,
+      "explanation": "Nominalisation: 'sincere' -> 'sincerity'."
+    },
+    {
+      "source_ref": "rosyth-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Joyce can go cycling if her mother approves. ________ only with the ________.",
+      "correct_answer": "Joyce can go cycling only with the approval of her mother.",
+      "marks": 2,
+      "explanation": "Nominalisation: 'approves' -> 'the approval of her mother'."
+    },
+    {
+      "source_ref": "rosyth-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious.",
+      "prompt": "a) Which two-word phrase in paragraph 1 shows the impression Sam's classmates had of him? [1m] b) Explain clearly why Sam did not feel that he was special when he compared himself to his friends? [2m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "cheerful personality",
+          "keywords": [
+            [
+              "cheerful",
+              "personality"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "Sam felt that the friends surrounding him excelled at everything, from academics to sports",
+          "keywords": [
+            [
+              "friends",
+              "excelled",
+              "academics",
+              "sports"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "Sam was envious of his peers who received awards for their achievements",
+          "keywords": [
+            [
+              "envious",
+              "peers",
+              "awards",
+              "achievements"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "One day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. ... One afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. ... \"All those little things you do. You have changed people's lives, even if you don't see it,\" Jen continued.",
+      "prompt": "Look at the table below. What do the words in the left column refer to in the passage? Write your answers in the column on the right. a) that (line 11) b) it (line 21) c) little things (line 30) [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "a) Sam giving Dan an inviting look / the inviting smile Sam gave Dan",
+          "keywords": [
+            [
+              "Sam",
+              "Dan",
+              "inviting",
+              "smile"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "b) The new balloon Sam bought for the little girl",
+          "keywords": [
+            [
+              "new balloon",
+              "bought"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "c) The things Sam did to help others",
+          "keywords": [
+            [
+              "things",
+              "help",
+              "others"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Each day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.",
+      "prompt": "What did Sam do that made Mrs Raju pat his back 'approvingly' (lines 16-17)? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Sam volunteered to help Mrs Raju lift the heavy boxes of groceries into the shop",
+          "keywords": [
+            [
+              "help",
+              "lift",
+              "heavy boxes",
+              "groceries"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "he did so whether it was rain or shine, and he sorted the items out, knowing her knees were weak",
+          "keywords": [
+            [
+              "rain",
+              "shine",
+              "sort",
+              "items",
+              "weak knees"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Intuitively, Sam sat next to Dan and then asked him to join his group of friends. ... He recalled Dan texting him a funny joke because he had a friend to talk to.",
+      "prompt": "Write 1, 2 and 3 in the blanks below to indicate the order in which the events occurred in the story. ___ Sam sat next to Dan. ___ Dan texted Sam to share a funny joke. ___ Sam asking Dan to join him for recess. [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "Sam sat next to Dan = 1; Dan texted Sam to share a funny joke = 3; Sam asked Dan to join his group / recess = 2. Order: 1, 3, 2.",
+          "keywords": [
+            [
+              "1",
+              "3",
+              "2"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "One afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon.",
+      "prompt": "From lines 19-21, how can you tell that Sam was a selfless person? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Sam knew he could be late for class / he was rushing to his enrichment class, but he still stopped to help the little girl",
+          "keywords": [
+            [
+              "late for class",
+              "enrichment",
+              "rushing"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "he spent the last of his allowance to buy a new balloon for the little girl",
+          "keywords": [
+            [
+              "last",
+              "allowance",
+              "buy",
+              "new balloon",
+              "little girl"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Sam sighed, \"I am clueless. It's just that nothing special ever happens to me.\" Jen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\"",
+      "prompt": "Based on line 28, why did Jen shake her head? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Jen disagreed with Sam's claim that nothing special had happened to him, because she knew he had used his allowance to buy a new balloon for the little girl whose balloon had floated away",
+          "keywords": [
+            [
+              "disagreed"
+            ],
+            [
+              "allowance",
+              "bought",
+              "balloon",
+              "little girl"
+            ],
+            [
+              "floated away"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "For the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative. Sam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.",
+      "prompt": "Based on lines 33-41, state whether each statement in the table below is true or false, then give one reason why you think so. a) Mrs Raju's knees were in severe pain despite Sam's help. b) Dan's family liked Sam tremendously. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "a) False — Mrs Raju's knees were now aching less because of Sam's help.",
+          "keywords": [
+            [
+              "false"
+            ],
+            [
+              "aching less"
+            ],
+            [
+              "Sam's help"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "keyword",
+          "description": "b) True — Dan's family invited Sam to their family events.",
+          "keywords": [
+            [
+              "true"
+            ],
+            [
+              "family events"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Sam sighed, \"I am clueless. It's just that nothing special ever happens to me.\" ... For the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. ... It dawned on him that Jen was right and he was appreciative.",
+      "prompt": "Pick out two words from lines 27-37 which show how Sam felt during his reflection. Each word is found in a different sentence. Before Jen spoke to Sam: ________. After Jen spoke to Sam: ________. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "clueless",
+          "keywords": [
+            [
+              "clueless"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "keyword",
+          "description": "appreciative",
+          "keywords": [
+            [
+              "appreciative"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground.",
+      "prompt": "From lines 38-41, how did Mrs Raju and the little girl show Sam their gratitude? a) Mrs Raju: b) The little girl: [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Mrs Raju gave Sam some snacks after he had helped her",
+          "keywords": [
+            [
+              "Mrs Raju",
+              "snacks",
+              "helped"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "The little girl would run to greet him joyfully each time they met at the playground",
+          "keywords": [
+            [
+              "little girl",
+              "run",
+              "greet",
+              "joyfully",
+              "playground"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    },
+    {
+      "source_ref": "rosyth-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "He thought that recognition had to be loud or obvious. ... \"All those little things you do. You have changed people's lives, even if you don't see it. ... It means so much more when they show you gratitude,\" Jen continued. ... It dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "prompt": "Explain the change in how Sam felt about what recognition meant to him. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "At first, Sam thought that recognition had to be loud and obvious",
+          "keywords": [
+            [
+              "first",
+              "loud",
+              "obvious"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "After speaking with Jen, he realised that recognition could come in small things",
+          "keywords": [
+            [
+              "realised",
+              "small things"
+            ]
+          ]
+        }
+      ],
+      "passage": "Sam had a smile that lit up the gloomiest of days. Even though his classmates told him that he had a cheerful personality, he sometimes felt like he blended into the busy school crowd. He was surrounded by friends who excelled at everything from academics to sports. Sam was envious of his peers who received awards for their achievements. He thought that recognition had to be loud or obvious. \"Remember, Sam, you're special in your own way,\" his parents would remind him when he expressed his frustration. However, his classmates' compliments often drowned out those words.\n\nOne day, at recess, he noticed his classmate, Dan, sitting alone. Sam recognised that look – shoulders hunched, gaze fixed on untouched food, as if eating alone made the meal taste worse. Intuitively, Sam sat next to Dan and then asked him to join his group of friends. Dan hesitated but Sam gave him an inviting smile. That was all it took. Dan's shoulders slowly relaxed as the conversation among the boys flowed.\n\nEach day, Sam passed by a neighbourhood shop on his way to school. Mrs Raju, the owner, often struggled to carry the heavy boxes of groceries inside because of her weak knees. Rain or shine, Sam never hesitated to help lift them into the shop and sort the items out. \"Such a kind boy,\" Mrs Raju would say, her eyes crinkling as she patted his back approvingly.\n\nOne afternoon, while Sam was rushing to his enrichment class, he noticed a little girl crying inconsolably at the playground. Her balloon had floated away. Despite knowing that he could be late for class, Sam walked quickly to a nearby shop. He used the last of his allowance to buy a new balloon. As Sam handed it to the little girl, she squealed in delight and ran back to her mother. Sam simply grinned. He thought such actions were what anyone would do.\n\nOn the last day of school, Sam's form teacher asked the class to reflect on the most significant thing that had happened to them that year. He sat in deep thoughts when his friend, Jen, nudged him with a quizzed look. \"You look stumped,\" she commented.\n\nSam sighed, \"I am clueless. It's just that nothing special ever happens to me.\"\n\nJen shook her head. In all seriousness, Jen said softly but firmly, \"I don't think so. You are the good that happens to others.\" Sam stared blankly at her.\n\n\"All those little things you do. You have changed people's lives, even if you don't see it. You make people's day better. Maybe that's better than random good things happening to you. It means so much more when they show you gratitude,\" Jen continued.\n\nFor the first time, Sam looked back – not through his own eyes, but through the eyes of those he had helped. He remembered Mrs Raju smiling as she greeted her customers, her knees now aching less because of his help. He recalled Dan texting him a funny joke because he had a friend to talk to. It dawned on him that Jen was right and he was appreciative.\n\nSam finally realised that good things were indeed happening to him, just not in the way he had expected. Mrs Raju had once made his day by giving him some snacks after he helped her. The little girl would run to greet him joyfully each time they met at the playground. Dan's family also invited him to their family events.\n\nIt dawned on Sam that the acts of recognition could come in small ways. They were quiet in the warmth of a \"Thank you\", a grateful smile, or the unnoticed but undeniable impact on someone.",
+      "image": "rosyth-2025-passage.png"
+    }
+  ]
+}

@@ -1,0 +1,1188 @@
+{
+  "_source": "Nanyang Primary School P6 English Paper 2 2025 Prelim (Booklet A 25 marks + Booklet B 65 marks, total 90). Downloaded from https://www.etestpaper.com.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image is authoritative for the Visual Text Comprehension (Q21-25). Answers are from the paper's own compiled answer key. The paper is the combined Paper 1 (composition) + Paper 2 (Booklet A + Booklet B) booklet; only Paper 2 (Q1-75) is captured here.",
+  "questions": [
+    {
+      "source_ref": "nanyang-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "By the time we arrived at the party, most of the guests ________ and the venue was rather empty.",
+      "options": [
+        "had left",
+        "have left",
+        "are leaving",
+        "were leaving"
+      ],
+      "correct_answer": "had left",
+      "marks": 1,
+      "explanation": "Past perfect 'had left' for an action completed before another past action (arrived)."
+    },
+    {
+      "source_ref": "nanyang-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Neither of the twins ________ willing to share their toys.",
+      "options": [
+        "is",
+        "are",
+        "were",
+        "have been"
+      ],
+      "correct_answer": "is",
+      "marks": 1,
+      "explanation": "'Neither of' takes a singular verb 'is'."
+    },
+    {
+      "source_ref": "nanyang-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "You ________ have completed the assignment when you were free last Friday, but you chose to put it off and have to rush through the work now.",
+      "options": [
+        "must",
+        "might",
+        "would",
+        "should"
+      ],
+      "correct_answer": "should",
+      "marks": 1,
+      "explanation": "'should have' expresses that the action was expected/obligatory but not done."
+    },
+    {
+      "source_ref": "nanyang-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Our neighbours were kind enough to lend us ________ car for the trip.",
+      "options": [
+        "his",
+        "they",
+        "their",
+        "theirs"
+      ],
+      "correct_answer": "their",
+      "marks": 1,
+      "explanation": "Possessive determiner 'their' before the noun 'car'."
+    },
+    {
+      "source_ref": "nanyang-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "There wasn't ________ bread left, so I had to eat cereal instead.",
+      "options": [
+        "few",
+        "many",
+        "much",
+        "several"
+      ],
+      "correct_answer": "much",
+      "marks": 1,
+      "explanation": "'bread' is uncountable, so 'much' is used."
+    },
+    {
+      "source_ref": "nanyang-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"I stayed up all night revising, ________ I still forgot the formula during the exam,\" said Bryan.",
+      "options": [
+        "as",
+        "so",
+        "but",
+        "and"
+      ],
+      "correct_answer": "but",
+      "marks": 1,
+      "explanation": "'but' shows the contrast between revising hard and still forgetting."
+    },
+    {
+      "source_ref": "nanyang-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "He's been working late every night this week, ________?",
+      "options": [
+        "is he",
+        "didn't he",
+        "hasn't he",
+        "doesn't he"
+      ],
+      "correct_answer": "hasn't he",
+      "marks": 1,
+      "explanation": "Tag question for the positive present perfect 'has been' is 'hasn't he'."
+    },
+    {
+      "source_ref": "nanyang-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "He was ________ the impression that the meeting had been cancelled upon seeing the empty meeting room.",
+      "options": [
+        "by",
+        "on",
+        "with",
+        "under"
+      ],
+      "correct_answer": "under",
+      "marks": 1,
+      "explanation": "'under the impression' is the fixed expression."
+    },
+    {
+      "source_ref": "nanyang-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The teacher praised the student ________ composition was the most creative.",
+      "options": [
+        "who",
+        "which",
+        "whom",
+        "whose"
+      ],
+      "correct_answer": "whose",
+      "marks": 1,
+      "explanation": "Possessive relative pronoun 'whose' showing ownership of the composition."
+    },
+    {
+      "source_ref": "nanyang-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Sandra noticed her teacher ________ at her in disapproval throughout the entire presentation.",
+      "options": [
+        "looks",
+        "looked",
+        "to look",
+        "looking"
+      ],
+      "correct_answer": "looking",
+      "marks": 1,
+      "explanation": "Present participle 'looking' after a perception verb 'noticed'."
+    },
+    {
+      "source_ref": "nanyang-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The audience watched in awe as the archer hit the target with remarkable ________.",
+      "options": [
+        "detail",
+        "agility",
+        "clarity",
+        "precision"
+      ],
+      "correct_answer": "precision",
+      "marks": 1,
+      "explanation": "'precision' = accuracy/exactness in hitting the target."
+    },
+    {
+      "source_ref": "nanyang-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The villagers struggled to ________ themselves during the harsh winter with the limited food supplies they had.",
+      "options": [
+        "control",
+        "endure",
+        "sustain",
+        "preserve"
+      ],
+      "correct_answer": "sustain",
+      "marks": 1,
+      "explanation": "'sustain themselves' = keep themselves going/alive."
+    },
+    {
+      "source_ref": "nanyang-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The students completed the experiment ________, following every step closely.",
+      "options": [
+        "wilfully",
+        "intuitively",
+        "haphazardly",
+        "meticulously"
+      ],
+      "correct_answer": "meticulously",
+      "marks": 1,
+      "explanation": "'meticulously' = with great care and attention to detail."
+    },
+    {
+      "source_ref": "nanyang-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Engrossed in her book, Sarah was completely ________ to the noise around her.",
+      "options": [
+        "attuned",
+        "oblivious",
+        "receptive",
+        "sensitive"
+      ],
+      "correct_answer": "oblivious",
+      "marks": 1,
+      "explanation": "'oblivious to' = unaware of."
+    },
+    {
+      "source_ref": "nanyang-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Even though he was feeling unwell, Jayden decided to ________ with his promise to volunteer at the old folks' home.",
+      "options": [
+        "put up",
+        "do away",
+        "catch on",
+        "follow through"
+      ],
+      "correct_answer": "follow through",
+      "marks": 1,
+      "explanation": "'follow through with' = complete/carry out a promise."
+    },
+    {
+      "source_ref": "nanyang-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "Gaming addiction has become a growing concern, especially among children. While video games can be engaging as a pastime, excessive gaming (16) can lead to serious consequences. Some children become so caught up in (17) their games that they neglect their studies and even lose sleep. Parents who try to limit their child's gaming often face resistance, with some children (18) becoming agitated or even defiant when asked to stop. One reason gaming is so compelling is the sense of achievement it provides. Many online games (19) reward players for completing tasks, encouraging them to keep playing to unlock new skills and abilities. This constant reinforcement fosters an addictive (20) cycle, making it difficult for some children to stop. If left unchecked, this cycle may impair a child's development, affecting attention span, emotional control, and real-life social skills.",
+      "prompt": "The word \"engaging\" is closest in meaning to:",
+      "options": [
+        "amusing",
+        "tempting",
+        "satisfying",
+        "captivating"
+      ],
+      "correct_answer": "captivating",
+      "marks": 1,
+      "explanation": "\"engaging\" = captivating/absorbing."
+    },
+    {
+      "source_ref": "nanyang-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The phrase \"caught up in\" is closest in meaning to:",
+      "options": [
+        "absorbed",
+        "distracted",
+        "indifferent",
+        "overwhelmed"
+      ],
+      "correct_answer": "absorbed",
+      "marks": 1,
+      "explanation": "\"caught up in\" = completely absorbed by."
+    },
+    {
+      "source_ref": "nanyang-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"resistance\" is closest in meaning to:",
+      "options": [
+        "hesitation",
+        "opposition",
+        "discomfort",
+        "stubbornness"
+      ],
+      "correct_answer": "opposition",
+      "marks": 1,
+      "explanation": "\"resistance\" = opposition/pushback."
+    },
+    {
+      "source_ref": "nanyang-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"compelling\" is closest in meaning to:",
+      "options": [
+        "necessary",
+        "irresistible",
+        "persuasive",
+        "compulsory"
+      ],
+      "correct_answer": "irresistible",
+      "marks": 1,
+      "explanation": "\"compelling\" = irresistibly absorbing."
+    },
+    {
+      "source_ref": "nanyang-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"fosters\" is closest in meaning to:",
+      "options": [
+        "limits",
+        "creates",
+        "controls",
+        "develops"
+      ],
+      "correct_answer": "develops",
+      "marks": 1,
+      "explanation": "\"fosters\" = develops/encourages."
+    },
+    {
+      "source_ref": "nanyang-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "nanyang-2025-q21.png",
+      "context": "Text 1 is a poster for the Nova Sunburst X10 smartphone, advertised as 'The Future in Your Hands' with key features of enhanced camera clarity, unmatched speed, and smarter battery management, and a promotion to win a pair of air tickets for purchases before 1 December 2025.",
+      "prompt": "The writer made the statement, \"The Future in Your Hands\", in Text 1 to emphasise that the Sunburst X10 is ________.",
+      "options": [
+        "better than current phone models",
+        "guaranteed to improve in the future",
+        "small enough to fit into anyone's hands",
+        "suitable for future generations of people"
+      ],
+      "correct_answer": "better than current phone models",
+      "marks": 1,
+      "explanation": "The tagline conveys that the phone is the most advanced, i.e. better than current models.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements claim that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nAdvertisements intentionally focus on features such as faster processing speed or higher camera quality to create the impression that the new model is a major improvement. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery life gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "nanyang-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "nanyang-2025-q21.png",
+      "context": "\"Take shots like a professional!\" — the picture in the middle of the poster shows hands holding the phone capturing a landscape photo.",
+      "prompt": "\"Take shots like a professional!\" The picture supports this statement by giving the impression that the camera ________.",
+      "options": [
+        "takes high quality photographs",
+        "takes clear pictures even in the dark",
+        "zooms in on distant places automatically",
+        "is suitable for professional photographers"
+      ],
+      "correct_answer": "takes high quality photographs",
+      "marks": 1,
+      "explanation": "The sharp, detailed landscape shot taken on the phone shows high photo quality.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements claim that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nAdvertisements intentionally focus on features such as faster processing speed or higher camera quality to create the impression that the new model is a major improvement. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery life gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "nanyang-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "nanyang-2025-q21.png",
+      "context": "Text 2 is a news article about smartphones, noting that the actual difference between old and new models is often minor while the price increase is substantial.",
+      "prompt": "Based on Text 2, what does the writer suggest about the real improvements in new phone models?",
+      "options": [
+        "They make old phone models stop working properly.",
+        "They are only noticeable in certain expensive models.",
+        "They are necessary to keep up with the latest technology.",
+        "They may not be significant enough to justify the price increase."
+      ],
+      "correct_answer": "They may not be significant enough to justify the price increase.",
+      "marks": 1,
+      "explanation": "Text 2 says the improvements may be minor while the price increase is substantial.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements claim that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nAdvertisements intentionally focus on features such as faster processing speed or higher camera quality to create the impression that the new model is a major improvement. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery life gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "nanyang-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "nanyang-2025-q21.png",
+      "context": "Text 2 states that as battery life decreases over time, a simple battery change may be considerably cheaper than buying an expensive new model.",
+      "prompt": "What advice does the article in Text 2 give to consumers who are thinking about buying a new phone?",
+      "options": [
+        "Compare different brands carefully before buying.",
+        "Wait for prices of new models to drop before buying.",
+        "Replace parts of the old phone instead of buying a new one.",
+        "Only buy phones with much larger batteries or better hardware."
+      ],
+      "correct_answer": "Replace parts of the old phone instead of buying a new one.",
+      "marks": 1,
+      "explanation": "Text 2 suggests a simple battery change may be cheaper than a new model.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements claim that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nAdvertisements intentionally focus on features such as faster processing speed or higher camera quality to create the impression that the new model is a major improvement. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery life gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "nanyang-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "nanyang-2025-q21.png",
+      "context": "Both Text 1 (poster) and Text 2 (article) discuss upgrades in smartphone performance, camera quality, and battery life.",
+      "prompt": "Which of the following statements based on Text 2 most clearly challenges the way Nova's new model is promoted in Text 1?",
+      "options": [
+        "The actual difference between old and new models is often minor.",
+        "A common advertising strategy is to highlight better performance features.",
+        "New models may seem exciting, but their higher prices are not always justified.",
+        "Improvements like longer battery life may not be good enough a reason to buy a whole new phone."
+      ],
+      "correct_answer": "Improvements like longer battery life may not be good enough a reason to buy a whole new phone.",
+      "marks": 1,
+      "explanation": "This directly undercuts the poster's 'smarter battery management' selling point.",
+      "passage": "The extract below is taken from an article about smartphones.\n\nEvery year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements claim that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nAdvertisements intentionally focus on features such as faster processing speed or higher camera quality to create the impression that the new model is a major improvement. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery life gradually decreases over time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "nanyang-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A)against (B)even (C)had (D)however (E)like (F)many (G)over (H)therefore (J)these (K)this (L)unlike (M)were (N)when (P)who (Q)whom [Note: letters (I) and (O) are omitted from the word bank to avoid confusion during marking.]\n\nMaria Hertogh's court case in Singapore received a lot of attention. ___(26)___ over in the Netherlands, film crews covered the development of the case. Her sad story was ___(27)___ known by many.\n\nMaria was separated from her birth parents, the Hertoghs, ___(28)___ she was five years old due to circumstances of war. For the next seven years, she was cared for by Aminah Mohamed and grew to love her like family. After the war, ___(29)___ her wishes, she was taken from Aminah Mohamed and sent to live with the Hertoghs in the Netherlands. This ruling by the court triggered tensions which erupted into riots. At the same time in other parts of the world, other children ___(30)___ also taken away from families they loved. ___(31)___ Maria's case, there were no protests, riots, or news reports about ___(32)___ children. People only got to hear about their tragic stories years later, ___(33)___ of which reminded us of the impact of separating children from their loved ones.\n\nToday, we know that when there are conflicts — whether ___(34)___ issues like race, religion, or other differences — it is often the children ___(35)___ suffer the most. We must remember these stories and prevent children from experiencing such suffering again.",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "B",
+      "marks": 1,
+      "explanation": "'Even' — Even over in the Netherlands, film crews covered the case."
+    },
+    {
+      "source_ref": "nanyang-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "H",
+      "marks": 1,
+      "explanation": "'Therefore' — Her sad story was therefore known by many."
+    },
+    {
+      "source_ref": "nanyang-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "N",
+      "marks": 1,
+      "explanation": "'When' — separated ... when she was five years old."
+    },
+    {
+      "source_ref": "nanyang-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "A",
+      "marks": 1,
+      "explanation": "'Against' — against her wishes."
+    },
+    {
+      "source_ref": "nanyang-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "M",
+      "marks": 1,
+      "explanation": "'Were' — other children were also taken away."
+    },
+    {
+      "source_ref": "nanyang-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "L",
+      "marks": 1,
+      "explanation": "'Unlike' — Unlike Maria's case, there were no protests."
+    },
+    {
+      "source_ref": "nanyang-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "J",
+      "marks": 1,
+      "explanation": "'These' — news reports about these children."
+    },
+    {
+      "source_ref": "nanyang-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "'Many' — many of which reminded us of the impact."
+    },
+    {
+      "source_ref": "nanyang-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "G",
+      "marks": 1,
+      "explanation": "'Over' — whether over issues like race, religion..."
+    },
+    {
+      "source_ref": "nanyang-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "P",
+      "marks": 1,
+      "explanation": "'Who' — the children who suffer the most."
+    },
+    {
+      "source_ref": "nanyang-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "It was the first day of Sarah's vacation. With enthooziasm(36) bubbling inside her, she planned her day — a visit to the art museum and a local café.\n\nBy midday, Sarah wandered around the museum, amazed by its intrakate(37) exhibits with detailed carvings and tiny moving parts. Noticing her interest, a guide offered her a compliment(38) tour. He explained, \"This guided tour is free and no rehzevations(39) are needed.\" They then began uncovering the museum's hidden treshures(40).\n\nThe guide started telling Sarah stories behind the exhibits which made each piece of artwork came(41) alive. Sarah felt a fervent fondness for the beautiful artworks as she listened close(42) to the guide, amazed by the passion and effort the artists had put into each piece. The guide shared how many of the artworks were created on(43) scratch, often involving weeks or months of work. It took a lot of patience and persistence to strength(44) their skills and complete each masterpiece.\n\nThat evening, she relaxed in a cozy café, holding her warm coffee and watching the glowing sunset. A sense of acompleashment(45) filled her. Smiling gently, she knew this vacation was more than just a break.",
+      "prompt": "Write the correct word.",
+      "correct_answer": "enthusiasm",
+      "marks": 1,
+      "explanation": "Correct spelling 'enthusiasm'."
+    },
+    {
+      "source_ref": "nanyang-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "intricate",
+      "marks": 1,
+      "explanation": "Correct spelling 'intricate' (detailed/complex)."
+    },
+    {
+      "source_ref": "nanyang-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "complimentary",
+      "marks": 1,
+      "explanation": "Adjective form 'complimentary' (given free)."
+    },
+    {
+      "source_ref": "nanyang-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "reservations",
+      "marks": 1,
+      "explanation": "Correct spelling 'reservations'."
+    },
+    {
+      "source_ref": "nanyang-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "treasures",
+      "marks": 1,
+      "explanation": "Correct spelling 'treasures'."
+    },
+    {
+      "source_ref": "nanyang-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "come",
+      "marks": 1,
+      "explanation": "Bare infinitive 'come' after 'made' (make + object + base verb)."
+    },
+    {
+      "source_ref": "nanyang-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "closely",
+      "marks": 1,
+      "explanation": "Adverb 'closely' modifies 'listened'."
+    },
+    {
+      "source_ref": "nanyang-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "from",
+      "marks": 1,
+      "explanation": "'created from scratch' is the correct phrase."
+    },
+    {
+      "source_ref": "nanyang-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "strengthen",
+      "marks": 1,
+      "explanation": "Correct spelling 'strengthen'."
+    },
+    {
+      "source_ref": "nanyang-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "accomplishment",
+      "marks": 1,
+      "explanation": "Correct spelling 'accomplishment'."
+    },
+    {
+      "source_ref": "nanyang-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "Most people can only share stories about trekking based on what they have seen in books or movies. However, only a few people have actually experienced ___(46)___ it is really like to hike through tall, snowy mountains and see the amazing views for ___(47)___.\n\nTrekking in the mountains is certainly a task that is not for everyone ___(48)___ it can be dangerous and difficult. To the faint-hearted, having to trek mountainous terrains and staying overnight in tents where one is ___(49)___ to sudden changes in weather is considered an ___(50)___. For those who appreciate it, it is a test of strength and being able to enjoy the beauty of nature along the way makes facing all the challenges ___(51)___.\n\nOne of the greatest trekking expeditions of all was that of Tenzing Norgay's, a legendary mountaineering guide who made history ___(52)___ bravely reaching the summit of Mount Everest with Sir Edmund Hillary. This groundbreaking achievement made him famous all ___(53)___ the world. On one expedition, Tenzing and his team had to change their plans because the weather got worse, forcing them to find a new route. Tenzing kept going ___(54)___ the conditions getting harsher. Along the way, he chanced ___(55)___ a hidden part of the mountains with colourful wildflowers. ___(56)___ discovery revealed a part of the Himalayas so untouched that it had never been documented ___(57)___.\n\nTrekking helps one become more adaptable and allows one to ___(58)___ resilient during challenging times. When hikers are prepared for the challenges that lie ___(59)___, the mountains actually offer a journey that is ___(60)___ deeply rewarding and unforgettable. Overcoming these challenges with determination can help one learn, grow and create lasting memories.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "what",
+      "marks": 1,
+      "explanation": "\"what it is really like\" — the thing it is like. (Accept: how)"
+    },
+    {
+      "source_ref": "nanyang-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "themselves",
+      "marks": 1,
+      "explanation": "\"see the views for themselves\". (Accept: real)"
+    },
+    {
+      "source_ref": "nanyang-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "because",
+      "marks": 1,
+      "explanation": "\"not for everyone because it can be dangerous\". (Accept: as / since / for)"
+    },
+    {
+      "source_ref": "nanyang-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "vulnerable",
+      "marks": 1,
+      "explanation": "\"vulnerable to sudden changes in weather\". (Accept: subjected / exposed / susceptible)"
+    },
+    {
+      "source_ref": "nanyang-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "ordeal",
+      "marks": 1,
+      "explanation": "\"considered an ordeal\". (Accept: adversity)"
+    },
+    {
+      "source_ref": "nanyang-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "worthwhile",
+      "marks": 1,
+      "explanation": "\"makes facing the challenges worthwhile\". (Accept: easier)"
+    },
+    {
+      "source_ref": "nanyang-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "by",
+      "marks": 1,
+      "explanation": "\"made history by bravely reaching the summit\". (Accept: after / upon / for)"
+    },
+    {
+      "source_ref": "nanyang-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "over",
+      "marks": 1,
+      "explanation": "\"famous all over the world\". (Accept: around / across)"
+    },
+    {
+      "source_ref": "nanyang-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "despite",
+      "marks": 1,
+      "explanation": "\"kept going despite the conditions\"."
+    },
+    {
+      "source_ref": "nanyang-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "upon",
+      "marks": 1,
+      "explanation": "\"chanced upon\" = discovered by chance. (Accept: on)"
+    },
+    {
+      "source_ref": "nanyang-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "his",
+      "marks": 1,
+      "explanation": "\"His discovery\" (Tenzing's). (Accept: this / the / their / that)"
+    },
+    {
+      "source_ref": "nanyang-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "before",
+      "marks": 1,
+      "explanation": "\"never been documented before\". (Accept: yet / anywhere)"
+    },
+    {
+      "source_ref": "nanyang-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "remain",
+      "marks": 1,
+      "explanation": "\"remain resilient\". (Accept: stay / be)"
+    },
+    {
+      "source_ref": "nanyang-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "ahead",
+      "marks": 1,
+      "explanation": "\"the challenges that lie ahead\"."
+    },
+    {
+      "source_ref": "nanyang-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "both",
+      "marks": 1,
+      "explanation": "\"both deeply rewarding and unforgettable\". (Accept: so / very / especially / really / truly / most / surprisingly)"
+    },
+    {
+      "source_ref": "nanyang-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "\"I was reading a thrilling novel last night,\" Lily told her cousin.\nLily told her cousin ________.",
+      "correct_answer": "that she had been reading a thrilling novel the previous night",
+      "marks": 2,
+      "explanation": "Reported speech: tense shifts back and 'last night' becomes 'the previous night'."
+    },
+    {
+      "source_ref": "nanyang-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "If the coach had not encouraged us, we would have given up halfway.\nWithout the coach's ________.",
+      "correct_answer": "encouragement, we would have given up halfway",
+      "marks": 2,
+      "explanation": "Rewrite using the noun 'encouragement'."
+    },
+    {
+      "source_ref": "nanyang-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The chef prepares delicious meals every evening.\n________ by the chef.",
+      "correct_answer": "Delicious meals are prepared every evening",
+      "marks": 2,
+      "explanation": "Passive voice: object becomes subject."
+    },
+    {
+      "source_ref": "nanyang-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "They did not spread the rumour that Hugo was expelled.\nNone of ________.",
+      "correct_answer": "them spread the rumour that Hugo was expelled",
+      "marks": 2,
+      "explanation": "Rewrite with 'None of them' + the past-tense verb."
+    },
+    {
+      "source_ref": "nanyang-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The florist described in detail the floral arrangement at the banquet hall.\nThe florist gave a ________.",
+      "correct_answer": "detailed description of the floral arrangement at the banquet hall",
+      "marks": 2,
+      "explanation": "Nominalisation: 'described ... in detail' -> 'gave a detailed description of ...'."
+    },
+    {
+      "source_ref": "nanyang-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents.",
+      "prompt": "Pick out a word from the first paragraph that describes Eva's natural curiosity of places and people. [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "inquisitive",
+          "keywords": [
+            [
+              "inquisitive"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. ... After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary.",
+      "prompt": "What were the two things that Gary was likely to do when Eva was at his porch? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) replenish Eva's food and water",
+          "keywords": [
+            [
+              "replenish"
+            ],
+            [
+              "food and water"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) play with Eva",
+          "keywords": [
+            [
+              "play with Eva"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. 'Oh no! What should I do? Would I worsen her injury if I move her?' He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass.",
+      "prompt": "Explain clearly why Gary hesitated before picking up Eva in paragraph two. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "Gary was not sure what to do",
+          "keywords": [
+            [
+              "not sure what to do"
+            ],
+            [
+              "unsure"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "he was afraid to worsen Eva's injury",
+          "keywords": [
+            [
+              "afraid",
+              "worsen"
+            ],
+            [
+              "worsen",
+              "injury"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Under the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless ... His mother rushed to his side. 'We'll take her to the vet now,' she said firmly ... Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition — a fractured paw, bruised body but no other broken bones. (lines 11-24)",
+      "prompt": "Based on lines 11 to 24, state whether each statement in the table below is true or false, then give one reason why you think so.\n(a) Eva was likely to have been hit by a motorcycle.\n(b) Gary's mother was indifferent to Eva's injury.\n(c) The vet was careful in handling Eva's condition. [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) True — Gary saw the tail lights of a motorcycle that was speeding down the deserted road, where Eva lay motionless.",
+          "keywords": [
+            [
+              "true"
+            ],
+            [
+              "tail lights",
+              "motorcycle"
+            ],
+            [
+              "speeding",
+              "deserted road"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) False — Gary's mother immediately helped Gary take Eva to the vet.",
+          "keywords": [
+            [
+              "false"
+            ],
+            [
+              "immediately",
+              "helped",
+              "take Eva to the vet"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) False — The vet spent an hour examining Eva thoroughly and administering the treatment.",
+          "keywords": [
+            [
+              "false"
+            ],
+            [
+              "hour",
+              "examining"
+            ],
+            [
+              "administering",
+              "treatment"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "...after an hour, the vet told them Eva's condition — a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. ... Gary dedicated himself to her recovery. ... When her paw healed and the swelling subsided, Gary let Eva out of the cage.",
+      "prompt": "Write 1, 2 and 3 in the blanks below to indicate the order in which the events occurred in the passage.\n___ The vet informed Gary and his mother that Eva would take some time to recover.\n___ Eva was nursed back to health at Gary's house.\n___ Gary found Eva badly hurt on the pavement by the road. [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "Correct order: (1) Gary found Eva badly hurt on the pavement by the road; (2) The vet informed Gary and his mother that Eva would take some time to recover; (3) Eva was nursed back to health at Gary's house. The three blanks are 2, 3, 1.",
+          "keywords": [
+            [
+              "Gary found Eva badly hurt"
+            ],
+            [
+              "vet informed"
+            ],
+            [
+              "nursed back to health"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. ... He checked online and discovered that Eva was showing him affection. 'Mum! Eva loves me!' ... 'Of course, she does. Don't you love her too? You've taken such good care of her.' Gary's mother answered, giving Gary a pat on his back. 'I'm proud of you!' (lines 25-35)",
+      "prompt": "Based on the information from lines 25 to 35, fill in the blanks in the following table.\n(a) How Gary felt when he checked online and found out that Eva was showing him affection: ________\n(b) What Gary's mother did when she knew her son loved Eva and had taken good care of her: ________ [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "(a) Gary was surprised / happy / excited",
+          "keywords": [
+            [
+              "surprised"
+            ],
+            [
+              "happy"
+            ],
+            [
+              "excited"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) Gary's mother patted Gary on his back and commended him for taking good care of Eva",
+          "keywords": [
+            [
+              "patted",
+              "on his back"
+            ],
+            [
+              "commended"
+            ],
+            [
+              "good care of Eva"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Gary was eager to prove himself and took his role (line 5) seriously. ... and then came the hardest part (line 20) — waiting. ... Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest (line 29).",
+      "prompt": "Look at the table below. What do the word(s) in the left column refer to in the passage? Write your answers in the column on the right.\n(a) his role (line 5)\n(b) the hardest part (line 20)\n(c) cage rest (line 29) [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) his role = Gary having to take care of his neighbours' cat / Gary's responsibility of caring for his neighbours' cat",
+          "keywords": [
+            [
+              "take care of",
+              "neighbours' cat"
+            ],
+            [
+              "responsibility"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) the hardest part = waiting to know how badly injured Eva was",
+          "keywords": [
+            [
+              "waiting"
+            ],
+            [
+              "how badly injured"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) cage rest = (Eva) staying in a cage and not moving too much while in the cage",
+          "keywords": [
+            [
+              "stay in a cage"
+            ],
+            [
+              "not moving too much"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. ... The new house is within walking distance from my daughter's home.",
+      "prompt": "How would moving to the new house benefit Uncle Tim and Auntie Daisy? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "the new house was smaller, so it was easier to maintain",
+          "keywords": [
+            [
+              "smaller"
+            ],
+            [
+              "easier to maintain"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "they would be within walking distance from their daughter's home",
+          "keywords": [
+            [
+              "walking distance"
+            ],
+            [
+              "daughter's home"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room.",
+      "prompt": "What did Gary do when he heard that Eva would be leaving, and why did he react that way? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Gary cried and ran to his room",
+          "keywords": [
+            [
+              "cried"
+            ],
+            [
+              "ran to his room"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "as he was upset about having to be separated from Eva",
+          "keywords": [
+            [
+              "upset"
+            ],
+            [
+              "separated from Eva"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    },
+    {
+      "source_ref": "nanyang-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Uncle Tim handed Gary a box with Eva inside. 'Gary, we would like you to take care of Eva from now on ... We know that she will be in good hands,' Uncle Tim said. 'Don't you think one good turn deserves another?' Auntie Daisy added with a wink.",
+      "prompt": "In the last paragraph, Auntie Daisy said that one good turn deserved another. What was the good thing that Gary did and what did he deserve in return? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "the good thing Gary did was he took good care of Eva",
+          "keywords": [
+            [
+              "took good care of Eva"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "what he deserved in return was to be Eva's new owner",
+          "keywords": [
+            [
+              "new owner"
+            ],
+            [
+              "deserved"
+            ]
+          ]
+        }
+      ],
+      "passage": "One balmy day at the start of June, Gary was given an important responsibility—caring for his neighbours' cat, Eva, for a month. She was a grey tabby with an inquisitive streak. She enjoyed exploring the neighbourhood by herself and had met most residents. Gary's neighbours, Uncle Tim and Auntie Daisy, were going to another part of the country to check on their new house. Gary was eager to prove himself and took his role seriously. Each morning, he would go into his neighbours' backyard to replenish her food and water. He would even play with Eva. She would come and go as she pleased using the pet door installed on the back door. After a week, Eva began appearing on Gary's porch every morning instead, stretching lazily in the sun, waiting for Gary. Gary thought, \"Great! I don't have to go to the backyard anymore since Eva comes to my porch every day.\" Just when everything felt perfect, disaster struck.\n\nUnder the evening sky, Gary was watering the plants in his garden. Suddenly, a sharp yowl pierced the air. Gary spun around and saw the tail lights of a motorcycle which was speeding down the deserted road. Near the kerb, Eva lay motionless, her fur ruffled, one paw curled awkwardly beneath her face. Panic surged through him. She was still breathing but weak, her body trembling. \"Oh no! What should I do? Would I worsen her injury if I move her?\" He hesitated for a moment before scooping her up in a towel, cradling her like fragile glass. His mother rushed to his side. \"We'll take her to the vet now,\" she said firmly, already holding the car keys.\n\nThe drive to the vet felt like hours. Gary's mother placed a reassuring hand on his shoulder. \"She'll be okay,\" she said. Inside the clinic, the sterile scent of antiseptic filled the air, and then came the hardest part—waiting. How badly was Eva hurt? What would the vet say? Would she be able to recover? Time crawled by as the vet examined Eva thoroughly and administered the treatment. Finally, after an hour, the vet told them Eva's condition—a fractured paw, bruised body but no other broken bones. Her paw was bandaged. She would need to stay indoors for weeks to heal. On the way home, Gary's mother bought a cage.\n\nGary dedicated himself to her recovery. He placed the cage in his room and padded it with towels. Then, he placed Eva carefully into the cage. \"Be good, Eva. You mustn't move too much so that your paw will recover faster,\" Gary said as he patted Eva and closed the cage door. Strangely, Eva did not protest. \"Looks like Eva understands what you said,\" Gary's mother chuckled. For the next few days, Gary changed Eva's bandage daily and made sure Eva had a comfortable cage rest. Once her paw healed and the swelling subsided, Gary let Eva out of the cage. He monitored Eva's movement in his room. Whenever Gary sat on the floor, Eva would curl up beside him and purr softly. She even rubbed her face against his arm or leg. Gary wondered why Eva did that. He checked online and discovered that Eva was showing him affection. \"Mum! Eva loves me!\" Gary ran to his mother and showed her what he had read. \"Of course, she does. Don't you love her too? You've taken such good care of her,\" Gary's mother answered, giving Gary a pat on his back. \"I'm proud of you!\" Gary grinned broadly.\n\nUncle Tim and Auntie Daisy came back and thanked Gary and his mother. Uncle Tim announced, \"We'll be moving to our new house in two weeks' time. We're already in our seventies and the smaller new house is easier to maintain. Now we have to drive five hours to visit our daughter. The new house is within walking distance from my daughter's home. We'll miss you. You're such good neighbours all these years.\" Tears welled up in Gary's eyes when he heard that and saw Auntie Daisy picking up Eva. He stifled his sobs and ran to his room. Gary's mother explained to her neighbours how Gary's relationship with Eva had changed over the month. Meanwhile, Eva was meowing loudly in Auntie Daisy's arms.\n\nOn the night before Uncle Tim and Auntie Daisy moved to their new home, Gary's doorbell rang. Gary opened the door and received a surprise. Uncle Tim handed Gary a box with Eva inside. \"Gary, we would like you to take care of Eva from now on. We know that she will be in good hands,\" Uncle Tim said. \"Don't you think one good turn deserves another?\" Auntie Daisy added with a wink. Gary was at a loss for words as he clutched the box tightly. Gary's mother thanked Uncle Tim. As they turned to leave, Gary put down the box, ran to the elderly couple and gave them a bear hug. \"I promise to take VERY good care of Eva,\" Gary said with heartfelt gratitude.",
+      "image": "nanyang-2025-passage.png"
+    }
+  ]
+}

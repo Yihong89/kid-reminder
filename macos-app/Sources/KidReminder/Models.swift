@@ -407,7 +407,10 @@ struct EpaperSubmitResult: Codable, Equatable {
 /// the kid has finished it AND the parent has reviewed every oeq question.
 struct EpaperLastResult: Codable, Equatable {
     let sessionId: Int
-    let scoreEarned: Int
+    /// Double, not Int. "偏长扣一半" 这条判分规则会产生 .5 的分数（aitong-2025 是 76.5）。
+    /// 用 Int 接会导致**整份试卷列表**解码失败 —— JSONDecoder 遇到 76.5 抛错，
+    /// 而列表是一次性解析的，所以一份卷子带小数点，所有卷子都点不开。
+    let scoreEarned: Double
     let marksTotal: Int
     let completedAt: String
 }

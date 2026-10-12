@@ -1,0 +1,1168 @@
+{
+  "_source": "Methodist Girls' School (Primary) P6 English Paper 2 2025 Prelim (Booklet A 25 marks + Booklet B 65 marks, total 90). Downloaded from https://www.etestpaper.com.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image (mgs-2025-q21.png) is authoritative for the Visual Text Comprehension (Q21-25). Answers are from the paper's own compiled answer key. For cloze_wordbank Q26-35, answers are the word-bank letters; the word bank is: (A) as, (B) at, (C) by, (D) could, (E) for, (F) has, (G) had, (H) over, (J) through, (K) with, (L) who, (M) while, (N) which, (P) would, (Q) until.",
+  "questions": [
+    {
+      "source_ref": "mgs-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The sudden loud noise woke the baby and made her ________.",
+      "options": [
+        "cry",
+        "cries",
+        "cried",
+        "crying"
+      ],
+      "correct_answer": "cry",
+      "marks": 1,
+      "explanation": "\"make\" + bare infinitive (causative) — the noise made the baby 'cry'."
+    },
+    {
+      "source_ref": "mgs-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "All the luggage ________ still strewn about the room, Sam had no space to move around.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "was",
+      "marks": 1,
+      "explanation": "\"luggage\" is uncountable → singular verb; past tense matches \"had\"."
+    },
+    {
+      "source_ref": "mgs-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "If I ________ her email address, I would send her an invitation.",
+      "options": [
+        "know",
+        "knew",
+        "had known",
+        "have known"
+      ],
+      "correct_answer": "knew",
+      "marks": 1,
+      "explanation": "Second conditional: 'If + past simple' → 'would'."
+    },
+    {
+      "source_ref": "mgs-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Tom, together with his friends, ________ at the Active Ageing Centre to befriend and engage seniors every month.",
+      "options": [
+        "volunteer",
+        "volunteers",
+        "has volunteered",
+        "have volunteered"
+      ],
+      "correct_answer": "volunteers",
+      "marks": 1,
+      "explanation": "Subject is singular 'Tom'; 'together with' does not change the number; habitual present tense."
+    },
+    {
+      "source_ref": "mgs-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"People hardly ever go to the cinema nowadays, ________? They prefer to stay home to watch online content,\" remarked Grandmother.",
+      "options": [
+        "is it",
+        "isn't it",
+        "do they",
+        "don't they"
+      ],
+      "correct_answer": "do they",
+      "marks": 1,
+      "explanation": "\"hardly\" makes the statement negative, so the tag is positive 'do they'."
+    },
+    {
+      "source_ref": "mgs-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Sally was nervous on the first day in her new school. However, her classmates warmed up ________ her quickly and put her at ease.",
+      "options": [
+        "to",
+        "on",
+        "with",
+        "over"
+      ],
+      "correct_answer": "to",
+      "marks": 1,
+      "explanation": "\"warm up to someone\" = to become friendlier/more relaxed with them."
+    },
+    {
+      "source_ref": "mgs-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Given that it might rain tomorrow, you ________ bring an umbrella when you go out.",
+      "options": [
+        "will",
+        "could",
+        "would",
+        "should"
+      ],
+      "correct_answer": "should",
+      "marks": 1,
+      "explanation": "\"should\" gives advice/suggestion appropriate to the situation."
+    },
+    {
+      "source_ref": "mgs-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "________ planning had gone into the learning journey, making it an organised and successful one.",
+      "options": [
+        "Few",
+        "Little",
+        "Much",
+        "Many"
+      ],
+      "correct_answer": "Much",
+      "marks": 1,
+      "explanation": "\"planning\" is uncountable, so use 'Much'."
+    },
+    {
+      "source_ref": "mgs-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "________ the obstacles he faced, Fazil refused to give up and pressed on.",
+      "options": [
+        "In spite of",
+        "Other than",
+        "Contrary to",
+        "In addition to"
+      ],
+      "correct_answer": "In spite of",
+      "marks": 1,
+      "explanation": "\"In spite of\" = despite, expressing contrast."
+    },
+    {
+      "source_ref": "mgs-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Hassan wished he ________ his mother's advice not to place his phone on the edge of the table. However, it was too late.",
+      "options": [
+        "heeded",
+        "has heeded",
+        "had heeded",
+        "had been heeding"
+      ],
+      "correct_answer": "had heeded",
+      "marks": 1,
+      "explanation": "\"wish\" + past perfect expresses regret about a past action."
+    },
+    {
+      "source_ref": "mgs-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Leo's confidence to clinch the championship was ________ when he saw how good his opponent was.",
+      "options": [
+        "inflated",
+        "elevated",
+        "deepened",
+        "dampened"
+      ],
+      "correct_answer": "dampened",
+      "marks": 1,
+      "explanation": "\"dampened\" = reduced/weakened (his confidence)."
+    },
+    {
+      "source_ref": "mgs-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Hundreds of residents in the area were ________ when they lost their homes to the fire and had to move elsewhere.",
+      "options": [
+        "evicted",
+        "expelled",
+        "retreated",
+        "displaced"
+      ],
+      "correct_answer": "displaced",
+      "marks": 1,
+      "explanation": "\"displaced\" = forced to leave one's home."
+    },
+    {
+      "source_ref": "mgs-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "When the toddler showed off his completed sandcastle, the proud grandfather praised him ________.",
+      "options": [
+        "modestly",
+        "profusely",
+        "unanimously",
+        "consecutively"
+      ],
+      "correct_answer": "profusely",
+      "marks": 1,
+      "explanation": "\"praised him profusely\" = praised him very much/at length."
+    },
+    {
+      "source_ref": "mgs-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "\"Let's ________ on our efforts to complete the project on time,\" the manager urged his workers.",
+      "options": [
+        "double up",
+        "double over",
+        "double back",
+        "double down"
+      ],
+      "correct_answer": "double down",
+      "marks": 1,
+      "explanation": "\"double down\" = intensify one's commitment/efforts."
+    },
+    {
+      "source_ref": "mgs-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "We were so unprepared for our last game that the other team beat us hands down. Hence, we conceded ________.",
+      "options": [
+        "loss",
+        "defeat",
+        "failure",
+        "rejection"
+      ],
+      "correct_answer": "defeat",
+      "marks": 1,
+      "explanation": "\"concede defeat\" = admit that one has lost."
+    },
+    {
+      "source_ref": "mgs-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The phrase \"getting worse\" is closest in meaning to:",
+      "options": [
+        "dissipating",
+        "depreciating",
+        "deteriorating",
+        "disintegrating"
+      ],
+      "correct_answer": "deteriorating",
+      "marks": 1,
+      "explanation": "\"deteriorating\" = getting worse.",
+      "context": "Too much screen time is bad for children. Social media may be one of the reasons that mental health among young people seems to be getting worse. Continuous scrolling online not only affects sleep quality, but also takes time away from playing with friends, schoolwork and other activities. Additionally, children are deprived of healthier physical activities. All these can add anxiety and feelings of depression. Children are also especially vulnerable to being harmed in digital spaces. They are at an age where they are exploring their own identities. There is a strong need to find friends and to belong. This makes children easy prey for strangers who want to take advantage of them online. Also, because their self-control is not fully developed yet, they may be more prone to screen addiction. To help parents and teachers protect children from social media's ill effects, Singapore's Ministry of Health has provided recommendations for the optimal amount of screen time."
+    },
+    {
+      "source_ref": "mgs-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"Additionally\" is closest in meaning to:",
+      "options": [
+        "Moreover",
+        "Therefore",
+        "Meanwhile",
+        "Regardless"
+      ],
+      "correct_answer": "Moreover",
+      "marks": 1,
+      "explanation": "\"Moreover\" = in addition / besides.",
+      "context": "Too much screen time is bad for children. Social media may be one of the reasons that mental health among young people seems to be getting worse. Continuous scrolling online not only affects sleep quality, but also takes time away from playing with friends, schoolwork and other activities. Additionally, children are deprived of healthier physical activities. All these can add anxiety and feelings of depression. Children are also especially vulnerable to being harmed in digital spaces. They are at an age where they are exploring their own identities. There is a strong need to find friends and to belong. This makes children easy prey for strangers who want to take advantage of them online. Also, because their self-control is not fully developed yet, they may be more prone to screen addiction. To help parents and teachers protect children from social media's ill effects, Singapore's Ministry of Health has provided recommendations for the optimal amount of screen time."
+    },
+    {
+      "source_ref": "mgs-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"especially\" is closest in meaning to:",
+      "options": [
+        "mainly",
+        "usually",
+        "commonly",
+        "particularly"
+      ],
+      "correct_answer": "particularly",
+      "marks": 1,
+      "explanation": "\"particularly\" = especially.",
+      "context": "Too much screen time is bad for children. Social media may be one of the reasons that mental health among young people seems to be getting worse. Continuous scrolling online not only affects sleep quality, but also takes time away from playing with friends, schoolwork and other activities. Additionally, children are deprived of healthier physical activities. All these can add anxiety and feelings of depression. Children are also especially vulnerable to being harmed in digital spaces. They are at an age where they are exploring their own identities. There is a strong need to find friends and to belong. This makes children easy prey for strangers who want to take advantage of them online. Also, because their self-control is not fully developed yet, they may be more prone to screen addiction. To help parents and teachers protect children from social media's ill effects, Singapore's Ministry of Health has provided recommendations for the optimal amount of screen time."
+    },
+    {
+      "source_ref": "mgs-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The phrase \"take advantage of\" is closest in meaning to:",
+      "options": [
+        "exploit",
+        "misuse",
+        "swindle",
+        "deceive"
+      ],
+      "correct_answer": "exploit",
+      "marks": 1,
+      "explanation": "\"exploit\" = take advantage of (someone).",
+      "context": "Too much screen time is bad for children. Social media may be one of the reasons that mental health among young people seems to be getting worse. Continuous scrolling online not only affects sleep quality, but also takes time away from playing with friends, schoolwork and other activities. Additionally, children are deprived of healthier physical activities. All these can add anxiety and feelings of depression. Children are also especially vulnerable to being harmed in digital spaces. They are at an age where they are exploring their own identities. There is a strong need to find friends and to belong. This makes children easy prey for strangers who want to take advantage of them online. Also, because their self-control is not fully developed yet, they may be more prone to screen addiction. To help parents and teachers protect children from social media's ill effects, Singapore's Ministry of Health has provided recommendations for the optimal amount of screen time."
+    },
+    {
+      "source_ref": "mgs-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"prone\" is closest in meaning to:",
+      "options": [
+        "averse",
+        "exposed",
+        "responsive",
+        "susceptible"
+      ],
+      "correct_answer": "susceptible",
+      "marks": 1,
+      "explanation": "\"susceptible\" = prone / likely to be affected.",
+      "context": "Too much screen time is bad for children. Social media may be one of the reasons that mental health among young people seems to be getting worse. Continuous scrolling online not only affects sleep quality, but also takes time away from playing with friends, schoolwork and other activities. Additionally, children are deprived of healthier physical activities. All these can add anxiety and feelings of depression. Children are also especially vulnerable to being harmed in digital spaces. They are at an age where they are exploring their own identities. There is a strong need to find friends and to belong. This makes children easy prey for strangers who want to take advantage of them online. Also, because their self-control is not fully developed yet, they may be more prone to screen addiction. To help parents and teachers protect children from social media's ill effects, Singapore's Ministry of Health has provided recommendations for the optimal amount of screen time."
+    },
+    {
+      "source_ref": "mgs-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "\"...connect ... under the stars\". The image in the poster in Text 1 supports this by depicting people ________.",
+      "options": [
+        "picnicking in one place",
+        "relaxing in a cosy room",
+        "sitting under the open sky",
+        "coming together for a feast"
+      ],
+      "correct_answer": "sitting under the open sky",
+      "marks": 1,
+      "explanation": "The poster picture shows people seated outdoors under the night sky.",
+      "context": "Text 1 is a poster for a \"Film Show at the Park\" community event, and Text 2 is an extract from a talk given at a Community Club.",
+      "image": "mgs-2025-q21.png",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges. Family time offers many benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity helping them grow into confident and secure adults. There are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to appreciate nature. As the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we can grow stronger."
+    },
+    {
+      "source_ref": "mgs-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "Based on Text 1, which of the following is true about the event?",
+      "options": [
+        "All adults will enjoy free-flow beverages.",
+        "Interested parties can register on the spot.",
+        "Participants must attend with family members.",
+        "Children get free admission to the film screening."
+      ],
+      "correct_answer": "Children get free admission to the film screening.",
+      "marks": 1,
+      "explanation": "The poster states 'Complimentary tickets for children!'",
+      "context": "Text 1 is a poster for a \"Film Show at the Park\" community event, and Text 2 is an extract from a talk given at a Community Club.",
+      "image": "mgs-2025-q21.png",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges. Family time offers many benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity helping them grow into confident and secure adults. There are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to appreciate nature. As the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we can grow stronger."
+    },
+    {
+      "source_ref": "mgs-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "What is the main purpose of Text 1?",
+      "options": [
+        "to encourage people to watch more films",
+        "to attract people to attend a community event",
+        "to provide people with the details of a new film",
+        "to remind people to spend time with their loved ones"
+      ],
+      "correct_answer": "to attract people to attend a community event",
+      "marks": 1,
+      "explanation": "The poster is an advertisement inviting families to the film show at the park.",
+      "context": "Text 1 is a poster for a \"Film Show at the Park\" community event, and Text 2 is an extract from a talk given at a Community Club.",
+      "image": "mgs-2025-q21.png",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges. Family time offers many benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity helping them grow into confident and secure adults. There are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to appreciate nature. As the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we can grow stronger."
+    },
+    {
+      "source_ref": "mgs-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "Based on Text 2, the talk that is taking place at the Community Club is most likely for ________.",
+      "options": [
+        "Family Day",
+        "Kindness Day",
+        "Health and Fitness Day",
+        "Community Service Day"
+      ],
+      "correct_answer": "Family Day",
+      "marks": 1,
+      "explanation": "Text 2 emphasises family time and family bonds, matching a Family Day theme.",
+      "context": "Text 1 is a poster for a \"Film Show at the Park\" community event, and Text 2 is an extract from a talk given at a Community Club.",
+      "image": "mgs-2025-q21.png",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges. Family time offers many benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity helping them grow into confident and secure adults. There are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to appreciate nature. As the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we can grow stronger."
+    },
+    {
+      "source_ref": "mgs-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "How does the content of Text 2 support the message of the poster in Text 1?",
+      "options": [
+        "It promotes indoor and outdoor activities.",
+        "It encourages people to play more games.",
+        "It focuses on the need to build a strong community.",
+        "It highlights the benefits of bringing family members together."
+      ],
+      "correct_answer": "It highlights the benefits of bringing family members together.",
+      "marks": 1,
+      "explanation": "Text 2 describes how spending quality time together builds strong bonds, supporting the poster's message.",
+      "context": "Text 1 is a poster for a \"Film Show at the Park\" community event, and Text 2 is an extract from a talk given at a Community Club.",
+      "image": "mgs-2025-q21.png",
+      "passage": "A strong community makes us feel safe and connected, and it all begins at home. The family serves as the foundation of a healthy support system and spending quality time together lays the groundwork for overcoming life's challenges. Family time offers many benefits: it strengthens emotional bonds, boosts confidence, and reinforces our sense of self-worth. For children, it cultivates a robust sense of identity helping them grow into confident and secure adults. There are countless ways to enjoy quality family time. Indoors, a lively game night can fill the house with laughter and joy. Outdoors, a simple picnic in the park can create cherished memories while allowing us to appreciate nature. As the saying goes, \"Home is where the heart is.\" When family bonds are strong, they form the heart of a thriving community. Together, we support and uplift one another. In this way, we can grow stronger."
+    },
+    {
+      "source_ref": "mgs-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A) as (B) at (C) by (D) could (E) for (F) has (G) had (H) over (J) through (K) with (L) who (M) while (N) which (P) would (Q) until.\n\nHave you ever thought about how reading became such a big part of our lives? Reading ___(26)___ been important for thousands of years, beginning as a way to record and share information using symbols in ancient civilisations. At first, only a few educated people ___(27)___ understand these symbols. It was not ___(28)___ the Phoenicians invented one of the first earliest alphabets - letters representing sounds - that reading began to transform. This made reading easier and more widespread, especially after the Greeks and Romans improved the alphabet, ___(29)___ influenced many modern languages. For centuries, books were rare and expensive and could only be accessed ___(30)___ wealthy or religious groups. However, everything changed ___(31)___ the invention of the printing press - books were produced quickly and in large numbers, available to all. ___(32)___ time, libraries and cheaper books made reading more accessible, encouraging many people to develop a love for it. Reading became part of everyday life, both ___(33)___ pleasure and learning. Today, reading habits continue to evolve rapidly. ___(34)___ many still enjoy printed books, digital formats like e-books and audiobooks have become common. The internet also encourages shorter, more frequent reading, especially ___(35)___ social media platforms. Despite these changes, the value of reading remains strong. It helps us connect with new ideas, emotions and perspectives - something people will likely continue to treasure for generations.",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "has (F) \"Reading has been important...\"."
+    },
+    {
+      "source_ref": "mgs-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "D",
+      "marks": 1,
+      "explanation": "could (D) \"...only a few educated people could understand...\"."
+    },
+    {
+      "source_ref": "mgs-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "Q",
+      "marks": 1,
+      "explanation": "until (Q) \"It was not until the Phoenicians invented...\"."
+    },
+    {
+      "source_ref": "mgs-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "N",
+      "marks": 1,
+      "explanation": "which (N) \"...which influenced many modern languages.\""
+    },
+    {
+      "source_ref": "mgs-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "C",
+      "marks": 1,
+      "explanation": "by (C) \"...could only be accessed by wealthy or religious groups.\""
+    },
+    {
+      "source_ref": "mgs-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "K",
+      "marks": 1,
+      "explanation": "with (K) \"everything changed with the invention of the printing press\"."
+    },
+    {
+      "source_ref": "mgs-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "H",
+      "marks": 1,
+      "explanation": "over (H) \"Over time, libraries and cheaper books...\"."
+    },
+    {
+      "source_ref": "mgs-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "E",
+      "marks": 1,
+      "explanation": "for (E) \"both for pleasure and learning\"."
+    },
+    {
+      "source_ref": "mgs-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "M",
+      "marks": 1,
+      "explanation": "while (M) \"...evolve rapidly, while many still enjoy printed books...\"."
+    },
+    {
+      "source_ref": "mgs-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "J",
+      "marks": 1,
+      "explanation": "through (J) \"especially through social media platforms\"."
+    },
+    {
+      "source_ref": "mgs-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "Dear Diary,\n\nOur Social Studies lesson today was so interesting! I learnt that the Singapore Botanic Gardens is a UNESCO World Heritage Site. It's the first place in Singapore to reseev(36) such an honour, and it was choose(37) for its historical importance, natural beauty, and role in the rubber trade in the 1900s. It's also one of the few tropickle(38) colonial gardens left in the world!\n\nWe found out that for a site to become a UNESCO World Heritage Site, the place must be so important that it is valued by people around the world. It must meet strict kryteeria(39), for example having cultural or natural signify(40). Singapore took five years to prepare its apply(41). Experts praised the excellent mayntenence(42) of the Gardens, especially compared to other gardens in Asia.\n\nWhich(43) struck me most was how something right here in Singapore is now recognised around the world. As I walked along the shady paths, I begin(44) to reminisce about my past visits. I now see the Gardens in a whole new light. It makes me proud that something so ___(45)___ is now appreciated by people around the world.\n\nOne day, I hope to visit other UNESCO sites - like Angkok Wat or Borobudur.",
+      "prompt": "Write the correct word.",
+      "correct_answer": "receive",
+      "marks": 1,
+      "explanation": "Correct spelling 'receive'."
+    },
+    {
+      "source_ref": "mgs-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "chosen",
+      "marks": 1,
+      "explanation": "Past participle 'chosen' after 'was'."
+    },
+    {
+      "source_ref": "mgs-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "tropical",
+      "marks": 1,
+      "explanation": "Correct spelling 'tropical'."
+    },
+    {
+      "source_ref": "mgs-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "criteria",
+      "marks": 1,
+      "explanation": "Correct spelling 'criteria'."
+    },
+    {
+      "source_ref": "mgs-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "significance",
+      "marks": 1,
+      "explanation": "Noun form 'significance'."
+    },
+    {
+      "source_ref": "mgs-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "application",
+      "marks": 1,
+      "explanation": "Noun form 'application'."
+    },
+    {
+      "source_ref": "mgs-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "maintenance",
+      "marks": 1,
+      "explanation": "Correct spelling 'maintenance'."
+    },
+    {
+      "source_ref": "mgs-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "What",
+      "marks": 1,
+      "explanation": "\"What struck me most was...\" (the thing that struck me most)."
+    },
+    {
+      "source_ref": "mgs-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "began",
+      "marks": 1,
+      "explanation": "Past tense 'began' to match 'walked'."
+    },
+    {
+      "source_ref": "mgs-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "familiar",
+      "marks": 1,
+      "explanation": "Fill in 'familiar' — something so familiar is now appreciated."
+    },
+    {
+      "source_ref": "mgs-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "Hawker culture is one of Singapore's most treasured traditions. It is more than just food. Dishes like chicken rice, laksa, roti prata and nasi lemak ___(46)___ people from all backgrounds together, creating a strong ___(47)___ of community and identity. Hawker culture started in the 1800s ___(48)___ immigrants brought their recipes and sold food on the streets. ___(49)___ after, hawker centres were built to provide cleaner and safer places to eat, becoming lively spaces ___(50)___ people bond over affordable meals. Today, our hawker culture ___(51)___ multiple challenges. The ___(52)___ costs of ingredients, rent and labour make it harder for hawkers to keep prices affordable. Many young people are also not ___(53)___ in becoming hawkers because the work is demanding, so many older hawkers are retiring ___(54)___ successors. At the same time, modern technology and changing lifestyles also mean that hawkers need to ___(55)___ to new ways of doing business. To ___(56)___ this iconic culture, hawkers must embrace modern developments ___(57)___ as digital payments, social media and delivery services. However, it is equally important to protect the traditions that make hawker food special - like the unique cooking skills passed ___(58)___ through generations and the friendly, personal interactions hawkers have with customers. The vibrant atmosphere and freshly cooked food at hawker centres add to the charm and cannot be replaced ___(59)___ convenience alone. Through striking a ___(60)___ between tradition and progress, our hawker culture can stay alive and strong. This will help ensure that hawker food remains a proud part of Singapore's identity for many years to come.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "bring",
+      "marks": 1,
+      "explanation": "\"bring people together\"."
+    },
+    {
+      "source_ref": "mgs-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "sense",
+      "marks": 1,
+      "explanation": "\"a strong sense of community\"."
+    },
+    {
+      "source_ref": "mgs-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "when",
+      "marks": 1,
+      "explanation": "\"started ... when immigrants brought their recipes\"."
+    },
+    {
+      "source_ref": "mgs-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "soon",
+      "marks": 1,
+      "explanation": "\"Soon after, hawker centres were built\"."
+    },
+    {
+      "source_ref": "mgs-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "where",
+      "marks": 1,
+      "explanation": "\"spaces where people bond over affordable meals\"."
+    },
+    {
+      "source_ref": "mgs-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "faces",
+      "marks": 1,
+      "explanation": "\"our hawker culture faces multiple challenges\"."
+    },
+    {
+      "source_ref": "mgs-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "higher",
+      "marks": 1,
+      "explanation": "\"The higher costs of ingredients...\"."
+    },
+    {
+      "source_ref": "mgs-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "interested",
+      "marks": 1,
+      "explanation": "\"not interested in becoming hawkers\"."
+    },
+    {
+      "source_ref": "mgs-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "without",
+      "marks": 1,
+      "explanation": "\"retiring without successors\"."
+    },
+    {
+      "source_ref": "mgs-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "adapt",
+      "marks": 1,
+      "explanation": "\"hawkers need to adapt to new ways\"."
+    },
+    {
+      "source_ref": "mgs-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "continue",
+      "marks": 1,
+      "explanation": "\"To continue this iconic culture\"."
+    },
+    {
+      "source_ref": "mgs-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "such",
+      "marks": 1,
+      "explanation": "\"such as digital payments\"."
+    },
+    {
+      "source_ref": "mgs-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "down",
+      "marks": 1,
+      "explanation": "\"passed down through generations\"."
+    },
+    {
+      "source_ref": "mgs-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "by",
+      "marks": 1,
+      "explanation": "\"cannot be replaced by convenience alone\"."
+    },
+    {
+      "source_ref": "mgs-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "balance",
+      "marks": 1,
+      "explanation": "\"striking a balance between tradition and progress\"."
+    },
+    {
+      "source_ref": "mgs-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": "He did not throw the ball in time. The team missed the chance to score.",
+      "prompt": "Had ________.",
+      "correct_answer": "he thrown the ball in time, the team would not have missed the chance to score",
+      "marks": 2,
+      "explanation": "Inversion with 'Had' (third conditional) to express the unrealised past condition."
+    },
+    {
+      "source_ref": "mgs-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": "Mrs Lee explained the new school rules clearly to everyone.",
+      "prompt": "Mrs Lee gave ________.",
+      "correct_answer": "a clear explanation of the new school rules to everyone",
+      "marks": 2,
+      "explanation": "Nominalisation: 'explained ... clearly' -> 'gave a clear explanation'."
+    },
+    {
+      "source_ref": "mgs-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": "The cat is very friendly. The children in the neighbourhood love playing with it.",
+      "prompt": "________ because of its ________.",
+      "correct_answer": "The children in the neighbourhood love playing with the cat because of its friendliness",
+      "marks": 2,
+      "explanation": "Combine the two ideas using 'because of its friendliness'."
+    },
+    {
+      "source_ref": "mgs-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": "The scientists are analysing the data from the recent experiment.",
+      "prompt": "The data ________.",
+      "correct_answer": "from the recent experiment is being analysed by the scientists",
+      "marks": 2,
+      "explanation": "Change from active present continuous to passive: 'is being analysed'."
+    },
+    {
+      "source_ref": "mgs-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "context": "The teacher said to the students, \"You must submit your homework tomorrow.\"",
+      "prompt": "The teacher told the students ________.",
+      "correct_answer": "that they had to submit their homework the next day",
+      "marks": 2,
+      "explanation": "Reported speech: tense/pronoun/time shift; 'must' -> 'had to', 'tomorrow' -> 'the next day'."
+    },
+    {
+      "source_ref": "mgs-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "In the first paragraph, Rui En was worried about her classmates finding out where she spent her weekends. What did Rui En think her classmates would feel if they saw her at the wet market? [1m] She thought they would be ________.",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "Disgusted",
+          "keywords": [
+            [
+              "disgusted"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "\"Rui En, there's nothing to be ashamed of,\" she murmured (line 6). Explain fully why Rui En felt \"ashamed\". [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Rui En saw Eileen livestreaming at the stall and panicked",
+          "keywords": [
+            [
+              "livestreaming",
+              "stall",
+              "panicked"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "her secret about working in the wet market would be revealed to everyone at school",
+          "keywords": [
+            [
+              "secret",
+              "wet market",
+              "revealed",
+              "school"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "From the first paragraph, pick out a three-word phrase that tells us Rui En felt unhappy about being at the market every Sunday. [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "dreaded every moment",
+          "keywords": [
+            [
+              "dreaded",
+              "every",
+              "moment"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "\"A cold fear seeped into her bones\" (lines 13-14). Explain fully what caused Rui En to feel this way. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Rui En saw Eileen livestreaming at the stall (filming the market with her phone held high)",
+          "keywords": [
+            [
+              "Eileen",
+              "livestreaming",
+              "stall",
+              "phone"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "she panicked that her secret about working in the wet market would be revealed to everyone at school",
+          "keywords": [
+            [
+              "secret",
+              "revealed",
+              "everyone at school",
+              "wet market"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "What does \"strutted right up to Rui En\" (lines 17-18) suggest about Eileen's attitude towards Rui En? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "Eileen was arrogant and confident, showing no respect or fear of Rui En",
+          "keywords": [
+            [
+              "arrogant",
+              "confident",
+              "no respect"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "Explain fully what Rui En meant by \"What was I doing?\" (lines 25). [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "Rui En realised she was about to humiliate her sister just to impress Eileen",
+          "keywords": [
+            [
+              "humiliate",
+              "sister",
+              "impress",
+              "Eileen"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "she felt ashamed for letting herself be manipulated",
+          "keywords": [
+            [
+              "ashamed",
+              "manipulated"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "Based on lines 11-34, state whether each statement in the table below is true or false, then give one reason why you think so. (a) Eileen felt that the market was unpleasant. (b) Sue Yi immediately forgave Rui En when she apologised. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) True — Eileen wrinkled her nose at the slabs of meat",
+          "keywords": [
+            [
+              "true",
+              "wrinkled her nose",
+              "slabs of meat"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) False — after Rui En apologised, Sue Yi turned away, devastated",
+          "keywords": [
+            [
+              "false",
+              "turned away",
+              "devastated"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "Look at the table below. What do the words in the left column refer to in the passage? (a) what she wanted most (line 20) (b) it (line 36) (c) come clean (line 38) [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) Rui En's wish to be seen as \"cool enough\" to be Eileen's friend",
+          "keywords": [
+            [
+              "wish",
+              "seen as",
+              "cool enough",
+              "Eileen's friend"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) the sheep's eyeball",
+          "keywords": [
+            [
+              "sheep's",
+              "eyeball"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) Rui En and Sue Yi showing everyone at school that they sold mutton in a wet market on weekends",
+          "keywords": [
+            [
+              "showing everyone",
+              "school",
+              "mutton",
+              "wet market"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "From lines 28-34, pick out two separate phrases to show the characters' feelings and explain why they felt that way. (a) Four-word phrase that shows Eileen felt embarrassed (b) Reason for Eileen's feelings (c) Five-word phrase that shows Rui En felt relieved (d) Reason for Rui En's feelings [4m]",
+      "marks": 4,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) \"Cheeks burned crimson red\" — four-word phrase showing Eileen felt embarrassed",
+          "keywords": [
+            [
+              "cheeks",
+              "burned",
+              "crimson",
+              "red"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "(b) Reason for Eileen's feelings: she slipped and fell on the wet floor and felt embarrassed because everyone online saw her fall and get covered in scraps",
+          "keywords": [
+            [
+              "slipped",
+              "fell",
+              "embarrassed",
+              "online",
+              "scraps"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) \"Tension in her chest ease\" — five-word phrase showing Rui En felt relieved",
+          "keywords": [
+            [
+              "tension",
+              "chest",
+              "ease"
+            ]
+          ]
+        },
+        {
+          "seq": 4,
+          "point_kind": "inference",
+          "description": "(d) Reason for Rui En's feelings: she felt relieved as Sue Yi forgave her and they laughed together",
+          "keywords": [
+            [
+              "relieved",
+              "Sue Yi forgave",
+              "laughed together"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    },
+    {
+      "source_ref": "mgs-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "prompt": "Explain clearly what Rui En meant by \"something inside her had shifted\" (line 41). [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "Rui En had changed from being ashamed of selling mutton at the wet market and afraid her classmates would be disgusted, to proudly posting a photo with her sister at the stall",
+          "keywords": [
+            [
+              "changed",
+              "ashamed",
+              "proudly",
+              "posting",
+              "photo"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "she no longer cared what others thought and had the courage to embrace who she was",
+          "keywords": [
+            [
+              "no longer cared",
+              "courage",
+              "embrace"
+            ]
+          ]
+        }
+      ],
+      "passage": "Every Sunday, Rui En stood at her parents' wet market stall selling mutton. The stench of raw meat seeped into her clothes, and grease clung to her hands. She dreaded every moment, her mind swirling with images of horror etched on her classmates' faces if they ever discovered where she spent her weekends. \"Sue Yi,\" Rui En muttered to her sister, \"I really hope no one from school shows up.\" Sue Yi handed a bag of meat to a customer, her calm smile a stark contrast to the storm brewing in Rui En's chest. \"Rui En, there's nothing to be ashamed of,\" she murmured. But Rui En could not believe her. Each time Rui En looked around at the dangling cuts of meat, the anxiety of being exposed for being different hung over her like a heavy fog. Rui En's classmates spent weekends at malls and cafés, not in humid markets reeking of raw meat. The market was a constant reminder that Rui En was different. Yet deep down, Rui En knew she had no choice - her parents depended on her sister and her. (Then Rui En's heart lurched.) Eileen Tan - the most popular girl in class - appeared like a nightmare come true, weaving through the crowd with her phone held high, streaming live. Her nose wrinkled in disgust as she panned the camera across the slabs of meat. Rui En froze. A cold fear seeped into her bones. This was it - the moment her carefully hidden secret would unravel for the entire school to see. \"Sue Yi,\" Rui En hissed, flailing her arms to get Sue Yi's attention. But Sue Yi was busy with a customer, oblivious to the danger Rui En felt closing in. To Rui En's horror, Eileen's eyes met hers. A smirk spread across Eileen's face as she strutted right up to Rui En. \"Hey, Rui En,\" she sneered. \"Want to do something fun? Dump that bin of rubbish on your sister. I'm live - everyone will see.\" Rui En's hands started to tremble. She looked at the bin filled with slimy scraps. Her mind raced. She knew what she wanted most: If I did this, maybe Eileen would finally think I was cool enough to be her friend. Rui En grabbed the bin. It was heavier than she expected, the rotting smell stinging her eyes, making her legs wobble. Just then Sue Yi turned, and Rui En's and her eyes locked. Sue Yi's usual calm expression changed instantly - from calm to betrayed. \"Why are you letting her control you?\" Sue Yi asked quietly. Sue Yi's words struck Rui En in the face as shame crashed over her. \"What was I doing?\" Rui En dropped the bin with a thud, tears burning in her eyes. \"I'm so sorry, Sue Yi,\" Rui En whispered. But Sue Yi turned away, devastated. Suddenly, a shriek cut through the market. Eileen had slipped and fallen on the wet floor, crashing right into the bin Rui En had just dropped. Slime and scraps exploded across Eileen's white shirt. Her phone, still streaming, captured the humiliating moment as laughter erupted from the crowd. Eileen's cheeks crimson red as she scrambled to her feet, desperately trying to wipe the mess from her clothes. Shock flickered across Sue Yi's face. Then as Rui En and Sue Yi looked at each other, Sue Yi's expression softened and melted into laughter. Rui En felt the tension in her chest ease; she realised how close she had come to losing the one person who truly cared about her. As Rui En knelt to clean the mess, she found herself staring at a sheep's eyeball - round, glossy, unblinking. Rui En picked it up with trembling fingers, a strange calm settling over her. \"Hey, Rui En,\" Sue Yi called softly. Rui En looked up to see her lifting her phone, her eyes shining with warmth despite everything. \"Maybe it's time we come clean. Show everyone at school what life in the wet market is really like. The real us.\" \"Smile,\" Sue Yi said. Rui En forced a shaky grin, a swirl of embarrassment and relief surging inside her. Yet beneath it all, something inside her had shifted. Later that evening, Sue Yi posted the photo with the caption: EYE bring out the best in her! For the first time, Rui En felt the weight lift from her chest. She no longer cared what Eileen or anyone else thought. She had something far better - her family, and the courage to stand in her own skin. She looked at the unblinking eyeball and typed: EYE think so too. (Adapted from \"LIVE! At the Wet Market\")",
+      "image": "mgs-2025-passage.png"
+    }
+  ]
+}

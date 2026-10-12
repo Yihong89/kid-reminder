@@ -1,0 +1,1135 @@
+{
+  "_source": "Singapore Chinese Girls' School (SCGS) P6 English Language Paper 2 2025 Preliminary Examination (Booklet A 25 marks + Booklet B 65 marks, total 90). Transcribed from the scanned paper.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image is authoritative for the Visual Text Comprehension (Q21-25). Answers are from the paper's own compiled answer key (PDF pages 25-26). For the comprehension open-ended questions, suggested answers are taken from the answer key.",
+  "questions": [
+    {
+      "source_ref": "scgs-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "By the time the campers pitched their tents, the sun ________ behind the hills.",
+      "options": [
+        "set",
+        "sets",
+        "had set",
+        "was setting"
+      ],
+      "correct_answer": "had set",
+      "marks": 1,
+      "explanation": "Past event ('by the time') + past action requires the past perfect 'had set'."
+    },
+    {
+      "source_ref": "scgs-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Each of the dancers ________ expected to attend the final rehearsal this evening.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "is",
+      "marks": 1,
+      "explanation": "'Each' is singular; the present tense matches 'this evening'."
+    },
+    {
+      "source_ref": "scgs-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Rita noticed that many elderly people in her neighbourhood lacked awareness ________ common eye issues, and she decided to do something about it.",
+      "options": [
+        "in",
+        "at",
+        "of",
+        "with"
+      ],
+      "correct_answer": "of",
+      "marks": 1,
+      "explanation": "'awareness of' is the correct collocation."
+    },
+    {
+      "source_ref": "scgs-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "If the rules of the match had been explained clearly, the players ________ their tactics before the game.",
+      "options": [
+        "would review",
+        "have reviewed",
+        "will have reviewed",
+        "would have reviewed"
+      ],
+      "correct_answer": "would have reviewed",
+      "marks": 1,
+      "explanation": "Third conditional: if + past perfect, then 'would have' + past participle."
+    },
+    {
+      "source_ref": "scgs-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Through the binoculars, the birdwatcher watched the rare eagle ________ gracefully across the morning sky before disappearing behind the mountains.",
+      "options": [
+        "soar",
+        "soars",
+        "soared",
+        "had soared"
+      ],
+      "correct_answer": "soar",
+      "marks": 1,
+      "explanation": "Bare infinitive after the perception verb 'watched'."
+    },
+    {
+      "source_ref": "scgs-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "________ the champion stumbled in the final lap, she managed to retain her lead until the finishing line.",
+      "options": [
+        "Since",
+        "Unless",
+        "Although",
+        "Whenever"
+      ],
+      "correct_answer": "Although",
+      "marks": 1,
+      "explanation": "'Although' introduces a contrast despite the stumble."
+    },
+    {
+      "source_ref": "scgs-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"He'd completed the marathon before the rain started, ________ he?\" asked Maria.",
+      "options": [
+        "didn't",
+        "hadn't",
+        "couldn't",
+        "wouldn't"
+      ],
+      "correct_answer": "hadn't",
+      "marks": 1,
+      "explanation": "'He'd' = 'he had', so the tag question uses 'hadn't he?'."
+    },
+    {
+      "source_ref": "scgs-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The quality of the imported vegetables, together with the freshness of the local fruits, ________ impressed the demanding restaurant owner.",
+      "options": [
+        "is",
+        "are",
+        "has",
+        "have"
+      ],
+      "correct_answer": "has",
+      "marks": 1,
+      "explanation": "'The quality' is the singular subject; 'together with' does not change it. Present perfect 'has impressed'."
+    },
+    {
+      "source_ref": "scgs-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "As Mei Lin exited the packed theatre, she accidentally bumped ________ her school principal.",
+      "options": [
+        "by",
+        "into",
+        "across",
+        "against"
+      ],
+      "correct_answer": "into",
+      "marks": 1,
+      "explanation": "'bumped into' = met someone by chance."
+    },
+    {
+      "source_ref": "scgs-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Despite having ________ experience in public speaking, Sarah delivered her presentation confidently.",
+      "options": [
+        "few",
+        "little",
+        "much",
+        "many"
+      ],
+      "correct_answer": "little",
+      "marks": 1,
+      "explanation": "'experience' is uncountable, so it takes 'little'."
+    },
+    {
+      "source_ref": "scgs-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Everyone wrinkled their noses as the room was filled with a ________ smell. The stench was unbearable.",
+      "options": [
+        "strong",
+        "savoury",
+        "peppery",
+        "pungent"
+      ],
+      "correct_answer": "pungent",
+      "marks": 1,
+      "explanation": "'pungent' = having a sharp, strong smell."
+    },
+    {
+      "source_ref": "scgs-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "When tensions arose during the group discussion, the leader skilfully attempted to ________ the conflict before it worsened.",
+      "options": [
+        "ignore",
+        "defuse",
+        "escalate",
+        "aggravate"
+      ],
+      "correct_answer": "defuse",
+      "marks": 1,
+      "explanation": "'defuse' = to calm or reduce a tense situation."
+    },
+    {
+      "source_ref": "scgs-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "After months of training, the dancers finally ________ a flawless performance that impressed the judges.",
+      "options": [
+        "pulled in",
+        "pulled up",
+        "pulled off",
+        "pulled through"
+      ],
+      "correct_answer": "pulled off",
+      "marks": 1,
+      "explanation": "'pull off' = succeed in doing something difficult."
+    },
+    {
+      "source_ref": "scgs-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The scientist was awarded a prize for her ________ in developing a new method to clean polluted water.",
+      "options": [
+        "intention",
+        "instigation",
+        "inspiration",
+        "innovation"
+      ],
+      "correct_answer": "innovation",
+      "marks": 1,
+      "explanation": "'innovation' = a new idea or method."
+    },
+    {
+      "source_ref": "scgs-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "Although Melissa was surprised by the unfair accusation from her classmate, she responded ________ and avoided making the situation worse.",
+      "options": [
+        "smugly",
+        "tactfully",
+        "cheerfully",
+        "defensively"
+      ],
+      "correct_answer": "tactfully",
+      "marks": 1,
+      "explanation": "'tactfully' = in a sensitive, diplomatic way."
+    },
+    {
+      "source_ref": "scgs-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"cornerstone\" is closest in meaning to:",
+      "options": [
+        "portion",
+        "progress",
+        "fragment",
+        "foundation"
+      ],
+      "correct_answer": "foundation",
+      "marks": 1,
+      "explanation": "'cornerstone' = a foundational part.",
+      "context": "The PA\\sion Community Football (PACF) programme was started in 2004 by the People's Association (PA). It has been a cornerstone of youth development for 20 years, providing weekly football training for children and teens aged 5 to 16. The programme also fosters friendships among participants from diverse backgrounds, regardless of age, race or social status. For the past decade, Post Office Savings Bank (POSB) has stood by the PACF programme, contributing about $1.2 million through the POSB Passion Kids Fund. To mark the 20th Anniversary of the PACF programme, POSB has pledged an additional $600,000 to extend its commitment over the next three years, enabling PA to increase the number of active PACF centres from 35 to 50 by next year. The programme will also broaden its impact by collaborating with community organisations to strengthen family bonds through football. Around 2000 children will benefit from this programme annually."
+    },
+    {
+      "source_ref": "scgs-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"fosters\" is closest in meaning to:",
+      "options": [
+        "controls",
+        "nurtures",
+        "maintains",
+        "preserves"
+      ],
+      "correct_answer": "nurtures",
+      "marks": 1,
+      "explanation": "'fosters' = nurtures / encourages the growth of."
+    },
+    {
+      "source_ref": "scgs-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"stood by\" is closest in meaning to:",
+      "options": [
+        "joined",
+        "observed",
+        "supported",
+        "accompanied"
+      ],
+      "correct_answer": "supported",
+      "marks": 1,
+      "explanation": "'stood by' = supported."
+    },
+    {
+      "source_ref": "scgs-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"pledged\" is closest in meaning to:",
+      "options": [
+        "donated",
+        "reserved",
+        "promised",
+        "withdrawn"
+      ],
+      "correct_answer": "promised",
+      "marks": 1,
+      "explanation": "'pledged' = promised."
+    },
+    {
+      "source_ref": "scgs-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"broaden\" is closest in meaning to:",
+      "options": [
+        "expand",
+        "deepen",
+        "intensify",
+        "minimise"
+      ],
+      "correct_answer": "expand",
+      "marks": 1,
+      "explanation": "'broaden' = expand / widen."
+    },
+    {
+      "source_ref": "scgs-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "According to the poster in Text 1, which of the following is true?",
+      "options": [
+        "The Sunburst X10 has at least two key features.",
+        "Customers can purchase the Sunburst X10 online.",
+        "The Sunburst X10 is the first smartphone produced in 2025.",
+        "Customers will receive a pair of air tickets after purchasing the Sunburst X10."
+      ],
+      "correct_answer": "The Sunburst X10 has at least two key features.",
+      "marks": 1,
+      "explanation": "The poster lists three benefits (#1 Enhanced camera clarity, #2 Unmatched speed, #3 Smarter battery management), so it has at least two key features.",
+      "context": "Text 1 is a poster for the Nova Sunburst X10 smartphone, advertising enhanced camera clarity, unmatched speed and smarter battery management at an affordable price.",
+      "image": "scgs-2025-q21.png",
+      "passage": "Every year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise higher numbers in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery optimisation gradually decreases with time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "scgs-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "The writer made the statement, \"The Latest Talk in Town\", in Text 1 to emphasise that the phone is ________.",
+      "options": [
+        "suitable for future generations",
+        "better than current phone models",
+        "guaranteed to improve in the future",
+        "small enough to fit into anyone's hands"
+      ],
+      "correct_answer": "better than current phone models",
+      "marks": 1,
+      "explanation": "'The latest talk in town' suggests the phone is the newest and most talked-about model, i.e. better than current ones.",
+      "context": "\"The Latest Talk in Town\" — the headline on the poster in Text 1.",
+      "image": "scgs-2025-q21.png",
+      "passage": "Every year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise higher numbers in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery optimisation gradually decreases with time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "scgs-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "Based on the poster in Text 1, which of the following best fits the phone you expect to purchase?",
+      "options": [
+        "bulky",
+        "practical",
+        "expensive",
+        "complicated"
+      ],
+      "correct_answer": "practical",
+      "marks": 1,
+      "explanation": "The advertised features — great camera, fast speed and long battery life — suggest a practical, convenient device.",
+      "context": "The Sunburst X10 poster touts #1 Enhanced camera clarity, #2 Unmatched speed and #3 Smarter battery management.",
+      "image": "scgs-2025-q21.png",
+      "passage": "Every year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise higher numbers in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery optimisation gradually decreases with time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "scgs-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "\"Take shots like a professional!\" The picture supports this by giving the impression that the camera ________.",
+      "options": [
+        "can last all day",
+        "takes high quality photographs",
+        "zooms in on distant places automatically",
+        "is suitable for professional photographers"
+      ],
+      "correct_answer": "takes high quality photographs",
+      "marks": 1,
+      "explanation": "The picture shows the phone taking a photo and the slogan 'Take shots like a professional!' conveys that it produces high-quality photos.",
+      "context": "'Take shots like a professional!' — the slogan and picture on the poster in Text 1.",
+      "image": "scgs-2025-q21.png",
+      "passage": "Every year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise higher numbers in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery optimisation gradually decreases with time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "scgs-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "prompt": "We cannot trust the way Text 1 promotes Nova's new model because Text 2 says ________.",
+      "options": [
+        "the actual difference between old and new models is insignificant",
+        "a common marketing strategy is to emphasise higher numbers in new models",
+        "new models may have significantly larger batteries or major hardware changes",
+        "it is worth considering whether the improvements in new models are indeed value for money"
+      ],
+      "correct_answer": "the actual difference between old and new models is insignificant",
+      "marks": 1,
+      "explanation": "Text 2 states that in many cases the actual difference between old and new models is minor while the price increase is substantial.",
+      "context": "Text 2 is an article stating that the real difference between old and new phones is often minor while the price increase is substantial.",
+      "image": "scgs-2025-q21.png",
+      "passage": "Every year, new smartphones are released with promises of cutting-edge features and better performance. Advertisements say that upgrading to new models will significantly improve user experience, causing consumers to eagerly anticipate new phone models. However, in many cases, the actual difference between old and new models is minor, while the price increase is substantial. It is worth considering whether the improvements in new models are indeed value for money.\n\nA common marketing strategy is to emphasise higher numbers in new models, such as higher processing speeds and camera megapixels. Longer battery life is another frequently advertised feature. New models may have significantly larger batteries or major hardware changes. However, as battery optimisation gradually decreases with time, a simple battery change may be considerably cheaper than purchasing expensive new models."
+    },
+    {
+      "source_ref": "scgs-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "H",
+      "marks": 1,
+      "explanation": "\"on\" — relied on different methods.",
+      "context": "Word bank: (A)a (B)although (C)been (D)being (E)having (F)many (G)much (H)on (J)since (K)some (L)these (M)to (N)was (P)were (Q)with.\n\nToday, we use refrigerators to keep our food cold. However, in the past, people relied ___(26)___ different methods. They used ice, cellars, and rivers. Storage spaces were often dug into hills, and food was covered with straw and sawdust. Unlike the insulation we use today, ___(27)___ materials were naturally sourced and had not ___(28)___ manufactured in factories. These methods worked to some extent, but they came with limitations.\n\nIn hotter climates, natural ice was difficult to obtain. The heat caused food to spoil ___(29)___ more quickly. In 1802, Thomas Moore invented the icebox, which solved ___(30)___ of these problems: food spoilage decreased, ice storage improved, and cooling became more reliable, though cost and size remained concerns. His invention featured a wooden box lined with metal and cooled using blocks of ice. While it was an improvement, it eventually became ___(31)___ thing of the past when newer technologies emerged. ___(32)___ many people wanted electric refrigerators, they were too expensive for most families. These early refrigerators were also heavy and contained many metal parts. Each cooling unit with its connected parts ___(33)___ also too large for smaller homes. Over time, manufacturers, ___(34)___ solved many of the early design problems, succeeded in making refrigerators more compact and affordable. ___(35)___ such improvements, food could be stored more safely.\n\nToday, few people pause to consider what life might have been before the refrigerator became common in every home."
+    },
+    {
+      "source_ref": "scgs-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "L",
+      "marks": 1,
+      "explanation": "\"these\" — these materials were naturally sourced.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "C",
+      "marks": 1,
+      "explanation": "\"been\" — had not been manufactured in factories.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "G",
+      "marks": 1,
+      "explanation": "\"much\" — spoil much more quickly.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "\"many\" — solved many of these problems.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "A",
+      "marks": 1,
+      "explanation": "\"a\" — a thing of the past.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "B",
+      "marks": 1,
+      "explanation": "\"although\" — although many people wanted them.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "N",
+      "marks": 1,
+      "explanation": "\"was\" — was also too large.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "E",
+      "marks": 1,
+      "explanation": "\"having\" — having solved many of the early design problems.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "Q",
+      "marks": 1,
+      "explanation": "\"with\" — with such improvements.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Saying",
+      "marks": 1,
+      "explanation": "Gerund ('saying') is needed after 'all it takes is'.",
+      "context": "Making new friends can feel challenging at first, but it often starts with one simple step: being open to meeting new people. Sometimes, all it takes is say(36) hello to your peer's friends and expanding your circle through those connections. With a little effort and a friendly attetute(37), you will soon find others who are just as kind and trustworthy.\n\nWhen you pursue hobbies and interests you enjoy, you have a good chance of meeting people with similar passions. So sign up for a new activity or try out the late(38) fitness craze — every event is an opertuneeti(39) to make like-minded friends. No matter how you connect with others, always remember to smile. There be(40) a lot of truth in the maxim, 'When you're smiling, the whole world smiles with you'. People are more attuned with(41) positive emotions when forming new relationships. A smile is free and it is a friendly jascher(42) that shows you are looking for a connection. Friendships, like all relationships, require mainteinance(43). Do not retreat to your safe haven and lose touch. A simple message goes a long way. Your friends will appreciate it.\n\nSome avoid argyumnts(44) to keep the peace, but managing conflicts can actually strengthening(45) friendship. Talk things through and learn to accept each other's differences without judgement."
+    },
+    {
+      "source_ref": "scgs-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Attitude",
+      "marks": 1,
+      "explanation": "Correct spelling is 'attitude'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Latest",
+      "marks": 1,
+      "explanation": "'latest' (the most recent) fits the context of a fitness craze.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Opportunity",
+      "marks": 1,
+      "explanation": "Correct spelling is 'opportunity'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Is",
+      "marks": 1,
+      "explanation": "'There is a lot of truth' — subject-verb agreement.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "To",
+      "marks": 1,
+      "explanation": "The correct phrase is 'attuned to'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Gesture",
+      "marks": 1,
+      "explanation": "'gesture' (a friendly action) is the intended word, not 'jester'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Maintenance",
+      "marks": 1,
+      "explanation": "Correct spelling is 'maintenance'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Arguments",
+      "marks": 1,
+      "explanation": "Correct spelling is 'arguments'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Strengthen",
+      "marks": 1,
+      "explanation": "After the modal 'can', the base form 'strengthen' is needed.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "Wafting",
+      "marks": 1,
+      "explanation": "'wafting' = drifting gently through the air.",
+      "context": "The sound of clattering dishes, a sizzling grill, and the blast of a wok furnace often signal the start of a busy day at a hawker centre. Combined with the aroma of fragrant spices, barbecue marinades and steaming hot soup ___(46)___ through the morning air, these sensations have become synonymous ___(47)___ Singapore's hawker culture. Whether it is a plate of chicken rice ___(48)___ a bowl of curry noodles, each dish is skilfully ___(49)___ with practiced hands, honed through daily experience to bring out the unique flavours.\n\nSingapore's hawker culture can be ___(50)___ back to the 1800s, when early immigrants from China, India and the Malay Archipelago began selling food in our country. Though these meals were simple, their authentic taste has ___(51)___ unchanged since then, when prepared on the spot using traditional recipes.\n\nHawker centres ___(52)___ a clean and organised environment to their customers, with designated stalls and walkways where customers can move around with ease. Every morning, elderly patrons who have been ___(53)___ customers for years meet with friends at the same table to enjoy their usual drinks and read the newspaper together. These gatherings offer comfort and connection to the community. Many Singaporeans are also willing to queue for a long time ___(54)___ to get a taste of their favourite hawker dishes. These familiar community spaces have long been ___(55)___ of Singapore's identity. More than just places to eat, hawker centres hold a special ___(56)___ in the hearts of Singaporeans.\n\nFood plays a key role not only in satisfying hunger ___(57)___ also in building bonds among communities. Many experienced vendors run their businesses ___(58)___ the same designated spot for decades, serving loyal customers. ___(59)___ challenges like rising costs and changing demographics, this culture thrives today through steady community support. Every individual hawker centre has ___(60)___ own unique character and charm that keeps customers coming back.\n\nThe cultural significance of Singapore's hawker heritage has been recognised by UNESCO as an Intangible Cultural Heritage of Humanity."
+    },
+    {
+      "source_ref": "scgs-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "With",
+      "marks": 1,
+      "explanation": "'synonymous with'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "Or",
+      "marks": 1,
+      "explanation": "'whether ... or ...'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "Made",
+      "marks": 1,
+      "explanation": "'skilfully made'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "Brought",
+      "marks": 1,
+      "explanation": "'can be brought back to' (traced back to).",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "Stayed",
+      "marks": 1,
+      "explanation": "'has stayed unchanged'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "Provide",
+      "marks": 1,
+      "explanation": "'provide ... to their customers'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "Regular",
+      "marks": 1,
+      "explanation": "'regular customers'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "Just",
+      "marks": 1,
+      "explanation": "'just to get a taste'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "Part",
+      "marks": 1,
+      "explanation": "'part of Singapore's identity'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "Place",
+      "marks": 1,
+      "explanation": "'hold a special place'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "But",
+      "marks": 1,
+      "explanation": "'not only ... but also ...'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "At",
+      "marks": 1,
+      "explanation": "'at the same spot'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "Despite",
+      "marks": 1,
+      "explanation": "'Despite challenges'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "Its",
+      "marks": 1,
+      "explanation": "'its own unique character'.",
+      "context": ""
+    },
+    {
+      "source_ref": "scgs-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Mary cannot help at the animal shelter tonight because she is very busy. Mary is too ________",
+      "correct_answer": "Mary is too busy to help at the animal shelter tonight.",
+      "marks": 2,
+      "explanation": "'too' + adjective + 'to'-infinitive."
+    },
+    {
+      "source_ref": "scgs-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Ali can perform magic tricks. No other student can do it. The only ________",
+      "correct_answer": "The only student who can perform magic tricks is Ali.",
+      "marks": 2,
+      "explanation": "Cleft sentence using 'The only ... is ...'."
+    },
+    {
+      "source_ref": "scgs-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Anne asked her sister if she had finished her homework the previous night. Rewrite the sentence, beginning with \"Anne asked her sister,\"",
+      "correct_answer": "Anne asked her sister, \"Did you finish your homework last night?\"",
+      "marks": 2,
+      "explanation": "Converting reported speech back to direct speech."
+    },
+    {
+      "source_ref": "scgs-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Mrs Lee bought the last carton of mangoes and paid for it. The last carton of ________",
+      "correct_answer": "The last carton of mangoes was bought and paid for by Mrs Lee.",
+      "marks": 2,
+      "explanation": "Changing to the passive voice."
+    },
+    {
+      "source_ref": "scgs-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The team withdrew because some players could not get leave from work. The reason for the team's ________",
+      "correct_answer": "The reason for the team's withdrawal was that some players could not get leave from work.",
+      "marks": 2,
+      "explanation": "Nominalisation: 'withdrawal' + reason clause."
+    },
+    {
+      "source_ref": "scgs-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "Why did Alex think that he was not good at running? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Alex would finish last during every training session.",
+          "keywords": [
+            [
+              "finish last",
+              "training session"
+            ]
+          ]
+        }
+      ],
+      "context": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "During the inter-school cross-country meet, Alex was standing under a tree watching others when Coach Nelson selected him to join the team. (a) What did Alex think was the reason that he was chosen? [1m]  (b) Explain fully the actual reason why Coach Nelson had chosen Alex. [2m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Alex thought he was the school's last resort.",
+          "keywords": [
+            [
+              "last resort",
+              "school's last resort"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "Coach Nelson had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.",
+          "keywords": [
+            [
+              "observed",
+              "quiet determination"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "inference",
+          "description": "Coach Nelson believed that Alex could beat most of the other competitors in the race.",
+          "keywords": [
+            [
+              "could beat",
+              "competitors"
+            ]
+          ]
+        }
+      ],
+      "context": "That morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "How did Kai support Alex during the race? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Kai warned Alex that there were many twisted tree roots on the ground.",
+          "keywords": [
+            [
+              "warned",
+              "twisted tree roots"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "Kai told Alex to stay with him in the race.",
+          "keywords": [
+            [
+              "stay with him",
+              "stay with me"
+            ]
+          ]
+        }
+      ],
+      "context": "At the signal, all the runners raced along the gravel path. \"Stay with me, Alex,\" Kai's voice was steady. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "Based on lines 4-10, state whether each statement in the table below is true or false, then give one reason why you think so. (a) The team members agreed with Coach Nelson's choice of Alex as the replacement runner.  (b) Coach Nelson gave Alex instructions on how to run the race. [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) False — the team members shook their heads in disapproval when Coach Nelson announced that Alex would be the replacement runner.",
+          "keywords": [
+            [
+              "false",
+              "disapproval",
+              "shook their heads"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) True — Coach Nelson told Alex to follow Kai's lead and sprint as if everything depends on it when he hits the field.",
+          "keywords": [
+            [
+              "true",
+              "follow Kai's lead",
+              "sprint"
+            ]
+          ]
+        }
+      ],
+      "context": "That morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "From the fourth paragraph, pick out a four-word phrase that shows Alex believed that he did not belong at the starting line. [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Completely out of place.",
+          "keywords": [
+            [
+              "completely out of place",
+              "out of place"
+            ]
+          ]
+        }
+      ],
+      "context": "Alex stood at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school's best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "(a) Based on paragraph 7, which word best describes Alex's initial reaction when he realised his position in the race? Put a tick (✓) in the box next to the word. [1m]  (b) Why did Alex feel this way? [1m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "(a) Surprised.",
+          "keywords": [
+            [
+              "surprised"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "Alex felt this way because he discovered he was in fourth place when he had expected to be far behind.",
+          "keywords": [
+            [
+              "fourth place",
+              "far behind"
+            ]
+          ]
+        }
+      ],
+      "context": "Alex's heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "Look at the table below. What do the words in the left column refer to in the passage? Write your answers in the column on the right. (a) it (line 9)  (b) that (line 20) [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) it — struggling to keep up with other teammates.",
+          "keywords": [
+            [
+              "struggling to keep up",
+              "teammates"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) that — Kai slipping and falling on the trail.",
+          "keywords": [
+            [
+              "Kai",
+              "slipping",
+              "falling",
+              "trail"
+            ]
+          ]
+        }
+      ],
+      "context": "He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others. ... Suddenly, Alex heard a sharp yelp ahead. Kai had slipped.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "What pushed Alex to make his final effort? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "The coach's encouraging shout motivated Alex to give his best effort at the end of the race.",
+          "keywords": [
+            [
+              "coach's",
+              "encouraging shout",
+              "motivated",
+              "best effort"
+            ]
+          ]
+        }
+      ],
+      "context": "As Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest. \"You can do this, Alex!\" his coach's familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "Based on information in lines 29 - 41, fill in the following table. (a) What did Coach Nelson's body language tell us about how he felt?  (b) What did Coach Nelson want Alex to remember from the race (line 33)?  (c) What did Kai's first facial expression tell us about how he felt?  (d) What was Kai trying to do when he spoke to Alex? [4m]",
+      "marks": 4,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "(a) Elated.",
+          "keywords": [
+            [
+              "elated"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) Coach Nelson wanted Alex to remember that his effort and had gotten him to finish the race.",
+          "keywords": [
+            [
+              "effort",
+              "finish the race"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "keyword",
+          "description": "(c) Shocked.",
+          "keywords": [
+            [
+              "shocked"
+            ]
+          ]
+        },
+        {
+          "seq": 4,
+          "point_kind": "inference",
+          "description": "(d) Kai recognised that Alex had become a stronger runner and praised him.",
+          "keywords": [
+            [
+              "stronger runner",
+              "praised"
+            ]
+          ]
+        }
+      ],
+      "context": "\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That's the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a grin, Kai clapped him on the back. \"You've become such a strong runner! You are a worthy competitor,\" he said with genuine pride.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    },
+    {
+      "source_ref": "scgs-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "\"...Alex finally believed in them\" (lines 46-49). What did Alex finally believe? How did he demonstrate this belief at the end of the story? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "Alex finally believed that he was stronger than he thought he was.",
+          "keywords": [
+            [
+              "stronger than he thought"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "He demonstrated this by saying the same words Coach Nelson had said to him to encourage a younger runner to believe that the young boy is stronger than he thinks.",
+          "keywords": [
+            [
+              "same words",
+              "younger runner",
+              "encourage"
+            ]
+          ]
+        }
+      ],
+      "context": "That afternoon, Alex noticed Coach Nelson conversing with a younger runner. The younger runner looked up anxiously. \"Run your own race. It's normal to feel nervous at first, but stay steady, trust yourself, and don't stop,\" Alex said. \"You're stronger than you think.\" Those were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "passage": "At the inter-school cross-country meet, Alex stood under a tree, silently watching his teammates warm up. He had never felt that running was his strength. During every training session, Alex would finish last. He had come to expect nothing more.\nThat morning, their school needed a replacement for their injured fourth runner. A commanding voice called out. It was Coach Nelson. He announced to everyone that Alex would be the replacement runner. While the rest of the team shook their heads in disapproval, Coach Nelson approached Alex. He had observed Alex's quiet determination during training, noting how he persisted even when he struggled to keep up with the others.\n\"You’ve not let it stop you,\" Coach Nelson said. \"You’re stronger than you think. Just follow Kai’s lead, and when you hit the field, sprint as if everything depends on it.\"\nAlex stared at Coach Nelson in disbelief. \"They must be desperate,\" Alex concluded as he positioned himself at the starting line beside Kai, the school’s best runner. With their fourth runner injured and time running out, surely he was their last resort. He stood uneasily among the athletes, feeling completely out of place and inadequate.\nAt the signal, all the runners raced along the gravel path. Kai glanced back while running. His eyes met Alex’s, and for a moment, Alex expected the school’s star runner to sprint ahead like the others.\n\"Stay with me, Alex,\" Kai’s voice was steady, encouraging. \"Roots ahead! Watch your step!\" he warned. There were many twisted tree roots. Suddenly, Alex heard a sharp yell ahead. Kai had slipped. That was when Alex realised just how dangerous the trail had become. Kai quickly got up and continued with the race.\nAlex’s heart raced. Despite his fear, he kept his steady pace. Perspiration drenched his shirt as he emerged from the shadows onto a gentle, sunlit slope. Certain that he had fallen behind, Alex glanced around. He had to rub his eyes and look again. There were only three runners ahead. Not thirteen. Not even ten. Just three. Fourth place? His mouth went dry and his pulse quickened as the reality dawned on him. Seeing himself so close to the front, adrenaline coursed through his veins.\nAs Alex approached the final slope, his legs started to ache. He was breathing heavily as he pushed on. The cheers were thunderous, but one voice rose above the rest.\n\"You can do this, Alex!\" his coach’s familiar voice rang out. With newfound confidence, Alex surged forward, drawing on all his training. As Alex crossed the finish line, Coach Nelson pumped his fists in the air and congratulated him.\n\"I saw what you could do in training,\" Coach Nelson declared with pride, \"but today you showed me so much more. That’s the runner I knew was in there! I hope you will remember this experience, Alex — your effort got you here.\" Alex had not merely completed the race — he had excelled with hard work, finishing just behind Kai and surpassing all expectations. Kai stared at Alex, his eyes wide and mouth slightly agape. Shock was written all over his face. Then breaking into a warm, encouraging grin, Kai clapped him on the back.\n\"You’ve become such a strong runner! You are a worthy competitor,\" he said with genuine pride. \"Keep pushing like this, and soon you’ll be the one to beat!\"\n\"Thanks for believing in me,\" Alex said, smiling warmly. \"Thanks for keeping an eye on me during the race,\" Alex added. \"Those warnings about the roots really helped.\"\nThat afternoon, Alex noticed Coach Nelson conversing with a younger runner. Alex approached them. The younger runner looked up anxiously.\n\"Run your own race. It’s normal to feel nervous at first, but stay steady, trust yourself, and don’t stop,\" Alex said. He gave the younger boy a reassuring nod and added, \"You’re stronger than you think.\"\nThose were the same words Coach Nelson had said to him before the race. Back then, he doubted they applied to him. But now, after everything that had happened, Alex finally believed in them.",
+      "image": "scgs-2025-passage.png"
+    }
+  ]
+}

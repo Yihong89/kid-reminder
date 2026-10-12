@@ -1,0 +1,1136 @@
+{
+  "_source": "Henry Park Primary School P6 English Paper 2 2025 Prelim (Booklet A 25 marks + Booklet B 65 marks, total 90). Downloaded from https://www.etestpaper.com.",
+  "_note": "Prompts are transcribed from a scanned paper and may contain small errors; the cropped poster image is authoritative for the Visual Text Comprehension (Q21-25). Answers are from the paper's own compiled answer key.",
+  "questions": [
+    {
+      "source_ref": "henrypark-2025-q1",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "\"He won't be attending the talk today, ________?\"",
+      "options": [
+        "will he",
+        "won't he",
+        "would he",
+        "wouldn't he"
+      ],
+      "correct_answer": "will he",
+      "marks": 1,
+      "explanation": "Tag question: statement is negative ('won't'), so the tag is positive 'will he'."
+    },
+    {
+      "source_ref": "henrypark-2025-q2",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Tim, as well as his peers, ________ disappointed when they found out the tournament results yesterday.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "was",
+      "marks": 1,
+      "explanation": "\"as well as\" does not change the singular subject 'Tim'."
+    },
+    {
+      "source_ref": "henrypark-2025-q3",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Julia, ________ bag has a sunflower sewn on it, will help you with the gardening project.",
+      "options": [
+        "who",
+        "which",
+        "whom",
+        "whose"
+      ],
+      "correct_answer": "whose",
+      "marks": 1,
+      "explanation": "Possessive relative pronoun 'whose'."
+    },
+    {
+      "source_ref": "henrypark-2025-q4",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "________ the busy streets of the city, we found a peaceful park to relax in.",
+      "options": [
+        "Over",
+        "Amid",
+        "Besides",
+        "Alongside"
+      ],
+      "correct_answer": "Amid",
+      "marks": 1,
+      "explanation": "\"Amid\" = surrounded by / in the middle of."
+    },
+    {
+      "source_ref": "henrypark-2025-q5",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "All of the furniture ________ carefully arranged before the guests arrived.",
+      "options": [
+        "was",
+        "were",
+        "are being",
+        "have been"
+      ],
+      "correct_answer": "was",
+      "marks": 1,
+      "explanation": "\"Furniture\" is uncountable, takes singular 'was'."
+    },
+    {
+      "source_ref": "henrypark-2025-q6",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Everybody ________ excited for the upcoming school play as they have been spending long hours rehearsing for it.",
+      "options": [
+        "is",
+        "are",
+        "was",
+        "were"
+      ],
+      "correct_answer": "is",
+      "marks": 1,
+      "explanation": "\"Everybody\" is singular, and the present tense matches 'have been'."
+    },
+    {
+      "source_ref": "henrypark-2025-q7",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "The adults were exhausted as they ________ with the children for two hours before their bedtime.",
+      "options": [
+        "play",
+        "played",
+        "have played",
+        "had been playing"
+      ],
+      "correct_answer": "had been playing",
+      "marks": 1,
+      "explanation": "Past perfect continuous describes an action ongoing up to a point in the past."
+    },
+    {
+      "source_ref": "henrypark-2025-q8",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "Georgina would rather cook her own meals ________ eat out.",
+      "options": [
+        "to",
+        "over",
+        "than",
+        "then"
+      ],
+      "correct_answer": "than",
+      "marks": 1,
+      "explanation": "\"would rather ... than\" is the correct structure."
+    },
+    {
+      "source_ref": "henrypark-2025-q9",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "She watched the dancers ________ onto the stage with their movements perfectly timed with the music.",
+      "options": [
+        "walk",
+        "walks",
+        "had walked",
+        "were walking"
+      ],
+      "correct_answer": "walk",
+      "marks": 1,
+      "explanation": "Bare infinitive after 'watched' (perception verb)."
+    },
+    {
+      "source_ref": "henrypark-2025-q10",
+      "section": "grammar_mcq",
+      "question_type": "mcq",
+      "prompt": "We have ________ free time later this afternoon, perhaps we can meet to discuss the project.",
+      "options": [
+        "few",
+        "little",
+        "some",
+        "plenty"
+      ],
+      "correct_answer": "little",
+      "marks": 1,
+      "explanation": "\"Little\" (uncountable) with a slight negative hedge."
+    },
+    {
+      "source_ref": "henrypark-2025-q11",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The strong smell of paint really ________ me ________ from working in the room.",
+      "options": [
+        "set ... up",
+        "put ... off",
+        "take ... off",
+        "break ... up"
+      ],
+      "correct_answer": "put ... off",
+      "marks": 1,
+      "explanation": "\"put off\" = to discourage/deter."
+    },
+    {
+      "source_ref": "henrypark-2025-q12",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "To ________ your vocabulary, you need to spend time reading every day.",
+      "options": [
+        "diminish",
+        "assemble",
+        "strengthen",
+        "undermine"
+      ],
+      "correct_answer": "strengthen",
+      "marks": 1,
+      "explanation": "\"strengthen your vocabulary\" = improve it."
+    },
+    {
+      "source_ref": "henrypark-2025-q13",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "After the heavy thunderstorm, the river's water level rose ________ causing a flood in no time.",
+      "options": [
+        "rapidly",
+        "slightly",
+        "silently",
+        "roughly"
+      ],
+      "correct_answer": "rapidly",
+      "marks": 1,
+      "explanation": "Adverb describing the quick rise."
+    },
+    {
+      "source_ref": "henrypark-2025-q14",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "The head prefect nominee's speech was ________ with unclear statements that made his position hard to understand.",
+      "options": [
+        "factual",
+        "concise",
+        "ambiguous",
+        "straightforward"
+      ],
+      "correct_answer": "ambiguous",
+      "marks": 1,
+      "explanation": "\"ambiguous\" = open to more than one interpretation (unclear)."
+    },
+    {
+      "source_ref": "henrypark-2025-q15",
+      "section": "vocab_mcq",
+      "question_type": "mcq",
+      "prompt": "She wore sunglasses to ________ her tired eyes.",
+      "options": [
+        "block",
+        "shade",
+        "conceal",
+        "disguise"
+      ],
+      "correct_answer": "conceal",
+      "marks": 1,
+      "explanation": "\"conceal\" = hide."
+    },
+    {
+      "source_ref": "henrypark-2025-q16",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "context": "Abel Mutai, a Kenyan runner, was just a few metres from the finish line. Suddenly, he became bewildered by the signage and stopped, thinking he had completed the race. A Spanish runner, Ivan Fernandez, was right behind him. He noticed the situation and signalled the Kenyan to continue running. However, Mutai could not comprehend the language. Seeing the situation, Fernandez gently nudged Mutai forward, ensuring he crossed the finish line first.",
+      "prompt": "The word \"bewildered\" is closest in meaning to:",
+      "options": [
+        "excited",
+        "shocked",
+        "annoyed",
+        "confused"
+      ],
+      "correct_answer": "confused",
+      "marks": 1,
+      "explanation": "\"bewildered\" = confused/puzzled."
+    },
+    {
+      "source_ref": "henrypark-2025-q17",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"signalled\" is closest in meaning to:",
+      "options": [
+        "forced",
+        "followed",
+        "gestured",
+        "requested"
+      ],
+      "correct_answer": "gestured",
+      "marks": 1,
+      "explanation": "\"signalled\" = gestured."
+    },
+    {
+      "source_ref": "henrypark-2025-q18",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"comprehend\" is closest in meaning to:",
+      "options": [
+        "speak",
+        "translate",
+        "recognise",
+        "understand"
+      ],
+      "correct_answer": "understand",
+      "marks": 1,
+      "explanation": "\"comprehend\" = understand."
+    },
+    {
+      "source_ref": "henrypark-2025-q19",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"nudged\" is closest in meaning to:",
+      "options": [
+        "pulled",
+        "guided",
+        "tapped",
+        "pushed"
+      ],
+      "correct_answer": "pushed",
+      "marks": 1,
+      "explanation": "\"nudged\" = pushed gently."
+    },
+    {
+      "source_ref": "henrypark-2025-q20",
+      "section": "cloze_mcq",
+      "question_type": "mcq",
+      "prompt": "The word \"honestly\" is closest in meaning to:",
+      "options": [
+        "easily",
+        "eagerly",
+        "rightfully",
+        "reluctantly"
+      ],
+      "correct_answer": "rightfully",
+      "marks": 1,
+      "explanation": "\"honestly\" here = rightfully/deservedly."
+    },
+    {
+      "source_ref": "henrypark-2025-q21",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "henrypark-2025-q21.png",
+      "context": "Text 1 is a poster for easyLocker, an islandwide parcel collection network offering secure, always-open lockers at convenient locations.",
+      "prompt": "According to the poster in Text 1, users of easyLockers must ________.",
+      "options": [
+        "collect their parcels within 24 hours",
+        "key in a unique access code to retrieve their parcels",
+        "share their home address with the delivery personnel to receive their parcels",
+        "provide contact details to the delivery personnel to retrieve their parcels"
+      ],
+      "correct_answer": "key in a unique access code to retrieve their parcels",
+      "marks": 1,
+      "explanation": "The poster says 'Enter your unique access code sent to you.'",
+      "passage": "The extract below is taken from a news article about parcel collection lockers.\n\nIn Singapore, many people still prefer having their online shopping parcels delivered straight to their homes to using parcel lockers. A study in 2022 showed that only 13 out of every 100 lockers were being used. This is even though there are over 1,000 locker stations placed conveniently around the country – in places like MRT stations, HDB blocks, and community centres.\n\nMost shoppers said they chose home delivery because it is more convenient. Some websites even offer free or cheap delivery to your doorstep. Others said they did not see the locker option when shopping online. Hence, they had not tried it.\n\nEven though locker usage is still low, companies and government agencies hope more shoppers will try it as they learn about the benefits. Using parcel lockers can help reduce traffic from delivery vehicles and lower our carbon footprint, which is better for the Earth. So, why not give parcel lockers a try?\n\nAdapted from: Low usage of nationwide collection lockers: Online shoppers rely more on home delivery but operator hopeful of pick-up by Daryl Choo, Today Online"
+    },
+    {
+      "source_ref": "henrypark-2025-q22",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "henrypark-2025-q21.png",
+      "context": "\"Remember to secure the locker before you leave!\" on the easyLocker poster.",
+      "prompt": "Why did the writer include this line in the poster in Text 1?",
+      "options": [
+        "To encourage users to leave the area quickly",
+        "To remind users to close the lockers for security",
+        "To ensure users are aware of the locker's closing time",
+        "To make users aware of the importance of keeping the area tidy"
+      ],
+      "correct_answer": "To remind users to close the lockers for security",
+      "marks": 1,
+      "explanation": "The line reminds users to secure the locker.",
+      "passage": "The extract below is taken from a news article about parcel collection lockers.\n\nIn Singapore, many people still prefer having their online shopping parcels delivered straight to their homes to using parcel lockers. A study in 2022 showed that only 13 out of every 100 lockers were being used. This is even though there are over 1,000 locker stations placed conveniently around the country – in places like MRT stations, HDB blocks, and community centres.\n\nMost shoppers said they chose home delivery because it is more convenient. Some websites even offer free or cheap delivery to your doorstep. Others said they did not see the locker option when shopping online. Hence, they had not tried it.\n\nEven though locker usage is still low, companies and government agencies hope more shoppers will try it as they learn about the benefits. Using parcel lockers can help reduce traffic from delivery vehicles and lower our carbon footprint, which is better for the Earth. So, why not give parcel lockers a try?\n\nAdapted from: Low usage of nationwide collection lockers: Online shoppers rely more on home delivery but operator hopeful of pick-up by Daryl Choo, Today Online"
+    },
+    {
+      "source_ref": "henrypark-2025-q23",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "henrypark-2025-q21.png",
+      "context": "\"Unlock the easy way to get your parcels.\" - the entire picture in the middle of the poster.",
+      "prompt": "The writer gives the impression that easyLockers are ________.",
+      "options": [
+        "free for all online shoppers",
+        "replacing door-to-door delivery entirely",
+        "easily accessible in many parts of Singapore",
+        "only useful in emergency situations or during natural disasters"
+      ],
+      "correct_answer": "easily accessible in many parts of Singapore",
+      "marks": 1,
+      "explanation": "The map with 'over 250 locations' and 'Convenient Location' conveys easy access.",
+      "passage": "The extract below is taken from a news article about parcel collection lockers.\n\nIn Singapore, many people still prefer having their online shopping parcels delivered straight to their homes to using parcel lockers. A study in 2022 showed that only 13 out of every 100 lockers were being used. This is even though there are over 1,000 locker stations placed conveniently around the country – in places like MRT stations, HDB blocks, and community centres.\n\nMost shoppers said they chose home delivery because it is more convenient. Some websites even offer free or cheap delivery to your doorstep. Others said they did not see the locker option when shopping online. Hence, they had not tried it.\n\nEven though locker usage is still low, companies and government agencies hope more shoppers will try it as they learn about the benefits. Using parcel lockers can help reduce traffic from delivery vehicles and lower our carbon footprint, which is better for the Earth. So, why not give parcel lockers a try?\n\nAdapted from: Low usage of nationwide collection lockers: Online shoppers rely more on home delivery but operator hopeful of pick-up by Daryl Choo, Today Online"
+    },
+    {
+      "source_ref": "henrypark-2025-q24",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "henrypark-2025-q21.png",
+      "context": "Both Text 1 (poster) and Text 2 (news article) are about parcel collection lockers.",
+      "prompt": "Based on the information in both Text 1 and 2, why might parcel lockers be a better option?",
+      "options": [
+        "They are free to use.",
+        "They offer additional discounts on items.",
+        "They guarantee faster delivery than home delivery.",
+        "They help reduce the number of delivery vehicles on the road."
+      ],
+      "correct_answer": "They help reduce the number of delivery vehicles on the road.",
+      "marks": 1,
+      "explanation": "Text 2 says lockers can help reduce traffic from delivery vehicles and lower carbon footprint.",
+      "passage": "The extract below is taken from a news article about parcel collection lockers.\n\nIn Singapore, many people still prefer having their online shopping parcels delivered straight to their homes to using parcel lockers. A study in 2022 showed that only 13 out of every 100 lockers were being used. This is even though there are over 1,000 locker stations placed conveniently around the country – in places like MRT stations, HDB blocks, and community centres.\n\nMost shoppers said they chose home delivery because it is more convenient. Some websites even offer free or cheap delivery to your doorstep. Others said they did not see the locker option when shopping online. Hence, they had not tried it.\n\nEven though locker usage is still low, companies and government agencies hope more shoppers will try it as they learn about the benefits. Using parcel lockers can help reduce traffic from delivery vehicles and lower our carbon footprint, which is better for the Earth. So, why not give parcel lockers a try?\n\nAdapted from: Low usage of nationwide collection lockers: Online shoppers rely more on home delivery but operator hopeful of pick-up by Daryl Choo, Today Online"
+    },
+    {
+      "source_ref": "henrypark-2025-q25",
+      "section": "comprehension_mcq",
+      "question_type": "mcq",
+      "image": "henrypark-2025-q21.png",
+      "context": "Text 1 tells us the advantages of using parcel lockers. However, based on Text 2.",
+      "prompt": "We know that ________.",
+      "options": [
+        "the parcel lockers are underutilised",
+        "the parcel lockers service is temporary",
+        "the parcel lockers are confusing to use",
+        "the parcel lockers are located at inconvenient places"
+      ],
+      "correct_answer": "the parcel lockers are underutilised",
+      "marks": 1,
+      "explanation": "Text 2 states only 13 out of every 100 lockers were being used.",
+      "passage": "The extract below is taken from a news article about parcel collection lockers.\n\nIn Singapore, many people still prefer having their online shopping parcels delivered straight to their homes to using parcel lockers. A study in 2022 showed that only 13 out of every 100 lockers were being used. This is even though there are over 1,000 locker stations placed conveniently around the country – in places like MRT stations, HDB blocks, and community centres.\n\nMost shoppers said they chose home delivery because it is more convenient. Some websites even offer free or cheap delivery to your doorstep. Others said they did not see the locker option when shopping online. Hence, they had not tried it.\n\nEven though locker usage is still low, companies and government agencies hope more shoppers will try it as they learn about the benefits. Using parcel lockers can help reduce traffic from delivery vehicles and lower our carbon footprint, which is better for the Earth. So, why not give parcel lockers a try?\n\nAdapted from: Low usage of nationwide collection lockers: Online shoppers rely more on home delivery but operator hopeful of pick-up by Daryl Choo, Today Online"
+    },
+    {
+      "source_ref": "henrypark-2025-q26",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "Word bank: (A)any (B)are (C)as (D)at (E)however (F)is (G)might (H)my (J)or (K)should (L)then (M)this (N)to (P)with (Q)which.\n\nSpending time on your phone, tablet, or computer can be very enjoyable. ___(26)___, it is important to remember that too much screen time can have negative effects. If you spend long hours looking ___(27)___ a screen, it can make you feel tired, affect your sleep and even leave you feeling less energetic. You ___(28)___ also find it harder to focus on other important things, like schoolwork or spending quality time ___(29)___ family and friends.\n\nTo stay healthy, you ___(30)___ balance screen time with other activities. Make time for outdoor play, reading, ___(31)___ hobbies that do not involve screens. Setting limits on how much time you spend on devices ___(32)___ an effective way to keep things in balance. For example, you could decide to play for thirty minutes and ___(33)___ take a break to do something else. This is more beneficial than spending the entire day on screens ___(34)___ can leave you feeling drained.\n\nIt is also a good idea to have days when you do not use screens at all and take ___(35)___ chance to explore new activities. Remember, technology is fun, but it is important to enjoy the world around you too!",
+      "prompt": "Choose the letter for blank (26) from the word bank.",
+      "correct_answer": "E",
+      "marks": 1,
+      "explanation": "\"However\" - contrast."
+    },
+    {
+      "source_ref": "henrypark-2025-q27",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (27) from the word bank.",
+      "correct_answer": "D",
+      "marks": 1,
+      "explanation": "\"at\" - looking at."
+    },
+    {
+      "source_ref": "henrypark-2025-q28",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (28) from the word bank.",
+      "correct_answer": "G",
+      "marks": 1,
+      "explanation": "\"might\" - possibility."
+    },
+    {
+      "source_ref": "henrypark-2025-q29",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (29) from the word bank.",
+      "correct_answer": "P",
+      "marks": 1,
+      "explanation": "\"with\" - with family and friends."
+    },
+    {
+      "source_ref": "henrypark-2025-q30",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (30) from the word bank.",
+      "correct_answer": "K",
+      "marks": 1,
+      "explanation": "\"should\" - advice."
+    },
+    {
+      "source_ref": "henrypark-2025-q31",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (31) from the word bank.",
+      "correct_answer": "J",
+      "marks": 1,
+      "explanation": "\"or\" - list of alternatives."
+    },
+    {
+      "source_ref": "henrypark-2025-q32",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (32) from the word bank.",
+      "correct_answer": "F",
+      "marks": 1,
+      "explanation": "\"is\" - singular subject."
+    },
+    {
+      "source_ref": "henrypark-2025-q33",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (33) from the word bank.",
+      "correct_answer": "L",
+      "marks": 1,
+      "explanation": "\"then\" - sequence."
+    },
+    {
+      "source_ref": "henrypark-2025-q34",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (34) from the word bank.",
+      "correct_answer": "Q",
+      "marks": 1,
+      "explanation": "\"which\" - relative pronoun."
+    },
+    {
+      "source_ref": "henrypark-2025-q35",
+      "section": "cloze_wordbank",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Choose the letter for blank (35) from the word bank.",
+      "correct_answer": "M",
+      "marks": 1,
+      "explanation": "\"this\" - take this chance."
+    },
+    {
+      "source_ref": "henrypark-2025-q36",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "Dear Diary,\n\nIt was an unforgettable day of outdoor learning with my Primary 6 schoolmates. The morning started off in(36) a sense of excitement as we ventured out into the field for our first hands-on expirience(37). I was initially very concerned about the complex(38) of the tasks that we needed to do but it turned out quite to be manegeble(39) with the instructor's clear instructions. I was pleasantly surprised by how engaging(40) my schoolmates were in these activities!\n\nWe began with a nature walk. We had to observe and describe the different plants and insects we saw. It was a great opurtunity(41) for us to practise using descriptive language. Although(42) struggling to find the right words, we worked well together. It was a wonderful moment of collebaration(43) and learning.\n\nLater, we had a group discussion, where we shared what we had discovered. Even the quieter ones found their voice, and I could see their confidence growing. It was indeed a fulfilled(44) day as outdoor learning not only broadened our vocabulary but also built a stronger sense of comunnity(45) among the students. Outdoor learning is definitely fun and meaningful!",
+      "prompt": "Write the correct word.",
+      "correct_answer": "With",
+      "marks": 1,
+      "explanation": "\"started off with a sense of excitement\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q37",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Experience",
+      "marks": 1,
+      "explanation": "Noun form 'experience'."
+    },
+    {
+      "source_ref": "henrypark-2025-q38",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Complexity",
+      "marks": 1,
+      "explanation": "Noun form 'complexity'."
+    },
+    {
+      "source_ref": "henrypark-2025-q39",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "manageable",
+      "marks": 1,
+      "explanation": "Correct spelling 'manageable'."
+    },
+    {
+      "source_ref": "henrypark-2025-q40",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "engaging",
+      "marks": 1,
+      "explanation": "'engaging' is correct."
+    },
+    {
+      "source_ref": "henrypark-2025-q41",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "opportunity",
+      "marks": 1,
+      "explanation": "Correct spelling 'opportunity'."
+    },
+    {
+      "source_ref": "henrypark-2025-q42",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "Although",
+      "marks": 1,
+      "explanation": "'Although' is correct."
+    },
+    {
+      "source_ref": "henrypark-2025-q43",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "collaboration",
+      "marks": 1,
+      "explanation": "Correct spelling 'collaboration'."
+    },
+    {
+      "source_ref": "henrypark-2025-q44",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "fulfilling",
+      "marks": 1,
+      "explanation": "Adjective form 'fulfilling'."
+    },
+    {
+      "source_ref": "henrypark-2025-q45",
+      "section": "editing",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Write the correct word.",
+      "correct_answer": "community",
+      "marks": 1,
+      "explanation": "Correct spelling 'community'."
+    },
+    {
+      "source_ref": "henrypark-2025-q46",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "The Singapore Food Agency (SFA) is planning to change Lim Chu Kang into a modern farming area that uses less resources to grow more food. This will help Singaporeans produce more of ___(46)___ own food and not ___(47)___ too much on other countries.\n\nAs Singapore buys over 90% of its food ___(48)___ other places, we can be vulnerable when other countries face shortage problems. To combat ___(49)___, Singapore wants to grow 30% of the food we need by the year 2030. Much support ___(50)___ been given by the government to the farmers.\n\nThe new farming area will have shared ___(51)___ like water and power infrastructure to help farms save money and use fewer resources. It will also try to reduce waste and be more efficient. However, to ___(52)___ that different kinds of plants and animals are protected, an environmental study is ___(53)___ with the help of environmental experts.\n\nThe study looks ___(54)___ at the types of plants and animals living in the area, including those ___(55)___ may be rare or endangered. Special attention is given to native species that play an ___(56)___ role in the local ecosystem. Environmental experts are working with farmers and planners to make sure these species are not harmed by the development.\n\nMeasures such as ___(57)___ aside green spaces, creating buffer zones, and using eco-friendly farming methods will help ___(58)___ wildlife habitats. For example, trees that birds and insects need will be kept as much as ___(59)___, and farming activities will be planned to stay away from areas that are easily harmed.\n\nWith careful planning, the new Lim Chu Kang farming area can become a model for how nature and modern agriculture can work hand ___(60)___ hand. This balance is key to making sure that Singapore's goal of food security does not come at the cost of its rich biodiversity.",
+      "prompt": "Fill in blank (46) with a suitable word.",
+      "correct_answer": "their",
+      "marks": 1,
+      "explanation": "\"their own food\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q47",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "prompt": "Fill in blank (47) with a suitable word.",
+      "correct_answer": "rely",
+      "marks": 1,
+      "explanation": "\"rely too much on other countries\".",
+      "context": ""
+    },
+    {
+      "source_ref": "henrypark-2025-q48",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (48) with a suitable word.",
+      "correct_answer": "from",
+      "marks": 1,
+      "explanation": "\"buys food from other places\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q49",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (49) with a suitable word.",
+      "correct_answer": "This",
+      "marks": 1,
+      "explanation": "Reference to the previous idea."
+    },
+    {
+      "source_ref": "henrypark-2025-q50",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (50) with a suitable word.",
+      "correct_answer": "has",
+      "marks": 1,
+      "explanation": "\"Much support has been given\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q51",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (51) with a suitable word.",
+      "correct_answer": "facilities",
+      "marks": 1,
+      "explanation": "\"shared facilities\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q52",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (52) with a suitable word.",
+      "correct_answer": "ensure",
+      "marks": 1,
+      "explanation": "\"to ensure that...\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q53",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (53) with a suitable word.",
+      "correct_answer": "ongoing",
+      "marks": 1,
+      "explanation": "\"an ongoing study\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q54",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (54) with a suitable word.",
+      "correct_answer": "closely",
+      "marks": 1,
+      "explanation": "\"looks closely at\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q55",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (55) with a suitable word.",
+      "correct_answer": "that",
+      "marks": 1,
+      "explanation": "\"those that may be rare\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q56",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (56) with a suitable word.",
+      "correct_answer": "important",
+      "marks": 1,
+      "explanation": "\"an important role\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q57",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (57) with a suitable word.",
+      "correct_answer": "setting",
+      "marks": 1,
+      "explanation": "\"setting aside green spaces\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q58",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (58) with a suitable word.",
+      "correct_answer": "protect",
+      "marks": 1,
+      "explanation": "\"help protect wildlife habitats\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q59",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (59) with a suitable word.",
+      "correct_answer": "possible",
+      "marks": 1,
+      "explanation": "\"as much as possible\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q60",
+      "section": "cloze_open",
+      "question_type": "fill_blank",
+      "context": "",
+      "prompt": "Fill in blank (60) with a suitable word.",
+      "correct_answer": "in",
+      "marks": 1,
+      "explanation": "\"work hand in hand\"."
+    },
+    {
+      "source_ref": "henrypark-2025-q61",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The nurse said, \"Mrs Lim, you missed your doctor's appointment last week.\" The nurse told Mrs Lim that ________.",
+      "correct_answer": "she had missed her doctor's appointment the previous week",
+      "marks": 2,
+      "explanation": "Reported speech: tense and time reference shift back."
+    },
+    {
+      "source_ref": "henrypark-2025-q62",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The judges will accept the artwork if it is properly framed. Unless ________.",
+      "correct_answer": "it is properly framed, the judges will not accept the artwork",
+      "marks": 2,
+      "explanation": "\"Unless\" introduces the condition for non-acceptance."
+    },
+    {
+      "source_ref": "henrypark-2025-q63",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "Grace enjoys baking with her mother. What Grace ________.",
+      "correct_answer": "enjoys doing is baking with her mother",
+      "marks": 2,
+      "explanation": "Cleft sentence with 'what'."
+    },
+    {
+      "source_ref": "henrypark-2025-q64",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "He saw the doctor. He felt much better. Having ________.",
+      "correct_answer": "seen the doctor, he felt much better",
+      "marks": 2,
+      "explanation": "Perfect participle 'having seen'."
+    },
+    {
+      "source_ref": "henrypark-2025-q65",
+      "section": "synthesis",
+      "question_type": "fill_blank",
+      "prompt": "The rescue team succeeded in their mission to save the stranded hiker from the mountain. The rescue team's mission ________.",
+      "correct_answer": "to save the stranded hiker from the mountain was successful",
+      "marks": 2,
+      "explanation": "Nominalisation rephrasing."
+    },
+    {
+      "source_ref": "henrypark-2025-q66",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "context": "I thought I was losing my sanity because, far too often, when I arrived\nat the preschool I ran, I would find the toy cabinet wide open and toys strewn\neverywhere. The rule was that each child could take out one toy at a time and\nhad to return it before getting another. High up and latched securely, the\ncabinet was not easily accessible, so I assumed a teacher with access to the     5\nkey was opening it for them. I raised the issue with the staff, but they denied\nopening it. Frustrated, I bought a combination lock and shared the code with\nthe teachers who needed access. The first week after installing it, we were\nrelieved to find the cabinet still securely locked.\n    But first thing on Monday of the following week, the cabinet had been     10\nopened again, with toys scattered everywhere. I questioned everyone who\nwas given the lock combination but each insisted that they had not opened it\nor shared the code. Assuming I had failed to lock it properly, I made sure it\nwas securely locked that day. However, the very next day, the cabinet was\nwide open again, and toys filled the room once more. It was infuriating and I     15\nconsidered nailing it shut and banning toys altogether. That day, I finally\nrealised the cause of the problem when we gathered the toys. Except those\nthe children were playing with, I put the rest away into the cabinet.\n    In my flustered state, I locked the cabinet again, forgetting that some\ntoys were still outside. Realising my mistake, I decided to leave it locked until     20\nthe children were ready to switch toys. When a little girl asked to exchange\nher toy, a three-year-old boy named Scotty, with the vocabulary of an English\nprofessor, offered to help her. I just smiled, thinking he could not open the\ncabinet. After letting Scotty and the little girl each choose a toy, I put the rest\naway into the cabinet and locked it again. When Scotty offered to help another     25\nchild exchange toys, I decided to observe. To my astonishment, he stepped\non a stool to reach the lock. Next, he confidently spun the dials of the lock and\nthe cabinet swung wide open.\n    \"Scotty, how did you learn to open that?\" I gasped. \"It was quite\nelementary,\" Scotty said with a grin. \"I analysed your movements and     30\ndeduced the combination.\"\n    I could only shake my head in disbelief. When his mother arrived to\npick him up, I told her about the incident and asked if a keyed lock might be a\nbetter option. She laughed. \"We tried that, and he figured out how to pick\nevery one we've purchased.  That's why all our locks are up high, though he     35\nstill finds ways to get to them.\" I was shocked, and asked if there was anything\nelse he did that I should know about.\n    \"Plenty of things,\" she said with a laugh. \"For instance, my husband\ngave Scotty an old clock he could not fix, thinking it would keep him busy.\nScotty spent the day tinkering, with pieces scattered everywhere. By evening,     40\nmy husband was stunned to find the clock not only reassembled but working\nperfectly, though I was not surprised in the least. Scotty has always had a\nknack for figuring things out. So, good luck keeping him out of the cabinet and\nlet me know if you figure out how.\"\n    But I never did. I stood there, torn between disbelief and admiration,     45\nrealising that sometimes the most unexpected answers come from the\nsmallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "prompt": "Why did the narrator think that the toy cabinet was inaccessible? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "the cabinet was high up and latched securely / the rule was that each child could take out one toy at a time and had to return it before getting another",
+          "keywords": [
+            [
+              "high up",
+              "latched",
+              "securely",
+              "not easily accessible"
+            ]
+          ]
+        }
+      ],
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q67",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "Fill in the table to show the narrator's emotions before and within the first week of using the combination lock. (a) Before using the combination lock: (b) Within the first week of using the combination lock: [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) before: frustrated / fed up (with the toys scattered)",
+          "keywords": [
+            [
+              "frustrated",
+              "fed up"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) within first week: relieved (the cabinet remained securely locked)",
+          "keywords": [
+            [
+              "relieved"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q68",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "According to paragraph 3, which 7-word phrase shows that Scotty was very advanced in his language skills? [1m]",
+      "marks": 1,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "with the vocabulary of an English professor",
+          "keywords": [
+            [
+              "vocabulary",
+              "English professor"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q69",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "Based on lines 19-28, what did Scotty do that surprised the narrator? (a)(b) [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "Scotty stepped on a stool to reach the lock",
+          "keywords": [
+            [
+              "step on a stool",
+              "stool"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "he confidently spun the dials of the lock and the cabinet swung wide open",
+          "keywords": [
+            [
+              "spun the dials",
+              "swung open"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q70",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "What do the words in the left column refer to in the passage? (a) each (line 12) (b) the rest (line 18) (c) every one (line 35) [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) each child could take out one toy at a time and had to return it before getting another",
+          "keywords": [
+            [
+              "child",
+              "one toy"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) the toys the children were not playing with",
+          "keywords": [
+            [
+              "toys",
+              "not playing with"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) the locks / items Scotty's parents had purchased",
+          "keywords": [
+            [
+              "locks",
+              "purchased"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q71",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "State whether each statement is true or false, then give a reason. (a) The narrator wanted to end the use of the toy cabinet. (b) The combination lock for the toy cabinet initially worked. (c) Scotty's father taught him how to assemble an old clock. [3m]",
+      "marks": 3,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "textual_evidence",
+          "description": "(a) True — the narrator considered nailing the cabinet shut and banning toys altogether",
+          "keywords": [
+            [
+              "true",
+              "nailing",
+              "banning"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "(b) True — the first week after installing it, the cabinet was still securely locked",
+          "keywords": [
+            [
+              "true",
+              "first week",
+              "securely locked"
+            ]
+          ]
+        },
+        {
+          "seq": 3,
+          "point_kind": "textual_evidence",
+          "description": "(c) False — Scotty's father gave Scotty an old clock that he could not fix",
+          "keywords": [
+            [
+              "false",
+              "old clock",
+              "could not fix"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q72",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "Explain in your own words what Scotty meant when he said, \"It was quite elementary.\" [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "he meant it was quite easy / simple to figure out the combination of the lock",
+          "keywords": [
+            [
+              "easy",
+              "simple"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "he worked out the combination by analysing the movements of the dials / his own deduction",
+          "keywords": [
+            [
+              "analyse",
+              "deduce",
+              "worked out"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q73",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "no, she was not surprised",
+          "keywords": [
+            [
+              "no",
+              "not surprised"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "she laughed and said Scotty always had a knack for figuring things out",
+          "keywords": [
+            [
+              "laughed",
+              "knack"
+            ]
+          ]
+        }
+      ],
+      "prompt": "Do you think Scotty's mother was surprised by the incident? Use evidence from the passage to support your answer. [2m]",
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q74",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "What did Scotty's mother think of the narrator's chances of keeping Scotty out of the cabinet? What did she do to show it? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "inference",
+          "description": "she thought the narrator had little to no chance of keeping Scotty out of the cabinet",
+          "keywords": [
+            [
+              "little chance",
+              "no chance"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "textual_evidence",
+          "description": "she told the narrator good luck keeping him out and to let her know if he figured it out",
+          "keywords": [
+            [
+              "good luck",
+              "let her know"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    },
+    {
+      "source_ref": "henrypark-2025-q75",
+      "section": "comprehension_oeq",
+      "question_type": "oeq",
+      "prompt": "(a) Which word best describes how the narrator feels towards Scotty at the end of the passage? (amazed / frustrated / disappointed / pleased) (b) Why did he feel this way? [2m]",
+      "marks": 2,
+      "mark_points": [
+        {
+          "seq": 1,
+          "point_kind": "keyword",
+          "description": "amazed",
+          "keywords": [
+            [
+              "amazed"
+            ]
+          ]
+        },
+        {
+          "seq": 2,
+          "point_kind": "inference",
+          "description": "scotty, though young, could do things that even his father could not",
+          "keywords": [
+            [
+              "young",
+              "even his father could not"
+            ]
+          ]
+        }
+      ],
+      "context": "",
+      "passage": "I thought I was losing my sanity because, far too often, when I arrived at the preschool I ran, I would find the toy cabinet wide open and toys strewn everywhere. The rule was that each child could take out one toy at a time and had to return it before getting another. High up and latched securely, the cabinet was not easily accessible, so I assumed a teacher with access to the key was opening it for them. I raised the issue with the staff, but they denied opening it. Frustrated, I bought a combination lock and shared the code with the teachers who needed access. The first week after installing it, we were relieved to find the cabinet still securely locked.\n\nBut first thing on Monday of the following week, the cabinet had been opened again, with toys scattered everywhere. I questioned everyone who was given the lock combination but each insisted that they had not opened it or shared the code. Assuming I had failed to lock it properly, I made sure it was securely locked that day. However, the very next day, the cabinet was wide open again, and toys filled the room once more. It was infuriating and I considered nailing it shut and banning toys altogether. That day, I finally realised the cause of the problem when we gathered the toys. Except those the children were playing with, I put the rest away into the cabinet.\n\nIn my flustered state, I locked the cabinet again, forgetting that some toys were still outside. Realising my mistake, I decided to leave it locked until the children were ready to switch toys. When a little girl asked to exchange her toy, a three-year-old boy named Scotty, with the vocabulary of an English professor, offered to help her. I just smiled, thinking he could not open the cabinet. After letting Scotty and the little girl each choose a toy, I put the rest away into the cabinet and locked it again. When Scotty offered to help another child exchange toys, I decided to observe. To my astonishment, he stepped on a stool to reach the lock. Next, he confidently spun the dials of the lock and the cabinet swung wide open.\n\n\"Scotty, how did you learn to open that?\" I gasped. \"It was quite elementary,\" Scotty said with a grin. \"I analysed your movements and deduced the combination.\"\n\nI could only shake my head in disbelief. When his mother arrived to pick him up, I told her about the incident and asked if a keyed lock might be a better option. She laughed. \"We tried that, and he figured out how to pick every one we've purchased. That's why all our locks are up high, though he still finds ways to get to them.\" I was shocked, and asked if there was anything else he did that I should know about.\n\n\"Plenty of things,\" she said with a laugh. \"For instance, my husband gave Scotty an old clock he could not fix, thinking it would keep him busy. Scotty spent the day tinkering, with pieces scattered everywhere. By evening, my husband was stunned to find the clock not only reassembled but working perfectly, though I was not surprised in the least. Scotty has always had a knack for figuring things out. So, good luck keeping him out of the cabinet and let me know if you figure out how.\"\n\nBut I never did. I stood there, torn between disbelief and admiration, realising that sometimes the most unexpected answers come from the smallest hands.\n\nA Very Precocious Child by D. W. Howard",
+      "image": "henrypark-2025-passage.png"
+    }
+  ]
+}

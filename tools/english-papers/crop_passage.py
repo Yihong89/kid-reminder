@@ -36,6 +36,9 @@ PAGES = {
     # rulang: the reading passage for Q66-75 is printed at the very end of
     # Booklet A (printed pages 10-11), not in Booklet B.
     "rulang": 14,
+    # peihwa: passage for Q66-75 sits at the end of Booklet A (printed page 10),
+    # complete on one page -- lines 1-45, no continuation page.
+    "peihwa": 12,
 }
 
 # slug -> second page, for passages long enough to spill onto the next
