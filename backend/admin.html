@@ -2720,6 +2720,28 @@
     }
   }
 
+  function epaperMistakeRow(q) {
+    const row = document.createElement("div");
+    row.className = "card sci-mistake-row";
+    const cntClass = q.correct_count > 0 ? "pos" : q.correct_count < 0 ? "neg" : "";
+    row.innerHTML = `
+      <div class="main">
+        <div class="prompt">${escapeHtml(q.prompt)}</div>
+        <div class="meta">${escapeHtml(q.school)} ${q.year || ""} · ${EPAPER_SECTION_ZH[q.section] || escapeHtml(q.section)} · ${q.marks} 分
+          <span class="cnt ${cntClass}">正确数 ${q.correct_count}</span>
+        </div>
+      </div>
+      <button class="ghost" title="移出错题本">✅ 已掌握</button>`;
+    row.querySelector("button").onclick = async () => {
+      if (!confirm("确认这道题已经掌握，移出错题本？")) return;
+      try {
+        await api(`/api/epaper/questions/${q.id}`, { method: "PATCH", body: JSON.stringify({ inMistakeBank: false }) });
+        refreshEpaperMistakes();
+      } catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+
   // 筛选栏的事件：输入防抖，下拉/标签即改即查
   (() => {
     let t = null;
