@@ -1029,6 +1029,36 @@ function normalizeEnglishAnswer(s) {
   return String(s || "").trim().toLowerCase().replace(/\s+/g, " ").replace(/[.,!?;:"'()]/g, "").trim();
 }
 
+// An MCQ's answer key has to be the OPTION TEXT, because grading compares what
+// the kid tapped against it — "Whom", never "C". Nine hand-entered questions had
+// the letter stored instead, and no option text can ever equal "C", so the kid
+// was told he was wrong every single time he was right (found 2026-10-13, after
+// he said so twice). Accept a letter at entry and turn it into the option text;
+// return null when the answer is neither, so callers can refuse it instead of
+// storing something that can never match.
+function coerceMcqAnswer(options, correctAnswer) {
+  const opts = (Array.isArray(options) ? options : []).map((o) => String(o).trim());
+  const raw = String(correctAnswer == null ? "" : correctAnswer).trim();
+  if (!raw || !opts.length) return null;
+  const eq = (a, b) => String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+  const resolveOne = (part) => {
+    const hit = opts.find((o) => eq(o, part));
+    if (hit) return hit;                                  // already the option text
+    const letter = part.toUpperCase();
+    if (/^[A-Z]$/.test(letter)) {
+      const i = letter.charCodeAt(0) - 65;
+      // only read it as an index when the letter is not itself an option
+      if (i >= 0 && i < opts.length && !opts.some((o) => eq(o, letter))) return opts[i];
+    }
+    return null;
+  };
+  const parts = raw.split("/").map((p) => p.trim()).filter(Boolean);
+  if (!parts.length) return null;
+  const resolved = parts.map(resolveOne);
+  if (resolved.some((r) => r === null)) return null;
+  return resolved.join(" / ");
+}
+
 // ----------------------------------------------------- 科学 mark-point matching
 // Science OEQ answers are free prose, so the English module's exact-after-
 // normalisation comparison is useless here. Instead each mark point declares the
@@ -2694,7 +2724,7 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const type = ["fill_blank", "mcq", "sentence_transform"].includes(body.type) ? body.type : null;
       const prompt = String(body.prompt || "").trim();
-      const correctAnswer = String(body.correctAnswer || "").trim();
+      let correctAnswer = String(body.correctAnswer || "").trim();
       if (!type || !prompt || !correctAnswer) {
         return sendJSON(400, { error: "type, prompt, correctAnswer are required" });
       }
@@ -2704,6 +2734,13 @@ const server = http.createServer(async (req, res) => {
           return sendJSON(400, { error: "mcq questions need an options array (2+ choices)" });
         }
         options = JSON.stringify(body.options.map((o) => String(o).trim()));
+        // Refuse a key that matches no option (see coerceMcqAnswer): the parent
+        // often types the letter, which used to be stored verbatim.
+        const coerced = coerceMcqAnswer(JSON.parse(options), correctAnswer);
+        if (coerced === null) {
+          return sendJSON(400, { error: `correctAnswer ${JSON.stringify(correctAnswer)} is not one of the options — use the option text (or its letter)` });
+        }
+        correctAnswer = coerced;
       }
       const topic = String(body.topic || "").trim();
       const explanation = String(body.explanation || "").trim();
@@ -2727,13 +2764,35 @@ const server = http.createServer(async (req, res) => {
         const body = await readBody(req);
         const sets = [];
         const vals = [];
+        // An MCQ's key must stay an option text (see coerceMcqAnswer). Options and
+        // the answer can be edited separately, so validate the values the row will
+        // END UP with, not just the fields this request happens to carry.
+        const cur = db.prepare("SELECT type, options, correct_answer FROM english_questions WHERE id = ?").get(id);
+        if (!cur) return sendJSON(404, { error: "question not found" });
+        const effType = (body.type !== undefined && ["fill_blank", "mcq", "sentence_transform"].includes(body.type))
+          ? body.type : cur.type;
+        const effOptions = body.options !== undefined
+          ? (Array.isArray(body.options) ? JSON.stringify(body.options.map((o) => String(o).trim())) : null)
+          : cur.options;
+        let coercedAnswer = null;
+        if (effType === "mcq") {
+          let parsed = null;
+          try { parsed = JSON.parse(effOptions || "null"); } catch { parsed = null; }
+          coercedAnswer = coerceMcqAnswer(parsed, body.correctAnswer !== undefined ? body.correctAnswer : cur.correct_answer);
+          if (coercedAnswer === null) {
+            return sendJSON(400, { error: "correctAnswer is not one of the options — use the option text (or its letter)" });
+          }
+        }
         if (body.type !== undefined && ["fill_blank", "mcq", "sentence_transform"].includes(body.type)) {
           sets.push("type = ?"); vals.push(body.type);
         }
         const strField = (key, col) => { if (body[key] !== undefined) { sets.push(`${col} = ?`); vals.push(String(body[key]).trim()); } };
         strField("topic", "topic");
         strField("prompt", "prompt");
-        strField("correctAnswer", "correct_answer");
+        if (body.correctAnswer !== undefined) {
+          sets.push("correct_answer = ?");
+          vals.push(effType === "mcq" ? coercedAnswer : String(body.correctAnswer).trim());
+        }
         strField("explanation", "explanation");
         if (body.options !== undefined) { sets.push("options = ?"); vals.push(Array.isArray(body.options) ? JSON.stringify(body.options.map((o) => String(o).trim())) : null); }
         if (body.needsAudio !== undefined) { sets.push("needs_audio = ?"); vals.push(body.needsAudio ? 1 : 0); }
@@ -2813,7 +2872,7 @@ const server = http.createServer(async (req, res) => {
       const itemId = Number(engSubmitMatch[2]);
       const item = db
         .prepare(
-          `SELECT i.id, i.result, i.question_id, q.correct_answer, q.explanation
+          `SELECT i.id, i.result, i.question_id, q.correct_answer, q.explanation, q.options
            FROM english_quiz_items i JOIN english_questions q ON q.id = i.question_id
            WHERE i.id = ? AND i.session_id = ?`
         )
@@ -2823,7 +2882,20 @@ const server = http.createServer(async (req, res) => {
       const answer = String(body.answer || "");
       if (item.result === null) {
         const alts = item.correct_answer.split("/").map((a) => normalizeEnglishAnswer(a));
-        const isCorrect = alts.includes(normalizeEnglishAnswer(answer));
+        let isCorrect = alts.includes(normalizeEnglishAnswer(answer));
+        if (!isCorrect && item.options) {
+          // Last-ditch guard for an MCQ whose key is a bare option letter (nine
+          // such rows existed until 2026-10-13). Grading compares the option TEXT
+          // the kid tapped, so a letter key can never match anything — mapping it
+          // through the options can only turn a wrong into a right, never the
+          // reverse, because it is the same answer the tap already represented.
+          let parsed = null;
+          try { parsed = JSON.parse(item.options); } catch { parsed = null; }
+          const coerced = coerceMcqAnswer(parsed, item.correct_answer);
+          if (coerced) {
+            isCorrect = coerced.split("/").map((a) => normalizeEnglishAnswer(a)).includes(normalizeEnglishAnswer(answer));
+          }
+        }
         const result = isCorrect ? "correct" : "incorrect";
         db.prepare("UPDATE english_quiz_items SET answer = ?, result = ? WHERE id = ?").run(answer, result, itemId);
         db.prepare(
