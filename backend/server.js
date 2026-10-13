@@ -1628,6 +1628,244 @@ const EPAPER_SECTION_LABELS = {
 // per section instead of repeated under every question.
 const EPAPER_SHARED_TEXT_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]);
 
+// ------------------------------------------------- 英语错题本：筛选条件
+// Shared by the admin list and the redo PDF so that 导出 always matches what the
+// parent is looking at. Returns SQL fragments plus a human-readable note that
+// gets printed in the PDF header.
+function epaperQuestionFilters(url) {
+  const paperKey = url.searchParams.get("paperKey") || "";
+  const mistakeOnly = url.searchParams.get("mistakeBank") === "1";
+  const section = url.searchParams.get("section") || "";
+  const kw = (url.searchParams.get("q") || "").trim();
+  const clauses = [], args = [], notes = [];
+  if (paperKey) { clauses.push("paper_key = ?"); args.push(paperKey); notes.push(paperKey); }
+  if (mistakeOnly) clauses.push("in_mistake_bank = 1");
+  if (section) {
+    clauses.push("section = ?"); args.push(section);
+    notes.push(EPAPER_SECTION_LABELS[section] || section);
+  }
+  if (kw) {
+    clauses.push("(prompt LIKE ? OR context LIKE ? OR passage LIKE ?)");
+    const like = "%" + kw + "%";
+    args.push(like, like, like);
+    notes.push('"' + kw + '"');
+  }
+  return { paperKey, mistakeOnly, section, kw, clauses, args, filterNote: notes.join(" \u00b7 ") };
+}
+
+// ------------------------------------------------- 家长端「英语错题本重做 PDF」
+// A printable worksheet of the mistake bank: the questions as they were set,
+// with room to write, and the answers on their own last page — so the kid can
+// redo the set on paper (parent request, 2026-10-13). It honours the same query
+// params the admin list uses, so 导出 always matches what is on screen.
+//
+// Grouped by (paper, section): a passage shared by a run of questions is printed
+// once, and a comprehension item gets its line-numbered scan rather than the
+// flattened text, because those questions cite lines.
+const EPAPER_MISTAKE_ORDER = [
+  "grammar_mcq", "vocab_mcq", "cloze_mcq", "comprehension_mcq",
+  "cloze_wordbank", "editing", "cloze_open", "synthesis", "comprehension_oeq",
+];
+const EPAPER_MISTAKE_INSTR = {
+  grammar_mcq: "Choose the correct answer and write its number (1, 2, 3 or 4).",
+  vocab_mcq: "Choose the correct answer and write its number (1, 2, 3 or 4).",
+  cloze_mcq: "Choose the word closest in meaning to the underlined word. Write its number.",
+  comprehension_mcq: "Read the texts and choose the best answer. Write its number.",
+  cloze_wordbank: "Choose the most suitable word from the word bank. Write its letter in the blank.",
+  editing: "Each numbered word contains a spelling or grammatical error. Write the correct word.",
+  cloze_open: "Fill in each blank with a suitable word.",
+  synthesis: "Rewrite the given sentence(s) using the word(s) provided. One sentence, same meaning.",
+  comprehension_oeq: "Read the passage and answer the questions.",
+};
+
+function epaperMistakesPdf(db, { rows, filterNote }) {
+  return new Promise((resolve, reject) => {
+    let PDFDocument;
+    try { PDFDocument = require("pdfkit"); }
+    catch { return reject(new Error("pdfkit 未安装 —— 在部署目录执行 npm install")); }
+    if (!rows.length) return reject(new Error("没有符合筛选条件的错题"));
+
+    const W = 595.28, H = 841.89, ML = 52, MR = 52, MT = 54, MB = 56, CW = W - ML - MR;
+    const INK = "#1a1a1a", GRAY = "#6b7280", ACCENT = "#0f766e", RULE = "#cbd5e1";
+
+    const doc = new PDFDocument({
+      size: [W, H], autoFirstPage: false,
+      margins: { top: MT, bottom: MB, left: ML, right: MR },
+      info: { Title: "English Paper 2 — mistake bank", Author: "Kid Reminder" },
+    });
+    const chunks = [];
+    doc.on("data", (c) => chunks.push(c));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    let y = MT;
+    const newPage = () => { doc.addPage(); y = MT; };
+    const need = (h) => { if (y + h > H - MB) newPage(); };
+    const put = (str, o = {}) => {
+      const width = o.width === undefined ? CW : o.width;
+      doc.font(o.font || "Helvetica").fontSize(o.size || 10)
+         .fillColor(o.color || INK)
+         .text(String(str == null ? "" : str), o.x === undefined ? ML : o.x, y,
+               { width, align: o.align || "left", lineGap: o.lineGap || 0 });
+      y = doc.y + (o.after || 0);
+    };
+    const para = (str, font, size, color, after, opts = {}) => {
+      const width = opts.width === undefined ? CW : opts.width;
+      const h = doc.font(font).fontSize(size).heightOfString(String(str), { width });
+      need(Math.min(h, H - MT - MB) + 2);
+      put(str, { font, size, color, after, width, x: opts.x, lineGap: opts.lineGap });
+    };
+    // Ruled writing lines.
+    const writingLines = (n, gap = 19) => {
+      for (let i = 0; i < n; i++) {
+        need(gap);
+        doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(0.5).strokeColor(RULE).stroke();
+        y += gap;
+      }
+      y += 6;
+    };
+    const questionHead = (it) => {
+      need(40);
+      y += 10;
+      doc.rect(ML, y, 30, 17).fill(INK);
+      doc.font("Helvetica-Bold").fontSize(9.5).fillColor("#ffffff")
+         .text(String(it.paper_seq), ML, y + 4.5, { width: 30, align: "center", lineBreak: false });
+      doc.font("Helvetica").fontSize(8).fillColor(GRAY)
+         .text(it.marks + (it.marks > 1 ? " marks" : " mark"), ML + 37, y + 5, { width: 80, lineBreak: false });
+      y += 23;
+    };
+
+    // ---------------- 抬头 ----------------
+    newPage();
+    put("ENGLISH PAPER 2 \u00b7 MISTAKE BANK", { font: "Helvetica-Bold", size: 14, after: 6 });
+    put("Redo this set on paper. The answers are on the last page.", { size: 9.5, color: GRAY, after: 2 });
+    put("Comprehension questions are not included \u2014 redo those in the app, where the passage is on screen.",
+        { size: 8.5, color: GRAY, after: 2 });
+    put(new Date().toISOString().slice(0, 10) + "  \u00b7  " + rows.length +
+        (rows.length === 1 ? " question" : " questions") +
+        (filterNote ? "  \u00b7  " + filterNote : ""), { size: 9, color: ACCENT, after: 9 });
+    doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1.4).strokeColor(INK).stroke(); y += 3;
+    doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(0.5).strokeColor(INK).stroke(); y += 12;
+
+    // ---------------- 题目 ----------------
+    const byPaper = new Map();
+    for (const r of rows) {
+      if (!byPaper.has(r.paper_key)) byPaper.set(r.paper_key, []);
+      byPaper.get(r.paper_key).push(r);
+    }
+
+    for (const [paperKey, list] of byPaper) {
+      const first = list[0];
+      need(74);
+      y += 14;
+      doc.rect(ML, y - 2, 4.5, 17).fill(INK);
+      doc.font("Helvetica-Bold").fontSize(12).fillColor(INK)
+         .text(String(first.school || paperKey) + (first.year ? "  " + first.year : ""),
+               ML + 12, y + 1, { width: CW - 90, lineBreak: false });
+      doc.font("Helvetica").fontSize(8.5).fillColor(GRAY)
+         .text(list.length + " \u00d7", W - MR - 60, y + 3, { width: 60, align: "right", lineBreak: false });
+      y += 20;
+
+      for (const sec of EPAPER_MISTAKE_ORDER) {
+        const group = list.filter((r) => r.section === sec).sort((a, b) => a.paper_seq - b.paper_seq);
+        if (!group.length) continue;
+
+        const imgInfo = null;   // only comprehension sections carry images, and those are excluded
+
+        need(64);
+        y += 10;
+        doc.font("Helvetica-Bold").fontSize(10.5).fillColor(ACCENT)
+           .text(EPAPER_SECTION_LABELS[sec] || sec, ML, y, { width: CW - 100, lineBreak: false });
+        doc.font("Helvetica").fontSize(8.5).fillColor(GRAY)
+           .text("Q" + group[0].paper_seq + "\u2013" + group[group.length - 1].paper_seq +
+                 "  (" + group.reduce((n, r) => n + r.marks, 0) + " marks)",
+                 W - MR - 110, y + 2, { width: 110, align: "right", lineBreak: false });
+        y += 15;
+        para(EPAPER_MISTAKE_INSTR[sec] || "", "Helvetica-Oblique", 8.6, GRAY, 8);
+
+        // 共享原文：每段只印一次
+        if (EPAPER_SHARED_TEXT_SECTIONS.has(sec) && sec !== "comprehension_oeq") {
+          const ctx = (group.find((r) => (r.context || "").trim()) || {}).context;
+          if (ctx) para(ctx, "Helvetica", 9.2, INK, 10);
+        }
+
+        for (const it of group) {
+          // 改错/填空三类：题干都是同一句指令，原文里的空号已经指明题号，重复十遍只是噪音
+          const compact = ["cloze_wordbank", "editing", "cloze_open"].includes(sec);
+          const opts = it.question_type === "mcq" && it.options ? JSON.parse(it.options) : [];
+          // Reserve the whole block (head + prompt + options) up front: printing
+          // the head first left an MCQ's number at the foot of a page with its
+          // four options overleaf.
+          const promptH = compact ? 0 : doc.font("Helvetica").fontSize(9.6)
+            .heightOfString(String(it.prompt || ""), { width: CW });
+          const optsH = opts.length ? doc.font("Helvetica").fontSize(9.4)
+            .heightOfString(opts.map((o, i) => "(" + (i + 1) + ")  " + o).join("\n"),
+                            { width: CW - 14, lineGap: 2 }) : 0;
+          need(34 + promptH + optsH + 16);
+
+          questionHead(it);
+          if (!compact) para(it.prompt, "Helvetica", 9.6, INK, 5);
+
+          if (opts.length) {
+            opts.forEach((o, i) => put("(" + (i + 1) + ")  " + o,
+              { x: ML + 14, width: CW - 14, size: 9.4, after: 2 }));
+            y += 4;
+          } else if (sec === "comprehension_oeq") {
+            writingLines(Math.max(2, Math.min(5, it.marks + 1)));
+          } else if (compact) {
+            need(22);
+            doc.moveTo(ML + 4, y + 12).lineTo(ML + 190, y + 12).lineWidth(0.6).strokeColor(RULE).stroke();
+            y += 24;
+          } else {
+            writingLines(it.marks >= 2 ? 2 : 1);
+          }
+          y += 2;
+        }
+      }
+    }
+
+    // ---------------- 答案（单独最后一页） ----------------
+    newPage();
+    put("ANSWERS", { font: "Helvetica-Bold", size: 13, after: 4 });
+    put("For the parent \u2014 the kid should not need this page until the set is done.",
+        { size: 9, color: GRAY, after: 10 });
+    doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1).strokeColor(INK).stroke(); y += 10;
+
+    for (const [paperKey, list] of byPaper) {
+      const first = list[0];
+      need(50); y += 8;
+      put(String(first.school || paperKey) + (first.year ? "  " + first.year : ""),
+          { font: "Helvetica-Bold", size: 10.5, after: 6 });
+      for (const sec of EPAPER_MISTAKE_ORDER) {
+        const group = list.filter((r) => r.section === sec).sort((a, b) => a.paper_seq - b.paper_seq);
+        if (!group.length) continue;
+        need(40); y += 4;
+        para(EPAPER_SECTION_LABELS[sec] || sec, "Helvetica-Bold", 9.2, ACCENT, 4);
+
+        // 填空题答案用逗号连成一两行，阅读理解逐题列得分点
+        if (group[0].question_type !== "oeq") {
+          const parts = group.map((r) => r.paper_seq + ". " + (String(r.correct_answer || "").trim() || "—"));
+          para(parts.join("    "), "Helvetica", 9.2, INK, 8, { lineGap: 3 });
+        } else {
+          for (const r of group) {
+            const pts = db.prepare(
+              `SELECT seq, description FROM epaper_mark_points WHERE question_id = ? ORDER BY seq`).all(r.id);
+            need(28);
+            put(r.paper_seq + ".  (" + r.marks + (r.marks > 1 ? " marks" : " mark") + ")",
+                { font: "Helvetica-Bold", size: 9.2, after: 2 });
+            const lines = pts.length ? pts.map((p) => "\u2022 " + (p.description || "")).join("\n")
+                                     : (String(r.correct_answer || "").trim() || "\u2014");
+            para(lines, "Helvetica", 9, INK, 7, { x: ML + 14, width: CW - 14, lineGap: 2 });
+          }
+        }
+      }
+    }
+
+    doc.end();
+  });
+}
+
+
 function epaperEscapeHtml(s) {
   return String(s == null ? "" : s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -3745,6 +3983,35 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(200, { session, items: detailed });
     }
 
+    // --- 家长端导出「英语错题本重做 PDF」（题目 + 留白，答案在最后一页）--------
+    if (method === "GET" && pathname === "/api/epaper/mistakes.pdf") {
+      if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+      try {
+        const f = epaperQuestionFilters(url);
+        // This export is only ever the mistake bank, whatever the URL says.
+        if (!f.mistakeOnly) f.clauses.push("in_mistake_bank = 1");
+        // Comprehension is deliberately left out (parent, 2026-10-13): it needs
+        // the printed passage to answer, and redoing those on paper means
+        // embedding a scan per paper — 14 MB for the full bank, for a section
+        // the app already handles. Everything else is self-contained text.
+        f.clauses.push("section NOT IN ('comprehension_oeq', 'comprehension_mcq')");
+        const where = f.clauses.length ? `WHERE ${f.clauses.join(" AND ")}` : "";
+        const rows = db.prepare(
+          `SELECT * FROM epaper_questions ${where} ORDER BY paper_key, paper_seq`).all(...f.args);
+        const buf = await epaperMistakesPdf(db, { rows, filterNote: f.filterNote });
+        const name = "mistakes-" + new Date().toISOString().slice(0, 10) + "-" + rows.length + ".pdf";
+        res.writeHead(200, {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename="${name}"`,
+          "Content-Length": buf.length,
+          "Cache-Control": "no-store",
+        });
+        return res.end(buf);
+      } catch (e) {
+        return sendJSON(400, { error: e.message });
+      }
+    }
+
     // --- 家长端下载「孩子作答 PDF」（原题 + 孩子的答案）------------------------
     const epaperAnswersPdfMatch = pathname.match(/^\/api\/epaper\/sessions\/(\d+)\/answers\.pdf$/);
     if (epaperAnswersPdfMatch && method === "GET") {
@@ -3910,14 +4177,22 @@ const server = http.createServer(async (req, res) => {
     if (method === "GET" && pathname === "/api/epaper/questions") {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });
-      const paperKey = url.searchParams.get("paperKey") || "";
-      const mistakeOnly = url.searchParams.get("mistakeBank") === "1";
+      const f = epaperQuestionFilters(url);
+      const paperKey = f.paperKey, mistakeOnly = f.mistakeOnly;
+      const clauses = f.clauses.slice(), args = f.args.slice();
       const limit = Math.min(200, Math.max(1, parseInt(url.searchParams.get("limit") || (paperKey ? "100" : "50"), 10)));
-      const clauses = [], args = [];
-      if (paperKey) { clauses.push("paper_key = ?"); args.push(paperKey); }
-      if (mistakeOnly) clauses.push("in_mistake_bank = 1");
       const where = clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
       const total = db.prepare(`SELECT COUNT(*) n FROM epaper_questions ${where}`).get(...args).n;
+      // Dropdown options for the mistake-bank filter bar: what is actually in the
+      // bank right now, not every paper ever imported.
+      const facets = mistakeOnly ? {
+        papers: db.prepare(`
+          SELECT paper_key AS paperKey, school, year, COUNT(*) n FROM epaper_questions
+           WHERE in_mistake_bank = 1 GROUP BY paper_key ORDER BY year DESC, school ASC`).all(),
+        sections: db.prepare(`
+          SELECT section, COUNT(*) n FROM epaper_questions
+           WHERE in_mistake_bank = 1 GROUP BY section`).all(),
+      } : null;
       const rows = db.prepare(
         `SELECT * FROM epaper_questions ${where} ORDER BY paper_key, paper_seq LIMIT ?`
       ).all(...args, limit);
@@ -3930,7 +4205,7 @@ const server = http.createServer(async (req, res) => {
         }
         return { ...q, options: q.options ? JSON.parse(q.options) : null, points };
       });
-      return sendJSON(200, { total, questions });
+      return sendJSON(200, { total, questions, facets });
     }
 
     sendJSON(404, { error: "not found" });

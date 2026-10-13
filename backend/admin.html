@@ -455,6 +455,13 @@
     <div id="epaperMistakesView" hidden>
       <div class="card">
         <div class="vocab-summary">错题本里的题只会在这里手动移出，答对了也不会自动清掉。</div>
+        <div class="vocab-filters">
+          <input type="text" id="epaperMistakeQ" placeholder="搜索题目 / 原文关键字…" />
+          <select id="epaperMistakePaper"><option value="">全部卷子</option></select>
+          <select id="epaperMistakeSection"><option value="">全部题型</option></select>
+          <button class="primary" id="epaperMistakePdf">⬇️ 导出重做 PDF</button>
+        </div>
+        <div class="vocab-summary" id="epaperMistakeSummary"></div>
         <div id="epaperMistakeList"></div>
       </div>
     </div>
@@ -2577,17 +2584,105 @@
   };
 
   // ---- 英语试卷错题本管理（只在这里手动移出，从不自动清空） -----------------
+  const EPAPER_SECTION_ZH = {
+    grammar_mcq: "语法选择", vocab_mcq: "词汇选择", cloze_mcq: "词汇填空（选择）",
+    comprehension_mcq: "阅读理解（选择）", cloze_wordbank: "选词填空", editing: "改错",
+    cloze_open: "开放填空", synthesis: "句子改写", comprehension_oeq: "阅读问答",
+  };
+  // 导出重做 PDF 时不带阅读理解：那两段要对着原文（扫描图）才能做，重做该在 app 里。
+  const EPAPER_PDF_SKIP = new Set(["comprehension_oeq", "comprehension_mcq"]);
+
+  function epaperMistakeFilters() {
+    return {
+      q: $("#epaperMistakeQ").value.trim(),
+      paperKey: $("#epaperMistakePaper").value,
+      section: $("#epaperMistakeSection").value,
+    };
+  }
+  // 列表和导出共用同一组参数，保证「导出」永远等于「眼前这一批」
+  function epaperMistakeQuery(f) {
+    const p = new URLSearchParams({ mistakeBank: "1" });
+    if (f.q) p.set("q", f.q);
+    if (f.paperKey) p.set("paperKey", f.paperKey);
+    if (f.section) p.set("section", f.section);
+    return p.toString();
+  }
+  // 下拉选项来自错题本当前的真实构成，只填一次，之后保留用户的选择
+  function epaperMistakeFillFacets(facets) {
+    if (!facets) return;
+    const paper = $("#epaperMistakePaper"), section = $("#epaperMistakeSection");
+    if (paper.dataset.filled !== "1") {
+      for (const p of facets.papers) {
+        const o = document.createElement("option");
+        o.value = p.paperKey;
+        o.textContent = `${p.school} ${p.year || ""}（${p.n}）`;
+        paper.appendChild(o);
+      }
+      paper.dataset.filled = "1";
+    }
+    if (section.dataset.filled !== "1") {
+      for (const s of facets.sections) {
+        const o = document.createElement("option");
+        o.value = s.section;
+        o.textContent = `${EPAPER_SECTION_ZH[s.section] || s.section}（${s.n}）`;
+        section.appendChild(o);
+      }
+      section.dataset.filled = "1";
+    }
+  }
+
   async function refreshEpaperMistakes() {
     try {
-      const data = await api("/api/epaper/questions?mistakeBank=1&limit=200");
+      const f = epaperMistakeFilters();
+      const data = await api(`/api/epaper/questions?${epaperMistakeQuery(f)}&limit=200`);
+      epaperMistakeFillFacets(data.facets);
       const el = $("#epaperMistakeList");
       el.innerHTML = "";
+      const bits = [];
+      if (f.q) bits.push(`关键字「${f.q}」`);
+      if (f.paperKey) bits.push(f.paperKey);
+      if (f.section) bits.push(EPAPER_SECTION_ZH[f.section] || f.section);
+      $("#epaperMistakeSummary").textContent =
+        `共 ${data.total} 题` + (bits.length ? `（${bits.join(" · ")}）` : "") +
+        (data.total > data.questions.length ? `，只列出前 ${data.questions.length} 题` : "") +
+        "　·　导出的重做 PDF 不含阅读理解";
       if (!data.questions.length) {
-        el.innerHTML = '<div class="empty">错题本是空的 🎉</div>';
+        el.innerHTML = '<div class="empty">没有符合条件的错题 🎉</div>';
         return;
       }
       for (const q of data.questions) el.appendChild(epaperMistakeRow(q));
     } catch (e) { showErr(e.message); }
+  }
+
+  // 导出当前筛选结果（和列表用的是同一组参数）
+  async function epaperMistakeExportPdf() {
+    const btn = $("#epaperMistakePdf"), label = btn.textContent;
+    btn.disabled = true; btn.textContent = "⏳ 正在生成…";
+    try {
+      const f = epaperMistakeFilters();
+      const res = await fetch(`/api/epaper/mistakes.pdf?${epaperMistakeQuery(f)}`, {
+        headers: pin ? { "X-Admin-Pin": pin } : {},
+      });
+      if (!res.ok) {
+        let msg = "生成失败";
+        try { msg = (await res.json()).error || msg; } catch {}
+        throw new Error(msg);
+      }
+      const cd = res.headers.get("Content-Disposition") || "";
+      const m = /filename="?([^"]+)"?/.exec(cd);
+      const url = URL.createObjectURL(await res.blob());
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = m ? m[1] : "mistakes.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    } catch (e) {
+      showErr("导出 PDF 失败：" + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
   }
 
   function epaperMistakeRow(q) {
@@ -2597,7 +2692,7 @@
     row.innerHTML = `
       <div class="main">
         <div class="prompt">${escapeHtml(q.prompt)}</div>
-        <div class="meta">${escapeHtml(q.school)} ${q.year || ""} · ${escapeHtml(q.section)} · ${q.marks} 分
+        <div class="meta">${escapeHtml(q.school)} ${q.year || ""} · ${EPAPER_SECTION_ZH[q.section] || escapeHtml(q.section)} · ${q.marks} 分
           <span class="cnt ${cntClass}">正确数 ${q.correct_count}</span>
         </div>
       </div>
@@ -2611,6 +2706,21 @@
     };
     return row;
   }
+
+  // 筛选栏的事件：输入防抖，下拉即改即查
+  (() => {
+    let t = null;
+    $("#epaperMistakeQ").addEventListener("input", () => {
+      clearTimeout(t);
+      t = setTimeout(refreshEpaperMistakes, 250);
+    });
+    $("#epaperMistakeQ").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { clearTimeout(t); refreshEpaperMistakes(); }
+    });
+    $("#epaperMistakePaper").onchange = refreshEpaperMistakes;
+    $("#epaperMistakeSection").onchange = refreshEpaperMistakes;
+    $("#epaperMistakePdf").onclick = epaperMistakeExportPdf;
+  })();
 
   // ---- 英语练习记录（自动批改，纯只读） --------------------------------
   async function refreshEngRecords() {
