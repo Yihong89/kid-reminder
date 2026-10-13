@@ -1806,9 +1806,12 @@ function epaperMistakesPdf(db, { rows, filterNote, part = "questions" }) {
         y += 10;
         doc.font("Helvetica-Bold").fontSize(10.5).fillColor(ACCENT)
            .text(EPAPER_SECTION_LABELS[sec] || sec, ML, y, { width: CW - 100, lineBreak: false });
+        const groupMarks = group.reduce((n, r) => n + r.marks, 0);
+        const seqLabel = group[0].paper_seq === group[group.length - 1].paper_seq
+          ? "Q" + group[0].paper_seq
+          : "Q" + group[0].paper_seq + "\u2013" + group[group.length - 1].paper_seq;
         doc.font("Helvetica").fontSize(8.5).fillColor(GRAY)
-           .text("Q" + group[0].paper_seq + "\u2013" + group[group.length - 1].paper_seq +
-                 "  (" + group.reduce((n, r) => n + r.marks, 0) + " marks)",
+           .text(seqLabel + "  (" + groupMarks + (groupMarks === 1 ? " mark)" : " marks)"),
                  W - MR - 110, y + 2, { width: 110, align: "right", lineBreak: false });
         y += 15;
         para(EPAPER_MISTAKE_INSTR[sec] || "", "Helvetica-Oblique", 8.6, GRAY, 8);
@@ -1821,22 +1824,37 @@ function epaperMistakesPdf(db, { rows, filterNote, part = "questions" }) {
           if (ctx) para(ctx, "Helvetica", 9.2, INK, 10);
         }
 
+        let printedCtx = null;   // 上一题印过的原文，同一段不重复印
         for (const it of group) {
           // 改错/填空三类：题干都是同一句指令，原文里的空号已经指明题号，重复十遍只是噪音
           const compact = ["cloze_wordbank", "editing", "cloze_open"].includes(sec);
           const opts = it.question_type === "mcq" && it.options ? JSON.parse(it.options) : [];
-          // Reserve the whole block (head + prompt + options) up front: printing
-          // the head first left an MCQ's number at the foot of a page with its
-          // four options overleaf.
+          // 段落自带原文：句子改写的 context 是「要改写的原句」（每题一条），
+          // 词汇/cloze 选择的 context 是含划线词的那整段短文（一组共享）。
+          // 共享的只印一次，逐题的每题都印 —— 不印这些题根本没法做。
+          const ctxText = (!EPAPER_SHARED_TEXT_SECTIONS.has(sec)
+                           && String(it.context || "").trim()
+                           && String(it.context).trim() !== printedCtx)
+            ? String(it.context).trim() : "";
+          // Reserve the whole block (head + context + prompt + options) up front:
+          // printing the head first left an MCQ's number at the foot of a page
+          // with its four options overleaf.
+          const promptText = compact ? ""
+            : (sec === "synthesis" ? epaperSynthesisPrompt(it.prompt) : String(it.prompt || ""));
           const promptH = compact ? 0 : doc.font("Helvetica").fontSize(9.6)
-            .heightOfString(String(it.prompt || ""), { width: CW });
+            .heightOfString(promptText, { width: CW });
+          const ctxH = ctxText ? doc.font("Helvetica").fontSize(9.2)
+            .heightOfString(ctxText, { width: CW }) + 6 : 0;
           const optsH = opts.length ? doc.font("Helvetica").fontSize(9.4)
             .heightOfString(opts.map((o, i) => "(" + (i + 1) + ")  " + o).join("\n"),
                             { width: CW - 14, lineGap: 2 }) : 0;
-          need(34 + promptH + optsH + 16);
+          need(34 + ctxH + promptH + optsH + 16);
+
+          if (ctxText) { para(ctxText, "Helvetica", 9.2, INK, 6); printedCtx = ctxText; }
+          else if (!String(it.context || "").trim()) printedCtx = null;
 
           questionHead(it);
-          if (!compact) para(it.prompt, "Helvetica", 9.6, INK, 5);
+          if (!compact) para(promptText, "Helvetica", 9.6, INK, 5);
 
           if (opts.length) {
             opts.forEach((o, i) => put("(" + (i + 1) + ")  " + o,
@@ -1904,6 +1922,22 @@ function epaperMistakesPdf(db, { rows, filterNote, part = "questions" }) {
   });
 }
 
+
+// 句子改写的题干自带一句套话（"Rewrite, keeping the same meaning, in ONE sentence:"），
+// 每道题都印一遍很吵，而段落小标题下面已经写了同样的要求，所以印的时候去掉。
+// 只在前缀里没有引号时才去 —— 引号说明这句带着具体考点（"beginning with \"No
+// sooner\""、"using the word \"so\""），那是必须留给孩子的信息。
+function epaperSynthesisPrompt(prompt) {
+  const s = String(prompt || "").trim();
+  if (!/^Rewrite\b/i.test(s)) return s;
+  const colon = s.indexOf(":");
+  const quotes = [s.indexOf("\""), s.indexOf("\u201c"), s.indexOf("'")].filter((i) => i >= 0);
+  const firstQuote = quotes.length ? Math.min(...quotes) : Infinity;
+  if (colon >= 0 && colon < firstQuote) return s.slice(colon + 1).trim();
+  const m = /^(Rewrite[^"\u201c']*?\.)\s+/.exec(s);
+  if (m) return s.slice(m[0].length).trim();
+  return s;
+}
 
 function epaperEscapeHtml(s) {
   return String(s == null ? "" : s)
