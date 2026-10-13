@@ -1735,6 +1735,19 @@ function epaperMistakesPdf(db, { rows, filterNote }) {
       y += 23;
     };
 
+    // The shared passage is stored on the FIRST question of a run (q26/q36/q46),
+    // and the mistake bank usually does NOT contain that one — so read it from
+    // the paper instead of hoping it survived the filter. Without this the cloze
+    // sections printed as bare numbered boxes with nothing to fill in.
+    const sharedContextFor = (paperKey, sec) => {
+      if (!EPAPER_SHARED_TEXT_SECTIONS.has(sec) || sec === "comprehension_oeq") return "";
+      const r = db.prepare(
+        `SELECT context FROM epaper_questions
+          WHERE paper_key = ? AND section = ? AND context <> ''
+          ORDER BY paper_seq LIMIT 1`).get(paperKey, sec);
+      return r ? r.context : "";
+    };
+
     // ---------------- 抬头 ----------------
     newPage();
     put("ENGLISH PAPER 2 \u00b7 MISTAKE BANK", { font: "Helvetica-Bold", size: 14, after: 6 });
@@ -1783,9 +1796,11 @@ function epaperMistakesPdf(db, { rows, filterNote }) {
         y += 15;
         para(EPAPER_MISTAKE_INSTR[sec] || "", "Helvetica-Oblique", 8.6, GRAY, 8);
 
-        // 共享原文：每段只印一次
+        // 共享原文：每段只印一次。优先回卷子取（错题本里常常没有第一题），
+        // 退回筛选结果里带的那份（cloze_mcq 这类每题都带 context 的段落）。
         if (EPAPER_SHARED_TEXT_SECTIONS.has(sec) && sec !== "comprehension_oeq") {
-          const ctx = (group.find((r) => (r.context || "").trim()) || {}).context;
+          const ctx = sharedContextFor(paperKey, sec)
+            || (group.find((r) => (r.context || "").trim()) || {}).context;
           if (ctx) para(ctx, "Helvetica", 9.2, INK, 10);
         }
 
