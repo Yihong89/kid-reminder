@@ -1635,14 +1635,18 @@ const EPAPER_SHARED_TEXT_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze
 function epaperQuestionFilters(url) {
   const paperKey = url.searchParams.get("paperKey") || "";
   const mistakeOnly = url.searchParams.get("mistakeBank") === "1";
-  const section = url.searchParams.get("section") || "";
+  // Multi-select: "cloze_open,editing" — the parent wants to pull the cloze and
+  // the editing questions into one worksheet. A single value still works.
+  const sections = (url.searchParams.get("section") || "")
+    .split(",").map((s) => s.trim()).filter(Boolean);
   const kw = (url.searchParams.get("q") || "").trim();
   const clauses = [], args = [], notes = [];
   if (paperKey) { clauses.push("paper_key = ?"); args.push(paperKey); notes.push(paperKey); }
   if (mistakeOnly) clauses.push("in_mistake_bank = 1");
-  if (section) {
-    clauses.push("section = ?"); args.push(section);
-    notes.push(EPAPER_SECTION_LABELS[section] || section);
+  if (sections.length) {
+    clauses.push(`section IN (${sections.map(() => "?").join(", ")})`);
+    args.push(...sections);
+    notes.push(sections.map((s) => EPAPER_SECTION_LABELS[s] || s).join(" + "));
   }
   if (kw) {
     clauses.push("(prompt LIKE ? OR context LIKE ? OR passage LIKE ?)");
@@ -1650,7 +1654,7 @@ function epaperQuestionFilters(url) {
     args.push(like, like, like);
     notes.push('"' + kw + '"');
   }
-  return { paperKey, mistakeOnly, section, kw, clauses, args, filterNote: notes.join(" \u00b7 ") };
+  return { paperKey, mistakeOnly, sections, kw, clauses, args, filterNote: notes.join(" \u00b7 ") };
 }
 
 // ------------------------------------------------- 家长端「英语错题本重做 PDF」
@@ -1678,7 +1682,7 @@ const EPAPER_MISTAKE_INSTR = {
   comprehension_oeq: "Read the passage and answer the questions.",
 };
 
-function epaperMistakesPdf(db, { rows, filterNote }) {
+function epaperMistakesPdf(db, { rows, filterNote, part = "questions" }) {
   return new Promise((resolve, reject) => {
     let PDFDocument;
     try { PDFDocument = require("pdfkit"); }
@@ -1749,16 +1753,28 @@ function epaperMistakesPdf(db, { rows, filterNote }) {
     };
 
     // ---------------- 抬头 ----------------
+    // Two files are produced from one export click: the worksheet, and the
+    // answers on their own (parent, 2026-10-13) so the kid never has them in hand.
+    const answersOnly = part === "answers";
     newPage();
-    put("ENGLISH PAPER 2 \u00b7 MISTAKE BANK", { font: "Helvetica-Bold", size: 14, after: 6 });
-    put("Redo this set on paper. The answers are on the last page.", { size: 9.5, color: GRAY, after: 2 });
-    put("Comprehension questions are not included \u2014 redo those in the app, where the passage is on screen.",
-        { size: 8.5, color: GRAY, after: 2 });
+    put(answersOnly ? "ENGLISH PAPER 2 \u00b7 MISTAKE BANK \u00b7 ANSWERS"
+                    : "ENGLISH PAPER 2 \u00b7 MISTAKE BANK",
+        { font: "Helvetica-Bold", size: 14, after: 6 });
+    if (answersOnly) {
+      put("For the parent \u2014 keep this away from the kid until the set is done.",
+          { size: 9.5, color: GRAY, after: 2 });
+    } else {
+      put("Redo this set on paper. The answers are in the separate answers file.",
+          { size: 9.5, color: GRAY, after: 2 });
+      put("Comprehension questions are not included \u2014 redo those in the app, where the passage is on screen.",
+          { size: 8.5, color: GRAY, after: 2 });
+    }
     put(new Date().toISOString().slice(0, 10) + "  \u00b7  " + rows.length +
         (rows.length === 1 ? " question" : " questions") +
         (filterNote ? "  \u00b7  " + filterNote : ""), { size: 9, color: ACCENT, after: 9 });
     doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1.4).strokeColor(INK).stroke(); y += 3;
     doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(0.5).strokeColor(INK).stroke(); y += 12;
+    if (answersOnly) { y -= 12; }
 
     // ---------------- 题目 ----------------
     const byPaper = new Map();
@@ -1767,6 +1783,7 @@ function epaperMistakesPdf(db, { rows, filterNote }) {
       byPaper.get(r.paper_key).push(r);
     }
 
+    if (!answersOnly) {
     for (const [paperKey, list] of byPaper) {
       const first = list[0];
       need(74);
@@ -1838,16 +1855,22 @@ function epaperMistakesPdf(db, { rows, filterNote }) {
         }
       }
     }
+    }
 
-    // ---------------- 答案（单独最后一页） ----------------
-    newPage();
-    put("ANSWERS", { font: "Helvetica-Bold", size: 13, after: 4 });
-    put("For the parent \u2014 the kid should not need this page until the set is done.",
-        { size: 9, color: GRAY, after: 10 });
-    doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1).strokeColor(INK).stroke(); y += 10;
+    // ---------------- 答案 ----------------
+    if (part !== "questions") {
+      // In the combined file this starts a fresh page under an "ANSWERS"
+      // heading; in the answers-only file the page header already says it.
+      if (!answersOnly) {
+        newPage();
+        put("ANSWERS", { font: "Helvetica-Bold", size: 13, after: 4 });
+        put("For the parent \u2014 the kid should not need this page until the set is done.",
+            { size: 9, color: GRAY, after: 10 });
+        doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1).strokeColor(INK).stroke(); y += 10;
+      }
 
-    for (const [paperKey, list] of byPaper) {
-      const first = list[0];
+      for (const [paperKey, list] of byPaper) {
+        const first = list[0];
       need(50); y += 8;
       put(String(first.school || paperKey) + (first.year ? "  " + first.year : ""),
           { font: "Helvetica-Bold", size: 10.5, after: 6 });
@@ -1873,6 +1896,7 @@ function epaperMistakesPdf(db, { rows, filterNote }) {
             para(lines, "Helvetica", 9, INK, 7, { x: ML + 14, width: CW - 14, lineGap: 2 });
           }
         }
+      }
       }
     }
 
@@ -4013,8 +4037,13 @@ const server = http.createServer(async (req, res) => {
         const where = f.clauses.length ? `WHERE ${f.clauses.join(" AND ")}` : "";
         const rows = db.prepare(
           `SELECT * FROM epaper_questions ${where} ORDER BY paper_key, paper_seq`).all(...f.args);
-        const buf = await epaperMistakesPdf(db, { rows, filterNote: f.filterNote });
-        const name = "mistakes-" + new Date().toISOString().slice(0, 10) + "-" + rows.length + ".pdf";
+        // The worksheet and its answers are two files (parent, 2026-10-13), so
+        // the kid's copy never carries the answers. ?part=answers fetches the
+        // other half; the UI asks for both on one click.
+        const part = url.searchParams.get("part") === "answers" ? "answers" : "questions";
+        const buf = await epaperMistakesPdf(db, { rows, filterNote: f.filterNote, part });
+        const name = "mistakes-" + (part === "answers" ? "answers-" : "")
+          + new Date().toISOString().slice(0, 10) + "-" + rows.length + ".pdf";
         res.writeHead(200, {
           "Content-Type": "application/pdf",
           "Content-Disposition": `attachment; filename="${name}"`,
