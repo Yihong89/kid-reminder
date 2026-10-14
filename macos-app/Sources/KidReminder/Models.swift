@@ -375,6 +375,13 @@ struct EpaperSessionItem: Codable, Identifiable {
     let options: [String]?     // mcq only
     let marks: Int
     let image: String
+    /// oeq only: how many separate answer boxes the printed paper gives this
+    /// question (a) b) c) …) — computed by the server from the question's own
+    /// wording, never from the mark points (acsj-p5-2025 Q69 wants four blanks
+    /// but carries one mark point, and aitong-2025 Q68 wants two). With a single
+    /// box the kid writes one long lifted sentence and the teacher zeroes it for
+    /// copying. Falls back to 1.
+    let blanks: Int?
     /// True if this item already has a stored answer — only meaningful on a
     /// resumed session (see POST /api/epaper/sessions); always false on a
     /// freshly created one. Lets the runner jump straight to the first

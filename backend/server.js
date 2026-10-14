@@ -1657,6 +1657,35 @@ function epaperQuestionFilters(url) {
   return { paperKey, mistakeOnly, sections, kw, clauses, args, filterNote: notes.join(" \u00b7 ") };
 }
 
+// ------------------------------------------------- 一道阅读题给几个作答空
+// app 按卷面画几个框，所以这个数只能从**题目本身**读，不能看得分点：
+// acsj-p5-2025 Q69 要填 4 个空却只有 1 个得分点，aitong-2025 Q68 两个空正好
+// 两个得分点 —— 两者并不相等。读得出来的信号按可靠性排序：
+//   1. 标号 a) b) c) …
+//   2. 题干里直接把空印出来了（多个 ___）
+//   3. 「Write 1, 2 and 3 in the blanks」这类数字序列
+//   4. 明说「state two/three …」（但 "a two-word phrase" 说的是一个短语，不算）
+// 读不出来就是 1 个空 —— 绝大多数题本来就只有一个作答空间。
+// aitong-2025 Q68 就是因为只有一个框，孩子把两个点写成一句照抄原文的话，
+// 撞上「照抄归零」白丢了 2 分（家长 2026-10-14 报的）。
+function epaperAnswerBlanks(prompt) {
+  const p = String(prompt || "");
+  const labels = new Set();
+  for (const m of p.matchAll(/(?:^|[\s;(])([a-h])\)/gi)) labels.add(m[1].toLowerCase());
+  if (labels.size >= 2) return Math.min(labels.size, 8);
+  const blanks = (p.match(/_{2,}/g) || []).length;
+  if (blanks >= 2) return Math.min(blanks, 8);
+  if (/\b(write|fill|number)\b/i.test(p)) {
+    const uniq = [...new Set((p.match(/\b[1-6]\b/g) || []).map(Number))].sort((a, b) => a - b);
+    if (uniq.length >= 2 && uniq.every((n, i) => n === i + 1)) return Math.min(uniq.length, 8);
+  }
+  const w = p.match(/\b(two|three|four)\b(?![\s-]*(?:word|words|mark|marks|line|lines)\b)/i);
+  if (w && /\b(state|give|name|list|provide|pick|identify|describe)\b/i.test(p)) {
+    return { two: 2, three: 3, four: 4 }[w[1].toLowerCase()];
+  }
+  return 1;
+}
+
 // ------------------------------------------------- 家长端「英语错题本重做 PDF」
 // A printable worksheet of the mistake bank: the questions as they were set,
 // with room to write, and the answers on their own last page — so the kid can
@@ -3825,6 +3854,7 @@ const server = http.createServer(async (req, res) => {
           questionType: it.questionType, context: it.context, passage: it.passage || "",
           prompt: it.prompt, options: it.options ? JSON.parse(it.options) : null, marks: it.marks,
           image: it.image,
+          blanks: it.questionType === "oeq" ? epaperAnswerBlanks(it.prompt) : 1,
           // oeq "answered" = at least one mark point was auto-scored at submit
           // time (see the /submit handler below); mcq/fill_blank "answered" =
           // final_correct has been set. Both are set exactly once, at first
@@ -3876,6 +3906,7 @@ const server = http.createServer(async (req, res) => {
           questionType: q.question_type, context: q.context, passage: q.passage || "",
           prompt: q.prompt,
           options: q.options ? JSON.parse(q.options) : null, marks: q.marks, image: q.image,
+          blanks: q.question_type === "oeq" ? epaperAnswerBlanks(q.prompt) : 1,
           answered: false,
         });
       });

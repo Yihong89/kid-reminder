@@ -40,6 +40,8 @@ struct EnglishPaperRunnerView: View {
     @State private var typed = ""                       // single-item fill_blank/oeq
     @State private var pickedOption: String?             // single-item mcq
     @State private var groupAnswers: [Int: String] = [:]  // itemId -> answer, group steps
+    /// 多空的 oeq：itemId -> 每个空各自的内容。提交时拼成一条答案（接口仍收一个字符串）。
+    @State private var oeqParts: [Int: [String]] = [:]
     @State private var showOriginalScan = false           // comprehension_oeq: text vs. original scan
     /// Break length for the post-paper reminder. The server sends it on complete
     /// (EPAPER_REST_MINUTES) so it can be retuned without rebuilding this app;
@@ -194,6 +196,7 @@ struct EnglishPaperRunnerView: View {
             typed = ""
             pickedOption = nil
             groupAnswers = [:]
+            oeqParts = [:]
             showOriginalScan = false
         }
     }
@@ -291,16 +294,70 @@ struct EnglishPaperRunnerView: View {
     /// A comprehension_oeq question inside a shared-passage group needs room
     /// for a real sentence, not a single-line field — same bounded TextEditor
     /// as the standalone oeq case, just sized down to fit inside the list.
+    ///
+    /// 卷面上这道题给了几个空就画几个框（服务器按题目本身算好，放在 `blanks`）。
+    /// 只给一个框时，孩子会把「两个点」写成一句照抄原文的长句，撞上「照抄归零」
+    /// 白丢分 —— aitong-2025 Q68 就是这样丢了 2 分（家长 2026-10-14 报的）。
+    @ViewBuilder
     private func groupOeqAnswerBox(_ item: EpaperSessionItem) -> some View {
-        TextEditor(text: groupAnswerBinding(item.itemId))
+        let count = max(1, item.blanks ?? 1)
+        if count > 1 {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("这题卷面上有 \(count) 个空，分开写")
+                    .font(.caption).foregroundStyle(.secondary)
+                    .padding(.leading, 40)
+                ForEach(0..<count, id: \.self) { i in
+                    HStack(alignment: .top, spacing: 6) {
+                        Text(Self.partLabel(i))
+                            .font(paperFont.scaledCallout).foregroundStyle(.secondary)
+                            .frame(width: 24, alignment: .trailing)
+                            .padding(.top, 8)
+                        oeqEditor(oeqPartBinding(item.itemId, i, count: count), height: 54)
+                    }
+                    .padding(.leading, 40)
+                }
+            }
+        } else {
+            oeqEditor(groupAnswerBinding(item.itemId), height: 70)
+                .padding(.leading, 40)
+        }
+    }
+
+    private func oeqEditor(_ text: Binding<String>, height: CGFloat) -> some View {
+        TextEditor(text: text)
             .font(.body)
             .scrollContentBackground(.hidden)
             .padding(6)
             .background(Color.primary.opacity(0.04))
             .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary))
             .clipShape(RoundedRectangle(cornerRadius: 8))
-            .frame(height: 70)
-            .padding(.leading, 40)
+            .frame(height: height)
+    }
+
+    private static func partLabel(_ i: Int) -> String {
+        let letters = Array("abcdefgh")
+        return i < letters.count ? "\(letters[i]))" : "\(i + 1))"
+    }
+
+    /// 多空题的每一空：写进 oeqParts，同时把这一题所有空的文字拼成
+    /// groupAnswers[itemId] —— 提交接口收的还是一个字符串，不用改协议。
+    private func oeqPartBinding(_ itemId: Int, _ index: Int, count: Int) -> Binding<String> {
+        Binding(
+            get: {
+                let arr = oeqParts[itemId] ?? []
+                return index < arr.count ? arr[index] : ""
+            },
+            set: { newValue in
+                var arr = oeqParts[itemId] ?? []
+                while arr.count < count { arr.append("") }
+                arr[index] = newValue
+                oeqParts[itemId] = arr
+                groupAnswers[itemId] = arr
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .filter { !$0.isEmpty }
+                    .joined(separator: "\n")
+            }
+        )
     }
 
     /// MCQ options for a grouped comprehension_mcq step: tap one to select it.
@@ -514,6 +571,7 @@ struct EnglishPaperRunnerView: View {
             stepPhase = .answering
             typed = ""
             groupAnswers = [:]
+            oeqParts = [:]
             phase = .running(step: resumeStepIndex())
         } catch {
             phase = .error(error.localizedDescription)
@@ -562,6 +620,7 @@ struct EnglishPaperRunnerView: View {
         typed = ""
         pickedOption = nil
         groupAnswers = [:]
+        oeqParts = [:]
         phase = .running(step: step)
     }
 
