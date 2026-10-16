@@ -4336,8 +4336,13 @@ const server = http.createServer(async (req, res) => {
             if (fresh.tense_error) earned -= 1;
             earned = Math.max(0, earned);
           }
-          db.prepare("UPDATE epaper_questions SET in_mistake_bank = ? WHERE id = ?")
-            .run(earned < q.marks ? 1 : 0, q.id);
+          // 错题本只收不删：批改判错的收进来，判对的**不动**（2026-10-17）。原来
+          // 满分就自动移出，家长批一道阅读理解时会把同一趟里孩子做对的客观题一起
+          // 带走 —— 而移出是不可逆的，删掉就再也练不到了。要移出只有一条路：家长
+          // 在错题本列表点「✅ 已掌握」。想「别看已经会的」用正确数筛选就行。
+          if (earned < q.marks) {
+            db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+          }
           // correct_count: +1/-1 the first time this question is reviewed (mirrors
           // the objective submit-time bump below); a later re-review that flips
           // "full marks" either way nets ±2, same convention as english_questions'
@@ -4356,9 +4361,11 @@ const server = http.createServer(async (req, res) => {
             .run(entry.finalCorrect ? 1 : 0, itemId);
           db.prepare("UPDATE epaper_questions SET score_total = score_total + ? WHERE id = ?")
             .run(now - prev, q.id);
-          // 和阅读理解一样跟随最终判定：判错进错题本，判对摘掉。
-          db.prepare("UPDATE epaper_questions SET in_mistake_bank = ? WHERE id = ?")
-            .run(entry.finalCorrect ? 0 : 1, q.id);
+          // 和阅读理解同一条规矩：判错收进错题本，判对不动（移出只由家长手点
+          // 「已掌握」控制，见上面阅读理解那段的说明）。
+          if (!entry.finalCorrect) {
+            db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+          }
           // correct_count: submit already applied the initial +1/-1, so a
           // correction here (if any) is always a flip — net ±2.
           if (entry.finalCorrect !== !!item.final_correct) {
