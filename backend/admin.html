@@ -143,6 +143,39 @@
   .chip.on { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
   .chip .n { opacity:.6; font-size:11.5px; margin-left:5px; }
   .vocab-summary { font-size:13px; color:var(--muted); margin-bottom:8px; }
+
+  /* ---- 在线做题 ---- */
+  .drill-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:10px; }
+  .drill-title { font-size:17px; font-weight:600; }
+  .drill-bar { height:8px; border-radius:5px; background:var(--border); overflow:hidden; margin:6px 0 16px; }
+  .drill-fill { height:100%; width:0; background:var(--accent); transition:width .2s; }
+  .drill-q-num { font-size:13px; color:var(--muted); margin-bottom:6px; }
+  .drill-context { font-size:14px; color:var(--muted); white-space:pre-wrap; margin-bottom:8px;
+                   background:var(--bg, #f8fafc); border-radius:8px; padding:10px 12px; }
+  .drill-prompt { font-size:17px; line-height:1.6; margin-bottom:14px; white-space:pre-wrap; }
+  .drill-options { display:flex; flex-direction:column; gap:8px; margin-bottom:6px; }
+  .drill-opt { text-align:left; padding:11px 14px; border:1px solid var(--border); border-radius:10px;
+               background:var(--card); color:var(--ink); font-size:15px; cursor:pointer; }
+  .drill-opt:hover { border-color:var(--accent); }
+  .drill-opt.on { border-color:var(--accent); background:var(--accent); color:#fff; font-weight:600; }
+  .drill-input { width:100%; font-size:16px; padding:10px 12px; border:1px solid var(--border);
+                 border-radius:10px; font-family:inherit; }
+  textarea.drill-input { min-height:96px; }
+  .drill-nav { display:flex; gap:8px; align-items:center; margin-top:18px; }
+  .drill-nav #epaperDrillSubmit { margin-left:auto; }
+  .drill-score { display:flex; align-items:baseline; gap:10px; margin:6px 0 14px; }
+  .drill-score .big { font-size:34px; font-weight:700; color:var(--accent); }
+  .drill-table { width:100%; border-collapse:collapse; font-size:14px; margin-bottom:14px; }
+  .drill-table th, .drill-table td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); }
+  .drill-table td.num, .drill-table th.num { text-align:right; }
+  .drill-wrong { border-top:1px solid var(--border); padding:12px 0; }
+  .drill-wrong .w-prompt { font-size:15px; margin-bottom:6px; white-space:pre-wrap; }
+  .drill-wrong .w-line { font-size:14px; margin-bottom:3px; }
+  .drill-wrong .w-yours { color:#b91c1c; }
+  .drill-wrong .w-right { color:#15803d; }
+  .drill-wrong .w-why { font-size:13px; color:var(--muted); background:var(--bg,#f8fafc);
+                        border-radius:8px; padding:8px 10px; margin-top:6px; }
+  .drill-right { color:#15803d; }
   .vocab-list { display:flex; flex-direction:column; gap:6px; }
   .vocab-row { display:flex; align-items:center; gap:10px; padding:10px 12px; }
   .vocab-row .char { font-size:22px; font-weight:600; width:32px; text-align:center; flex-shrink:0; }
@@ -466,11 +499,32 @@
         <div class="vocab-filters">
           <input type="text" id="epaperMistakeQ" placeholder="搜索题目 / 原文关键字…" />
           <select id="epaperMistakePaper"><option value="">全部卷子</option></select>
-          <button class="primary" id="epaperMistakePdf">⬇️ 导出题目 + 答案</button>
+          <button class="primary" id="epaperMistakeDrill">✏️ 在线做题</button>
+          <button id="epaperMistakePdf">⬇️ 导出题目 + 答案</button>
         </div>
         <div class="chips" id="epaperMistakeSections"></div>
         <div class="vocab-summary" id="epaperMistakeSummary"></div>
         <div id="epaperMistakeList"></div>
+      </div>
+    </div>
+
+    <!-- 在线做题：按当前筛选把这一批题做完，交卷即出分，可下载错题报告 -->
+    <div id="epaperDrillView" hidden>
+      <div class="card" id="epaperDrillCard">
+        <div class="drill-head">
+          <div>
+            <div class="drill-title" id="epaperDrillTitle">在线做题</div>
+            <div class="vocab-summary" id="epaperDrillProgress"></div>
+          </div>
+          <button class="ghost" id="epaperDrillClose">✕ 退出</button>
+        </div>
+        <div class="drill-bar"><div class="drill-fill" id="epaperDrillFill"></div></div>
+        <div id="epaperDrillBody"></div>
+        <div class="drill-nav" id="epaperDrillNav">
+          <button class="ghost" id="epaperDrillPrev">← 上一题</button>
+          <button class="ghost" id="epaperDrillNext">下一题 →</button>
+          <button class="primary" id="epaperDrillSubmit">交卷</button>
+        </div>
       </div>
     </div>
 
@@ -2754,6 +2808,207 @@
     });
     $("#epaperMistakePaper").onchange = refreshEpaperMistakes;
     $("#epaperMistakePdf").onclick = epaperMistakeExportPdf;
+  })();
+
+  // ---- 在线做题：把当前筛选的这一批题在网页上做完，交卷即判分并出报告 ----
+  // 只做客观题（选择/填空/改写）：阅读理解要家长批改后才出报告，放进来就做不到
+  // 「交卷即出报告」，那部分仍在 app 里做。答案在服务端判，页面只负责收集与呈现。
+  const epaperDrill = { sessionId: null, items: [], answers: new Map(), at: 0 };
+
+  async function epaperDrillStart() {
+    const btn = $("#epaperMistakeDrill"), label = btn.textContent;
+    btn.disabled = true; btn.textContent = "⏳ 正在组卷…";
+    try {
+      const f = epaperMistakeFilters();
+      const filter = {};
+      if (f.q) filter.q = f.q;
+      if (f.paperKey) filter.paperKey = f.paperKey;
+      if (f.sections.length) filter.section = f.sections.join(",");
+      const res = await api("/api/epaper/sessions", {
+        method: "POST", body: JSON.stringify({ drill: true, filter }),
+      });
+      epaperDrill.sessionId = res.sessionId;
+      epaperDrill.items = res.items;
+      epaperDrill.answers = new Map();
+      epaperDrill.at = 0;
+      $("#epaperMistakesView").hidden = true;
+      $("#epaperDrillView").hidden = false;
+      epaperDrillRender();
+      window.scrollTo(0, 0);
+    } catch (e) {
+      showErr("开始做题失败：" + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
+  function epaperDrillSaveCurrent() {
+    const it = epaperDrill.items[epaperDrill.at];
+    if (!it) return;
+    const input = $("#epaperDrillInput");
+    if (input) {
+      const v = input.value.trim();
+      if (v) epaperDrill.answers.set(it.itemId, v);
+      else epaperDrill.answers.delete(it.itemId);
+    }
+  }
+
+  function epaperDrillRender() {
+    const items = epaperDrill.items, i = epaperDrill.at, it = items[i];
+    const body = $("#epaperDrillBody");
+    if (!it) { body.innerHTML = ""; return; }
+    const cur = epaperDrill.answers.get(it.itemId) || "";
+    const sec = EPAPER_SECTION_ZH[it.section] || it.section;
+    const parts = [
+      `<div class="drill-q-num">第 ${i + 1} 题 · ${escapeHtml(sec)} · ${it.marks} 分</div>`,
+    ];
+    if (it.context) parts.push(`<div class="drill-context">${escapeHtml(it.context)}</div>`);
+    parts.push(`<div class="drill-prompt">${escapeHtml(it.prompt)}</div>`);
+    if (it.questionType === "mcq" && Array.isArray(it.options)) {
+      parts.push(`<div class="drill-options">` + it.options.map((o, k) => {
+        const on = cur && cur === String(o);
+        return `<button class="drill-opt${on ? " on" : ""}" data-opt="${escapeHtml(String(o))}">` +
+               `(${k + 1}) ${escapeHtml(String(o))}</button>`;
+      }).join("") + `</div>`);
+    } else if (it.questionType === "oeq") {
+      parts.push(`<textarea class="drill-input" id="epaperDrillInput" placeholder="写答案…">${escapeHtml(cur)}</textarea>`);
+    } else {
+      parts.push(`<input type="text" class="drill-input" id="epaperDrillInput" placeholder="写答案…" ` +
+                 `value="${escapeHtml(cur)}" autocomplete="off" autocorrect="off" spellcheck="false" />`);
+    }
+    body.innerHTML = parts.join("");
+
+    if (it.questionType === "mcq" && Array.isArray(it.options)) {
+      body.querySelectorAll(".drill-opt").forEach((el) => {
+        el.onclick = () => {
+          // 再点一次取消选择
+          const v = el.dataset.opt;
+          if (epaperDrill.answers.get(it.itemId) === v) epaperDrill.answers.delete(it.itemId);
+          else epaperDrill.answers.set(it.itemId, v);
+          epaperDrillRender();
+        };
+      });
+    }
+    $("#epaperDrillProgress").textContent =
+      `第 ${i + 1} / ${items.length} 题 · 已答 ${epaperDrill.answers.size}`;
+    $("#epaperDrillTitle").textContent = `在线做题 · 共 ${items.length} 题`;
+    $("#epaperDrillFill").style.width = `${((i + 1) / items.length) * 100}%`;
+    $("#epaperDrillPrev").disabled = i === 0;
+    $("#epaperDrillNext").disabled = i === items.length - 1;
+    $("#epaperDrillNav").hidden = false;
+    $("#epaperDrillNav").style.display = "flex";
+    const ans = $("#epaperDrillInput");
+    if (ans) {
+      ans.focus();
+      // 填空题回车 = 下一题（最后一题回车就是交卷，但要先确认）
+      ans.onkeydown = (e) => {
+        if (e.key !== "Enter" || it.questionType === "oeq") return;   // 阅读理解要多行输入
+        e.preventDefault();
+        epaperDrillSaveCurrent();
+        if (epaperDrill.at < epaperDrill.items.length - 1) { epaperDrill.at++; epaperDrillRender(); }
+      };
+    }
+  }
+
+  async function epaperDrillSubmit() {
+    epaperDrillSaveCurrent();
+    const total = epaperDrill.items.length;
+    const unanswered = total - epaperDrill.answers.size;
+    if (unanswered > 0 && !confirm(`还有 ${unanswered} 题没作答，未作答按错处理。现在交卷？`)) return;
+    const btn = $("#epaperDrillSubmit");
+    btn.disabled = true;
+    try {
+      for (let i = 0; i < total; i++) {
+        const it = epaperDrill.items[i];
+        btn.textContent = `⏳ 批改中 ${i + 1}/${total}`;
+        await api(`/api/epaper/sessions/${epaperDrill.sessionId}/items/${it.itemId}/submit`, {
+          method: "POST",
+          body: JSON.stringify({ answer: epaperDrill.answers.get(it.itemId) || "" }),
+        });
+      }
+      btn.textContent = "⏳ 生成报告…";
+      await api(`/api/epaper/sessions/${epaperDrill.sessionId}/complete`, { method: "POST", body: "{}" });
+      await epaperDrillShowResult();
+    } catch (e) {
+      showErr("交卷失败：" + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = "交卷";
+    }
+  }
+
+  async function epaperDrillShowResult() {
+    const data = await api(`/api/epaper/sessions/${epaperDrill.sessionId}`);
+    const s = data.session, items = data.items;
+    // 分段得分
+    const bySec = new Map();
+    for (const it of items) {
+      if (!bySec.has(it.section)) bySec.set(it.section, { earned: 0, total: 0 });
+      const b = bySec.get(it.section);
+      b.total += it.marks;
+      b.earned += it.final_correct ? it.marks : 0;
+    }
+    const rows = [...bySec.entries()].map(([sec, b]) =>
+      `<tr><td>${escapeHtml(EPAPER_SECTION_ZH[sec] || sec)}</td>` +
+      `<td class="num">${b.earned}/${b.total}</td>` +
+      `<td class="num">${b.total ? Math.round((b.earned / b.total) * 100) : 0}%</td></tr>`).join("");
+    const wrong = items.filter((it) => !it.final_correct);
+    const wrongHTML = wrong.length ? wrong.map((it) => {
+      const options = Array.isArray(it.options) ? it.options : null;
+      const right = options && it.correct_answer
+        ? options.find((o) => String(o) === String(it.correct_answer)) || it.correct_answer
+        : it.correct_answer;
+      return `<div class="drill-wrong">` +
+        `<div class="w-prompt">第 ${it.seq} 题 · ${escapeHtml(EPAPER_SECTION_ZH[it.section] || it.section)}：${escapeHtml(it.prompt)}</div>` +
+        `<div class="w-line w-yours">你写：${escapeHtml(it.answer || "（没有作答）")}</div>` +
+        `<div class="w-line w-right">正确：${escapeHtml(right || "")}</div>` +
+        (it.explanation ? `<div class="w-why">${escapeHtml(it.explanation)}</div>` : "") +
+        `</div>`;
+    }).join("") : `<div class="vocab-summary">全部答对，没有错题 🎉</div>`;
+
+    $("#epaperDrillTitle").textContent = "批改完成";
+    $("#epaperDrillProgress").textContent = `共 ${items.length} 题，错 ${wrong.length} 题`;
+    $("#epaperDrillFill").style.width = "100%";
+    $("#epaperDrillNav").hidden = true;
+    $("#epaperDrillNav").style.display = "none";
+    $("#epaperDrillBody").innerHTML = `
+      <div class="drill-score">
+        <span class="big">${s.score_earned ?? 0}/${s.marks_total ?? 0}</span>
+        <span class="vocab-summary">${s.marks_total ? Math.round((s.score_earned / s.marks_total) * 100) : 0}%</span>
+      </div>
+      <table class="drill-table">
+        <tr><th>题型</th><th class="num">得分</th><th class="num">%</th></tr>${rows}
+      </table>
+      <div class="vocab-summary">错题明细（含正确答案与解析）：</div>
+      ${wrongHTML}
+      <div class="drill-nav" style="display:flex">
+        <button class="primary" id="epaperDrillReport">⬇️ 下载错题报告</button>
+        <button class="ghost" id="epaperDrillAgain">↻ 再做一遍</button>
+        <button class="ghost" id="epaperDrillExit">返回错题本</button>
+      </div>`;
+    $("#epaperDrillReport").onclick = () =>
+      window.open(`/api/epaper/sessions/${epaperDrill.sessionId}/report`, "_blank");
+    $("#epaperDrillAgain").onclick = () => { epaperDrillExit(); epaperDrillStart(); };
+    $("#epaperDrillExit").onclick = epaperDrillExit;
+  }
+
+  function epaperDrillExit() {
+    $("#epaperDrillView").hidden = true;
+    $("#epaperMistakesView").hidden = false;
+    epaperDrill.sessionId = null;
+    epaperDrill.items = [];
+    epaperDrill.answers = new Map();
+    refreshEpaperMistakes();
+  }
+
+  (() => {
+    $("#epaperMistakeDrill").onclick = epaperDrillStart;
+    $("#epaperDrillClose").onclick = () => {
+      if (epaperDrill.items.length && !confirm("退出后这次答题不会保存，确定退出？")) return;
+      epaperDrillExit();
+    };
+    $("#epaperDrillPrev").onclick = () => { epaperDrillSaveCurrent(); epaperDrill.at--; epaperDrillRender(); };
+    $("#epaperDrillNext").onclick = () => { epaperDrillSaveCurrent(); epaperDrill.at++; epaperDrillRender(); };
+    $("#epaperDrillSubmit").onclick = epaperDrillSubmit;
   })();
 
   // ---- 英语练习记录（自动批改，纯只读） --------------------------------

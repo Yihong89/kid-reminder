@@ -712,6 +712,10 @@ try { db.exec("ALTER TABLE vocab_words ADD COLUMN correct_count INTEGER NOT NULL
 // that reservation into a real, working second language sharing the same tables.
 try { db.exec("ALTER TABLE vocab_words ADD COLUMN topic TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE dictation_sessions ADD COLUMN language TEXT NOT NULL DEFAULT 'zh'"); } catch { /* exists */ }
+// 网页端「在线做题」刷的这一批是哪一批（"错题本 · 语法 · 63 题"）。纸面模式下报告
+// 标题取自卷名，但一次刷题可能横跨好几份卷子、也可能只按题型筛，卷名说不了这件事，
+// 所以单独存一行说明，报告页直接拿它当标题（2026-10-16）。
+try { db.exec("ALTER TABLE epaper_sessions ADD COLUMN label TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_questions ADD COLUMN paper_key TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_questions ADD COLUMN paper_seq INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_questions ADD COLUMN in_mistake_bank INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
@@ -2100,7 +2104,10 @@ function epaperBuildReportHTML(db, sessionId) {
   const scoreEarned = session.score_earned, marksTotal = session.marks_total;
   const pct = marksTotal ? Math.round((scoreEarned / marksTotal) * 1000) / 10 : 0;
   const TARGET_PCT = 90; // family's standing goal (AL1), same for every paper
-  const title = `${meta.school}${meta.year ? " " + meta.year : ""}`.trim() || "English Paper";
+  // 在线做题（mode='drill'）横跨卷子、按题型筛，纸面卷名说不了这次刷的是什么，
+  // 所以标题优先用会话自己记的那行说明。
+  const title = String(session.label || "").trim()
+    || `${meta.school}${meta.year ? " " + meta.year : ""}`.trim() || "English Paper";
   const wrongCount = [...blocksBySection.values()].reduce((n, arr) => n + arr.length, 0);
 
   const summaryRows = sectionOrder.map((sec) => {
@@ -2206,6 +2213,17 @@ function epaperBuildReportHTML(db, sessionId) {
   .points .point:first-child { border-top: none; padding-top: 0; margin-top: 0; }
   .point-model { font-size: 14px; margin-bottom: 4px; }
   footer { text-align: center; color: #9ca3af; font-size: 12px; margin-top: 28px; }
+  .print-btn { position: fixed; right: 20px; bottom: 20px; border: none; border-radius: 999px;
+               background: #2563eb; color: #fff; font-size: 15px; font-weight: 600;
+               padding: 12px 20px; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,.35); }
+  /* 「下载错题报告」＝在浏览器里存成 PDF，所以打印时去掉页面底色和浮动按钮，
+     只留卡片本身（2026-10-16）。 */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .print-btn { display: none; }
+    header.top, section { box-shadow: none; border: 1px solid #e5e7eb; break-inside: avoid; }
+    .q { break-inside: avoid; }
+  }
 </style>
 </head>
 <body>
@@ -2224,6 +2242,7 @@ function epaperBuildReportHTML(db, sessionId) {
   ${sectionsHTML}
   <footer>Great effort finishing the whole paper — every mistake reviewed here is one you're less likely to make next time. 🌟</footer>
 </div>
+<button class="print-btn" onclick="window.print()">🖨 保存为 PDF</button>
 </body>
 </html>`;
 }
@@ -3829,6 +3848,11 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const paperKey = String(body.paperKey || "");
       const mistakesMode = body.mistakes === true;
+      // 网页端「在线做题」：按错题本当前的筛选条件（卷子 / 题型多选 / 关键词）抽题，
+      // 一次把这一批做完。只收客观题 —— 阅读理解要家长批改后才出报告，放进来就做不到
+      // 「交卷即出报告」（2026-10-16）。
+      const drillMode = body.drill === true;
+      const drillFilter = (body.filter && typeof body.filter === "object") ? body.filter : {};
 
       let existing;
       if (paperKey) {
@@ -3864,8 +3888,33 @@ const server = http.createServer(async (req, res) => {
         return sendJSON(200, { sessionId: existing.id, mode: existingSession.mode, items });
       }
 
-      let qids, mode;
-      if (paperKey) {
+      let qids, mode, label = "";
+      if (drillMode) {
+        // Reuse the mistake-bank filter so the drill is always exactly what the
+        // parent sees on screen (same helper the list and the PDF export use).
+        const params = new URLSearchParams();
+        for (const [k, v] of Object.entries(drillFilter)) {
+          if (v !== "" && v != null) params.set(k, String(v));
+        }
+        const f = epaperQuestionFilters(new URL("http://drill/?" + params.toString()));
+        const clauses = [
+          "in_mistake_bank = 1",
+          "section NOT IN ('comprehension_oeq', 'comprehension_mcq')",
+          ...f.clauses,
+        ];
+        // Weakest first, like the app's own mistake practice, so the questions he
+        // keeps getting wrong come up first; ties are randomised.
+        const rows = db.prepare(
+          `SELECT id FROM epaper_questions WHERE ${clauses.join(" AND ")}
+            ORDER BY correct_count ASC, RANDOM() ASC`
+        ).all(...f.args);
+        if (!rows.length) {
+          return sendJSON(400, { error: "这批筛选里没有可在线做的题（阅读理解请在 app 里做）" });
+        }
+        qids = rows.map((r) => r.id);
+        mode = "drill";
+        label = f.filterNote ? `错题本 · ${f.filterNote}` : "错题本";
+      } else if (paperKey) {
         const rows = db.prepare(
           "SELECT id FROM epaper_questions WHERE paper_key = ? ORDER BY paper_seq ASC"
         ).all(paperKey);
@@ -3890,11 +3939,12 @@ const server = http.createServer(async (req, res) => {
         }
         mode = "mistakes";
       } else {
-        return sendJSON(400, { error: "paperKey or mistakes is required" });
+        return sendJSON(400, { error: "paperKey, mistakes or drill is required" });
       }
 
-      const sessionId = db.prepare("INSERT INTO epaper_sessions (mode, paper_key) VALUES (?, ?)")
-        .run(mode, paperKey).lastInsertRowid;
+      const sessionId = db.prepare(
+        "INSERT INTO epaper_sessions (mode, paper_key, label) VALUES (?, ?, ?)"
+      ).run(mode, drillMode ? String(drillFilter.paperKey || "") : paperKey, label).lastInsertRowid;
       const items = [];
       qids.forEach((qid, idx) => {
         const itemId = db.prepare(
