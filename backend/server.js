@@ -1689,7 +1689,9 @@ function epaperQuestionFilters(url) {
     if (Number.isFinite(n) && n >= 0) {
       clauses.push("correct_count <= ?");
       args.push(Math.floor(n));
-      notes.push(n === 0 ? "还没答对过" : `答对 \u2264 ${Math.floor(n)} 次`);
+      // 这行说明会印在重做 PDF 的页眉上，而 PDF 用的是内置 Helvetica（没有中文字形），
+      // 所以这里必须写 ASCII —— 中文会变成乱码（2026-10-17 实测踩到）。
+      notes.push(n === 0 ? "never correct" : `correct <= ${Math.floor(n)} times`);
     }
   }
   if (sections.length) {
@@ -1847,9 +1849,17 @@ function epaperMistakesPdf(db, { rows, filterNote, part = "questions" }) {
       put("Comprehension questions are not included \u2014 redo those in the app, where the passage is on screen.",
           { size: 8.5, color: GRAY, after: 2 });
     }
+    // 页眉这行只能有 ASCII：Helvetica 没有中文字形，中文会印成乱码。筛选题型/卷子的
+    // 说明本来就是英文，但家长如果用中文当搜索词，那一段就会是中文 —— 逐段清掉非
+    // ASCII 的片段（中文关键字本来也搜不到英文题干），留下能显示的部分（2026-10-17）。
+    const printableNote = String(filterNote || "")
+      .split(" \u00b7 ")
+      .map((part) => part.replace(/[^\x20-\x7E]/g, "").replace(/^["\s]+|["\s]+$/g, "").trim())
+      .filter((part) => /[A-Za-z0-9]/.test(part))   // 清完变成空壳的（如中文关键字）整段丢掉
+      .join("  \u00b7  ");
     put(new Date().toISOString().slice(0, 10) + "  \u00b7  " + rows.length +
         (rows.length === 1 ? " question" : " questions") +
-        (filterNote ? "  \u00b7  " + filterNote : ""), { size: 9, color: ACCENT, after: 9 });
+        (printableNote ? "  \u00b7  " + printableNote : ""), { size: 9, color: ACCENT, after: 9 });
     doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(1.4).strokeColor(INK).stroke(); y += 3;
     doc.moveTo(ML, y).lineTo(W - MR, y).lineWidth(0.5).strokeColor(INK).stroke(); y += 12;
     if (answersOnly) { y -= 12; }
