@@ -803,6 +803,11 @@ const SETTING_DEFS = {
     type: "int", def: 10, min: 1, max: 10, label: "同一个字答对几个词后往后排",
     hint: "某个字只要有这么多词答对过，它剩下的词不会被删掉，只是在「正确数相同」的词里排到最后。填 10 相当于不降权。",
   },
+  "epaper.drill.limit": {
+    // 网页端「在线做题」每次最多抽几题。0 = 不限制（把当前筛选的整批做完）。
+    type: "int", def: 0, min: 0, max: 500, label: "英语错题在线做题每次最多几题",
+    hint: "0 = 不限制（当前筛选的题全部做完）。抽题仍是「最弱优先」，所以限制成 N 时，抽到的是最该练的前 N 题。",
+  },
 };
 // Levels actually present in the Chinese bank, so the picker can never offer a
 // level with no words in it (and "" for "no priority").
@@ -1632,6 +1637,35 @@ const EPAPER_SECTION_LABELS = {
 // per section instead of repeated under every question.
 const EPAPER_SHARED_TEXT_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]);
 
+// 分组段落（改错、完形、阅读理解）的原文只存在该段**第一题**上。app 里同段题目按卷面
+// 顺序连着显示，第一题在，所以原文就在。网页端「在线做题」把题目按「最弱优先」重排、
+// 还可能只抽其中几题，那个第一题不一定被抽到，孩子就只看到一句「Write the correct
+// word.」而没有短文，没法答。所以按「卷子 + 题型」把该段原文找回来（2026-10-17）。
+// 带缓存是因为一次组卷会对同一段反复问。
+function epaperSectionTextLookup(db) {
+  const cache = new Map();
+  return (paperKey, section, column) => {
+    const key = `${paperKey}|${section}|${column}`;
+    if (!cache.has(key)) {
+      const row = db.prepare(
+        `SELECT ${column} AS t FROM epaper_questions
+          WHERE paper_key = ? AND section = ? AND ${column} IS NOT NULL AND ${column} != ''
+          ORDER BY paper_seq ASC LIMIT 1`
+      ).get(paperKey, section);
+      cache.set(key, row ? row.t : "");
+    }
+    return cache.get(key);
+  };
+}
+// 一道题真正要展示的原文：自己的优先，自己没有就从同段别的题借。
+function epaperEffectiveText(db, q, lookup) {
+  const own = { context: q.context || "", passage: q.passage || "" };
+  if (!EPAPER_SHARED_TEXT_SECTIONS.has(q.section)) return own;
+  if (!own.context) own.context = lookup(q.paper_key, q.section, "context");
+  if (!own.passage) own.passage = lookup(q.paper_key, q.section, "passage");
+  return own;
+}
+
 // ------------------------------------------------- 英语错题本：筛选条件
 // Shared by the admin list and the redo PDF so that 导出 always matches what the
 // parent is looking at. Returns SQL fragments plus a human-readable note that
@@ -1644,9 +1678,20 @@ function epaperQuestionFilters(url) {
   const sections = (url.searchParams.get("section") || "")
     .split(",").map((s) => s.trim()).filter(Boolean);
   const kw = (url.searchParams.get("q") || "").trim();
+  // 按「答对过几次」筛：错题本里 105 道从没答对过、106 道答对过一次，混在一起看不出
+  // 该练哪一批。maxCorrect=0 就是「还没答对过的」，也是家长最常要的那一档。
+  const maxCorrectRaw = (url.searchParams.get("maxCorrect") || "").trim();
   const clauses = [], args = [], notes = [];
   if (paperKey) { clauses.push("paper_key = ?"); args.push(paperKey); notes.push(paperKey); }
   if (mistakeOnly) clauses.push("in_mistake_bank = 1");
+  if (maxCorrectRaw !== "") {
+    const n = Number(maxCorrectRaw);
+    if (Number.isFinite(n) && n >= 0) {
+      clauses.push("correct_count <= ?");
+      args.push(Math.floor(n));
+      notes.push(n === 0 ? "还没答对过" : `答对 \u2264 ${Math.floor(n)} 次`);
+    }
+  }
   if (sections.length) {
     clauses.push(`section IN (${sections.map(() => "?").join(", ")})`);
     args.push(...sections);
@@ -2053,7 +2098,7 @@ function epaperBuildReportHTML(db, sessionId) {
   const items = db.prepare(`
     SELECT i.id itemId, i.seq, i.answer, i.final_correct finalCorrect,
            q.id questionId, q.section, q.question_type questionType, q.paper_seq paperSeq,
-           q.context, q.passage, q.prompt, q.correct_answer correctAnswer,
+           q.paper_key, q.context, q.passage, q.prompt, q.correct_answer correctAnswer,
            q.explanation, q.marks
       FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
      WHERE i.session_id = ? ORDER BY q.paper_seq`).all(sessionId);
@@ -2077,9 +2122,13 @@ function epaperBuildReportHTML(db, sessionId) {
   // plus the shared reading text (shown once) for sections that have one.
   const blocksBySection = new Map();
   const sharedTextBySection = new Map();
+  const sectionText = epaperSectionTextLookup(db);
   for (const it of items) {
     if (EPAPER_SHARED_TEXT_SECTIONS.has(it.section) && !sharedTextBySection.has(it.section)) {
-      const text = it.section === "comprehension_oeq" ? it.passage : it.context;
+      const own = it.section === "comprehension_oeq" ? it.passage : it.context;
+      // 在线做题只抽了同段的一部分题时，带原文的那道可能不在里面 —— 回卷子里找。
+      const text = own || sectionText(it.paper_key, it.section,
+                                     it.section === "comprehension_oeq" ? "passage" : "context");
       if (text) sharedTextBySection.set(it.section, text);
     }
     let block = null;
@@ -3867,24 +3916,28 @@ const server = http.createServer(async (req, res) => {
       if (existing) {
         const rows = db.prepare(`
           SELECT i.id itemId, i.seq, i.question_id questionId, q.section, q.question_type questionType,
-                 q.context, q.passage, q.prompt, q.options, q.marks, q.image,
+                 q.context, q.passage, q.prompt, q.options, q.marks, q.image, q.paper_key,
                  i.final_correct finalCorrect,
                  (SELECT COUNT(*) FROM epaper_item_points ip WHERE ip.item_id = i.id) pointCount
             FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
            WHERE i.session_id = ? ORDER BY i.seq`).all(existing.id);
         const existingSession = db.prepare("SELECT mode FROM epaper_sessions WHERE id = ?").get(existing.id);
-        const items = rows.map((it) => ({
-          itemId: it.itemId, seq: it.seq, questionId: it.questionId, section: it.section,
-          questionType: it.questionType, context: it.context, passage: it.passage || "",
-          prompt: it.prompt, options: it.options ? JSON.parse(it.options) : null, marks: it.marks,
-          image: it.image,
-          blanks: it.questionType === "oeq" ? epaperAnswerBlanks(it.prompt) : 1,
-          // oeq "answered" = at least one mark point was auto-scored at submit
-          // time (see the /submit handler below); mcq/fill_blank "answered" =
-          // final_correct has been set. Both are set exactly once, at first
-          // submit — matches how /submit's own idempotency check works.
-          answered: it.questionType === "oeq" ? it.pointCount > 0 : it.finalCorrect !== null,
-        }));
+        const sectionText = epaperSectionTextLookup(db);
+        const items = rows.map((it) => {
+          const text = epaperEffectiveText(db, it, sectionText);
+          return {
+            itemId: it.itemId, seq: it.seq, questionId: it.questionId, section: it.section,
+            questionType: it.questionType, context: text.context, passage: text.passage,
+            prompt: it.prompt, options: it.options ? JSON.parse(it.options) : null, marks: it.marks,
+            image: it.image,
+            blanks: it.questionType === "oeq" ? epaperAnswerBlanks(it.prompt) : 1,
+            // oeq "answered" = at least one mark point was auto-scored at submit
+            // time (see the /submit handler below); mcq/fill_blank "answered" =
+            // final_correct has been set. Both are set exactly once, at first
+            // submit — matches how /submit's own idempotency check works.
+            answered: it.questionType === "oeq" ? it.pointCount > 0 : it.finalCorrect !== null,
+          };
+        });
         return sendJSON(200, { sessionId: existing.id, mode: existingSession.mode, items });
       }
 
@@ -3902,18 +3955,24 @@ const server = http.createServer(async (req, res) => {
           "section NOT IN ('comprehension_oeq', 'comprehension_mcq')",
           ...f.clauses,
         ];
+        // 一次最多几题：请求里带了就用它，否则用家长在设置里存的默认值（0 = 不限制）。
+        const rawLimit = (body.limit === undefined || body.limit === null || body.limit === "")
+          ? getSetting("epaper.drill.limit") : Number(body.limit);
+        const limit = (Number.isFinite(rawLimit) && rawLimit > 0)
+          ? Math.min(500, Math.floor(rawLimit)) : 0;
         // Weakest first, like the app's own mistake practice, so the questions he
-        // keeps getting wrong come up first; ties are randomised.
+        // keeps getting wrong come up first; ties are randomised. With a limit the
+        // LIMIT therefore keeps the N most-in-need questions, not an arbitrary N.
         const rows = db.prepare(
           `SELECT id FROM epaper_questions WHERE ${clauses.join(" AND ")}
-            ORDER BY correct_count ASC, RANDOM() ASC`
-        ).all(...f.args);
+            ORDER BY correct_count ASC, RANDOM() ASC${limit ? " LIMIT ?" : ""}`
+        ).all(...f.args, ...(limit ? [limit] : []));
         if (!rows.length) {
           return sendJSON(400, { error: "这批筛选里没有可在线做的题（阅读理解请在 app 里做）" });
         }
         qids = rows.map((r) => r.id);
         mode = "drill";
-        label = f.filterNote ? `错题本 · ${f.filterNote}` : "错题本";
+        label = (f.filterNote ? `错题本 · ${f.filterNote}` : "错题本") + (limit ? ` · 前 ${limit} 题` : "");
       } else if (paperKey) {
         const rows = db.prepare(
           "SELECT id FROM epaper_questions WHERE paper_key = ? ORDER BY paper_seq ASC"
@@ -3946,15 +4005,25 @@ const server = http.createServer(async (req, res) => {
         "INSERT INTO epaper_sessions (mode, paper_key, label) VALUES (?, ?, ?)"
       ).run(mode, drillMode ? String(drillFilter.paperKey || "") : paperKey, label).lastInsertRowid;
       const items = [];
+      const sectionText = epaperSectionTextLookup(db);
       qids.forEach((qid, idx) => {
         const itemId = db.prepare(
           "INSERT INTO epaper_session_items (session_id, question_id, seq) VALUES (?, ?, ?)"
         ).run(sessionId, qid, idx + 1).lastInsertRowid;
         const q = db.prepare("SELECT * FROM epaper_questions WHERE id = ?").get(qid);
+        // 重排/抽题后，同段原文可能不在被抽中的那几题里 —— 补上，保证每道题都答得了。
+        const text = epaperEffectiveText(db, q, sectionText);
+        // 段落里的空位是按**卷面题号**标的（"…she reciefed(36) an alert…"）。app 里整卷
+        // 按卷面顺序做，题号对得上；网页端是最弱优先重排 + 可能只抽几题，题号对不上，
+        // 所以在题干里写明是哪一个空（2026-10-17）。
+        let prompt = q.prompt;
+        if (EPAPER_SHARED_TEXT_SECTIONS.has(q.section) && text.context.includes(`(${q.paper_seq})`)) {
+          prompt = `Blank ${q.paper_seq} — ${q.prompt}`;
+        }
         items.push({
           itemId: Number(itemId), seq: idx + 1, questionId: qid, section: q.section,
-          questionType: q.question_type, context: q.context, passage: q.passage || "",
-          prompt: q.prompt,
+          questionType: q.question_type, context: text.context, passage: text.passage,
+          prompt,
           options: q.options ? JSON.parse(q.options) : null, marks: q.marks, image: q.image,
           blanks: q.question_type === "oeq" ? epaperAnswerBlanks(q.prompt) : 1,
           answered: false,
@@ -4102,9 +4171,17 @@ const server = http.createServer(async (req, res) => {
       if (!session) return sendJSON(404, { error: "session not found" });
       const items = db.prepare(`
         SELECT i.*, q.section, q.question_type, q.context, q.passage, q.prompt, q.options,
-               q.correct_answer, q.explanation, q.marks, q.image, q.school, q.year
+               q.correct_answer, q.explanation, q.marks, q.image, q.school, q.year, q.paper_key
           FROM epaper_session_items i JOIN epaper_questions q ON q.id = i.question_id
          WHERE i.session_id = ? ORDER BY i.seq`).all(id);
+      // 在线做题重排过顺序，同段原文可能没被抽中 —— 补上，批改界面才看得到短文。
+      const sectionText = epaperSectionTextLookup(db);
+      for (const it of items) {
+        if (!EPAPER_SHARED_TEXT_SECTIONS.has(it.section)) continue;
+        const text = epaperEffectiveText(db, it, sectionText);
+        it.context = text.context;
+        it.passage = text.passage;
+      }
       const detailed = items.map((it) => {
         let points = null;
         if (it.question_type === "oeq") {

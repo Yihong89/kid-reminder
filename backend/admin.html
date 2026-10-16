@@ -134,6 +134,9 @@
   .vocab-filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
   .vocab-filters input[type=text] { flex:1 1 160px; font-size:15px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; }
   .vocab-filters select { font-size:14px; padding:7px 6px; border:1px solid var(--border); border-radius:8px; }
+  .drill-limit-label { display:flex; align-items:center; gap:5px; font-size:13px; color:var(--muted); white-space:nowrap; }
+  .drill-limit-label input { width:64px; font-size:14px; padding:7px 8px; border:1px solid var(--border);
+                             border-radius:8px; text-align:right; }
   /* 题型多选：要能「cloze + 改错 一起导」。原生 <select multiple> 得按住 ⌘ 点，
      手机上基本没法用，所以用一排可点亮的标签。 */
   .chips { display:flex; flex-wrap:wrap; gap:6px; margin:-2px 0 10px; }
@@ -499,6 +502,17 @@
         <div class="vocab-filters">
           <input type="text" id="epaperMistakeQ" placeholder="搜索题目 / 原文关键字…" />
           <select id="epaperMistakePaper"><option value="">全部卷子</option></select>
+          <select id="epaperMistakeCorrect" title="按这道题答对过几次筛">
+            <option value="">答对次数：全部</option>
+            <option value="0">还没答对过</option>
+            <option value="1">答对 ≤ 1 次</option>
+            <option value="2">答对 ≤ 2 次</option>
+            <option value="3">答对 ≤ 3 次</option>
+          </select>
+          <label class="drill-limit-label">每次最多
+            <input type="number" id="epaperDrillLimit" min="0" max="500" step="5" value="0" />
+            题
+          </label>
           <button class="primary" id="epaperMistakeDrill">✏️ 在线做题</button>
           <button id="epaperMistakePdf">⬇️ 导出题目 + 答案</button>
         </div>
@@ -2666,6 +2680,7 @@
       q: $("#epaperMistakeQ").value.trim(),
       paperKey: $("#epaperMistakePaper").value,
       sections: [...epaperMistakePicked],
+      maxCorrect: $("#epaperMistakeCorrect").value,   // "" = 不按答对次数筛
     };
   }
   // 列表和导出共用同一组参数，保证「导出」永远等于「眼前这一批」
@@ -2674,6 +2689,7 @@
     if (f.q) p.set("q", f.q);
     if (f.paperKey) p.set("paperKey", f.paperKey);
     if (f.sections.length) p.set("section", f.sections.join(","));
+    if (f.maxCorrect !== "") p.set("maxCorrect", f.maxCorrect);
     return p.toString();
   }
   // 卷子下拉 + 题型标签都来自错题本当前的真实构成，只填一次
@@ -2721,6 +2737,7 @@
       if (f.q) bits.push(`关键字「${f.q}」`);
       if (f.paperKey) bits.push(f.paperKey);
       if (f.sections.length) bits.push(f.sections.map((s) => EPAPER_SECTION_ZH[s] || s).join(" + "));
+      if (f.maxCorrect !== "") bits.push(f.maxCorrect === "0" ? "还没答对过" : `答对 ≤ ${f.maxCorrect} 次`);
       $("#epaperMistakeSummary").textContent =
         `共 ${data.total} 题` + (bits.length ? `（${bits.join(" · ")}）` : "") +
         (data.total > data.questions.length ? `，只列出前 ${data.questions.length} 题` : "") +
@@ -2808,6 +2825,26 @@
     });
     $("#epaperMistakePaper").onchange = refreshEpaperMistakes;
     $("#epaperMistakePdf").onclick = epaperMistakeExportPdf;
+    $("#epaperMistakeCorrect").onchange = refreshEpaperMistakes;
+    // 「每次最多几题」存成设置项（epaper.drill.limit），换浏览器/换设备都在；
+    // 0 = 不限制。它同时出现在「设置」页里，两边写的是同一个值。
+    const limitInput = $("#epaperDrillLimit");
+    (async () => {
+      try {
+        const s = await fetch("/api/settings").then((r) => r.json());
+        const f = (s.fields || []).find((x) => x.key === "epaper.drill.limit");
+        if (f) limitInput.value = f.value;
+      } catch { /* 读不到就按 0（不限制）走 */ }
+    })();
+    limitInput.onchange = async () => {
+      const v = Math.max(0, Math.min(500, parseInt(limitInput.value, 10) || 0));
+      limitInput.value = v;
+      try {
+        await api("/api/settings", {
+          method: "PATCH", body: JSON.stringify({ settings: { "epaper.drill.limit": v } }),
+        });
+      } catch (e) { showErr("保存「每次最多几题」失败：" + e.message); }
+    };
   })();
 
   // ---- 在线做题：把当前筛选的这一批题在网页上做完，交卷即判分并出报告 ----
@@ -2824,8 +2861,10 @@
       if (f.q) filter.q = f.q;
       if (f.paperKey) filter.paperKey = f.paperKey;
       if (f.sections.length) filter.section = f.sections.join(",");
+      if (f.maxCorrect !== "") filter.maxCorrect = f.maxCorrect;
+      const limit = Math.max(0, parseInt($("#epaperDrillLimit").value, 10) || 0);
       const res = await api("/api/epaper/sessions", {
-        method: "POST", body: JSON.stringify({ drill: true, filter }),
+        method: "POST", body: JSON.stringify({ drill: true, filter, limit }),
       });
       epaperDrill.sessionId = res.sessionId;
       epaperDrill.items = res.items;
