@@ -68,11 +68,12 @@ const ADMIN_HTML_PATH = path.join(__dirname, "admin.html");
 // Runs entirely against Ollama on this same Mac — a child's answers never leave
 // the house. Opt out with AI_GRADING=0 (grading then behaves exactly as before).
 const AI_GRADING = process.env.AI_GRADING !== "0";
-const OLLAMA_URL = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen3.8-27b-ctx16k:latest";
+// 判分服务：与 kid-reminder 同机的 oeq-grader（DeepSeek，3 票多数表决）。
+// 原先走本机 Ollama，2026-10-17 改为调用它 —— 规则是用老师批改过的卷子校准的，
+// 而且会按 point_kind 分流（textual_evidence 允许照抄、inference 要求推理）。
+const OEQ_GRADER_URL = process.env.OEQ_GRADER_URL || "http://127.0.0.1:8790";
 // A whole paper's worth of OEQ can queue up; keep the window short so the 10 GB
 // model doesn't hold the machine in swap (it peaked at 12 GB swap while loaded).
-const AI_KEEP_ALIVE = process.env.AI_KEEP_ALIVE || "5m";
 const AI_TIMEOUT_MS = parseInt(process.env.AI_TIMEOUT_MS || "180000", 10);
 // Rest reminder the kid's app pops up after finishing a paper. Server-supplied
 // so this can be tuned from the plist without rebuilding and re-copying the app
@@ -1285,46 +1286,47 @@ function epaperAutoHit(markPoint, answer) {
 // an immediate stop (1 token, nothing parseable) on ~23% of mark points, while
 // plain "1: YES" lines did not miss once — measured against the parent's own
 // verdicts, 27B@Q2_K agreed on 81% of points, 8B@Q4 on only 67%.
-const AI_PROMPT_TAIL =
   "\nAnswer with one line per mark point, exactly like:\n1: YES\n2: NO\nNo other text.";
 
 async function epaperAiSuggest(question, answer, points) {
   if (!AI_GRADING || !points.length) return null;
-  const lines = points.map((p) => `${p.seq}. ${p.description}`).join("\n");
-  const content =
-    "Mark each mark point YES or NO for this student answer.\n\n" +
-    `Question: ${question.prompt}\n\n` +
-    (question.passage ? `Passage: ${String(question.passage).slice(0, 2500)}\n\n` : "") +
-    `Student answer: ${answer || "(blank)"}\n\n` +
-    `Mark points:\n${lines}` + AI_PROMPT_TAIL;
-
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
   try {
-    const res = await fetch(`${OLLAMA_URL}/api/chat`, {
+    const res = await fetch(`${OEQ_GRADER_URL}/api/v1/grade`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       signal: controller.signal,
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        stream: false,
-        think: false,            // without this it returns its reasoning, not the verdict
-        keep_alive: AI_KEEP_ALIVE,
-        options: { temperature: 0, num_predict: 60 + points.length * 12 },
-        messages: [{ role: "user", content }],
+        question: {
+          prompt: question.prompt,
+          marks: Number(question.marks) || 1,
+          section: question.section || "comprehension_oeq",
+          passage: question.passage || "",
+        },
+        markPoints: points.map((p) => ({
+          seq: p.seq,
+          description: p.description,
+          pointKind: p.point_kind || "keyword",
+        })),
+        answer: answer || "",
       }),
     });
     if (!res.ok) return null;
     const out = await res.json();
-    const text = (out && out.message && out.message.content) || "";
     const verdicts = new Map();
-    for (const m of text.matchAll(/(\d+)\s*[:.\-]\s*(YES|NO)/gi)) {
-      verdicts.set(Number(m[1]), m[2].toUpperCase() === "YES" ? 1 : 0);
+    const reasons = new Map();
+    for (const p of out.points || []) {
+      const v = String(p.aiVerdict || "").toLowerCase();
+      // unknown/空 → 不表态，保持「不确定就不写」；平票时 grader 就是这么返回的
+      if (v === "yes") verdicts.set(Number(p.seq), 1);
+      else if (v === "no") verdicts.set(Number(p.seq), 0);
+      if (p.aiReason) reasons.set(Number(p.seq), String(p.aiReason).slice(0, 300));
     }
     if (!verdicts.size) return null;
-    return { verdicts, raw: text.trim().slice(0, 300) };
+    return { verdicts, reasons };
   } catch {
-    return null;   // Ollama down, timed out, or disabled — simply no suggestion
+    return null;   // grader down, timed out, or disabled — simply no suggestion
   } finally {
     clearTimeout(timer);
   }
@@ -1344,7 +1346,7 @@ function epaperRunAiSuggest(itemId, question, answer, missed) {
       try {
         db.prepare(
           "UPDATE epaper_item_points SET ai_hit = ?, ai_reason = ? WHERE item_id = ? AND mark_point_id = ?"
-        ).run(hit, result.raw, itemId, p.id);
+        ).run(hit, result.reasons.get(p.seq) || "", itemId, p.id);
       } catch { /* row re-graded or session deleted while we were thinking */ }
     }
     if (AI_GRADING) console.log(`[ai] session item ${itemId}: suggested on ${missed.length} missed point(s)`);
@@ -1356,43 +1358,37 @@ function epaperRunAiSuggest(itemId, question, answer, missed) {
 // yes/no question instead. Only fires after the deterministic comparison has
 // already said "wrong", and only for synthesis — every other fill_blank section
 // is a single word, which equality (plus the containment rule) handles fine.
-const AI_OBJECTIVE_PROMPT =
-  "A pupil rewrote a sentence for a school English test. Decide whether the " +
-  "pupil's sentence means the same as the reference answer and is grammatically " +
-  "correct. Ignore differences in spelling. Answer with exactly one line: " +
-  "VERDICT: YES or VERDICT: NO. No other text.";
-
 async function epaperAiJudgeObjective(question, answer) {
   if (!AI_GRADING) return null;
-  const content =
-    `Original sentence(s): ${question.context || "(not given)"}\n` +
-    `The pupil was told to write: ${question.prompt}\n` +
-    `Reference answer: ${question.correct_answer}\n` +
-    `Pupil's sentence: ${answer || "(blank)"}\n\n` + AI_OBJECTIVE_PROMPT;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), AI_TIMEOUT_MS);
   try {
-    const res = await fetch(`${OLLAMA_URL}/api/chat`, {
+    const res = await fetch(`${OEQ_GRADER_URL}/api/v1/grade`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       signal: controller.signal,
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        stream: false,
-        think: false,
-        keep_alive: AI_KEEP_ALIVE,
-        options: { temperature: 0, num_predict: 32 },
-        messages: [{ role: "user", content }],
+        question: {
+          prompt: question.prompt,
+          marks: Number(question.marks) || 2,
+          section: "synthesis",
+          correctAnswer: question.correct_answer || "",
+          context: question.context || "",
+        },
+        markPoints: [],
+        answer: answer || "",
       }),
     });
     if (!res.ok) return null;
     const out = await res.json();
-    const text = (out && out.message && out.message.content) || "";
-    const m = text.match(/VERDICT\s*[:\-]\s*(YES|NO)/i);
-    if (!m) return null;
-    return { hit: m[1].toUpperCase() === "YES" ? 1 : 0, raw: text.trim().slice(0, 200) };
+    const max = Number(out.maxScore) || Number(question.marks) || 2;
+    const score = Number(out.score) || 0;
+    // 只有「满分 = 意思完全一致」才提示；部分分（扣了拼写/标点）不改变孩子的判定
+    const hit = score >= max ? 1 : 0;
+    const why = (out.reasons || []).join(" / ") || (out.points || []).map((x) => x.aiReason).filter(Boolean).join(" / ");
+    return { hit, raw: String(why).slice(0, 200) };
   } catch {
-    return null;   // Ollama down, timed out, or disabled — simply no suggestion
+    return null;   // grader down, timed out, or disabled — simply no suggestion
   } finally {
     clearTimeout(timer);
   }
