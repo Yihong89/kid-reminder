@@ -1636,7 +1636,10 @@ const EPAPER_SECTION_LABELS = {
 // Sections whose reading text is ONE passage shared by a whole run of
 // questions (mirrors EnglishPaperRunnerView.groupableSections) — shown once
 // per section instead of repeated under every question.
-const EPAPER_SHARED_TEXT_SECTIONS = new Set(["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq"]);
+// cloze_mcq 也是「一整段短文 + 5 道词义题」的结构（Q16-20 那种）。有些卷子只在第一题
+// 上存了短文，其余各题 context 为空 —— 于是孩子在 app 里只看到一句 "The word … means"，
+// 没有短文可读（2026-10-17 反馈 SCGS Q17-20）。把它也算共享原文的段落。
+const EPAPER_SHARED_TEXT_SECTIONS = new Set(["cloze_wordbank", "cloze_mcq", "editing", "cloze_open", "comprehension_oeq"]);
 
 // 分组段落（改错、完形、阅读理解）的原文只存在该段**第一题**上。app 里同段题目按卷面
 // 顺序连着显示，第一题在，所以原文就在。网页端「在线做题」把题目按「最弱优先」重排、
@@ -2171,6 +2174,7 @@ function epaperBuildReportHTML(db, sessionId) {
 
   const items = db.prepare(`
     SELECT i.id itemId, i.seq, i.answer, i.final_correct finalCorrect,
+           i.syn_lang_error synLangError, i.syn_meaning_changed synMeaningChanged,
            q.id questionId, q.section, q.question_type questionType, q.paper_seq paperSeq,
            q.paper_key, q.context, q.passage, q.prompt, q.correct_answer correctAnswer,
            q.explanation, q.marks
@@ -2217,6 +2221,10 @@ function epaperBuildReportHTML(db, sessionId) {
       if (missed.length) block = { kind: "oeq", item: it, missed };
     } else if (it.finalCorrect === 0) {
       block = { kind: "objective", item: it };
+    } else if (it.section === "synthesis" && it.synLangError) {
+      // 结构对、只是扣了 1 分（拼写/标点/小语法）。这类也必须出现在错题报告里，
+      // 否则总分会比题目明细多出来，家长对不上（2026-10-17）。
+      block = { kind: "objective", item: it, partial: it.marks - 1 };
     }
     if (block) {
       if (!blocksBySection.has(it.section)) blocksBySection.set(it.section, []);
@@ -2254,9 +2262,14 @@ function epaperBuildReportHTML(db, sessionId) {
         const contextHTML = (!EPAPER_SHARED_TEXT_SECTIONS.has(sec) && it.context)
           ? `<div class="q-context">${epaperEscapeHtml(it.context)}</div>` : "";
         if (b.kind === "objective") {
-          const { why, tip } = epaperItemTip(sec, it.answer, it.correctAnswer);
+          const partial = b.partial != null;
+          const { why, tip } = partial
+            ? { why: "The rewrite has the right structure — the mark was lost on a slip (spelling, punctuation or a small grammar error).",
+                tip: "Reread your own sentence once before moving on: check the spelling of every word and the commas." }
+            : epaperItemTip(sec, it.answer, it.correctAnswer);
+          const marksText = partial ? `${marksLabel} \u2014 scored ${b.partial}` : marksLabel;
           return `<div class="q">
-            <div class="q-num">Question ${it.paperSeq} <span class="marks">(${marksLabel})</span></div>
+            <div class="q-num">Question ${it.paperSeq} <span class="marks">(${marksText})</span></div>
             ${contextHTML}
             <div class="q-prompt">${epaperEscapeHtml(it.prompt)}</div>
             <div class="answer-row">

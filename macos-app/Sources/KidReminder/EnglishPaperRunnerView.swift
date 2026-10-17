@@ -32,7 +32,8 @@ struct EnglishPaperRunnerView: View {
 
     // Sections that share ONE continuous passage across a run of consecutive
     // questions (see docs/superpowers/specs/2026-09-06-english-paper-practice-design.md).
-    private static let groupableSections: Set<String> = ["cloze_wordbank", "editing", "cloze_open", "comprehension_oeq", "comprehension_mcq"]
+    // cloze_mcq 也是「一篇短文 + 5 道词义题」，和 cloze_wordbank 一样按段显示一次原文。
+    private static let groupableSections: Set<String> = ["cloze_wordbank", "cloze_mcq", "editing", "cloze_open", "comprehension_oeq", "comprehension_mcq"]
 
     @State private var phase: Phase = .loading
     @State private var stepPhase: StepPhase = .answering
