@@ -4037,6 +4037,23 @@ const server = http.createServer(async (req, res) => {
 
       let qids, mode, label = "";
       if (drillMode) {
+        // 跨卷子专项：把所有 prelim 卷子的同一题型挑出来，一次做完。
+        // 和下面「错题本筛选」的 drill 不同 —— 这个不要求 in_mistake_bank，
+        // 而是按卷子顺序铺开（2026-10-17 家长要「一口气做完」）。
+        const scope = String(body.scope || "");
+        if (scope === "all-vocab") {
+          const rows = db.prepare(
+            `SELECT id FROM epaper_questions
+              WHERE section = 'vocab_mcq'
+                AND (context IS NULL OR context = '')
+                AND paper_key NOT IN ('my-wrong-answers', 'learninglab-2026')
+              ORDER BY paper_key ASC, paper_seq ASC`
+          ).all();
+          if (!rows.length) return sendJSON(400, { error: "题库里没有词汇选择题" });
+          qids = rows.map((r) => r.id);
+          mode = "drill";
+          label = `全部卷子 · 词汇 ${qids.length} 题`;   // 只要不带短文的（每卷 5 道）
+        } else {
         // Reuse the mistake-bank filter so the drill is always exactly what the
         // parent sees on screen (same helper the list and the PDF export use).
         const params = new URLSearchParams();
@@ -4067,6 +4084,7 @@ const server = http.createServer(async (req, res) => {
         qids = rows.map((r) => r.id);
         mode = "drill";
         label = (f.filterNote ? `错题本 · ${f.filterNote}` : "错题本") + (limit ? ` · 前 ${limit} 题` : "");
+        }
       } else if (paperKey) {
         const rows = db.prepare(
           "SELECT id FROM epaper_questions WHERE paper_key = ? ORDER BY paper_seq ASC"

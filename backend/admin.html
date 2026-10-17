@@ -487,6 +487,10 @@
     <div id="epaperView" hidden>
       <div class="card">
         <div class="vocab-summary">试卷预览——内容和孩子在 macOS App 里看到的完全一致（包括完整段落和完整 word bank），这里额外显示答案方便家长检查。</div>
+        <div class="vocab-filters">
+          <button class="primary" id="epaperVocabDrill">📚 全部卷子词汇专项</button>
+          <span class="vocab-summary" style="margin:0">把 prelim 卷子的词汇题按卷子顺序挑出来，一次做完 —— 交卷即出分数和错题报告。</span>
+        </div>
         <div id="epaperPapersList"></div>
       </div>
       <div class="card">
@@ -2894,6 +2898,36 @@
   // 「交卷即出报告」，那部分仍在 app 里做。答案在服务端判，页面只负责收集与呈现。
   const epaperDrill = { sessionId: null, items: [], answers: new Map(), at: 0 };
 
+  // 打开做题界面。from 记来源，退出时回到对应页面（错题本 / 试卷列表）。
+  function epaperDrillOpen(res, from) {
+    epaperDrill.sessionId = res.sessionId;
+    epaperDrill.items = res.items;
+    epaperDrill.answers = new Map();
+    epaperDrill.at = 0;
+    epaperDrill.from = from;
+    $("#epaperMistakesView").hidden = true;
+    $("#epaperView").hidden = true;
+    $("#epaperDrillView").hidden = false;
+    epaperDrillRender();
+    window.scrollTo(0, 0);
+  }
+
+  // 全部卷子的词汇专项：跨卷子抽题，按卷子顺序铺开（不要求进过错题本）。
+  async function epaperVocabDrillStart() {
+    const btn = $("#epaperVocabDrill"), label = btn.textContent;
+    btn.disabled = true; btn.textContent = "⏳ 正在组卷…";
+    try {
+      const res = await api("/api/epaper/sessions", {
+        method: "POST", body: JSON.stringify({ drill: true, scope: "all-vocab" }),
+      });
+      epaperDrillOpen(res, "papers");
+    } catch (e) {
+      showErr("开始做题失败：" + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
   async function epaperDrillStart() {
     const btn = $("#epaperMistakeDrill"), label = btn.textContent;
     btn.disabled = true; btn.textContent = "⏳ 正在组卷…";
@@ -2908,14 +2942,7 @@
       const res = await api("/api/epaper/sessions", {
         method: "POST", body: JSON.stringify({ drill: true, filter, limit }),
       });
-      epaperDrill.sessionId = res.sessionId;
-      epaperDrill.items = res.items;
-      epaperDrill.answers = new Map();
-      epaperDrill.at = 0;
-      $("#epaperMistakesView").hidden = true;
-      $("#epaperDrillView").hidden = false;
-      epaperDrillRender();
-      window.scrollTo(0, 0);
+      epaperDrillOpen(res, "mistakes");
     } catch (e) {
       showErr("开始做题失败：" + e.message);
     } finally {
@@ -3064,25 +3091,36 @@
       <div class="drill-nav" style="display:flex">
         <button class="primary" id="epaperDrillReport">⬇️ 下载错题报告</button>
         <button class="ghost" id="epaperDrillAgain">↻ 再做一遍</button>
-        <button class="ghost" id="epaperDrillExit">返回错题本</button>
+        <button class="ghost" id="epaperDrillExit">${epaperDrill.from === "papers" ? "返回试卷列表" : "返回错题本"}</button>
       </div>`;
     $("#epaperDrillReport").onclick = () =>
       epaperDownloadReport(epaperDrill.sessionId, $("#epaperDrillReport"));
-    $("#epaperDrillAgain").onclick = () => { epaperDrillExit(); epaperDrillStart(); };
+    $("#epaperDrillAgain").onclick = () => {
+      const again = epaperDrill.from === "papers" ? epaperVocabDrillStart : epaperDrillStart;
+      epaperDrillExit();
+      again();
+    };
     $("#epaperDrillExit").onclick = epaperDrillExit;
   }
 
   function epaperDrillExit() {
     $("#epaperDrillView").hidden = true;
-    $("#epaperMistakesView").hidden = false;
+    if (epaperDrill.from === "papers") {
+      $("#epaperView").hidden = false;
+      $("#epaperMistakesView").hidden = true;
+    } else {
+      $("#epaperMistakesView").hidden = false;
+      refreshEpaperMistakes();
+    }
+    epaperDrill.from = null;
     epaperDrill.sessionId = null;
     epaperDrill.items = [];
     epaperDrill.answers = new Map();
-    refreshEpaperMistakes();
   }
 
   (() => {
     $("#epaperMistakeDrill").onclick = epaperDrillStart;
+    $("#epaperVocabDrill").onclick = epaperVocabDrillStart;
     $("#epaperDrillClose").onclick = () => {
       if (epaperDrill.items.length && !confirm("退出后这次答题不会保存，确定退出？")) return;
       epaperDrillExit();
