@@ -2336,7 +2336,7 @@
     // 错题报告随时可以重出 —— 报告是按会话生成的，做题时就已经存在服务器上，关上
     // 结果页并不会丢。原来只有做完那一刻能下载，关掉就找不回来了（2026-10-17）。
     const reportBtn = s.status === "reviewed"
-      ? '<button class="ghost report" title="打开这次的错题报告（可打印/存为 PDF）">⬇️ 报告</button>'
+      ? '<button class="ghost report" title="下载这次的错题报告（PDF）">⬇️ 报告</button>'
       : "";
     row.innerHTML = `
       <div class="icon">📘</div>
@@ -2352,7 +2352,7 @@
     if (reportBtn) {
       row.querySelector(".report").onclick = (e) => {
         e.stopPropagation();
-        window.open(`/api/epaper/sessions/${s.id}/report`, "_blank");
+        epaperDownloadReport(s.id, e.currentTarget);
       };
     }
     if (s.status === "in_progress") {
@@ -2766,6 +2766,32 @@
     } catch (e) { showErr(e.message); }
   }
 
+  // 错题报告：点一下直接下 PDF 文件（服务端用 Chrome 把报告页渲染成 PDF）。
+  // 以前是 window.open 打开报告页再点「保存为 PDF」，那只会弹浏览器的打印框，
+  // 家长点了也不一定存得下来（2026-10-17 反馈）。服务端没 Chrome（501）时退回网页版。
+  async function epaperDownloadReport(sessionId, btn) {
+    const label = btn ? btn.textContent : "";
+    if (btn) { btn.disabled = true; btn.textContent = "⏳ 正在生成…"; }
+    try {
+      const res = await fetch(`/api/epaper/sessions/${sessionId}/report.pdf`);
+      if (res.ok) {
+        const cd = res.headers.get("Content-Disposition") || "";
+        const m = /filename="?([^"]+)"?/.exec(cd);
+        epaperMistakeSave({ blob: await res.blob(), name: m ? m[1] : `mistake-report-${sessionId}.pdf` });
+      } else if (res.status === 501) {
+        window.open(`/api/epaper/sessions/${sessionId}/report`, "_blank");
+      } else {
+        let msg = "导出报告失败";
+        try { msg = (await res.json()).error || msg; } catch {}
+        showErr(msg);
+      }
+    } catch (e) {
+      showErr("导出报告失败：" + e.message);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = label; }
+    }
+  }
+
   async function epaperMistakeFetchPdf(f, part) {
     const qs = epaperMistakeQuery(f) + (part === "answers" ? "&part=answers" : "");
     const res = await fetch(`/api/epaper/mistakes.pdf?${qs}`, {
@@ -3041,7 +3067,7 @@
         <button class="ghost" id="epaperDrillExit">返回错题本</button>
       </div>`;
     $("#epaperDrillReport").onclick = () =>
-      window.open(`/api/epaper/sessions/${epaperDrill.sessionId}/report`, "_blank");
+      epaperDownloadReport(epaperDrill.sessionId, $("#epaperDrillReport"));
     $("#epaperDrillAgain").onclick = () => { epaperDrillExit(); epaperDrillStart(); };
     $("#epaperDrillExit").onclick = epaperDrillExit;
   }

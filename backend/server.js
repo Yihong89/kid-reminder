@@ -53,8 +53,9 @@
 
 const http = require("node:http");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
-const { execFileSync } = require("node:child_process");
+const { execFileSync, execFile } = require("node:child_process");
 const { DatabaseSync } = require("node:sqlite");
 
 const PORT = parseInt(process.env.PORT || "2021", 10);
@@ -2095,6 +2096,69 @@ function epaperPointTip(pointKind) {
   }
 }
 
+// 把错题报告的 HTML 渲染成 PDF。
+//
+// 为什么不直接让浏览器 window.print()：那只会弹打印框，家长点了「保存 PDF」也不一定
+// 能把文件存下来（2026-10-17 反馈：「显示的是打印，然后又没有保存下来」）。所以服务端
+// 用本机 Chrome 的 --print-to-pdf 把**同一份** HTML 渲染成 PDF 直接下载 —— 排版和屏幕
+// 上看到的一致，也不用再写一套 pdfkit 渲染器。
+// Chrome 路径可用 REPORT_CHROME_PATH 覆盖；找不到就抛错，由路由回退成打开 HTML。
+const REPORT_CHROME_CANDIDATES = [
+  process.env.REPORT_CHROME_PATH,
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/Applications/Chromium.app/Contents/MacOS/Chromium",
+  "/usr/bin/google-chrome",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+].filter(Boolean);
+
+function findReportChrome() {
+  for (const p of REPORT_CHROME_CANDIDATES) {
+    try { if (fs.statSync(p).isFile()) return p; } catch { /* try the next one */ }
+  }
+  return null;
+}
+
+function epaperReportPdf(html, timeoutMs = 25000) {
+  return new Promise((resolve, reject) => {
+    const chrome = findReportChrome();
+    if (!chrome) return reject(new Error("本机没有找到 Chrome，暂时无法直接生成 PDF"));
+    let dir;
+    try {
+      dir = fs.mkdtempSync(path.join(os.tmpdir(), "epaper-report-"));
+    } catch (e) {
+      return reject(e);
+    }
+    const htmlPath = path.join(dir, "report.html");
+    const pdfPath = path.join(dir, "report.pdf");
+    const cleanup = () => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch { /* best effort */ } };
+    try {
+      fs.writeFileSync(htmlPath, html, "utf8");
+    } catch (e) {
+      cleanup();
+      return reject(e);
+    }
+    execFile(chrome, [
+      "--headless=new", "--no-sandbox", "--disable-gpu",
+      "--no-pdf-header-footer", "--virtual-time-budget=2000",
+      `--print-to-pdf=${pdfPath}`, "file://" + htmlPath,
+    ], { timeout: timeoutMs, killSignal: "SIGKILL" }, (err) => {
+      try {
+        if (err) return reject(new Error("渲染 PDF 失败：" + err.message));
+        const buf = fs.readFileSync(pdfPath);
+        if (buf.length < 5 || buf.subarray(0, 4).toString("latin1") !== "%PDF") {
+          return reject(new Error("渲染出来的文件不是 PDF"));
+        }
+        resolve(buf);
+      } catch (e) {
+        reject(e);
+      } finally {
+        cleanup();
+      }
+    });
+  });
+}
+
 // Returns the full HTML document (string) for a session's mistake report, or
 // null if the session doesn't exist or isn't fully reviewed yet.
 function epaperBuildReportHTML(db, sessionId) {
@@ -2272,9 +2336,12 @@ function epaperBuildReportHTML(db, sessionId) {
   .points .point:first-child { border-top: none; padding-top: 0; margin-top: 0; }
   .point-model { font-size: 14px; margin-bottom: 4px; }
   footer { text-align: center; color: #9ca3af; font-size: 12px; margin-top: 28px; }
-  .print-btn { position: fixed; right: 20px; bottom: 20px; border: none; border-radius: 999px;
-               background: #2563eb; color: #fff; font-size: 15px; font-weight: 600;
-               padding: 12px 20px; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,.35); }
+  /* 报告是 A4 的（新加坡用 A4）；不写的话 Chrome 无头渲染默认成 Letter。 */
+  @page { size: A4; margin: 12mm; }
+  .print-btn { position: fixed; right: 20px; bottom: 20px; display: inline-block; border: none;
+               border-radius: 999px; background: #2563eb; color: #fff; font-size: 15px;
+               font-weight: 600; padding: 12px 20px; cursor: pointer; text-decoration: none;
+               text-align: center; box-shadow: 0 4px 14px rgba(37,99,235,.35); }
   /* 「下载错题报告」＝在浏览器里存成 PDF，所以打印时去掉页面底色和浮动按钮，
      只留卡片本身（2026-10-16）。 */
   @media print {
@@ -2304,7 +2371,8 @@ function epaperBuildReportHTML(db, sessionId) {
   ${sectionsHTML}
   <footer>Great effort finishing the whole paper — every mistake reviewed here is one you're less likely to make next time. 🌟</footer>
 </div>
-<button class="print-btn" onclick="window.print()">🖨 保存为 PDF</button>
+<a class="print-btn dl" href="/api/epaper/sessions/${sessionId}/report.pdf">⬇️ 下载 PDF</a>
+<button class="print-btn" style="bottom:76px" onclick="window.print()">🖨 打印</button>
 </body>
 </html>`;
 }
@@ -4161,6 +4229,31 @@ const server = http.createServer(async (req, res) => {
       if (html === null) return sendJSON(409, { error: "session isn't fully graded yet" });
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(html);
+    }
+
+    // --- 同一份报告，直接给 PDF 文件（一步下载，不经过打印框）------------------
+    const epaperReportPdfRoute = pathname.match(/^\/api\/epaper\/sessions\/(\d+)\/report\.pdf$/);
+    if (epaperReportPdfRoute && method === "GET") {
+      const sessionId = Number(epaperReportPdfRoute[1]);
+      const html = epaperBuildReportHTML(db, sessionId);
+      if (html === null) return sendJSON(409, { error: "这份还没有批改完，暂时不能导出报告" });
+      try {
+        const pdf = await epaperReportPdf(html);
+        const row = db.prepare("SELECT label, paper_key FROM epaper_sessions WHERE id = ?").get(sessionId);
+        const label = String((row && row.label) || (row && row.paper_key) || "mistake-report")
+          .replace(/[^\x20-\x7E]+/g, "")
+          .replace(/[^A-Za-z0-9 ._-]+/g, "")
+          .trim().replace(/\s+/g, "-").slice(0, 60) || "mistake-report";
+        res.writeHead(200, {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename="mistake-report-${label}-${sessionId}.pdf"`,
+          "Cache-Control": "no-store",
+        });
+        return res.end(pdf);
+      } catch (e) {
+        // 环境问题（例如没装 Chrome）：把 HTML 报告页的位置一并告诉前端，它可以退回打开网页。
+        return sendJSON(501, { error: e.message, reportHTML: `/api/epaper/sessions/${sessionId}/report` });
+      }
     }
 
     // --- session list (admin): full history, not just pending -----------------
