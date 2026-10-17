@@ -2280,8 +2280,11 @@ function epaperBuildReportHTML(db, sessionId) {
   @media print {
     body { background: #fff; padding: 0; }
     .print-btn { display: none; }
-    header.top, section { box-shadow: none; border: 1px solid #e5e7eb; break-inside: avoid; }
+    header.top, section { box-shadow: none; border: 1px solid #e5e7eb; }
+    /* 只让**单道题**不被拆到两页。整段（section）不能设 avoid —— 一段 7 道题
+       塞不进一页，会被整体推到下一页，结果第一页只剩页眉一片空白（2026-10-17）。 */
     .q { break-inside: avoid; }
+    details.passage { break-inside: avoid; }
   }
 </style>
 </head>

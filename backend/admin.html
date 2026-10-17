@@ -2301,6 +2301,10 @@
     row.className = "card sci-session";
     const title = s.mode === "mistakes"
       ? "📕 错题本复习"
+      // 网页端在线做题：卷名说不了这次刷的是哪一批（可能横跨几份卷子、也可能只按
+      // 题型筛），所以用它自己记的那行说明当标题。
+      : s.mode === "drill"
+        ? `✏️ ${s.label || "在线做题"}`
       // Fall back to the raw paper_key if the paper was since removed from the
       // bank (history still references it) or for old rows with no paper_key.
       : `📘 ${paperLabels[s.paper_key] || s.paper_key || "英语试卷练习"}`;
@@ -2329,6 +2333,11 @@
     const forceCompleteBtn = s.status === "in_progress"
       ? '<button class="ghost force-complete" title="标记为可批改（孩子不会再继续做这份了）">✅ 标记可批改</button>'
       : "";
+    // 错题报告随时可以重出 —— 报告是按会话生成的，做题时就已经存在服务器上，关上
+    // 结果页并不会丢。原来只有做完那一刻能下载，关掉就找不回来了（2026-10-17）。
+    const reportBtn = s.status === "reviewed"
+      ? '<button class="ghost report" title="打开这次的错题报告（可打印/存为 PDF）">⬇️ 报告</button>'
+      : "";
     row.innerHTML = `
       <div class="icon">📘</div>
       <div class="info">
@@ -2336,9 +2345,16 @@
         <div class="when">${sub}</div>
       </div>
       ${badge}
+      ${reportBtn}
       ${forceCompleteBtn}
       <button class="del" title="删除这条记录">🗑</button>`;
     if (s.status !== "in_progress") row.onclick = () => openEpaperGradeDialog(s.id);
+    if (reportBtn) {
+      row.querySelector(".report").onclick = (e) => {
+        e.stopPropagation();
+        window.open(`/api/epaper/sessions/${s.id}/report`, "_blank");
+      };
+    }
     if (s.status === "in_progress") {
       row.querySelector(".force-complete").onclick = async (e) => {
         e.stopPropagation();
