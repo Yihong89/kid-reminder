@@ -4200,6 +4200,15 @@ const server = http.createServer(async (req, res) => {
           .run(correct ? q.marks : 0, q.id);
         db.prepare("UPDATE epaper_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?")
           .run(correct ? 1 : -1, q.id);
+        // drill（错题本练习 / 跨卷子专项）不经过家长复核，交卷即定分 —— 所以判错
+        // 直接收进错题本，否则这些题永远不会出现在错题本里。卷子模式仍然等家长
+        // 复核（下面这条 NOTE 描述的规则不变）。
+        try {
+          const sess = db.prepare("SELECT mode FROM epaper_sessions WHERE id = ?").get(item.session_id);
+          if (!correct && sess && sess.mode === "drill") {
+            db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
+          }
+        } catch { /* session deleted mid-submit */ }
         // NOTE: a wrong objective answer is NOT added to 错题本 here. It only
         // enters the mistake bank after the parent reviews/flags it (see the
         // /review handler below), so test runs don't pollute the bank.
