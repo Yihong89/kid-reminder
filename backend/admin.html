@@ -1329,7 +1329,10 @@
     try {
       const settings = {};
       for (const f of settingsFields) {
-        const el = $("#setting-" + f.key);
+        // 设置项的 key 带点（dictation.en.size、epaper.drill.limit…），不能用 CSS 选择器
+        // "#setting-<key>" —— 点会被当成 class，取到 null，整个保存就中断了（2026-10-18）。
+        const el = document.getElementById("setting-" + f.key);
+        if (!el) continue;
         if (f.type === "level") settings[f.key] = el.value;
         else if (f.type === "bool") settings[f.key] = el.checked;
         else settings[f.key] = Number(el.value);
