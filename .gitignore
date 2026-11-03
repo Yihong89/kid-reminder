@@ -55,3 +55,6 @@ build/
 *.xcodeproj/xcuserdata/
 *.zip
 .worktrees/
+
+# 打印讲义（含各校真题 PDF，不入库）
+handouts/

@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 /// 📘 The English Paper 2 practice window. Items are grouped into "steps":
 ///   - a single mcq/oeq/ungrouped fill_blank item is its own step (unchanged
@@ -636,6 +637,24 @@ struct EnglishPaperRunnerView: View {
         }
     }
 
+
+    /// 线上题做完后，把这份卷子的「改写 + 阅读理解」讲义存到下载文件夹并打开，
+    /// 让孩子打印出来做在纸上。这份卷子没有讲义时静默跳过。
+    private func saveHandoutIfAny() {
+        guard case .paper(let key, _) = source else { return }
+        Task {
+            guard let data = try? await api.epaperHandout(paperKey: key), !data.isEmpty else { return }
+            let dir = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask)[0]
+            let url = dir.appendingPathComponent("\(key)-synthesis-comprehension.pdf")
+            do {
+                try data.write(to: url, options: .atomic)
+                NSWorkspace.shared.open(url)
+            } catch {
+                // 存不下就算了，不打断做题流程
+            }
+        }
+    }
+
     private func finish() async {
         guard let sessionId = session?.sessionId else { return }
         phase = .finishing
@@ -645,6 +664,7 @@ struct EnglishPaperRunnerView: View {
             }
             phase = .done
             showRestPrompt = true   // the paper is in — prompt the break now
+            saveHandoutIfAny()      // 句子改写 / 阅读理解要打印出来做
         } catch {
             phase = .error(error.localizedDescription)
         }

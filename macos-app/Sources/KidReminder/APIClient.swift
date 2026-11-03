@@ -422,6 +422,16 @@ final class APIClient {
         return (try? JSONDecoder().decode(Resp.self, from: data))?.restMinutes
     }
 
+    /// 「句子改写 + 阅读理解」打印讲义（PDF）。没有讲义时返回 nil，不当作错误。
+    func epaperHandout(paperKey: String) async throws -> Data? {
+        let enc = paperKey.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? paperKey
+        do {
+            return try await request("/api/epaper/handout?paperKey=\(enc)")
+        } catch {
+            return nil
+        }
+    }
+
     /// Raw HTML for a reviewed session's mistake report — saved straight to
     /// disk by the caller, not decoded, since it's a document, not JSON.
     func epaperReportHTML(sessionId: Int) async throws -> Data {

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>词汇测验 · Vocab Quiz</title>
+<style>
+:root{--blue:#1f6fb2;--green:#1a7f37;--red:#c0392b;}
+*{box-sizing:border-box;}
+body{margin:0;font-family:"PingFang SC","Hiragino Sans GB",Helvetica,Arial,sans-serif;
+     background:#f4f6f8;color:#111;font-size:15px;line-height:1.55;}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px;}
+header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+h1{font-size:20px;margin:0;flex:1;}
+.back{color:var(--blue);text-decoration:none;font-size:14px;}
+.card{background:#fff;border-radius:10px;padding:18px 18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.qhead{display:flex;align-items:center;gap:10px;font-size:13px;color:#666;margin-bottom:10px;}
+.bar{flex:1;height:6px;background:#e6e9ed;border-radius:3px;overflow:hidden;}
+.bar > i{display:block;height:100%;background:var(--blue);width:0;transition:width .2s;}
+.qtext{font-size:20px;line-height:1.5;margin:8px 0 4px;}
+.qtext .quote{color:#35707f;font-style:italic;}
+.hint{font-size:13px;color:#888;margin-bottom:14px;}
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+.opt{text-align:left;border:1px solid #d6dbe1;background:#fff;border-radius:8px;padding:12px 14px;
+     font-size:15px;cursor:pointer;transition:.12s;font-family:inherit;line-height:1.4;}
+.opt:hover:not(:disabled){border-color:var(--blue);background:#f2f7fc;}
+.opt:disabled{cursor:default;}
+.opt.correct{border-color:var(--green);background:#eaf7ea;}
+.opt.wrong{border-color:var(--red);background:#fdecea;}
+.opt .tag{font-weight:700;margin-right:8px;color:#999;}
+.opt.correct .tag{color:var(--green);}
+.opt.wrong .tag{color:var(--red);}
+.fb{margin-top:16px;padding:12px 14px;border-radius:8px;font-size:14px;display:none;}
+.fb.show{display:block;}
+.fb.ok{background:#eaf7ea;border-left:4px solid var(--green);}
+.fb.no{background:#fdecea;border-left:4px solid var(--red);}
+.fb b{display:block;margin-bottom:4px;}
+.fb .zh{color:#35707f;}
+.fb .note{color:#444;margin-top:6px;font-size:13px;}
+.fb .ex{font-family:Georgia,serif;margin-top:6px;font-size:13px;color:#333;}
+.row{display:flex;gap:10px;margin-top:16px;}
+button.primary{background:var(--blue);color:#fff;border:0;border-radius:8px;padding:11px 22px;font-size:15px;
+     cursor:pointer;font-family:inherit;}
+button.primary:disabled{opacity:.45;cursor:default;}
+button.ghost{background:#fff;border:1px solid #cfd6dd;border-radius:8px;padding:11px 18px;font-size:15px;
+     cursor:pointer;font-family:inherit;color:#333;}
+.start p{margin:6px 0 14px;color:#555;}
+.pill{display:inline-block;background:#eef4fb;color:var(--blue);border-radius:20px;padding:3px 12px;font-size:13px;margin-right:6px;}
+.score{font-size:44px;font-weight:700;color:var(--blue);line-height:1.1;}
+.wrongs{margin-top:16px;}
+.wrongs div{padding:9px 0;border-bottom:1px solid #eee;font-size:14px;}
+.wrongs .k{font-weight:700;}
+.wrongs .r{color:var(--red);}
+.wrongs .c{color:var(--green);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎯 词汇测验</h1>
+    <a class="back" href="/">← 回主页</a>
+  </header>
+
+  <div class="card start" id="start">
+    <p><span class="pill">90 个词</span><span class="pill">55 词 + 35 短语</span></p>
+    <p>选一组开始。每答完一题立刻告诉你对不对，并给出中文意思和一个例句。</p>
+    <div class="row">
+      <button class="primary" data-n="20">20 题</button>
+      <button class="ghost" data-n="40">40 题</button>
+      <button class="ghost" data-n="0">全部 90 题</button>
+    </div>
+  </div>
+
+  <div class="card" id="quiz" hidden>
+    <div class="qhead"><span id="cnt">1 / 20</span><div class="bar"><i id="prog"></i></div><span id="sc">0</span></div>
+    <div class="qtext" id="qtext"></div>
+    <div class="hint" id="hint"></div>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb"></div>
+    <div class="row"><button class="primary" id="next" disabled>下一题 →</button></div>
+  </div>
+
+  <div class="card" id="done" hidden>
+    <div class="score" id="finalScore"></div>
+    <p id="finalMsg"></p>
+    <div class="wrongs" id="wrongList"></div>
+    <div class="row">
+      <button class="primary" id="again">再来一组</button>
+      <button class="ghost" id="home">回主页</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ITEMS = [{"k":"w","q":"accede","po":"v.","a":"to agree to a request","zh":"同意（某请求）——正式场合用，指答应别人的要求，不是“赞成某个观点”","ex":"The manager finally acceded to our request for extra practice time.","note":"固定搭配 accede to sth。形近词：exceed（超过）、concede（承认输了）。"},{"k":"w","q":"adamant","po":"adj.","a":"refusing to change your mind","zh":"坚决的、固执的——别人劝也劝不动，比 determined 更强调“不肯改”","ex":"He was adamant that he had locked the door before leaving.","note":"be adamant that / be adamant about。比 determined 更强硬，带“劝不动”的意味。"},{"k":"w","q":"allegedly","po":"adv.","a":"said to be true but not proved","zh":"据称——报道用词，“有人这么说，但未证实”，不等于确实发生","ex":"Allegedly, the thief escaped through the back window.","note":"新闻用词，不代表已证实。形容词 alleged，名词 allegation。"},{"k":"w","q":"ambiguously","po":"adv.","a":"in a way that can be understood in more than one way","zh":"含糊地——可以有两种以上理解，让人分不清到底哪个","ex":"The instructions were written ambiguously, so nobody knew which way to turn.","note":"形容词 ambiguous，名词 ambiguity。反义 clearly。"},{"k":"w","q":"ambiguous","po":"adj.","a":"having more than one possible meaning","zh":"模棱两可的——句子或答案意思不清；与 ambivalent（心情矛盾）不同","ex":"His answer was ambiguous, so we could not tell if he agreed.","note":"别与 ambivalent（心里矛盾、两种感觉并存）混：ambiguous 是意思不清，ambivalent 是心情矛盾。"},{"k":"w","q":"breach","po":"n./v.","a":"a breaking of a rule; to break through","zh":"违反；突破口——破坏规则、合同，比 break 正式","ex":"Sharing the password was a breach of the school's rules.","note":"固定搭配 a breach of contract / security breach。与 break 同源，但 breach 更正式。"},{"k":"w","q":"coherent","po":"adj.","a":"clear and easy to follow","zh":"连贯的——前后接得上、读得懂；写作评分常用","ex":"Her essay was coherent from start to finish.","note":"反义 incoherent。名词 coherence。写作评分常用词。"},{"k":"w","q":"compelled","po":"v.(past)","a":"forced to do something","zh":"被迫——外因逼着做，不是自己想做","ex":"The heavy rain compelled us to cancel the hike.","note":"compel sb to do sth。近义 forced；注意与 impelled（内心驱使）区别。"},{"k":"w","q":"compulsively","po":"adv.","a":"unable to stop yourself doing something","zh":"不由自主地——控制不住地重复做；别与 compulsory（必修的）混","ex":"He compulsively checked his phone every few seconds.","note":"别与 compulsory（必修的、强制的）混：前者修饰动作，后者修饰课程/规定。"},{"k":"w","q":"condoned","po":"v.(past)","a":"accepted wrong behaviour without punishing it","zh":"纵容、默许——明知不对却不惩罚；与 condemn（谴责）意思相反","ex":"The coach never condoned cheating, even from the best player.","note":"与 condemn（谴责）意思相反，拼写却很像——这是最常见的陷阱。"},{"k":"w","q":"confined","po":"adj./v.(past)","a":"kept within limits or inside a place","zh":"局限于——被限制在某个范围之内","ex":"The infection was confined to one classroom.","note":"be confined to。近义 restricted。"},{"k":"w","q":"conform","po":"v.","a":"to behave according to rules or standards","zh":"遵从——按规矩做，跟 to 搭配","ex":"All pupils must conform to the school uniform rules.","note":"conform to（不是 with）。名词 conformity。"},{"k":"w","q":"consensus","po":"n.","a":"general agreement among a group","zh":"共识——一群人一致同意；不可数名词","ex":"The class reached a consensus on where to go for the trip.","note":"不可数名词：说 reach / build a consensus，不说 a consensus of opinions。"},{"k":"w","q":"culpable","po":"adj.","a":"deserving blame","zh":"有罪的、该受责备——对错误负有责任，多用于事故、失职","ex":"The driver was culpable for the accident because he was speeding.","note":"法律用词，近义 guilty / to blame。名词 culpability。"},{"k":"w","q":"cynically","po":"adv.","a":"believing people act only for their own advantage","zh":"冷嘲地——认为人做事都只为自己打算","ex":"He cynically said the donation was only made for publicity.","note":"形容词 cynical，名词 cynic。与 sarcastically（讽刺地）语气不同：cynical 是不信人性。"},{"k":"w","q":"deferential","po":"adj.","a":"showing respect to someone older or more senior","zh":"恭敬的——对年长或职位高的人表示尊重","ex":"The young officer spoke in a deferential tone to the general.","note":"名词 deference。形近 different——考卷常拿这个拼写骗人。"},{"k":"w","q":"delirious","po":"adj.","a":"confused and unable to think clearly, often from fever","zh":"神志不清的——多因高烧，说胡话、认不出人","ex":"The patient was delirious with fever and did not recognise his son.","note":"be delirious with fever。别与 delightful（愉快的）混。"},{"k":"w","q":"embellishment","po":"n.","a":"a detail added to make a story more interesting","zh":"润色、添枝加叶——给故事加细节让它更好听","ex":"The story was true, apart from a little embellishment about the size of the fish.","note":"动词 embellish。写记叙文时指“加点细节”，带轻微贬义。"},{"k":"w","q":"endorsed","po":"v.(past)","a":"officially supported or recommended","zh":"背书、公开支持——名人代言或公开表态支持","ex":"The athlete endorsed the new running shoes in a television advert.","note":"名词 endorsement。商业语境 = 代言；政治语境 = 表态支持。"},{"k":"w","q":"excavate","po":"v.","a":"to dig out earth to uncover something","zh":"挖掘——挖开土层找东西","ex":"Archaeologists excavated the site for three months before finding the tomb.","note":"名词 excavation。近义 dig up，但 excavate 更专业。"},{"k":"w","q":"frivolous","po":"adj.","a":"not serious; silly","zh":"轻浮的、不严肃的——把心思花在不重要的事上","ex":"He wasted his savings on frivolous things like designer phone cases.","note":"反义 serious / sensible。常配 complaint（无理的投诉）、spending。"},{"k":"w","q":"gallant","po":"adj.","a":"brave; polite and attentive","zh":"英勇的、彬彬有礼的——多形容男士对弱者的行为","ex":"The gallant firefighter carried the child out of the burning flat.","note":"形近 elegant（优雅）——两者都含 -gant/-lant，注意开头。"},{"k":"w","q":"hindrance","po":"n.","a":"something that gets in the way","zh":"阻碍——挡路的东西，跟 to","ex":"Noise is a serious hindrance to studying.","note":"动词 hinder。固定搭配 a hindrance to。"},{"k":"w","q":"implications","po":"n.","a":"possible effects or hidden meanings","zh":"可能的影响、含意——话里没明说但能推出来的意思","ex":"The new rule has serious implications for pupils who take the bus.","note":"动词 imply。考试常问 what does the word imply —— 答案要写出言外之意，不是字面。"},{"k":"w","q":"incoherently","po":"adv.","a":"in a way that is hard to understand","zh":"语无伦次地——说得断断续续、听不懂","ex":"He mumbled incoherently after the fall and could not say his name.","note":"反义 coherently。常与 mumbled / rambled 连用。"},{"k":"w","q":"infringed","po":"v.(past)","a":"broke a law or someone's right","zh":"侵犯——侵害别人的权利、版权","ex":"The company infringed the artist's copyright by using her photo.","note":"名词 infringement。搭配 infringe on sb's rights。"},{"k":"w","q":"irreconcilable","po":"adj.","a":"impossible to make agree","zh":"不可调和的——分歧大到没法和解","ex":"Their differences were irreconcilable, so they stopped working together.","note":"动词 reconcile（和解）。词根 re-concile = 再坐到一起。"},{"k":"w","q":"irredeemable","po":"adj.","a":"too bad to be saved or fixed","zh":"无可救药的——坏到没法挽救","ex":"The water damage to the book was irredeemable.","note":"动词 redeem（挽回、赎）。与 irreconcilable 都以 irre- 开头，注意后半截。"},{"k":"w","q":"lenient","po":"adj.","a":"not strict when punishing","zh":"宽容的——处罚偏轻、不严厉","ex":"The judge was lenient with the first offender and gave him a warning.","note":"反义 strict / severe。名词 leniency。"},{"k":"w","q":"meticulous","po":"adj.","a":"very careful about small details","zh":"一丝不苟的——每个细节都顾到","ex":"She kept meticulous notes of every experiment.","note":"副词 meticulously。近义 thorough，但 meticulous 强调细节。"},{"k":"w","q":"meticulously","po":"adv.","a":"with great care about every detail","zh":"一丝不苟地——每个细节都检查","ex":"He meticulously checked every answer before handing in the paper.","note":"常修饰 checked / planned / cleaned。"},{"k":"w","q":"monologue","po":"n.","a":"a long speech by one person","zh":"独白——一个人长篇讲话（不是对话）","ex":"The actor opened the play with a ten-minute monologue.","note":"区别 dialogue（对话）、soliloquy（自言自语式独白，戏剧术语）。"},{"k":"w","q":"prelude","po":"n.","a":"something that comes before and leads to something bigger","zh":"前奏、序幕——在大事之前发生的小事","ex":"The small quarrel was a prelude to a much bigger argument.","note":"固定搭配 a prelude to。也是音乐术语（前奏曲）。"},{"k":"w","q":"rampant","po":"adj.","a":"spreading fast and out of control","zh":"猖獗的——坏事迅速蔓延、控制不住；形容犯罪、疾病、谣言","ex":"Rumours were rampant before the results were announced.","note":"常形容 crime / disease / rumour / corruption，不形容人。"},{"k":"w","q":"refurbished","po":"v.(past)/adj.","a":"cleaned and repaired to look new again","zh":"翻新——清洁加整修，让它像新的","ex":"The library was refurbished last year and now has new shelves.","note":"名词 refurbishment。区别 furnished（配家具）。"},{"k":"w","q":"repercussion","po":"n.","a":"an indirect bad effect that follows later","zh":"后果、反作用——事情过后才显现的连带影响，多用复数","ex":"The decision to cancel the match had serious repercussions for the team.","note":"常用复数 repercussions。近义 consequences，但更强调“连带、间接”。"},{"k":"w","q":"solidarity","po":"n.","a":"unity and support among people with a shared aim","zh":"团结——为了共同目标互相支持；in solidarity with","ex":"The students wore red to show solidarity with their striking teacher.","note":"固定搭配 in solidarity with。"},{"k":"w","q":"steadfast","po":"adj.","a":"firm and not changing","zh":"坚定不移的——立场、信念不动摇","ex":"He remained steadfast in his belief that practice beats talent.","note":"近义 firm / unwavering。常配 belief / support / refusal。"},{"k":"w","q":"stringent","po":"adj.","a":"very strict","zh":"严格的——规定、测试很严","ex":"The school has stringent safety rules for the science lab.","note":"近义 strict / rigorous。常配 rules / tests / measures。"},{"k":"w","q":"susceptible","po":"adj.","a":"easily affected or infected by something","zh":"易受影响的、易感染的——抵抗力弱，跟 to","ex":"Young children are susceptible to colds in the rainy season.","note":"固定搭配 susceptible to。近义 prone to。"},{"k":"w","q":"synopsis","po":"n.","a":"a short summary of a story or report","zh":"摘要——故事或报告的简短概括","ex":"Write a synopsis of the story in not more than 80 words.","note":"复数 synopses。区别 summary（更中性）、blurb（书封广告语）。"},{"k":"w","q":"tarnish","po":"v.","a":"to spoil the good name of; to make metal dull","zh":"玷污、使失去光泽——多指名誉受损","ex":"The scandal tarnished his reputation for honesty.","note":"几乎固定搭配 tarnish sb's reputation。"},{"k":"w","q":"trifled","po":"v.(past)","a":"treated something or someone without seriousness","zh":"轻慢、玩弄——不把别人的感情当回事；trifle with","ex":"Don't trifle with other people's feelings.","note":"固定搭配 trifle with。名词 a trifle = 小事。"},{"k":"w","q":"unconventional","po":"adj.","a":"different from what is usual","zh":"非传统的——跟一般人的做法不同","ex":"She took an unconventional route to success and never finished university.","note":"反义 conventional。褒贬取决于语境。"},{"k":"w","q":"vigilant","po":"adj.","a":"watching carefully for danger","zh":"警觉的——一直留意危险","ex":"The guards stayed vigilant all night after the break-in.","note":"名词 vigilance。近义 alert / watchful。"},{"k":"w","q":"administration","po":"n.","a":"the work of managing an organisation; the people who manage","zh":"管理、行政部门——处理事务的部门，不是“管理人”","ex":"She works in the school administration and handles all the forms.","note":"动词 administer。区别 administration（管理）与 admittance（进入许可）。"},{"k":"w","q":"arduous","po":"adj.","a":"needing a lot of hard effort","zh":"艰巨的——需要长期费力才能完成","ex":"The climb to the summit was arduous and took eight hours.","note":"近义 tough / strenuous。常配 task / journey / climb。"},{"k":"w","q":"candidly","po":"adv.","a":"honestly and directly, even about difficult things","zh":"坦率地——连对自己不利的话也直说","ex":"She spoke candidly about her own mistake in front of the class.","note":"形容词 candid。区别 candidly（坦率）与 blindly（盲目地）。"},{"k":"w","q":"dampened","po":"v.(past)","a":"made less strong or less enthusiastic","zh":"减弱、扫兴——本义“弄湿”，引申为让热情、希望减弱","ex":"The sudden rain dampened our spirits but we finished the game anyway.","note":"常配 spirits / enthusiasm / hopes。本义是“弄湿”，引申为“扫兴”。"},{"k":"w","q":"exemplar","po":"n.","a":"a perfect example of something","zh":"典范、范本——值得照着做的样子","ex":"The essay is often used as an exemplar of clear writing.","note":"形容词 exemplary（堪称典范的）。区别 example（普通例子）。"},{"k":"w","q":"exorbitant","po":"adj.","a":"far too expensive","zh":"过高的——价格贵得离谱","ex":"They charged exorbitant prices for simple snacks at the stadium.","note":"常配 prices / fees / rent。近义 excessive。"},{"k":"w","q":"monotonous","po":"adj.","a":"boring because it never changes","zh":"单调的——一直不变所以无聊","ex":"The work on the factory line was monotonous and tiring.","note":"名词 monotony。区别 monologue（独白）——都以 mono- 开头。"},{"k":"w","q":"obnoxious","po":"adj.","a":"very unpleasant and annoying","zh":"讨厌的——让人反感、想避开的行为或气味","ex":"His obnoxious habit of interrupting annoyed the whole group.","note":"近义 offensive / objectionable。多形容行为、气味、人。"},{"k":"w","q":"paramount","po":"adj.","a":"more important than anything else","zh":"至关重要的——比什么都重要，没有比较级","ex":"Safety is paramount when you are handling chemicals.","note":"没有比较级。近义 supreme。常单独作表语：X is paramount。"},{"k":"w","q":"wilfully","po":"adv.","a":"deliberately, on purpose","zh":"故意地——明知故犯","ex":"He wilfully ignored the warning sign and walked onto the grass.","note":"美式拼写 willfully。法律语境 = 蓄意。"},{"k":"p","q":"backed off","a":"moved back; stopped pressing someone","zh":"退让、收手——看到对方反应激烈，就先退一步不硬来","ex":"The dog growled and we backed off slowly.","note":"区分：back out（退出协议）· back up（支持／备份）· back down（让步，多指立场）。"},{"k":"p","q":"backed up","a":"supported someone; made a copy of data","zh":"支持；备份——替人说话撑腰，或把资料另存一份","ex":"My parents backed me up when I wanted to join the choir.","note":"区分：back off（退让）· back out（反悔退出）。"},{"k":"p","q":"brought about","a":"caused something to happen","zh":"引起、导致——使某事发生（多指变化）","ex":"The new bridge brought about a big change in the village.","note":"区分：bring up（抚养／提起）· bring out（推出／使显现）· bring forward（提前）。"},{"k":"p","q":"brought forward","a":"moved an event to an earlier time","zh":"提前——把约定的时间往前挪","ex":"The meeting was brought forward from Friday to Wednesday.","note":"反义 put back / postpone（推迟）。"},{"k":"p","q":"brought on","a":"caused something bad to start","zh":"引起（多指不好的事）——诱发疾病、头痛等","ex":"The spicy food brought on a bad stomachache.","note":"常接 illness / attack / headache，带“诱发”意味。"},{"k":"p","q":"brought out","a":"produced or made something appear","zh":"推出；使显现——bring out the best in sb = 激发出某人最好的一面","ex":"The teacher brought out the best in her quietest pupils.","note":"固定搭配 bring out the best/worst in sb。"},{"k":"p","q":"cordoned off","a":"blocked an area with tape or barriers","zh":"用警戒线围起——警察把现场围起来，不许进","ex":"The police cordoned off the road after the accident.","note":"cordon = 警戒线。近义 sealed off。"},{"k":"p","q":"hold down","a":"kept a job; kept something at a low level","zh":"保住（工作）；压低——长时间做得住一份工作","ex":"He has held down the same job for twelve years.","note":"区分：hold up（延误／支撑）· hold out（坚持／伸出）· hold off（推迟／挡住）。"},{"k":"p","q":"hold out","a":"lasted; refused to give in","zh":"坚持；伸出——被围困时撑住不投降","ex":"The trapped climbers held out for two days until help came.","note":"区分：hold on（握紧／稍等）· hold back（阻挡／克制）。"},{"k":"p","q":"in a pickle","a":"in a difficult situation","zh":"处境困难——口语，碰上两难、脱不了身的情况","ex":"I'm in a pickle — I promised two friends the same book.","note":"近义 in a tight spot / in hot water。口语化。"},{"k":"p","q":"lay off","a":"stopped employing someone","zh":"解雇——因生意不好而裁员（不是个人的错）","ex":"The factory laid off fifty workers when orders fell.","note":"区分：lay out（布置／铺开）· lay up（储存／卧病）· lay down（放下／规定）。"},{"k":"p","q":"look upon","a":"regarded as","zh":"看待、视为——look upon A as B","ex":"She is looked upon as the best debater in the school.","note":"look upon A as B。同义 look on … as。"},{"k":"p","q":"looked over","a":"examined something quickly","zh":"检查、翻阅——快速看一遍","ex":"He looked over his notes before the test.","note":"区分：look into（调查）· look through（翻阅／看穿）· look after（照顾）。"},{"k":"p","q":"pulled off","a":"succeeded in doing something difficult","zh":"成功办成——把很难的事做成了","ex":"They pulled off a surprise win against the top team.","note":"区分：pull through（病愈／渡过难关）· pull up（停车）· pull out（退出／驶出）。"},{"k":"p","q":"pulled up","a":"stopped a vehicle","zh":"停车——车子靠边或停住","ex":"The taxi pulled up outside the school gate.","note":"区分：pull over（靠边停）· pull in（进站／吸引人群）。"},{"k":"p","q":"put up","a":"built something; tolerated something","zh":"搭建；忍受——搭帐篷，或put up with sth 忍受","ex":"We put up the tent in ten minutes. / I can't put up with the noise.","note":"区分：put off（推迟）· put out（熄灭）· put on（穿上／增加）。"},{"k":"p","q":"ride down","a":"rode after and caught up with someone","zh":"骑马追上——骑在马上追上去把人/马拦住（少见）","ex":"The huntsman rode down the runaway horse.","note":"少见；重点在介词：ride off（骑马离开）· ride out（渡过难关）· ride over（骑马越过）。"},{"k":"p","q":"ride out","a":"survived a difficult period","zh":"渡过难关——撑过风暴、危机","ex":"The small shop rode out the recession and is still open.","note":"常用 ride out a storm / crisis。"},{"k":"p","q":"under the weather","a":"feeling slightly ill","zh":"身体不适——有点小病，精神不好","ex":"I'm feeling a bit under the weather, so I'll skip practice.","note":"近义 unwell / off colour。反义 in fine form。"},{"k":"p","q":"with a pinch of salt","a":"with some doubt","zh":"有所怀疑地——听到的话要打个折扣，别全信","ex":"Take his story with a pinch of salt — he likes to exaggerate.","note":"固定句式 take sth with a pinch of salt（美式：grain of salt）。"},{"k":"p","q":"at the drop of a hat","a":"immediately, without hesitation","zh":"立刻、毫不犹豫——随时愿意马上行动","ex":"She would help a friend at the drop of a hat.","note":"多与 would 连用，表示“随时愿意”。"},{"k":"p","q":"broke off","a":"stopped suddenly in the middle","zh":"突然中断——话说到一半停住","ex":"He broke off in the middle of the sentence when the bell rang.","note":"区分：break down（故障／崩溃）· break out（爆发）· break up（解散／分手）。"},{"k":"p","q":"certified in","a":"officially qualified in a subject","zh":"获得…的合格认证——正式取得某个领域的资格","ex":"She is certified in first aid and can lead the safety briefing.","note":"介词辨析见下一节：certified in a subject / for a purpose / by a body。"},{"k":"p","q":"cut to the chase","a":"to get to the main point without delay","zh":"直奔主题——不绕圈子，说重点","ex":"Let's cut to the chase — can you finish it by Friday?","note":"源自电影剪接术语。近义 get to the point。"},{"k":"p","q":"fell in","a":"moved into line; agreed with a plan","zh":"排队；跟随——士兵列队站好","ex":"The recruits fell in quickly when the sergeant shouted.","note":"区分：fall out（争吵）· fall through（落空）· fall behind（落后）· fall for（上当／爱上）。"},{"k":"p","q":"fell through","a":"failed to happen","zh":"（计划）落空——本来要成的事最后没成","ex":"Our trip fell through when the flight was cancelled.","note":"主语多是 plan / deal / arrangement。"},{"k":"p","q":"fended off","a":"kept something away; defended against","zh":"挡开、挡回——挡掉攻击或难缠的问题","ex":"She fended off the difficult questions with a smile.","note":"近义 ward off。常接 questions / blows / attacks。"},{"k":"p","q":"jump the gun","a":"to start too early","zh":"抢跑；过早行动——时候未到就先动手","ex":"Don't jump the gun — the results are not out yet.","note":"源自赛跑抢跑。近义 act prematurely。"},{"k":"p","q":"lay up","a":"stored something for later; (illness) kept someone in bed","zh":"储存；卧病——存起来备用，或因病卧床","ex":"Squirrels lay up nuts for the winter.","note":"区分：lay off（解雇）· lay out（布置）。"},{"k":"p","q":"looks over","a":"examines quickly","zh":"检查、翻阅——快速看一遍","ex":"She looks over her work before submitting it.","note":"区分：looks into（调查）· looks to（求助于）。"},{"k":"p","q":"push back","a":"resisted; moved backwards","zh":"反击；推回——对政策、说法表示反对","ex":"The pupils pushed back against the new homework policy.","note":"近年常见于新闻：push back against sth。"},{"k":"p","q":"save for a rainy day","a":"keep money for a future need","zh":"未雨绸缪——存钱以备不时之需","ex":"He saves a little every month for a rainy day.","note":"类似：put aside / set aside。"},{"k":"p","q":"wore on","a":"(of time) passed slowly","zh":"（时间）慢慢过去——下午/会议慢慢熬过去","ex":"As the afternoon wore on, the rain finally stopped.","note":"区分：wear off（逐渐消失）· wear out（使疲惫／磨破）· wear away（逐渐消磨）。"},{"k":"p","q":"a spending spree","a":"a short period of uncontrolled spending","zh":"一阵挥霍——短时间大量花钱","ex":"He went on a spending spree after getting his bonus.","note":"固定搭配 go on a spending spree。spree 也见于 shopping / killing spree。"},{"k":"p","q":"suit your needs","a":"to be right for what you need","zh":"符合需要——按你的需求来调整","ex":"The course can be adjusted to suit your needs.","note":"同源辨析：suit（适合）· fit（尺寸合适）· match（相配）· go with（搭配）。"}];
+const LETTERS = ["A","B","C","D"];
+let pool = [], idx = 0, right = 0, wrong = [], answered = false;
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function buildQuestions(n){
+  const all = ITEMS.slice();
+  shuffle(all);
+  const pick = n ? all.slice(0, Math.min(n, all.length)) : all;
+  return pick.map(it => {
+    // 同类型里挑 3 个干扰项
+    const others = ITEMS.filter(x => x !== it && x.k === it.k);
+    shuffle(others);
+    const reverse = it.k === 'w' && Math.random() < 0.4;  // 40% 反过来问：给英文释义选单词
+    const opts = [ reverse ? it.q : it.a ];
+    for(const o of others){ if(opts.length>=4) break; const v = reverse ? o.q : o.a; if(!opts.includes(v)) opts.push(v); }
+    return { it, reverse, opts: shuffle(opts.slice()), answer: reverse ? it.q : it.a };
+  });
+}
+
+function start(n){
+  pool = buildQuestions(n);
+  idx = 0; right = 0; wrong = [];
+  document.getElementById('start').hidden = true;
+  document.getElementById('done').hidden = true;
+  document.getElementById('quiz').hidden = false;
+  show();
+}
+
+function show(){
+  answered = false;
+  const q = pool[idx];
+  const it = q.it;
+  document.getElementById('cnt').textContent = (idx+1) + ' / ' + pool.length;
+  document.getElementById('prog').style.width = (idx/pool.length*100) + '%';
+  document.getElementById('sc').textContent = '✔ ' + right;
+  if(q.reverse){
+    document.getElementById('qtext').innerHTML = 'Which word means: <span class="quote">“' + esc(it.a) + '”</span>';
+    document.getElementById('hint').textContent = '';
+  } else {
+    document.getElementById('qtext').innerHTML = esc(it.q) + (it.po ? ' <span style="font-size:14px;color:#888">(' + esc(it.po) + ')</span>' : '');
+    document.getElementById('hint').textContent = it.k === 'p' ? 'What does this phrase mean?' : 'What does this word mean?';
+  }
+  const box = document.getElementById('opts');
+  box.innerHTML = '';
+  q.opts.forEach((text, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="tag">' + LETTERS[i] + '</span>' + esc(text);
+    b.onclick = () => choose(i, b);
+    box.appendChild(b);
+  });
+  const fb = document.getElementById('fb');
+  fb.className = 'fb'; fb.innerHTML = '';
+  document.getElementById('next').disabled = true;
+  document.getElementById('next').textContent = (idx === pool.length-1) ? '看结果 →' : '下一题 →';
+}
+
+function choose(i, btn){
+  if(answered) return;
+  answered = true;
+  const q = pool[idx], btns = [...document.querySelectorAll('.opt')];
+  const chosen = q.opts[i];
+  const ok = chosen === q.answer;
+  btns.forEach((b, j) => {
+    b.disabled = true;
+    if(q.opts[j] === q.answer) b.classList.add('correct');
+  });
+  if(!ok){ btn.classList.add('wrong'); wrong.push(q); }
+  else right++;
+  document.getElementById('sc').textContent = '✔ ' + right;
+  const fb = document.getElementById('fb');
+  const it = q.it;
+  fb.className = 'fb show ' + (ok ? 'ok' : 'no');
+  fb.innerHTML = '<b>' + (ok ? '✅ 对了' : '❌ 不对，正确答案是：' + esc(q.answer)) + '</b>' +
+    '<span class="zh">' + esc(it.q) + '：' + esc(it.zh) + '</span>' +
+    (it.ex ? '<div class="ex">' + esc(it.ex) + '</div>' : '') +
+    (it.note ? '<div class="note">⚠️ ' + esc(it.note) + '</div>' : '');
+  document.getElementById('next').disabled = false;
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+document.getElementById('next').onclick = () => {
+  if(idx === pool.length-1){ finish(); return; }
+  idx++; show();
+};
+
+function finish(){
+  document.getElementById('quiz').hidden = true;
+  const done = document.getElementById('done');
+  done.hidden = false;
+  const total = pool.length;
+  const pct = Math.round(right/total*100);
+  document.getElementById('finalScore').textContent = right + ' / ' + total;
+  let msg = pct >= 90 ? '很好，这批词基本掌握了。' : pct >= 70 ? '大部分会了，错的几个再看一眼。' : pct >= 50 ? '一半左右，错的词要回去看看解析。' : '这批还很生，建议先把 PDF 里的解释读一遍。';
+  document.getElementById('finalMsg').textContent = msg + '（正确率 ' + pct + '%）';
+  const list = document.getElementById('wrongList');
+  list.innerHTML = '';
+  if(!wrong.length){ list.innerHTML = '<div style="color:#1a7f37">全对 🎉</div>'; }
+  else {
+    list.innerHTML = '<div style="font-weight:700;margin-bottom:6px">答错的 ' + wrong.length + ' 个</div>' +
+      wrong.map(q => '<div><span class="k">' + esc(q.it.q) + '</span> — <span class="c">' + esc(q.it.a) + '</span><br><span class="zh">' + esc(q.it.zh) + '</span></div>').join('');
+  }
+}
+
+document.querySelectorAll('#start button').forEach(b => b.onclick = () => start(Number(b.dataset.n)));
+document.getElementById('again').onclick = () => { document.getElementById('done').hidden = true; document.getElementById('start').hidden = false; };
+document.getElementById('home').onclick = () => location.href = '/';
+// 支持直接进入：/quiz?n=20
+const qs = new URLSearchParams(location.search);
+if (qs.has('n')) start(Number(qs.get('n')) || 20);
+</script>
+</body>
+</html>

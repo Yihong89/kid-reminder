@@ -1661,8 +1661,14 @@ function epaperSectionTextLookup(db) {
 function epaperEffectiveText(db, q, lookup) {
   const own = { context: q.context || "", passage: q.passage || "" };
   if (!EPAPER_SHARED_TEXT_SECTIONS.has(q.section)) return own;
+  // 同一张卷子、同一题型里可能有**两段不同的文章**（GEP 卷就有两个 cloze_open：
+  // 一段填动词形式、一段开放式填空）。原来 context 空缺时一律向「同题型第一题」
+  // 去借，结果开放式填空的孩子看到的是动词形式那一段 —— 他照着看得见的文章填，
+  // 被判全错（2026-10-24 实测 15 题）。所以：先用自己的 passage 补，
+  // 只有连 passage 都没有时才去借。
+  if (!own.context) own.context = own.passage;
   if (!own.context) own.context = lookup(q.paper_key, q.section, "context");
-  if (!own.passage) own.passage = lookup(q.paper_key, q.section, "passage");
+  if (!own.passage) own.passage = own.context || lookup(q.paper_key, q.section, "passage");
   return own;
 }
 
@@ -2408,6 +2414,12 @@ const server = http.createServer(async (req, res) => {
     // --- admin panel --------------------------------------------------
     if (method === "GET" && (pathname === "/" || pathname === "/admin")) {
       const html = fs.readFileSync(ADMIN_HTML_PATH);
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+      return res.end(html);
+    }
+    // 词汇测验：勾出来的 90 个词/短语做成选择题
+    if (method === "GET" && pathname === "/quiz") {
+      const html = fs.readFileSync(path.join(__dirname, "vocab-quiz.html"));
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(html);
     }
@@ -4049,6 +4061,39 @@ const server = http.createServer(async (req, res) => {
           qids = rows.map((r) => r.id);
           mode = "drill";
           label = `全部卷子 · 词汇 ${qids.length} 题`;   // 只要不带短文的（每卷 5 道）
+        } else if (scope === "gep-grammar-vocab") {
+          // GEP P5 专项（2026-10-20）：六份 GEP 卷子的语法题（语法 MCQ / 时态填空 /
+          // 词库填空）和词汇题（选词 / 近义词）一次做完。时态填空和完形填空同在
+          // cloze_open，只能靠题干区分 —— 时态题的题干是
+          // "Fill in blank (n) with the correct form of the verb given."
+          const rows = db.prepare(
+            `SELECT id FROM epaper_questions
+              WHERE paper_key LIKE 'gep-p5-%'
+                AND (section IN ('grammar_mcq', 'vocab_mcq', 'cloze_mcq', 'cloze_wordbank')
+                     OR (section = 'cloze_open' AND prompt LIKE '%with the correct form%'))
+              ORDER BY paper_key ASC, paper_seq ASC`
+          ).all();
+          if (!rows.length) return sendJSON(400, { error: "GEP 卷子里还没有语法/词汇题" });
+          qids = rows.map((r) => r.id);
+          mode = "drill";
+          label = `GEP 语法+词汇 · ${qids.length} 题`;
+        } else if (scope === "gep-cloze-synthesis") {
+          // GEP 完形填空 + 句子改写专项（2026-10-20）：完形 60 道（1 分/题，考固定
+          // 搭配与介词）加改写 20 道（2 分/题，单题分值最高）。完形题和时态题同在
+          // cloze_open，这里反过来只取题干是 "…with a suitable word" 的那批，
+          // 时态那 20 道留给「语法+词汇」专项。
+          const rows = db.prepare(
+            `SELECT id FROM epaper_questions
+              WHERE paper_key LIKE 'gep-p5-%'
+                AND (section = 'synthesis'
+                     OR (section = 'cloze_open' AND prompt LIKE '%a suitable word%'))
+              ORDER BY CASE section WHEN 'cloze_open' THEN 1 ELSE 2 END,
+                       paper_key ASC, paper_seq ASC`
+          ).all();
+          if (!rows.length) return sendJSON(400, { error: "GEP 卷子里还没有完形/改写的题" });
+          qids = rows.map((r) => r.id);
+          mode = "drill";
+          label = `GEP 完形+改写 · ${qids.length} 题`;
         } else {
         // Reuse the mistake-bank filter so the drill is always exactly what the
         // parent sees on screen (same helper the list and the PDF export use).
@@ -4559,6 +4604,25 @@ const server = http.createServer(async (req, res) => {
     // to check content before assigning it — same paper_seq order and the same
     // shared-passage grouping the macOS runner applies, so what a parent sees
     // here matches what the kid sees exactly.
+    // 打印讲义：句子改写 + 阅读理解（孩子做完线上题后自动下载去打印）
+    if (method === "GET" && pathname === "/api/epaper/handout") {
+      // 孩子端也能下载（做完题自动取讲义），所以 admin / kid 两种 PIN 都放行
+      const ok = req.headers["x-admin-pin"] === ADMIN_PIN || req.headers["x-kid-pin"] === KID_PIN;
+      if (!ok) return sendJSON(401, { error: "pin required" });
+      const paperKey = (url.searchParams.get("paperKey") || "").replace(/[^a-zA-Z0-9_-]/g, "");
+      if (!paperKey) return sendJSON(400, { error: "paperKey required" });
+      const file = path.join(__dirname, "handouts", paperKey + ".pdf");
+      if (!fs.existsSync(file)) return sendJSON(404, { error: "no handout for this paper" });
+      const buf = fs.readFileSync(file);
+      res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${paperKey}-synthesis-comprehension.pdf"`,
+        "Content-Length": buf.length,
+        "Cache-Control": "no-store",
+      });
+      return res.end(buf);
+    }
+
     if (method === "GET" && pathname === "/api/epaper/questions") {
       const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
       if (!isAdmin) return sendJSON(401, { error: "admin pin required" });

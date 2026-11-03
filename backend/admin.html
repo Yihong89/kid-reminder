@@ -319,6 +319,7 @@
         <button class="tab" id="tabScienceMistakes" hidden>📕 科学错题本</button>
         <button class="tab" id="tabEpaper" hidden>📘 英语试卷批改</button>
         <button class="tab" id="tabEpaperMistakes" hidden>📕 英语试卷错题本</button>
+        <button class="tab" id="tabVocabQuiz" hidden>🎯 词汇测验</button>
         <button class="tab" id="tabSettings" hidden>⚙️ 设置</button>
       </nav>
 
@@ -490,6 +491,10 @@
         <div class="vocab-filters">
           <button class="primary" id="epaperVocabDrill">📚 全部卷子词汇专项</button>
           <span class="vocab-summary" style="margin:0">把 prelim 卷子的词汇题按卷子顺序挑出来，一次做完 —— 交卷即出分数和错题报告。</span>
+          <button class="primary" id="epaperGepDrill">🎯 GEP 语法+词汇专项</button>
+          <span class="vocab-summary" style="margin:0">GEP P5 六份卷子的语法题（语法选择 / 时态填空 / 词库填空）和词汇题（选词 / 近义词）一次性做完。</span>
+          <button class="primary" id="epaperGepClozeDrill">✍️ GEP 完形+改写专项</button>
+          <span class="vocab-summary" style="margin:0">完形填空 60 道（考固定搭配和介词）加句子改写 20 道（每题 2 分，PSLE Booklet B 常考句式）。</span>
         </div>
         <div id="epaperPapersList"></div>
       </div>
@@ -2931,6 +2936,38 @@
     }
   }
 
+  // GEP 语法+词汇：跨六份 GEP 卷子抽语法题和词汇题，按卷子顺序铺开。
+  async function epaperGepDrillStart() {
+    const btn = $("#epaperGepDrill"), label = btn.textContent;
+    btn.disabled = true; btn.textContent = "⏳ 正在组卷…";
+    try {
+      const res = await api("/api/epaper/sessions", {
+        method: "POST", body: JSON.stringify({ drill: true, scope: "gep-grammar-vocab" }),
+      });
+      epaperDrillOpen(res, "gep");
+    } catch (e) {
+      showErr("开始做题失败：" + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
+  // GEP 完形+改写：完形填空 60 道 + 句子改写 20 道，完形在前、改写在后。
+  async function epaperGepClozeDrillStart() {
+    const btn = $("#epaperGepClozeDrill"), label = btn.textContent;
+    btn.disabled = true; btn.textContent = "⏳ 正在组卷…";
+    try {
+      const res = await api("/api/epaper/sessions", {
+        method: "POST", body: JSON.stringify({ drill: true, scope: "gep-cloze-synthesis" }),
+      });
+      epaperDrillOpen(res, "gep2");
+    } catch (e) {
+      showErr("开始做题失败：" + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
   async function epaperDrillStart() {
     const btn = $("#epaperMistakeDrill"), label = btn.textContent;
     btn.disabled = true; btn.textContent = "⏳ 正在组卷…";
@@ -2981,7 +3018,8 @@
         return `<button class="drill-opt${on ? " on" : ""}" data-opt="${escapeHtml(String(o))}">` +
                `(${k + 1}) ${escapeHtml(String(o))}</button>`;
       }).join("") + `</div>`);
-    } else if (it.questionType === "oeq") {
+    } else if (it.questionType === "oeq" || it.section === "synthesis") {
+      // 句子改写要写一整句，单行输入框没法看，用多行
       parts.push(`<textarea class="drill-input" id="epaperDrillInput" placeholder="写答案…">${escapeHtml(cur)}</textarea>`);
     } else {
       parts.push(`<input type="text" class="drill-input" id="epaperDrillInput" placeholder="写答案…" ` +
@@ -3094,12 +3132,15 @@
       <div class="drill-nav" style="display:flex">
         <button class="primary" id="epaperDrillReport">⬇️ 下载错题报告</button>
         <button class="ghost" id="epaperDrillAgain">↻ 再做一遍</button>
-        <button class="ghost" id="epaperDrillExit">${epaperDrill.from === "papers" ? "返回试卷列表" : "返回错题本"}</button>
+        <button class="ghost" id="epaperDrillExit">${epaperDrill.from === "mistakes" ? "返回错题本" : "返回试卷列表"}</button>
       </div>`;
     $("#epaperDrillReport").onclick = () =>
       epaperDownloadReport(epaperDrill.sessionId, $("#epaperDrillReport"));
     $("#epaperDrillAgain").onclick = () => {
-      const again = epaperDrill.from === "papers" ? epaperVocabDrillStart : epaperDrillStart;
+      const from = epaperDrill.from;
+      const again = from === "papers" ? epaperVocabDrillStart
+        : from === "gep" ? epaperGepDrillStart
+        : from === "gep2" ? epaperGepClozeDrillStart : epaperDrillStart;
       epaperDrillExit();
       again();
     };
@@ -3108,7 +3149,7 @@
 
   function epaperDrillExit() {
     $("#epaperDrillView").hidden = true;
-    if (epaperDrill.from === "papers") {
+    if (epaperDrill.from === "papers" || epaperDrill.from === "gep" || epaperDrill.from === "gep2") {
       $("#epaperView").hidden = false;
       $("#epaperMistakesView").hidden = true;
     } else {
@@ -3124,6 +3165,8 @@
   (() => {
     $("#epaperMistakeDrill").onclick = epaperDrillStart;
     $("#epaperVocabDrill").onclick = epaperVocabDrillStart;
+    $("#epaperGepDrill").onclick = epaperGepDrillStart;
+    $("#epaperGepClozeDrill").onclick = epaperGepClozeDrillStart;
     $("#epaperDrillClose").onclick = () => {
       if (epaperDrill.items.length && !confirm("退出后这次答题不会保存，确定退出？")) return;
       epaperDrillExit();
@@ -3437,6 +3480,8 @@
     $("#tabEpaper").onclick = () => setTab("epaper");
     $("#tabEpaper").hidden = role !== "admin";
     $("#tabEpaperMistakes").onclick = () => setTab("epaperMistakes");
+    $("#tabVocabQuiz").onclick = () => { location.href = "/quiz"; };
+    $("#tabVocabQuiz").hidden = role !== "admin";
     $("#tabSettings").onclick = () => setTab("settings");
     $("#settingsSave").onclick = saveSettings;
     $("#tabEpaperMistakes").hidden = role !== "admin";
