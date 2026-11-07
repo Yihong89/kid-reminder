@@ -54,7 +54,20 @@ final class ClassroomStore: ObservableObject {
     @Published var collapsed: Set<HomeworkBucket> =
         Set(HomeworkBucket.allCases.filter { $0.collapsedByDefault })
 
+    // MARK: - 搜索与折叠
+    //
+    // 资料动辄上百条（真实数据里 EL 一门课就有 109 份 coursework），平铺出来
+    // 根本没法用。所以两级折叠 + 搜索：
+    //   · 课程默认收起，点开才看到单元
+    //   · 单元也默认收起，点开才看到条目
+    //   · 一旦开始搜索，所有分组强制展开，否则搜到了却看不见
+    @Published var searchText: String = ""
+    @Published private(set) var expandedCourses: Set<String> = []
+    @Published private(set) var expandedUnits: Set<String> = []
+
     private var clock: Timer?
+
+    // MARK: - 生命周期
 
     func startClock() {
         clock?.invalidate()
@@ -108,6 +121,8 @@ final class ClassroomStore: ObservableObject {
         }
     }
 
+    // MARK: - 配色
+
     private func rebuildColors() {
         var all = Set(items.map(\.course))
         all.formUnion(materials.compactMap { $0.course })
@@ -124,9 +139,49 @@ final class ClassroomStore: ObservableObject {
         courseColors[course] ?? ClassroomPalette.colors[0]
     }
 
+    // MARK: - 搜索与折叠的接口
+
+    private var query: String {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+    }
+
+    var isSearching: Bool { !query.isEmpty }
+
+    private func hits(_ fields: [String?]) -> Bool {
+        guard isSearching else { return true }
+        for f in fields {
+            if let f, f.lowercased().contains(query) { return true }
+        }
+        return false
+    }
+
+    func toggleCourse(_ course: String) {
+        if expandedCourses.contains(course) {
+            expandedCourses.remove(course)
+        } else {
+            expandedCourses.insert(course)
+        }
+    }
+
+    func toggleUnit(_ course: String, _ unit: String) {
+        let key = course + "|" + unit
+        if expandedUnits.contains(key) { expandedUnits.remove(key) } else { expandedUnits.insert(key) }
+    }
+
+    /// 搜索时一律展开——搜到了却藏在折叠里等于没搜。
+    func isCourseExpanded(_ course: String) -> Bool {
+        isSearching || expandedCourses.contains(course)
+    }
+
+    func isUnitExpanded(_ course: String, _ unit: String) -> Bool {
+        isSearching || expandedUnits.contains(course + "|" + unit)
+    }
+
+    // MARK: - 作业
+
     var grouped: [HomeworkGroup] {
         var map: [HomeworkBucket: [ClassroomHomework]] = [:]
-        for item in items {
+        for item in items where hits([item.title, item.course, item.topic]) {
             map[HomeworkBucketRules.bucket(for: item.due, now: now), default: []].append(item)
         }
         return HomeworkBucket.allCases.compactMap { bucket in
@@ -136,6 +191,7 @@ final class ClassroomStore: ObservableObject {
         }
     }
 
+    /// 统计数字始终按全量算，不跟着搜索变——否则"已经逾期 0"会误导人。
     var stats: (overdue: Int, week: Int, total: Int) {
         var overdue = 0, week = 0
         for item in items {
@@ -148,12 +204,17 @@ final class ClassroomStore: ObservableObject {
         return (overdue, week, items.count)
     }
 
-    // MARK: - 资料 / 公告的分组
+    func toggle(_ bucket: HomeworkBucket) {
+        if collapsed.contains(bucket) { collapsed.remove(bucket) } else { collapsed.insert(bucket) }
+    }
 
-    /// 课程 → 单元 → 条目。老师没挂单元的落进 topic == "" 的组，UI 上显示成"未分类"。
+    func isCollapsed(_ bucket: HomeworkBucket) -> Bool { collapsed.contains(bucket) }
+
+    // MARK: - 资料
+
     var materialGroups: [MaterialCourseGroup] {
         var byCourse: [String: [ClassroomMaterial]] = [:]
-        for m in materials {
+        for m in materials where hits([m.title, m.course, m.topic]) {
             byCourse[m.course ?? "(未知课程)", default: []].append(m)
         }
         return byCourse.keys.sorted().map { course in
@@ -178,9 +239,11 @@ final class ClassroomStore: ObservableObject {
         }
     }
 
+    // MARK: - 公告
+
     var announcementGroups: [AnnouncementCourseGroup] {
         var byCourse: [String: [ClassroomAnnouncement]] = [:]
-        for a in announcements {
+        for a in announcements where hits([a.text, a.course]) {
             byCourse[a.course ?? "(未知课程)", default: []].append(a)
         }
         return byCourse.keys.sorted().map { course in
@@ -192,12 +255,6 @@ final class ClassroomStore: ObservableObject {
             )
         }
     }
-
-    func toggle(_ bucket: HomeworkBucket) {
-        if collapsed.contains(bucket) { collapsed.remove(bucket) } else { collapsed.insert(bucket) }
-    }
-
-    func isCollapsed(_ bucket: HomeworkBucket) -> Bool { collapsed.contains(bucket) }
 }
 
 struct MaterialTopicGroup: Identifiable {

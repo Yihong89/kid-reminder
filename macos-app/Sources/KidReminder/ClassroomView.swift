@@ -70,9 +70,11 @@ struct ClassroomView: View {
             }
             .pickerStyle(.segmented)
             .labelsHidden()
-            .frame(maxWidth: 360)
+            .frame(maxWidth: 330)
 
             Spacer()
+
+            searchField
 
             if classroom.isLoading { ProgressView().controlSize(.small) }
 
@@ -85,6 +87,32 @@ struct ClassroomView: View {
         }
         .padding(.horizontal, 22)
         .padding(.vertical, 11)
+    }
+
+    private var searchField: some View {
+        HStack(spacing: 5) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 10.5))
+                .foregroundStyle(.secondary)
+            TextField("搜索标题 / 课程 / 单元", text: $classroom.searchText)
+                .textFieldStyle(.plain)
+                .font(.system(size: 11.5))
+            if classroom.isSearching {
+                Button { classroom.searchText = "" } label: {
+                    Image(systemName: "xmark.circle.fill").font(.system(size: 10.5))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+        .background(RoundedRectangle(cornerRadius: 7).fill(Color(nsColor: .textBackgroundColor)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 7)
+                .strokeBorder(Color.primary.opacity(classroom.isSearching ? 0.22 : 0.08), lineWidth: 1)
+        )
+        .frame(width: 215)
     }
 
     private func count(for tab: ClassroomTab) -> Int {
@@ -104,7 +132,11 @@ struct ClassroomView: View {
             }
             statsRow
             if classroom.grouped.isEmpty && !classroom.isLoading {
-                emptyState(emoji: "🎉", title: "全部做完了", detail: "没有未完成的作业。")
+                if classroom.isSearching {
+                    emptyState(emoji: "🔍", title: "没有匹配的作业", detail: "换个关键词试试。")
+                } else {
+                    emptyState(emoji: "🎉", title: "全部做完了", detail: "没有未完成的作业。")
+                }
             } else {
                 ForEach(classroom.grouped) { group in
                     homeworkSection(bucket: group.bucket, list: group.items)
@@ -253,24 +285,40 @@ struct ClassroomView: View {
             if let detail = classroom.errorDetail {
                 errorBanner(title: classroom.errorTitle ?? "出错了", detail: detail)
             }
-            if classroom.materials.isEmpty && !classroom.isLoading {
-                emptyState(emoji: "📁", title: "没有资料",
-                           detail: "老师还没在 Classwork 里发过 Materials。")
+            if classroom.materialGroups.isEmpty && !classroom.isLoading {
+                if classroom.isSearching {
+                    emptyState(emoji: "🔍", title: "没有匹配的资料", detail: "换个关键词试试。")
+                } else {
+                    emptyState(emoji: "📁", title: "没有资料",
+                               detail: "老师还没在 Classwork 里发过 Materials。")
+                }
             } else {
                 ForEach(classroom.materialGroups) { group in
-                    VStack(alignment: .leading, spacing: 10) {
-                        courseHeader(group.course, count: group.count)
-                        ForEach(group.topics) { topic in
-                            VStack(alignment: .leading, spacing: 5) {
-                                if !topic.topic.isEmpty {
-                                    Text(topic.topic)
-                                        .font(.system(size: 10.5, weight: .medium))
-                                        .foregroundStyle(.secondary)
-                                        .padding(.leading, 2)
+                    VStack(alignment: .leading, spacing: 9) {
+                        Button { classroom.toggleCourse(group.course) } label: {
+                            courseHeader(group.course, count: group.count,
+                                         expanded: classroom.isCourseExpanded(group.course))
+                        }
+                        .buttonStyle(.plain)
+
+                        if classroom.isCourseExpanded(group.course) {
+                            ForEach(group.topics) { topic in
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Button {
+                                        classroom.toggleUnit(group.course, topic.topic)
+                                    } label: {
+                                        unitHeader(topic.displayName, count: topic.items.count,
+                                                   expanded: classroom.isUnitExpanded(group.course, topic.topic))
+                                    }
+                                    .buttonStyle(.plain)
+
+                                    if classroom.isUnitExpanded(group.course, topic.topic) {
+                                        ForEach(topic.items) { m in
+                                            materialRow(m)
+                                        }
+                                    }
                                 }
-                                ForEach(topic.items) { m in
-                                    materialRow(m)
-                                }
+                                .padding(.leading, 11)
                             }
                         }
                     }
@@ -329,15 +377,26 @@ struct ClassroomView: View {
             if let detail = classroom.errorDetail {
                 errorBanner(title: classroom.errorTitle ?? "出错了", detail: detail)
             }
-            if classroom.announcements.isEmpty && !classroom.isLoading {
-                emptyState(emoji: "📣", title: "没有公告",
-                           detail: "老师还没在 Stream 里发过东西。")
+            if classroom.announcementGroups.isEmpty && !classroom.isLoading {
+                if classroom.isSearching {
+                    emptyState(emoji: "🔍", title: "没有匹配的公告", detail: "换个关键词试试。")
+                } else {
+                    emptyState(emoji: "📣", title: "没有公告",
+                               detail: "老师还没在 Stream 里发过东西。")
+                }
             } else {
                 ForEach(classroom.announcementGroups) { group in
                     VStack(alignment: .leading, spacing: 8) {
-                        courseHeader(group.course, count: group.items.count)
-                        ForEach(group.items) { a in
-                            announcementCard(a)
+                        Button { classroom.toggleCourse(group.course) } label: {
+                            courseHeader(group.course, count: group.items.count,
+                                         expanded: classroom.isCourseExpanded(group.course))
+                        }
+                        .buttonStyle(.plain)
+
+                        if classroom.isCourseExpanded(group.course) {
+                            ForEach(group.items) { a in
+                                announcementCard(a)
+                            }
                         }
                     }
                 }
@@ -388,8 +447,12 @@ struct ClassroomView: View {
 
     // MARK: - 共用
 
-    private func courseHeader(_ course: String, count: Int) -> some View {
+    private func courseHeader(_ course: String, count: Int, expanded: Bool) -> some View {
         HStack(spacing: 7) {
+            Image(systemName: expanded ? "chevron.down" : "chevron.right")
+                .font(.system(size: 8.5, weight: .bold))
+                .foregroundStyle(.secondary)
+                .frame(width: 9)
             Circle()
                 .fill(classroom.color(for: course))
                 .frame(width: 7, height: 7)
@@ -402,6 +465,27 @@ struct ClassroomView: View {
                 .monospacedDigit()
             Spacer()
         }
+        .contentShape(Rectangle())
+    }
+
+    private func unitHeader(_ title: String, count: Int, expanded: Bool) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: expanded ? "chevron.down" : "chevron.right")
+                .font(.system(size: 8, weight: .bold))
+                .foregroundStyle(.tertiary)
+                .frame(width: 8)
+            Text(title)
+                .font(.system(size: 11.5, weight: .medium))
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+            Text("\(count)")
+                .font(.system(size: 10.5))
+                .foregroundStyle(.tertiary)
+                .monospacedDigit()
+            Spacer()
+        }
+        .padding(.vertical, 1)
+        .contentShape(Rectangle())
     }
 
     private func bucketHeader(bucket: HomeworkBucket, count: Int, collapsible: Bool,
