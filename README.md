@@ -228,6 +228,27 @@ each one is only generated once. If that service is busy or unavailable, the
 backend automatically falls back to macOS's built-in `say` voices — lower
 quality, but instant and always available, so the 🔊 button never just goes dead.
 
+## Google Classroom homework (作业)
+
+A second, independent view: what the kid **hasn't turned in**, sorted by how soon
+it's due — instead of Classroom's own per-course to-do list.
+
+- **作业** in the sidebar: overdue / must-do-today / tomorrow / this week / later.
+  "Overdue by more than 4 weeks" and "no due date" are **collapsed by default** —
+  in real data those two piles are mostly teacher-posted material and last month's
+  leftovers, and mixing them with today's work is how a dashboard stops being read.
+- "Must do today" is not calendar-day based: anything due within the next 10 hours
+  counts, so a 02:20 deadline shows up today, not tomorrow.
+- Data comes from an **Apps Script Web App deployed under the kid's own Google
+  account**. No OAuth client, no Google verification, and it sidesteps the
+  "under-18 users cannot use unconfigured third-party apps" policy that tends to
+  block OAuth on school accounts.
+- The Web App URL and secret live in the app's own `UserDefaults` and are **never
+  sent to the backend** (the backend listens on `0.0.0.0` over plain HTTP with a
+  shared PIN — putting the secret there would expose the list to the whole LAN).
+
+**Setup guide: [docs/google-classroom/](docs/google-classroom/README.md)**
+
 ## macOS app
 
 Native SwiftUI app (`macos-app/`). **Today** checklist, **Calendar** (month view
