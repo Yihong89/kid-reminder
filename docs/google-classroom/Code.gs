@@ -360,12 +360,16 @@ function collect_() {
 
   var out = {
     ok: true,
-    schema: 1,
+    schema: 2,
     generated_at: new Date().toISOString(),
     email: email,
-    counts: { courses: 0, coursework: 0, submissions: 0, open: 0 },
+    counts: { courses: 0, coursework: 0, submissions: 0, open: 0, materials: 0, announcements: 0 },
+    warnings: [],
     courses: [],
-    items: []
+    topics: [],
+    items: [],
+    materials: [],
+    announcements: []
   };
 
   var cr = getAll_('/courses', { studentId: 'me', courseStates: 'ACTIVE', pageSize: 50 }, 'courses');
@@ -373,82 +377,159 @@ function collect_() {
     return { ok: false, error: 'courses.list', code: cr.error.code,
              hint: hint_(cr.error.code, JSON.stringify(cr.error.doc)) };
   }
-
   out.counts.courses = cr.items.length;
 
   for (var i = 0; i < cr.items.length; i++) {
-    if (Date.now() - t0 > TIME_BUDGET_MS) break;
+    if (Date.now() - t0 > TIME_BUDGET_MS) {
+      out.warnings.push({ what: 'time_budget', detail: '还有课程没取完' });
+      break;
+    }
+
     var c = cr.items[i];
-    var tz = c.timeZone || 'Asia/Singapore';
+    var cid = c.id;
+    var cname = c.name || cid;
 
-    var wr = getAll_('/courses/' + c.id + '/courseWork',
+    // ---- 主题（单元）名：作业和资料都靠它分组 ----
+    var topicNames = {};
+    var tr = getAll_('/courses/' + cid + '/topics', { pageSize: 100 }, 'topic');
+    if (tr.error) {
+      out.warnings.push({ course: cname, what: 'topics.list', code: tr.error.code });
+    } else {
+      for (var ti = 0; ti < tr.items.length; ti++) {
+        var tp = tr.items[ti];
+        topicNames[tp.topicId] = tp.name;
+        out.topics.push({ course: cname, course_id: cid, id: tp.topicId, name: tp.name });
+      }
+    }
+
+    // ---- 作业 + 提交状态 ----
+    var wr = getAll_('/courses/' + cid + '/courseWork',
                      { courseWorkStates: 'PUBLISHED', pageSize: 100 }, 'courseWork');
-    if (wr.error) continue;
-    var work = wr.items;
+    if (wr.error) {
+      out.warnings.push({ course: cname, what: 'courseWork.list', code: wr.error.code });
+    } else {
+      var work = wr.items;
+      var sr = getAll_('/courses/' + cid + '/courseWork/-/studentSubmissions',
+                       { userId: 'me', pageSize: 100 }, 'studentSubmissions');
 
-    var sr = getAll_('/courses/' + c.id + '/courseWork/-/studentSubmissions',
-                     { userId: 'me', pageSize: 100 }, 'studentSubmissions');
+      // 通配符失败时区分「不支持」和「没权限」，否则会误判成被域拦
+      if (sr.error && work.length) {
+        var okPerItem = false;
+        for (var k = 0; k < work.length && k < 3; k++) {
+          var probeOne = fetch_('/courses/' + cid + '/courseWork/' + work[k].id + '/studentSubmissions',
+                                { userId: 'me', pageSize: 100 });
+          if (probeOne.code === 200) { okPerItem = true; break; }
+        }
+        if (!okPerItem) {
+          return { ok: false, error: 'studentSubmissions.list', code: sr.error.code,
+                   hint: hint_(sr.error.code, JSON.stringify(sr.error.doc)) };
+        }
+        sr = { items: [] };
+        for (var j = 0; j < work.length; j++) {
+          if (Date.now() - t0 > TIME_BUDGET_MS) break;
+          var r2 = getAll_('/courses/' + cid + '/courseWork/' + work[j].id + '/studentSubmissions',
+                           { userId: 'me', pageSize: 100 }, 'studentSubmissions');
+          if (r2.error) { sr = { error: r2.error }; break; }
+          sr.items = sr.items.concat(r2.items);
+        }
+        if (sr.error) {
+          return { ok: false, error: 'studentSubmissions.list', code: sr.error.code,
+                   hint: hint_(sr.error.code, JSON.stringify(sr.error.doc)) };
+        }
+      }
 
-    // 通配符失败时区分「不支持」和「没权限」，否则会误判成被域拦
-    if (sr.error && work.length) {
-      var okPerItem = false;
-      for (var k = 0; k < work.length && k < 3; k++) {
-        var t = fetch_('/courses/' + c.id + '/courseWork/' + work[k].id + '/studentSubmissions',
-                       { userId: 'me', pageSize: 100 });
-        if (t.code === 200) { okPerItem = true; break; }
+      out.counts.coursework += work.length;
+      out.counts.submissions += sr.items.length;
+
+      var byWork = {};
+      sr.items.forEach(function (s) { byWork[s.courseWorkId] = s; });
+
+      var openHere = 0;
+      for (var w = 0; w < work.length; w++) {
+        var item = work[w];
+        var sub = byWork[item.id];
+        var state = sub ? sub.state : null;
+        if (state === 'TURNED_IN' || state === 'RETURNED') continue;
+
+        openHere++;
+        out.items.push({
+          course: cname,
+          course_id: cid,
+          title: item.title || '(无标题)',
+          topic: topicNames[item.topicId] || '',
+          due_epoch: dueEpoch_(item),
+          due_label: dueLabel_(item),
+          has_time: !!item.dueTime,
+          state: state || '',
+          late: sub ? !!sub.late : false,
+          points: (typeof item.maxPoints === 'number') ? item.maxPoints : null,
+          kind: (String(item.workType || '').indexOf('_QUESTION') >= 0) ? '测验' : '',
+          link: item.alternateLink || ''
+        });
       }
-      if (!okPerItem) {
-        return { ok: false, error: 'studentSubmissions.list', code: sr.error.code,
-                 hint: hint_(sr.error.code, JSON.stringify(sr.error.doc)) };
-      }
-      sr = { items: [] };
-      for (var j = 0; j < work.length; j++) {
-        if (Date.now() - t0 > TIME_BUDGET_MS) break;
-        var r2 = getAll_('/courses/' + c.id + '/courseWork/' + work[j].id + '/studentSubmissions',
-                         { userId: 'me', pageSize: 100 }, 'studentSubmissions');
-        if (r2.error) { sr = { error: r2.error }; break; }
-        sr.items = sr.items.concat(r2.items);
-      }
-      if (sr.error) {
-        return { ok: false, error: 'studentSubmissions.list', code: sr.error.code,
-                 hint: hint_(sr.error.code, JSON.stringify(sr.error.doc)) };
-      }
+      out.counts.open += openHere;
+      out.courses.push({ id: cid, name: cname, open: openHere });
     }
 
-    out.counts.coursework += work.length;
-    out.counts.submissions += sr.items.length;
-
-    var byWork = {};
-    sr.items.forEach(function (s) { byWork[s.courseWorkId] = s; });
-
-    var openHere = 0;
-    for (var w = 0; w < work.length; w++) {
-      var item = work[w];
-      var sub = byWork[item.id];
-      var state = sub ? sub.state : null;
-      if (state === 'TURNED_IN' || state === 'RETURNED') continue;
-
-      openHere++;
-      out.items.push({
-        course: c.name || c.id,
-        course_id: c.id,
-        title: item.title || '(无标题)',
-        due_epoch: dueEpoch_(item),
-        due_label: dueLabel_(item),
-        has_time: !!item.dueTime,
-        state: state || '',
-        late: sub ? !!sub.late : false,
-        points: (typeof item.maxPoints === 'number') ? item.maxPoints : null,
-        kind: (String(item.workType || '').indexOf('_QUESTION') >= 0) ? '测验' : '',
-        link: item.alternateLink || (sub ? sub.alternateLink : '') || ''
-      });
+    // ---- 资料（Classwork → Materials）----
+    var mr = getAll_('/courses/' + cid + '/courseWorkMaterials',
+                     { courseWorkMaterialStates: 'PUBLISHED', pageSize: 100 }, 'courseWorkMaterial');
+    if (mr.error) {
+      out.warnings.push({ course: cname, what: 'courseWorkMaterials.list', code: mr.error.code });
+    } else {
+      for (var mi = 0; mi < mr.items.length; mi++) {
+        var mat = mr.items[mi];
+        out.materials.push({
+          course: cname,
+          course_id: cid,
+          title: mat.title || '(无标题)',
+          topic: topicNames[mat.topicId] || '',
+          kind: firstMaterialKind_(mat.materials),
+          created_epoch: mat.creationTime ? Date.parse(mat.creationTime) : null,
+          link: mat.alternateLink || ''
+        });
+      }
+      out.counts.materials += mr.items.length;
     }
 
-    out.counts.open += openHere;
-    out.courses.push({ id: c.id, name: c.name || c.id, open: openHere });
+    // ---- 公告（Stream）----
+    var ar = getAll_('/courses/' + cid + '/announcements',
+                     { announcementStates: 'PUBLISHED', pageSize: 100 }, 'announcements');
+    if (ar.error) {
+      out.warnings.push({ course: cname, what: 'announcements.list', code: ar.error.code });
+    } else {
+      for (var ai = 0; ai < ar.items.length; ai++) {
+        var ann = ar.items[ai];
+        out.announcements.push({
+          course: cname,
+          course_id: cid,
+          text: truncate_(ann.text, 600),
+          kind: firstMaterialKind_(ann.materials),
+          created_epoch: ann.creationTime ? Date.parse(ann.creationTime) : null,
+          link: ann.alternateLink || ''
+        });
+      }
+      out.counts.announcements += ar.items.length;
+    }
   }
 
   return out;
+}
+
+/// 附件里第一个能识别的类型，用来给列表配个图标。
+function firstMaterialKind_(materials) {
+  if (!materials || !materials.length) return '';
+  var m = materials[0];
+  if (m.driveFile) return 'drive';
+  if (m.youtubeVideo) return 'video';
+  if (m.link) return 'link';
+  if (m.form) return 'form';
+  return '';
+}
+
+function truncate_(s, n) {
+  s = String(s || '');
+  return s.length > n ? s.slice(0, n) + '…' : s;
 }
 
 function dueEpoch_(w) {

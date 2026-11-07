@@ -237,6 +237,9 @@ it's due — instead of Classroom's own per-course to-do list.
   "Overdue by more than 4 weeks" and "no due date" are **collapsed by default** —
   in real data those two piles are mostly teacher-posted material and last month's
   leftovers, and mixing them with today's work is how a dashboard stops being read.
+- Two more tabs alongside it: **资料** (Classwork → Materials, grouped by course and
+  then by unit/topic) and **公告** (Stream posts, newest first). Neither has a due
+  date, so they stay out of the urgency buckets entirely.
 - "Must do today" is not calendar-day based: anything due within the next 10 hours
   counts, so a 02:20 deadline shows up today, not tomorrow.
 - Data comes from an **Apps Script Web App deployed under the kid's own Google
