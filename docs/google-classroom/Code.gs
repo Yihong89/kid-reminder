@@ -394,6 +394,7 @@ function collect_() {
     // 学生账号通常拿不到——但角色这个维度不需要额外权限就能推出来。
     var teacherIds = {};
     var myId = null;
+    var nameCache = { enabled: true, map: {} };
 
     // ---- 主题（单元）名：作业和资料都靠它分组 ----
     var topicNames = {};
@@ -525,6 +526,7 @@ function collect_() {
           course: cname,
           course_id: cid,
           author: author,
+          creator: nameFor_(ann.creatorUserId, nameCache),
           text: truncate_(ann.text, 600),
           kind: firstMaterialKind_(ann.materials),
           created_epoch: ann.creationTime ? Date.parse(ann.creationTime) : null,
@@ -536,6 +538,26 @@ function collect_() {
   }
 
   return out;
+}
+
+/// 把 creatorUserId 换成真名。
+///
+/// 需要 classroom.profile.emails 权限。学校域可能拦掉这个敏感权限——所以这里
+/// 是"能拿到就显示，拿不到就算了"：第一次 401/403 就把开关关掉，这一轮不再试，
+/// 面板退回只显示"老师 / 同学"的角色标记，不会因为名字拿不到就整块失败。
+function nameFor_(userId, cache) {
+  if (!userId || !cache.enabled) return '';
+  if (cache.map.hasOwnProperty(userId)) return cache.map[userId];
+
+  var r = fetch_('/userProfiles/' + encodeURIComponent(userId), {});
+  if (r.code === 200 && r.doc) {
+    var full = (r.doc.name && r.doc.name.fullName) || '';
+    cache.map[userId] = full;
+    return full;
+  }
+  if (r.code === 401 || r.code === 403) cache.enabled = false;
+  cache.map[userId] = '';
+  return '';
 }
 
 /// 附件里第一个能识别的类型，用来给列表配个图标。

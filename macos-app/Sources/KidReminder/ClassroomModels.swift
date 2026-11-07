@@ -111,6 +111,8 @@ struct ClassroomAnnouncement: Decodable, Identifiable {
     let course_id: String?
     /// "teacher" / "student" / "me"。空字符串表示判不出来。
     let author: String?
+    /// 发布人真名。要 classroom.profile.emails 权限，学校域拒绝时是空串。
+    let creator: String?
     let text: String?
     let kind: String?
     let created_epoch: Double?
@@ -128,6 +130,11 @@ struct ClassroomAnnouncement: Decodable, Identifiable {
     var linkURL: URL? {
         guard let link, !link.isEmpty, let u = URL(string: link) else { return nil }
         return u
+    }
+
+    var creatorName: String? {
+        let n = (creator ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return n.isEmpty ? nil : n
     }
 
     /// 谁发的。老师 vs 同学是靠"只有老师能建作业/资料"反推的，不是 API 直接给的。

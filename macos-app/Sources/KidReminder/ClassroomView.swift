@@ -341,6 +341,12 @@ struct ClassroomView: View {
                 .font(.system(size: 13))
                 .lineLimit(1)
             Spacer(minLength: 8)
+            if let created = m.created {
+                Text(ClassroomFmt.ago(created, from: classroom.now))
+                    .font(.system(size: 10))
+                    .foregroundStyle(.tertiary)
+                    .monospacedDigit()
+            }
             if let url = m.linkURL {
                 Link(destination: url) {
                     Text("打开").font(.system(size: 10.5))
@@ -461,6 +467,12 @@ struct ClassroomView: View {
                             .padding(.horizontal, 5)
                             .padding(.vertical, 1.5)
                             .background(Capsule().fill(authorTint(a.author).opacity(0.13)))
+                    }
+                    if let name = a.creatorName {
+                        Text(name)
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
                     }
                     Text(ClassroomFmt.ago(a.created, from: classroom.now))
                         .font(.system(size: 10))
