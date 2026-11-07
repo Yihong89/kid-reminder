@@ -2,6 +2,7 @@ import SwiftUI
 
 enum SidebarItem: String, CaseIterable, Identifiable {
     case today = "Today"
+    case homework = "作业"
     case calendar = "Calendar"
     case countdown = "Countdown"
     case stickers = "Stickers"
@@ -16,6 +17,7 @@ enum SidebarItem: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .today: return "checklist"
+        case .homework: return "graduationcap.fill"
         case .calendar: return "calendar"
         case .countdown: return "timer"
         case .stickers: return "star.circle.fill"
@@ -33,6 +35,7 @@ struct ContentView: View {
     @EnvironmentObject var settings: SettingsStore
     @State private var selection: SidebarItem = .today
     @StateObject private var updater = AppUpdater()
+    @StateObject private var classroom = ClassroomStore()
 
     var body: some View {
         NavigationSplitView {
@@ -43,6 +46,7 @@ struct ContentView: View {
         } detail: {
             switch selection {
             case .today: TodayView()
+            case .homework: ClassroomView()
             case .calendar: CalendarView()
             case .countdown: CountdownView()
             case .stickers: StickersView()
@@ -54,6 +58,10 @@ struct ContentView: View {
             case .settings: SettingsView()
             }
         }
-        .task { await updater.check() }
+        .environmentObject(classroom)
+        .task {
+            await updater.check()
+            classroom.startClock()
+        }
     }
 }

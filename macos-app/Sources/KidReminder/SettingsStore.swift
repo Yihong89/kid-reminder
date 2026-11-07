@@ -14,6 +14,14 @@ final class SettingsStore: ObservableObject {
     /// Font scale (1.0 = normal) for the paper-runner reading text. The kid can
     /// zoom the passage/prompts with A− / A+ in the runner toolbar.
     @Published var paperFontScale: CGFloat
+
+    /// Google Classroom 作业面板用的 Web App 地址和访问密钥。
+    ///
+    /// 刻意存在本机 UserDefaults、**只由 app 自己使用**，不经过后端服务器：
+    /// 后端 listen 在 0.0.0.0 上、走明文 HTTP、用共享 PIN 认证，
+    /// 把 secret 交给它等于对整个局域网（包括学校 WiFi）开放孩子的作业清单。
+    @Published var classroomURL: String
+    @Published var classroomSecret: String
     static let paperFontRange: ClosedRange<CGFloat> = 0.8...1.8
 
     private let defaults = UserDefaults.standard
@@ -27,6 +35,8 @@ final class SettingsStore: ObservableObject {
         connected = defaults.bool(forKey: "connected")
         let f = defaults.double(forKey: "paperFontScale")
         paperFontScale = f == 0 ? 1.0 : CGFloat(f)
+        classroomURL = defaults.string(forKey: "classroomURL") ?? ""
+        classroomSecret = defaults.string(forKey: "classroomSecret") ?? ""
     }
 
     func save() {
@@ -36,6 +46,8 @@ final class SettingsStore: ObservableObject {
         defaults.set(role, forKey: "role")
         defaults.set(connected, forKey: "connected")
         defaults.set(paperFontScale, forKey: "paperFontScale")
+        defaults.set(classroomURL, forKey: "classroomURL")
+        defaults.set(classroomSecret, forKey: "classroomSecret")
     }
 
     var isAdmin: Bool { role == "admin" }

@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var settings: SettingsStore
+    @EnvironmentObject var classroom: ClassroomStore
     @StateObject private var updater = AppUpdater()
     @State private var host = ""
     @State private var port = ""
@@ -10,6 +11,7 @@ struct SettingsView: View {
     @State private var busy = false
     @State private var statusMessage: String?
     @State private var devLogCopyMessage: String?
+    @State private var classroomStatus: String?
 
     private var api: APIClient { APIClient(settings: settings) }
 
@@ -44,6 +46,27 @@ struct SettingsView: View {
                     Label(role == "admin" ? "Parent (full control)" : "Kid (your own tasks only)",
                           systemImage: role == "admin" ? "person.crop.circle.fill" : "face.smiling")
                 }
+            }
+
+            Section("Google Classroom 作业") {
+                TextField("Web App URL", text: $settings.classroomURL,
+                          prompt: Text("https://script.google.com/macros/s/…/exec"))
+                    .textContentType(.none)
+                SecureField("Secret", text: $settings.classroomSecret,
+                            prompt: Text("installSecret 打印的那一串"))
+                HStack {
+                    if classroom.isLoading {
+                        ProgressView().controlSize(.small)
+                    }
+                    Button("测试连接") { testClassroom() }
+                        .disabled(classroom.isLoading)
+                    Spacer()
+                    if let classroomStatus {
+                        Text(classroomStatus).font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                Text("在孩子的 Apps Script 项目里运行 installSecret 就能拿到这两个值。留空则「作业」面板显示未连接。")
+                    .font(.caption).foregroundStyle(.secondary)
             }
 
             Section("Updates") {
@@ -101,6 +124,8 @@ struct SettingsView: View {
             pin = settings.pin
         }
         .task { await verify() }
+        .onChange(of: settings.classroomURL) { _, _ in settings.save() }
+        .onChange(of: settings.classroomSecret) { _, _ in settings.save() }
     }
 
     private func connect() {
@@ -128,6 +153,21 @@ struct SettingsView: View {
             settings.save()
             let msg = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
             statusMessage = "Could not connect: \(msg)"
+        }
+    }
+
+    private func testClassroom() {
+        settings.save()
+        classroomStatus = nil
+        Task {
+            await classroom.refresh(url: settings.classroomURL, secret: settings.classroomSecret)
+            if let e = classroom.errorDetail {
+                classroomStatus = "失败：\(e)"
+            } else if !classroom.configured {
+                classroomStatus = "URL 和 Secret 都没填。"
+            } else {
+                classroomStatus = "成功，\(classroom.items.count) 项未完成。"
+            }
         }
     }
 

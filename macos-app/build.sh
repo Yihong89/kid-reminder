@@ -18,8 +18,11 @@ echo "=== building (universal: arm64 + x86_64, combined with lipo) ==="
 # not a bug in KidReminder). Building each arch as its own SwiftPM
 # invocation and combining with `lipo` sidesteps xcbuild entirely and
 # always yields a true universal binary regardless of the host machine.
-swift build -c release --arch arm64
-swift build -c release --arch x86_64
+# --disable-sandbox：SwiftPM 编译 manifest 时会调 sandbox-exec，在被外层沙箱
+# 包住的环境（CI、受限 shell）里会直接失败。本包没有任何 build plugin，
+# 关掉这层嵌套沙箱不影响产物。
+swift build -c release --disable-sandbox --arch arm64
+swift build -c release --disable-sandbox --arch x86_64
 BIN=".build/apple/Products/Release/$APP_NAME"
 mkdir -p "$(dirname "$BIN")"
 lipo -create \
@@ -45,15 +48,22 @@ if [ -f "Resources/AppIcon.svg" ]; then
   if [ -x "$CHROME" ]; then
     # Render the SVG directly. (An HTML <img> wrapper makes Chrome's screenshot
     # paint a gray border on the bottom/right edges — a rendering artifact.)
-    # guard against headless Chrome hanging: run under a 20s alarm (perl's alarm)
-    perl -e 'alarm shift; exec @ARGV' 20 \
-      "$CHROME" --headless --disable-gpu --screenshot="$WORK/AppIcon.svg.png" \
+    # guard against headless Chrome hanging: run under a 25s alarm (perl's alarm)
+    #
+    # --user-data-dir 必须显式给：受限环境（CI、被外层沙箱包住的 shell）里 Chrome
+    # 建不了默认 profile，会直接退出，表现就是"图标静默缺失"。
+    # --no-sandbox 同理：外层已有沙箱时 Chrome 自己的沙箱会崩（Trace/BPT trap: 5）。
+    perl -e 'alarm shift; exec @ARGV' 25 \
+      "$CHROME" --headless=new --no-sandbox --disable-gpu \
+      --user-data-dir="$WORK/chrome" \
+      --screenshot="$WORK/AppIcon.svg.png" \
       --window-size=1024,1024 --default-background-color=00000000 "file://$(pwd)/Resources/AppIcon.svg" >/dev/null 2>&1 || true
-    SRC="$WORK/AppIcon.svg.png"
-  else
-    qlmanage -t -s 1024 -o "$WORK" "Resources/AppIcon.svg" >/dev/null 2>&1
-    SRC="$WORK/AppIcon.svg.png"
   fi
+  # 不要假设上一步一定产出了 PNG：Chrome 可能在没报错的情况下什么都没写。
+  # 少了这个回退，后面 cp 会失败，iconutil 也会失败，最后得到一个没图标的包
+  # 却仍然打印"构建成功"——比直接报错更糟。
+  [ -s "$WORK/AppIcon.svg.png" ] || qlmanage -t -s 1024 -o "$WORK" "Resources/AppIcon.svg" >/dev/null 2>&1
+  SRC="$WORK/AppIcon.svg.png"
   ICONSET="$WORK/AppIcon.iconset"
   mkdir -p "$ICONSET"
   cp "$SRC" "$ICONSET/icon_512x512@2x.png"
@@ -64,9 +74,13 @@ if [ -f "Resources/AppIcon.svg" ]; then
     sips -z "$size" "$size" "$SRC" --out "$ICONSET/$name" >/dev/null 2>&1
   done
   mkdir -p "$BUNDLE/Contents/Resources"
-  iconutil -c icns "$ICONSET" -o "$BUNDLE/Contents/Resources/AppIcon.icns"
+  if iconutil -c icns "$ICONSET" -o "$BUNDLE/Contents/Resources/AppIcon.icns" 2>/dev/null \
+     && [ -s "$BUNDLE/Contents/Resources/AppIcon.icns" ]; then
+    echo "  -> Contents/Resources/AppIcon.icns ($(du -h "$BUNDLE/Contents/Resources/AppIcon.icns" | cut -f1))"
+  else
+    echo "  !! 图标生成失败，这个包没有图标（功能不受影响）"
+  fi
   rm -rf "$WORK"
-  echo "  -> Contents/Resources/AppIcon.icns"
 fi
 
 cat > "$BUNDLE/Contents/Info.plist" <<PLIST
@@ -78,7 +92,7 @@ cat > "$BUNDLE/Contents/Info.plist" <<PLIST
     <key>CFBundleDisplayName</key><string>Kid Reminder</string>
     <key>CFBundleIdentifier</key><string>com.kidreminder.mac</string>
     <key>CFBundleVersion</key><string>1</string>
-    <key>CFBundleShortVersionString</key><string>1.19.0</string>
+    <key>CFBundleShortVersionString</key><string>2.0.0</string>
     <key>CFBundleExecutable</key><string>$APP_NAME</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
