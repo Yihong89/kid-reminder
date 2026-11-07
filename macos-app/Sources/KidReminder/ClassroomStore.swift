@@ -64,6 +64,9 @@ final class ClassroomStore: ObservableObject {
     @Published var searchText: String = ""
     @Published private(set) var expandedCourses: Set<String> = []
     @Published private(set) var expandedUnits: Set<String> = []
+    /// 公告按作者分组，和资料不同——作者分组**默认展开**。
+    /// 一门课通常就那么几条，默认收起会变成"点三下才看到一句话"。
+    @Published private(set) var collapsedAuthors: Set<String> = []
 
     private var clock: Timer?
 
@@ -168,6 +171,15 @@ final class ClassroomStore: ObservableObject {
         if expandedUnits.contains(key) { expandedUnits.remove(key) } else { expandedUnits.insert(key) }
     }
 
+    func toggleAuthor(_ course: String, _ author: String) {
+        let key = course + "|author:" + author
+        if collapsedAuthors.contains(key) { collapsedAuthors.remove(key) } else { collapsedAuthors.insert(key) }
+    }
+
+    func isAuthorExpanded(_ course: String, _ author: String) -> Bool {
+        isSearching || !collapsedAuthors.contains(course + "|author:" + author)
+    }
+
     /// 搜索时一律展开——搜到了却藏在折叠里等于没搜。
     func isCourseExpanded(_ course: String) -> Bool {
         isSearching || expandedCourses.contains(course)
@@ -247,12 +259,19 @@ final class ClassroomStore: ObservableObject {
             byCourse[a.course ?? "(未知课程)", default: []].append(a)
         }
         return byCourse.keys.sorted().map { course in
-            AnnouncementCourseGroup(
-                course: course,
-                items: byCourse[course]!.sorted {
-                    ($0.created ?? .distantPast) > ($1.created ?? .distantPast)
-                }
-            )
+            let list = byCourse[course]!.sorted {
+                ($0.created ?? .distantPast) > ($1.created ?? .distantPast)
+            }
+            var byAuthor: [String: [ClassroomAnnouncement]] = [:]
+            for a in list { byAuthor[a.author ?? "", default: []].append(a) }
+            let authors = byAuthor.keys.sorted {
+                AnnouncementAuthorGroup.order($0) < AnnouncementAuthorGroup.order($1)
+            }.map { key in
+                AnnouncementAuthorGroup(key: key,
+                                        title: AnnouncementAuthorGroup.label(key),
+                                        items: byAuthor[key]!)
+            }
+            return AnnouncementCourseGroup(course: course, authors: authors, count: list.count)
         }
     }
 }
@@ -271,8 +290,35 @@ struct MaterialCourseGroup: Identifiable {
     var id: String { course }
 }
 
+struct AnnouncementAuthorGroup: Identifiable {
+    let key: String
+    let title: String
+    let items: [ClassroomAnnouncement]
+    var id: String { key }
+
+    static func label(_ key: String) -> String {
+        switch key {
+        case "teacher": return "老师"
+        case "student": return "同学"
+        case "me": return "我"
+        default: return "未标注作者"
+        }
+    }
+
+    /// 老师永远排最前，其次同学，然后自己，判不出作者的垫底。
+    static func order(_ key: String) -> Int {
+        switch key {
+        case "teacher": return 0
+        case "student": return 1
+        case "me": return 2
+        default: return 3
+        }
+    }
+}
+
 struct AnnouncementCourseGroup: Identifiable {
     let course: String
-    let items: [ClassroomAnnouncement]
+    let authors: [AnnouncementAuthorGroup]
+    let count: Int
     var id: String { course }
 }

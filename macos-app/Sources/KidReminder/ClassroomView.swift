@@ -397,14 +397,37 @@ struct ClassroomView: View {
                 ForEach(classroom.announcementGroups) { group in
                     VStack(alignment: .leading, spacing: 8) {
                         Button { classroom.toggleCourse(group.course) } label: {
-                            courseHeader(group.course, count: group.items.count,
+                            courseHeader(group.course, count: group.count,
                                          expanded: classroom.isCourseExpanded(group.course))
                         }
                         .buttonStyle(.plain)
 
                         if classroom.isCourseExpanded(group.course) {
-                            ForEach(group.items) { a in
-                                announcementCard(a)
+                            // 只有一种作者时不显示子标题——"老师 3"下面再列三条，
+                            // 这层分组没有任何信息量。
+                            if group.authors.count <= 1 {
+                                ForEach(group.authors.first?.items ?? []) { a in
+                                    announcementCard(a)
+                                }
+                            } else {
+                                ForEach(group.authors) { ag in
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Button {
+                                            classroom.toggleAuthor(group.course, ag.key)
+                                        } label: {
+                                            unitHeader(ag.title, count: ag.items.count,
+                                                       expanded: classroom.isAuthorExpanded(group.course, ag.key))
+                                        }
+                                        .buttonStyle(.plain)
+
+                                        if classroom.isAuthorExpanded(group.course, ag.key) {
+                                            ForEach(ag.items) { a in
+                                                announcementCard(a)
+                                            }
+                                        }
+                                    }
+                                    .padding(.leading, 11)
+                                }
                             }
                         }
                     }
