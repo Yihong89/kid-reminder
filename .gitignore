@@ -45,6 +45,11 @@ backend/epaper-images/
 # Generated TTS audio cache (dictation/English), regenerated on demand
 backend/dictation-audio/
 backend/english-audio/
+backend/oral-audio/
+backend/oral-words/
+
+# 孩子上传的口试整篇录音：隐私内容，不进仓库
+backend/oral-recordings/
 
 # macOS
 .DS_Store
