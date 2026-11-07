@@ -70,6 +70,42 @@ final class ClassroomStore: ObservableObject {
 
     private var clock: Timer?
 
+    // MARK: - 持久化
+    //
+    // 折叠状态记在本机：孩子习惯把某些课程或某个单元一直收着，重启后又全展开
+    // 等于白点。搜索词**不**持久化——打开 app 就带着上次的过滤条件会让人以为
+    // 数据丢了。
+    private enum PersistKey {
+        static let expandedCourses = "classroom.expandedCourses"
+        static let expandedUnits = "classroom.expandedUnits"
+        static let collapsedAuthors = "classroom.collapsedAuthors"
+        static let collapsedBuckets = "classroom.collapsedBuckets"
+    }
+
+    init() {
+        let d = UserDefaults.standard
+        if let a = d.array(forKey: PersistKey.expandedCourses) as? [String] {
+            expandedCourses = Set(a)
+        }
+        if let a = d.array(forKey: PersistKey.expandedUnits) as? [String] {
+            expandedUnits = Set(a)
+        }
+        if let a = d.array(forKey: PersistKey.collapsedAuthors) as? [String] {
+            collapsedAuthors = Set(a)
+        }
+        if let a = d.array(forKey: PersistKey.collapsedBuckets) as? [Int] {
+            collapsed = Set(a.compactMap { HomeworkBucket(rawValue: $0) })
+        }
+    }
+
+    private func persist() {
+        let d = UserDefaults.standard
+        d.set(Array(expandedCourses), forKey: PersistKey.expandedCourses)
+        d.set(Array(expandedUnits), forKey: PersistKey.expandedUnits)
+        d.set(Array(collapsedAuthors), forKey: PersistKey.collapsedAuthors)
+        d.set(collapsed.map(\.rawValue), forKey: PersistKey.collapsedBuckets)
+    }
+
     // MARK: - 生命周期
 
     func startClock() {
@@ -164,16 +200,19 @@ final class ClassroomStore: ObservableObject {
         } else {
             expandedCourses.insert(course)
         }
+        persist()
     }
 
     func toggleUnit(_ course: String, _ unit: String) {
         let key = course + "|" + unit
         if expandedUnits.contains(key) { expandedUnits.remove(key) } else { expandedUnits.insert(key) }
+        persist()
     }
 
     func toggleAuthor(_ course: String, _ author: String) {
         let key = course + "|author:" + author
         if collapsedAuthors.contains(key) { collapsedAuthors.remove(key) } else { collapsedAuthors.insert(key) }
+        persist()
     }
 
     func isAuthorExpanded(_ course: String, _ author: String) -> Bool {
@@ -218,6 +257,7 @@ final class ClassroomStore: ObservableObject {
 
     func toggle(_ bucket: HomeworkBucket) {
         if collapsed.contains(bucket) { collapsed.remove(bucket) } else { collapsed.insert(bucket) }
+        persist()
     }
 
     func isCollapsed(_ bucket: HomeworkBucket) -> Bool { collapsed.contains(bucket) }
