@@ -389,6 +389,12 @@ function collect_() {
     var cid = c.id;
     var cname = c.name || cid;
 
+    // 只有老师能创建作业/资料，所以这两处的 creatorUserId 构成"老师集合"，
+    // 用来判断公告是老师发的还是同学发的。反查名字需要 profile/rosters 权限，
+    // 学生账号通常拿不到——但角色这个维度不需要额外权限就能推出来。
+    var teacherIds = {};
+    var myId = null;
+
     // ---- 主题（单元）名：作业和资料都靠它分组 ----
     var topicNames = {};
     var tr = getAll_('/courses/' + cid + '/topics', { pageSize: 100 }, 'topic');
@@ -444,6 +450,9 @@ function collect_() {
       var byWork = {};
       sr.items.forEach(function (s) { byWork[s.courseWorkId] = s; });
 
+      work.forEach(function (w) { if (w.creatorUserId) teacherIds[w.creatorUserId] = true; });
+      if (!myId && sr.items.length) myId = sr.items[0].userId;
+
       var openHere = 0;
       for (var w = 0; w < work.length; w++) {
         var item = work[w];
@@ -479,6 +488,7 @@ function collect_() {
     } else {
       for (var mi = 0; mi < mr.items.length; mi++) {
         var mat = mr.items[mi];
+        if (mat.creatorUserId) teacherIds[mat.creatorUserId] = true;
         out.materials.push({
           course: cname,
           course_id: cid,
@@ -500,9 +510,21 @@ function collect_() {
     } else {
       for (var ai = 0; ai < ar.items.length; ai++) {
         var ann = ar.items[ai];
+        // teacher / student / me；判不出来就留空，宁可不标也不瞎标
+        var author = '';
+        if (ann.creatorUserId) {
+          if (myId && ann.creatorUserId === myId) {
+            author = 'me';
+          } else if (teacherIds[ann.creatorUserId]) {
+            author = 'teacher';
+          } else if (Object.keys(teacherIds).length) {
+            author = 'student';
+          }
+        }
         out.announcements.push({
           course: cname,
           course_id: cid,
+          author: author,
           text: truncate_(ann.text, 600),
           kind: firstMaterialKind_(ann.materials),
           created_epoch: ann.creationTime ? Date.parse(ann.creationTime) : null,

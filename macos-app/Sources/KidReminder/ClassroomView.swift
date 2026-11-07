@@ -360,6 +360,15 @@ struct ClassroomView: View {
         )
     }
 
+    /// 老师用强调色，同学和我用中性色——目的是让人一眼扫过时先看老师发的。
+    private func authorTint(_ author: String?) -> Color {
+        switch author ?? "" {
+        case "teacher": return Color(red: 0.20, green: 0.45, blue: 0.90)
+        case "me": return Color(red: 0.20, green: 0.60, blue: 0.40)
+        default: return .secondary
+        }
+    }
+
     private func materialIcon(_ kind: String?) -> String {
         switch kind {
         case "video": return "play.rectangle.fill"
@@ -422,6 +431,14 @@ struct ClassroomView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 HStack(spacing: 8) {
+                    if let who = a.authorLabel {
+                        Text(who)
+                            .font(.system(size: 9.5, weight: .medium))
+                            .foregroundStyle(authorTint(a.author))
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 1.5)
+                            .background(Capsule().fill(authorTint(a.author).opacity(0.13)))
+                    }
                     Text(ClassroomFmt.ago(a.created, from: classroom.now))
                         .font(.system(size: 10))
                         .foregroundStyle(.tertiary)
