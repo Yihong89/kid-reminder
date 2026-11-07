@@ -39,6 +39,7 @@ struct HomeworkGroup: Identifiable {
 @MainActor
 final class ClassroomStore: ObservableObject {
     @Published private(set) var items: [ClassroomHomework] = []
+    @Published private(set) var done: [ClassroomDone] = []
     @Published private(set) var materials: [ClassroomMaterial] = []
     @Published private(set) var announcements: [ClassroomAnnouncement] = []
     @Published private(set) var email: String?
@@ -126,6 +127,7 @@ final class ClassroomStore: ObservableObject {
 
         guard client.isConfigured else {
             items = []
+            done = []
             materials = []
             announcements = []
             email = nil
@@ -144,6 +146,7 @@ final class ClassroomStore: ObservableObject {
         do {
             let payload = try await client.fetch()
             items = payload.items ?? []
+            done = payload.done ?? []
             materials = payload.materials ?? []
             announcements = payload.announcements ?? []
             email = payload.email
@@ -164,6 +167,7 @@ final class ClassroomStore: ObservableObject {
 
     private func rebuildColors() {
         var all = Set(items.map(\.course))
+        all.formUnion(done.compactMap { $0.course })
         all.formUnion(materials.compactMap { $0.course })
         all.formUnion(announcements.compactMap { $0.course })
         let names = all.sorted()
@@ -262,6 +266,26 @@ final class ClassroomStore: ObservableObject {
 
     func isCollapsed(_ bucket: HomeworkBucket) -> Bool { collapsed.contains(bucket) }
 
+    // MARK: - 已交 / 已批改
+
+    /// 已交的作业。老师批改返还的排在最前——那是需要"跟一下"的东西。
+    var submittedGroups: [SubmittedCourseGroup] {
+        var byCourse: [String: [ClassroomDone]] = [:]
+        for d in done where hits([d.title, d.course, d.topic]) {
+            byCourse[d.course ?? "(未知课程)", default: []].append(d)
+        }
+        return byCourse.keys.sorted().map { course in
+            let sorted = byCourse[course]!.sorted { a, b in
+                if a.isReturned != b.isReturned { return a.isReturned }
+                if a.isReturned {
+                    return (a.updated ?? .distantPast) > (b.updated ?? .distantPast)
+                }
+                return (a.due ?? .distantFuture) < (b.due ?? .distantFuture)
+            }
+            return SubmittedCourseGroup(course: course, items: sorted)
+        }
+    }
+
     // MARK: - 资料
 
     var materialGroups: [MaterialCourseGroup] {
@@ -314,6 +338,13 @@ final class ClassroomStore: ObservableObject {
             return AnnouncementCourseGroup(course: course, authors: authors, count: list.count)
         }
     }
+}
+
+struct SubmittedCourseGroup: Identifiable {
+    let course: String
+    let items: [ClassroomDone]
+    var id: String { course }
+    var returnedCount: Int { items.filter { $0.isReturned }.count }
 }
 
 struct MaterialTopicGroup: Identifiable {

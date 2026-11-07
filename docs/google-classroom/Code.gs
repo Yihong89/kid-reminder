@@ -363,11 +363,12 @@ function collect_() {
     schema: 2,
     generated_at: new Date().toISOString(),
     email: email,
-    counts: { courses: 0, coursework: 0, submissions: 0, open: 0, materials: 0, announcements: 0 },
+    counts: { courses: 0, coursework: 0, submissions: 0, open: 0, done: 0, materials: 0, announcements: 0 },
     warnings: [],
     courses: [],
     topics: [],
     items: [],
+    done: [],
     materials: [],
     announcements: []
   };
@@ -459,7 +460,27 @@ function collect_() {
         var item = work[w];
         var sub = byWork[item.id];
         var state = sub ? sub.state : null;
-        if (state === 'TURNED_IN' || state === 'RETURNED') continue;
+
+        // 交过的不再进"待做"，但也不能丢——老师批改返还后要能看到分数。
+        // RETURNED = 已批改返还；TURNED_IN = 已交、等老师批。
+        if (state === 'TURNED_IN' || state === 'RETURNED') {
+          out.done.push({
+            course: cname,
+            course_id: cid,
+            title: item.title || '(无标题)',
+            topic: topicNames[item.topicId] || '',
+            state: state,
+            points: (sub && typeof sub.assignedGrade === 'number') ? sub.assignedGrade : null,
+            max_points: (typeof item.maxPoints === 'number') ? item.maxPoints : null,
+            late: sub ? !!sub.late : false,
+            due_label: dueLabel_(item),
+            due_epoch: dueEpoch_(item),
+            updated_epoch: (sub && sub.updateTime) ? Date.parse(sub.updateTime) : null,
+            link: item.alternateLink || ''
+          });
+          out.counts.done += 1;
+          continue;
+        }
 
         openHere++;
         out.items.push({

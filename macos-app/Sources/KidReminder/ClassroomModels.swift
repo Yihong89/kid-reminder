@@ -14,6 +14,7 @@ struct ClassroomPayload: Decodable {
     let counts: ClassroomCounts?
     let courses: [ClassroomCourse]?
     let items: [ClassroomHomework]?
+    let done: [ClassroomDone]?
     let materials: [ClassroomMaterial]?
     let announcements: [ClassroomAnnouncement]?
 
@@ -74,6 +75,58 @@ struct ClassroomHomework: Decodable, Identifiable {
         case "RECLAIMED_BY_STUDENT": return "撤回提交了"
         default: return nil
         }
+    }
+}
+
+// MARK: - 已交 / 已批改
+
+struct ClassroomDone: Decodable, Identifiable {
+    let course: String?
+    let course_id: String?
+    let title: String?
+    let topic: String?
+    /// "TURNED_IN"（已交、等批）或 "RETURNED"（已批改返还）
+    let state: String?
+    let points: Double?
+    let max_points: Double?
+    let late: Bool?
+    let due_label: String?
+    let due_epoch: Double?
+    let updated_epoch: Double?
+    let link: String?
+
+    var id: String { "\(course_id ?? "")|\(title ?? "")|\(Int(due_epoch ?? 0))" }
+    var displayTitle: String {
+        let t = (title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.isEmpty ? "(无标题)" : t
+    }
+    var topicName: String { (topic ?? "").trimmingCharacters(in: .whitespaces) }
+    var isReturned: Bool { state == "RETURNED" }
+    var statusLabel: String { isReturned ? "已批改" : "已交" }
+
+    /// "85 / 100"。没有分数就返回 nil，不显示 0 分。
+    var gradeText: String? {
+        guard let p = points else { return nil }
+        let g = ClassroomDone.num(p)
+        if let m = max_points, m > 0 { return "\(g) / \(ClassroomDone.num(m))" }
+        return g
+    }
+
+    var updated: Date? {
+        guard let updated_epoch else { return nil }
+        return Date(timeIntervalSince1970: updated_epoch / 1000.0)
+    }
+    var due: Date? {
+        guard let due_epoch else { return nil }
+        return Date(timeIntervalSince1970: due_epoch / 1000.0)
+    }
+    var linkURL: URL? {
+        guard let link, !link.isEmpty, let u = URL(string: link) else { return nil }
+        return u
+    }
+
+    static func num(_ v: Double) -> String {
+        v == v.rounded() ? String(Int(v)) : String(format: "%.1f", v)
     }
 }
 

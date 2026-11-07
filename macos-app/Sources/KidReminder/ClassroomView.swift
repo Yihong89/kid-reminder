@@ -1,7 +1,8 @@
 import SwiftUI
 
 enum ClassroomTab: String, CaseIterable, Identifiable {
-    case homework = "作业"
+    case homework = "待做"
+    case submitted = "已交"
     case materials = "资料"
     case announcements = "公告"
     var id: String { rawValue }
@@ -52,6 +53,7 @@ struct ClassroomView: View {
             ScrollView {
                 switch tab {
                 case .homework: homeworkBody
+                case .submitted: submittedBody
                 case .materials: materialsBody
                 case .announcements: announcementsBody
                 }
@@ -70,7 +72,7 @@ struct ClassroomView: View {
             }
             .pickerStyle(.segmented)
             .labelsHidden()
-            .frame(maxWidth: 330)
+            .frame(maxWidth: 360)
 
             Spacer()
 
@@ -118,6 +120,7 @@ struct ClassroomView: View {
     private func count(for tab: ClassroomTab) -> Int {
         switch tab {
         case .homework: return classroom.items.count
+        case .submitted: return classroom.done.count
         case .materials: return classroom.materials.count
         case .announcements: return classroom.announcements.count
         }
@@ -278,6 +281,107 @@ struct ClassroomView: View {
             .lineLimit(1)
     }
 
+    // MARK: - 已交 / 已批改
+
+    private var submittedBody: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            if let detail = classroom.errorDetail {
+                errorBanner(title: classroom.errorTitle ?? "出错了", detail: detail)
+            }
+            if classroom.submittedGroups.isEmpty && !classroom.isLoading {
+                if classroom.isSearching {
+                    emptyState(emoji: "🔍", title: "没有匹配的已交作业", detail: "换个关键词试试。")
+                } else {
+                    emptyState(emoji: "📥", title: "还没有交过作业",
+                               detail: "交上去的作业会出现在这里，老师批改返还后能看到分数。")
+                }
+            } else {
+                ForEach(classroom.submittedGroups) { group in
+                    VStack(alignment: .leading, spacing: 8) {
+                        Button { classroom.toggleCourse(group.course) } label: {
+                            courseHeader(group.course, count: group.items.count,
+                                         expanded: classroom.isCourseExpanded(group.course),
+                                         detail: group.returnedCount > 0 ? "已批改 \(group.returnedCount)" : nil)
+                        }
+                        .buttonStyle(.plain)
+
+                        if classroom.isCourseExpanded(group.course) {
+                            ForEach(group.items) { d in
+                                submittedCard(d)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 22)
+        .padding(.top, 16)
+        .padding(.bottom, 26)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func submittedCard(_ d: ClassroomDone) -> some View {
+        let courseColor = classroom.color(for: d.course ?? "")
+        let tint = d.isReturned
+            ? Color(red: 0.18, green: 0.62, blue: 0.42)
+            : Color(red: 0.30, green: 0.50, blue: 0.80)
+
+        return HStack(alignment: .top, spacing: 11) {
+            RoundedRectangle(cornerRadius: 2).fill(courseColor.opacity(0.85)).frame(width: 3)
+
+            VStack(alignment: .leading, spacing: 2) {
+                if !d.topicName.isEmpty {
+                    Text(d.topicName)
+                        .font(.system(size: 10))
+                        .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+                }
+                Text(d.displayTitle)
+                    .font(.system(size: 14, weight: .medium))
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(submittedMeta(d))
+                    .font(.system(size: 11))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            Spacer(minLength: 10)
+
+            VStack(alignment: .trailing, spacing: 5) {
+                HStack(spacing: 6) {
+                    Text(d.statusLabel)
+                        .font(.system(size: 9.5, weight: .medium))
+                        .foregroundStyle(tint)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1.5)
+                        .background(Capsule().fill(tint.opacity(0.13)))
+                    if let g = d.gradeText {
+                        Text(g)
+                            .font(.system(size: 12, weight: .semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(tint)
+                    }
+                }
+                if let url = d.linkURL {
+                    Link(destination: url) {
+                        Text("打开 Classroom").font(.system(size: 10.5))
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.vertical, 11)
+        .padding(.horizontal, 13)
+        .background(RoundedRectangle(cornerRadius: 11).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 11)
+                .strokeBorder(d.isReturned ? tint.opacity(0.28) : Color.primary.opacity(0.06), lineWidth: 1)
+        )
+    }
+
     // MARK: - 资料
 
     private var materialsBody: some View {
@@ -331,39 +435,12 @@ struct ClassroomView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func materialRow(_ m: ClassroomMaterial) -> some View {
-        HStack(spacing: 9) {
-            Image(systemName: materialIcon(m.kind))
-                .font(.system(size: 11))
-                .foregroundStyle(.secondary)
-                .frame(width: 15)
-            Text(m.displayTitle)
-                .font(.system(size: 13))
-                .lineLimit(1)
-            Spacer(minLength: 8)
-            if let created = m.created {
-                Text(ClassroomFmt.ago(created, from: classroom.now))
-                    .font(.system(size: 10))
-                    .foregroundStyle(.tertiary)
-                    .monospacedDigit()
-            }
-            if let url = m.linkURL {
-                Link(destination: url) {
-                    Text("打开").font(.system(size: 10.5))
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-            } else {
-                Text("无链接").font(.system(size: 10)).foregroundStyle(.tertiary)
-            }
-        }
-        .padding(.vertical, 7)
-        .padding(.horizontal, 11)
-        .background(RoundedRectangle(cornerRadius: 9).fill(Color(nsColor: .controlBackgroundColor)))
-        .overlay(
-            RoundedRectangle(cornerRadius: 9)
-                .strokeBorder(Color.primary.opacity(0.05), lineWidth: 1)
-        )
+    private func submittedMeta(_ d: ClassroomDone) -> String {
+        var parts: [String] = []
+        if let due = d.due_label, !due.isEmpty { parts.append("截止 \(due)") }
+        if let up = d.updated { parts.append("\(ClassroomFmt.ago(up, from: classroom.now))更新") }
+        if d.late == true { parts.append("已逾期") }
+        return parts.joined(separator: "  ·  ")
     }
 
     /// 老师用强调色，同学和我用中性色——目的是让人一眼扫过时先看老师发的。
@@ -373,6 +450,52 @@ struct ClassroomView: View {
         case "me": return Color(red: 0.20, green: 0.60, blue: 0.40)
         default: return .secondary
         }
+    }
+
+    private func materialRow(_ m: ClassroomMaterial) -> some View {
+        let courseColor = classroom.color(for: m.course ?? "")
+
+        return HStack(alignment: .center, spacing: 11) {
+            RoundedRectangle(cornerRadius: 2).fill(courseColor.opacity(0.85)).frame(width: 3)
+
+            Image(systemName: materialIcon(m.kind))
+                .font(.system(size: 12))
+                .foregroundStyle(.secondary)
+                .frame(width: 15)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(m.displayTitle)
+                    .font(.system(size: 13.5, weight: .medium))
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 8) {
+                    if let created = m.created {
+                        Text(ClassroomFmt.ago(created, from: classroom.now))
+                            .font(.system(size: 10))
+                            .foregroundStyle(.tertiary)
+                            .monospacedDigit()
+                    }
+                    if let url = m.linkURL {
+                        Link(destination: url) {
+                            Text("在 Classroom 打开").font(.system(size: 10))
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.secondary)
+                    } else {
+                        Text("无链接").font(.system(size: 10)).foregroundStyle(.tertiary)
+                    }
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .background(RoundedRectangle(cornerRadius: 11).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 11)
+                .strokeBorder(Color.primary.opacity(0.05), lineWidth: 1)
+        )
     }
 
     private func materialIcon(_ kind: String?) -> String {
@@ -499,7 +622,8 @@ struct ClassroomView: View {
 
     // MARK: - 共用
 
-    private func courseHeader(_ course: String, count: Int, expanded: Bool) -> some View {
+    private func courseHeader(_ course: String, count: Int, expanded: Bool,
+                              detail: String? = nil) -> some View {
         HStack(spacing: 7) {
             Image(systemName: expanded ? "chevron.down" : "chevron.right")
                 .font(.system(size: 8.5, weight: .bold))
@@ -515,6 +639,11 @@ struct ClassroomView: View {
                 .font(.system(size: 11))
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
+            if let detail {
+                Text(detail)
+                    .font(.system(size: 10.5, weight: .medium))
+                    .foregroundStyle(Color(red: 0.18, green: 0.62, blue: 0.42))
+            }
             Spacer()
         }
         .contentShape(Rectangle())
