@@ -14,6 +14,8 @@ struct ClassroomPayload: Decodable {
     let counts: ClassroomCounts?
     let courses: [ClassroomCourse]?
     let items: [ClassroomHomework]?
+    let materials: [ClassroomMaterial]?
+    let announcements: [ClassroomAnnouncement]?
 
     // 失败时才有
     let error: String?
@@ -39,6 +41,8 @@ struct ClassroomHomework: Decodable, Identifiable {
     let course: String
     let course_id: String?
     let title: String
+    /// 老师挂的单元/主题名。空字符串表示"未分类"。
+    let topic: String?
     let due_epoch: Double?
     let due_label: String?
     let has_time: Bool?
@@ -70,6 +74,58 @@ struct ClassroomHomework: Decodable, Identifiable {
         case "RECLAIMED_BY_STUDENT": return "撤回提交了"
         default: return nil
         }
+    }
+}
+
+// MARK: - 资料（Classwork → Materials）
+
+struct ClassroomMaterial: Decodable, Identifiable {
+    let course: String?
+    let course_id: String?
+    let title: String?
+    let topic: String?
+    let kind: String?
+    let created_epoch: Double?
+    let link: String?
+
+    var id: String { "\(course_id ?? "")|\(title ?? "")|\(Int(created_epoch ?? 0))" }
+    var displayTitle: String {
+        let t = (title ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.isEmpty ? "(无标题)" : t
+    }
+    var topicName: String { (topic ?? "").trimmingCharacters(in: .whitespaces) }
+    var created: Date? {
+        guard let created_epoch else { return nil }
+        return Date(timeIntervalSince1970: created_epoch / 1000.0)
+    }
+    var linkURL: URL? {
+        guard let link, !link.isEmpty, let u = URL(string: link) else { return nil }
+        return u
+    }
+}
+
+// MARK: - 公告（Stream）
+
+struct ClassroomAnnouncement: Decodable, Identifiable {
+    let course: String?
+    let course_id: String?
+    let text: String?
+    let kind: String?
+    let created_epoch: Double?
+    let link: String?
+
+    var id: String { "\(course_id ?? "")|\(Int(created_epoch ?? 0))|\((text ?? "").count)" }
+    var body: String {
+        let t = (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return t.isEmpty ? "(只有附件，没有正文)" : t
+    }
+    var created: Date? {
+        guard let created_epoch else { return nil }
+        return Date(timeIntervalSince1970: created_epoch / 1000.0)
+    }
+    var linkURL: URL? {
+        guard let link, !link.isEmpty, let u = URL(string: link) else { return nil }
+        return u
     }
 }
 
@@ -168,6 +224,17 @@ enum ClassroomFmt {
     static func points(_ p: Double?) -> String? {
         guard let p, p > 0 else { return nil }
         return p == p.rounded() ? "\(Int(p)) 分" : String(format: "%.1f 分", p)
+    }
+
+    /// "3 天前" / "2 小时前" —— 公告和资料没有截止时间，只能显示发布距今多久
+    static func ago(_ date: Date?, from now: Date) -> String {
+        guard let date else { return "" }
+        let d = now.timeIntervalSince(date)
+        if d < 60 { return "刚刚" }
+        if d < 3600 { return "\(Int(d / 60)) 分钟前" }
+        if d < 86400 { return "\(Int(d / 3600)) 小时前" }
+        if d < 86400 * 30 { return "\(Int(d / 86400)) 天前" }
+        return dateOnly.string(from: date)
     }
 
     static func updated(_ date: Date?, from now: Date) -> String {

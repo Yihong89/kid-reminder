@@ -39,6 +39,8 @@ struct HomeworkGroup: Identifiable {
 @MainActor
 final class ClassroomStore: ObservableObject {
     @Published private(set) var items: [ClassroomHomework] = []
+    @Published private(set) var materials: [ClassroomMaterial] = []
+    @Published private(set) var announcements: [ClassroomAnnouncement] = []
     @Published private(set) var email: String?
     @Published private(set) var counts: ClassroomCounts?
     @Published private(set) var lastUpdated: Date?
@@ -72,6 +74,8 @@ final class ClassroomStore: ObservableObject {
 
         guard client.isConfigured else {
             items = []
+            materials = []
+            announcements = []
             email = nil
             counts = nil
             lastUpdated = nil
@@ -88,6 +92,8 @@ final class ClassroomStore: ObservableObject {
         do {
             let payload = try await client.fetch()
             items = payload.items ?? []
+            materials = payload.materials ?? []
+            announcements = payload.announcements ?? []
             email = payload.email
             counts = payload.counts
             lastUpdated = Date()
@@ -103,7 +109,10 @@ final class ClassroomStore: ObservableObject {
     }
 
     private func rebuildColors() {
-        let names = Set(items.map(\.course)).sorted()
+        var all = Set(items.map(\.course))
+        all.formUnion(materials.compactMap { $0.course })
+        all.formUnion(announcements.compactMap { $0.course })
+        let names = all.sorted()
         var map: [String: Color] = [:]
         for (i, name) in names.enumerated() {
             map[name] = ClassroomPalette.colors[i % ClassroomPalette.colors.count]
@@ -139,9 +148,74 @@ final class ClassroomStore: ObservableObject {
         return (overdue, week, items.count)
     }
 
+    // MARK: - 资料 / 公告的分组
+
+    /// 课程 → 单元 → 条目。老师没挂单元的落进 topic == "" 的组，UI 上显示成"未分类"。
+    var materialGroups: [MaterialCourseGroup] {
+        var byCourse: [String: [ClassroomMaterial]] = [:]
+        for m in materials {
+            byCourse[m.course ?? "(未知课程)", default: []].append(m)
+        }
+        return byCourse.keys.sorted().map { course in
+            var byTopic: [String: [ClassroomMaterial]] = [:]
+            for m in byCourse[course]! {
+                byTopic[m.topicName, default: []].append(m)
+            }
+            // 有名字的单元按名字排，"未分类"永远垫底
+            let topics = byTopic.keys.sorted { a, b in
+                if a.isEmpty != b.isEmpty { return !a.isEmpty }
+                return a.localizedStandardCompare(b) == .orderedAscending
+            }.map { topic in
+                MaterialTopicGroup(
+                    topic: topic,
+                    items: byTopic[topic]!.sorted {
+                        ($0.created ?? .distantPast) > ($1.created ?? .distantPast)
+                    }
+                )
+            }
+            return MaterialCourseGroup(course: course, topics: topics,
+                                       count: byCourse[course]!.count)
+        }
+    }
+
+    var announcementGroups: [AnnouncementCourseGroup] {
+        var byCourse: [String: [ClassroomAnnouncement]] = [:]
+        for a in announcements {
+            byCourse[a.course ?? "(未知课程)", default: []].append(a)
+        }
+        return byCourse.keys.sorted().map { course in
+            AnnouncementCourseGroup(
+                course: course,
+                items: byCourse[course]!.sorted {
+                    ($0.created ?? .distantPast) > ($1.created ?? .distantPast)
+                }
+            )
+        }
+    }
+
     func toggle(_ bucket: HomeworkBucket) {
         if collapsed.contains(bucket) { collapsed.remove(bucket) } else { collapsed.insert(bucket) }
     }
 
     func isCollapsed(_ bucket: HomeworkBucket) -> Bool { collapsed.contains(bucket) }
+}
+
+struct MaterialTopicGroup: Identifiable {
+    let topic: String
+    let items: [ClassroomMaterial]
+    var id: String { topic }
+    var displayName: String { topic.isEmpty ? "未分类" : topic }
+}
+
+struct MaterialCourseGroup: Identifiable {
+    let course: String
+    let topics: [MaterialTopicGroup]
+    let count: Int
+    var id: String { course }
+}
+
+struct AnnouncementCourseGroup: Identifiable {
+    let course: String
+    let items: [ClassroomAnnouncement]
+    var id: String { course }
 }

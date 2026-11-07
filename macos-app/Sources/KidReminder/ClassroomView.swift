@@ -1,12 +1,22 @@
 import SwiftUI
 
-/// Google Classroom 作业面板。
+enum ClassroomTab: String, CaseIterable, Identifiable {
+    case homework = "作业"
+    case materials = "资料"
+    case announcements = "公告"
+    var id: String { rawValue }
+}
+
+/// Google Classroom 面板：作业 / 资料 / 公告。
 ///
-/// 只显示**还没交**的作业，按紧急程度分档。数据来自孩子自己账号部署的 Apps Script Web App，
-/// URL 和 Secret 在 设置 → Google Classroom 里填（存在本机 UserDefaults，不经过服务器）。
+/// 作业有截止时间，按紧急程度分档；资料和公告没有截止时间，按课程（资料再按单元）
+/// 分组，只做"方便翻到"这一件事。三条数据来自同一个 Apps Script Web App，
+/// URL 和 Secret 在 设置 → Google Classroom 里填（存本机，不经过后端）。
 struct ClassroomView: View {
     @EnvironmentObject var settings: SettingsStore
     @EnvironmentObject var classroom: ClassroomStore
+
+    @State private var tab: ClassroomTab = .homework
 
     var body: some View {
         Group {
@@ -20,8 +30,7 @@ struct ClassroomView: View {
         .background(Color(nsColor: .windowBackgroundColor))
         .task {
             await refresh()
-            // 10 分钟自动刷一次。用 task 而不是独立 Timer，是为了在切走这个面板时
-            // 随视图一起取消，不会留着后台循环。
+            // 10 分钟自动刷一次。用 task 而不是独立 Timer，切走这个面板时随视图取消。
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: 600 * 1_000_000_000)
                 if Task.isCancelled { break }
@@ -34,44 +43,34 @@ struct ClassroomView: View {
         await classroom.refresh(url: settings.classroomURL, secret: settings.classroomSecret)
     }
 
-    // MARK: - 主面板
+    // MARK: - 骨架
 
     private var content: some View {
         VStack(spacing: 0) {
-            header
+            topBar
             Divider().opacity(0.6)
             ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    if let detail = classroom.errorDetail {
-                        errorBanner(title: classroom.errorTitle ?? "出错了", detail: detail)
-                    }
-                    if classroom.grouped.isEmpty && !classroom.isLoading {
-                        emptyState
-                    } else {
-                        ForEach(classroom.grouped) { group in
-                            section(bucket: group.bucket, list: group.items)
-                        }
-                    }
+                switch tab {
+                case .homework: homeworkBody
+                case .materials: materialsBody
+                case .announcements: announcementsBody
                 }
-                .padding(.horizontal, 22)
-                .padding(.top, 16)
-                .padding(.bottom, 26)
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
             Divider().opacity(0.6)
             footer
         }
     }
 
-    private var header: some View {
-        HStack(spacing: 10) {
-            let s = classroom.stats
-            statTile("\(s.overdue)", "已经逾期", tint: ClassroomPalette.tint(.overdue), highlight: s.overdue > 0)
-            statTile("\(s.week)", "这 7 天内要交", tint: ClassroomPalette.tint(.today), highlight: false)
-            statTile("\(s.total)", "未完成合计", tint: .secondary, highlight: false)
-            if let c = classroom.counts?.courses {
-                statTile("\(c)", "门在上的课", tint: .secondary, highlight: false)
+    private var topBar: some View {
+        HStack(spacing: 12) {
+            Picker("", selection: $tab) {
+                ForEach(ClassroomTab.allCases) { t in
+                    Text("\(t.rawValue) \(count(for: t))").tag(t)
+                }
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .frame(maxWidth: 360)
 
             Spacer()
 
@@ -85,7 +84,52 @@ struct ClassroomView: View {
             .disabled(classroom.isLoading)
         }
         .padding(.horizontal, 22)
-        .padding(.vertical, 12)
+        .padding(.vertical, 11)
+    }
+
+    private func count(for tab: ClassroomTab) -> Int {
+        switch tab {
+        case .homework: return classroom.items.count
+        case .materials: return classroom.materials.count
+        case .announcements: return classroom.announcements.count
+        }
+    }
+
+    // MARK: - 作业
+
+    private var homeworkBody: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            if let detail = classroom.errorDetail {
+                errorBanner(title: classroom.errorTitle ?? "出错了", detail: detail)
+            }
+            statsRow
+            if classroom.grouped.isEmpty && !classroom.isLoading {
+                emptyState(emoji: "🎉", title: "全部做完了", detail: "没有未完成的作业。")
+            } else {
+                ForEach(classroom.grouped) { group in
+                    homeworkSection(bucket: group.bucket, list: group.items)
+                }
+            }
+        }
+        .padding(.horizontal, 22)
+        .padding(.top, 16)
+        .padding(.bottom, 26)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var statsRow: some View {
+        let s = classroom.stats
+        return HStack(spacing: 10) {
+            statTile("\(s.overdue)", "已经逾期",
+                     tint: ClassroomPalette.tint(.overdue), highlight: s.overdue > 0)
+            statTile("\(s.week)", "这 7 天内要交",
+                     tint: ClassroomPalette.tint(.today), highlight: false)
+            statTile("\(s.total)", "未完成合计", tint: .secondary, highlight: false)
+            if let c = classroom.counts?.courses {
+                statTile("\(c)", "门在上的课", tint: .secondary, highlight: false)
+            }
+            Spacer()
+        }
     }
 
     private func statTile(_ value: String, _ label: String, tint: Color, highlight: Bool) -> some View {
@@ -108,57 +152,47 @@ struct ClassroomView: View {
         )
     }
 
-    // MARK: - 分档
-
     @ViewBuilder
-    private func section(bucket: HomeworkBucket, list: [ClassroomHomework]) -> some View {
+    private func homeworkSection(bucket: HomeworkBucket, list: [ClassroomHomework]) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             Button {
                 if bucket.collapsedByDefault { classroom.toggle(bucket) }
             } label: {
-                HStack(spacing: 7) {
-                    RoundedRectangle(cornerRadius: 1.5)
-                        .fill(ClassroomPalette.tint(bucket))
-                        .frame(width: 3, height: 13)
-                    Text(bucket.title)
-                        .font(.system(size: 12.5, weight: .semibold))
-                    Text("\(list.count)")
-                        .font(.system(size: 11.5))
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
-                    if bucket.collapsedByDefault {
-                        Image(systemName: classroom.isCollapsed(bucket) ? "chevron.right" : "chevron.down")
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                }
-                .contentShape(Rectangle())
+                bucketHeader(bucket: bucket, count: list.count,
+                             collapsible: bucket.collapsedByDefault,
+                             collapsed: classroom.isCollapsed(bucket),
+                             tint: ClassroomPalette.tint(bucket), title: bucket.title)
             }
             .buttonStyle(.plain)
 
             if !classroom.isCollapsed(bucket) {
                 ForEach(list) { item in
-                    card(item, bucket: bucket)
+                    homeworkCard(item, bucket: bucket)
                 }
             }
         }
     }
 
-    private func card(_ item: ClassroomHomework, bucket: HomeworkBucket) -> some View {
+    private func homeworkCard(_ item: ClassroomHomework, bucket: HomeworkBucket) -> some View {
         let courseColor = classroom.color(for: item.course)
         let tint = ClassroomPalette.tint(bucket)
 
         return HStack(alignment: .top, spacing: 11) {
-            RoundedRectangle(cornerRadius: 2)
-                .fill(courseColor)
-                .frame(width: 3)
+            RoundedRectangle(cornerRadius: 2).fill(courseColor).frame(width: 3)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(item.course)
-                    .font(.system(size: 10.5, weight: .semibold))
-                    .foregroundStyle(courseColor)
-                    .lineLimit(1)
+                HStack(spacing: 6) {
+                    Text(item.course)
+                        .font(.system(size: 10.5, weight: .semibold))
+                        .foregroundStyle(courseColor)
+                        .lineLimit(1)
+                    if let t = item.topic, !t.isEmpty {
+                        Text("· \(t)")
+                            .font(.system(size: 10))
+                            .foregroundStyle(.tertiary)
+                            .lineLimit(1)
+                    }
+                }
 
                 Text(item.title)
                     .font(.system(size: 14, weight: .medium))
@@ -212,16 +246,191 @@ struct ClassroomView: View {
             .lineLimit(1)
     }
 
-    // MARK: - 状态
+    // MARK: - 资料
 
-    private var emptyState: some View {
+    private var materialsBody: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            if let detail = classroom.errorDetail {
+                errorBanner(title: classroom.errorTitle ?? "出错了", detail: detail)
+            }
+            if classroom.materials.isEmpty && !classroom.isLoading {
+                emptyState(emoji: "📁", title: "没有资料",
+                           detail: "老师还没在 Classwork 里发过 Materials。")
+            } else {
+                ForEach(classroom.materialGroups) { group in
+                    VStack(alignment: .leading, spacing: 10) {
+                        courseHeader(group.course, count: group.count)
+                        ForEach(group.topics) { topic in
+                            VStack(alignment: .leading, spacing: 5) {
+                                if !topic.topic.isEmpty {
+                                    Text(topic.topic)
+                                        .font(.system(size: 10.5, weight: .medium))
+                                        .foregroundStyle(.secondary)
+                                        .padding(.leading, 2)
+                                }
+                                ForEach(topic.items) { m in
+                                    materialRow(m)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 22)
+        .padding(.top, 16)
+        .padding(.bottom, 26)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func materialRow(_ m: ClassroomMaterial) -> some View {
+        HStack(spacing: 9) {
+            Image(systemName: materialIcon(m.kind))
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .frame(width: 15)
+            Text(m.displayTitle)
+                .font(.system(size: 13))
+                .lineLimit(1)
+            Spacer(minLength: 8)
+            if let url = m.linkURL {
+                Link(destination: url) {
+                    Text("打开").font(.system(size: 10.5))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+            } else {
+                Text("无链接").font(.system(size: 10)).foregroundStyle(.tertiary)
+            }
+        }
+        .padding(.vertical, 7)
+        .padding(.horizontal, 11)
+        .background(RoundedRectangle(cornerRadius: 9).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 9)
+                .strokeBorder(Color.primary.opacity(0.05), lineWidth: 1)
+        )
+    }
+
+    private func materialIcon(_ kind: String?) -> String {
+        switch kind {
+        case "video": return "play.rectangle.fill"
+        case "link": return "link"
+        case "form": return "list.bullet.rectangle"
+        case "drive": return "doc.fill"
+        default: return "doc.text"
+        }
+    }
+
+    // MARK: - 公告
+
+    private var announcementsBody: some View {
+        VStack(alignment: .leading, spacing: 22) {
+            if let detail = classroom.errorDetail {
+                errorBanner(title: classroom.errorTitle ?? "出错了", detail: detail)
+            }
+            if classroom.announcements.isEmpty && !classroom.isLoading {
+                emptyState(emoji: "📣", title: "没有公告",
+                           detail: "老师还没在 Stream 里发过东西。")
+            } else {
+                ForEach(classroom.announcementGroups) { group in
+                    VStack(alignment: .leading, spacing: 8) {
+                        courseHeader(group.course, count: group.items.count)
+                        ForEach(group.items) { a in
+                            announcementCard(a)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 22)
+        .padding(.top, 16)
+        .padding(.bottom, 26)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func announcementCard(_ a: ClassroomAnnouncement) -> some View {
+        let courseColor = classroom.color(for: a.course ?? "")
+        return HStack(alignment: .top, spacing: 11) {
+            RoundedRectangle(cornerRadius: 2)
+                .fill(courseColor.opacity(0.75))
+                .frame(width: 3)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(a.body)
+                    .font(.system(size: 12.5))
+                    .lineLimit(5)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 8) {
+                    Text(ClassroomFmt.ago(a.created, from: classroom.now))
+                        .font(.system(size: 10))
+                        .foregroundStyle(.tertiary)
+                    if let url = a.linkURL {
+                        Link(destination: url) {
+                            Text("在 Classroom 打开").font(.system(size: 10))
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 12)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Color(nsColor: .controlBackgroundColor)))
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(Color.primary.opacity(0.05), lineWidth: 1)
+        )
+    }
+
+    // MARK: - 共用
+
+    private func courseHeader(_ course: String, count: Int) -> some View {
+        HStack(spacing: 7) {
+            Circle()
+                .fill(classroom.color(for: course))
+                .frame(width: 7, height: 7)
+            Text(course)
+                .font(.system(size: 12.5, weight: .semibold))
+                .lineLimit(1)
+            Text("\(count)")
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+            Spacer()
+        }
+    }
+
+    private func bucketHeader(bucket: HomeworkBucket, count: Int, collapsible: Bool,
+                              collapsed: Bool, tint: Color, title: String) -> some View {
+        HStack(spacing: 7) {
+            RoundedRectangle(cornerRadius: 1.5).fill(tint).frame(width: 3, height: 13)
+            Text(title).font(.system(size: 12.5, weight: .semibold))
+            Text("\(count)")
+                .font(.system(size: 11.5))
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+            if collapsible {
+                Image(systemName: collapsed ? "chevron.right" : "chevron.down")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+        }
+        .contentShape(Rectangle())
+    }
+
+    private func emptyState(emoji: String, title: String, detail: String) -> some View {
         VStack(spacing: 8) {
-            Text("🎉").font(.system(size: 34))
-            Text("全部做完了").font(.system(size: 15, weight: .semibold))
-            Text("没有未完成的作业。").font(.system(size: 12)).foregroundStyle(.secondary)
+            Text(emoji).font(.system(size: 34))
+            Text(title).font(.system(size: 15, weight: .semibold))
+            Text(detail).font(.system(size: 12)).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 60)
+        .padding(.vertical, 56)
     }
 
     private var setupPrompt: some View {
