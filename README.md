@@ -1,14 +1,14 @@
 # Kid Reminder
 
 A family homework helper for a primary-school kid. Parents manage everything from a
-web panel on a home Mac Mini; the kid does the work in a native macOS app.
+web panel on a home Mac Mini; the kid does the work in a native macOS app — tasks,
+practice papers, and **what is still outstanding on Google Classroom**.
 
 It started as a daily task checklist and grew into a **practice platform**: besides
 the chore/checklist system (with stamps, a Pokémon collection, and a countdown for
 upcoming events), the kid practices **Chinese dictation (听写)**, **English
 spelling**, **English wrong-answer questions**, **English PSLE Paper 2 (整卷)**,
-and **PSLE Science open-ended questions** — all graded and tracked together — and
-sees what is still outstanding on **Google Classroom**.
+and **PSLE Science open-ended questions** — all graded and tracked together.
 
 The rest runs on the home LAN: the backend, the question banks and every graded
 session stay on the Mac Mini. The Google Classroom panel is the one piece that
