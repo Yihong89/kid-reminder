@@ -24,6 +24,32 @@ home LAN, so no data leaves the house.
 - **🧪 科学 (Science)** — PSLE Booklet B open-ended, graded per mark point with a keyword auto-grader.
 - **🎙️ TTS** — neural speech for dictation/spelling with a macOS `say` fallback.
 
+## What each feature depends on
+
+Three separate pieces, and no single feature needs all three:
+
+| Feature | Backend<br>(Node, Mac Mini `:2021`) | Neural TTS<br>(Qwen3, `:3091`) | Google<br>Apps Script |
+|---|:---:|:---:|:---:|
+| Tasks / Calendar / Countdown / Stickers | **required** | — | — |
+| 听写 Chinese dictation | **required** | recommended | — |
+| 英语听写 English spelling | **required** | recommended | — |
+| 英语错题 Wrong-answer bank | **required** | recommended | — |
+| 英语试卷 PSLE Paper 2 | **required** | — | — |
+| 科学 Science Booklet B | **required** | — | — |
+| **作业 Google Classroom** | **not used** | — | **required** |
+| Check for updates | — | — | — *(GitHub API)* |
+
+- **Backend** — the Node service on the home Mac Mini. Every practice feature reads its
+  questions and writes its sessions there.
+- **Neural TTS** — a separate local service (Qwen3-TTS on MLX, default
+  `127.0.0.1:3091`). It only affects how the *listening* parts sound. When it is busy or
+  down, the backend falls back to macOS `say` after one retry, so dictation still works —
+  it just sounds robotic. Nothing breaks.
+- **Apps Script** — used by exactly one feature, and the app talks to it **directly**.
+  The backend is not involved, so the homework panel keeps working with the Mac Mini
+  switched off. That is deliberate: the backend listens on `0.0.0.0` over plain HTTP
+  behind a shared PIN, so the Classroom secret must never be sent there.
+
 ## Architecture
 
 ```
