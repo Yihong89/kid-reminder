@@ -6,9 +6,14 @@ web panel on a home Mac Mini; the kid does the work in a native macOS app.
 It started as a daily task checklist and grew into a **practice platform**: besides
 the chore/checklist system (with stamps, a Pokémon collection, and a countdown for
 upcoming events), the kid practices **Chinese dictation (听写)**, **English
-wrong-answer questions**, **English PSLE Paper 2 (整卷)**, and **PSLE Science
-open-ended questions** — all graded and tracked together. The app runs on the
-home LAN, so no data leaves the house.
+spelling**, **English wrong-answer questions**, **English PSLE Paper 2 (整卷)**,
+and **PSLE Science open-ended questions** — all graded and tracked together — and
+sees what is still outstanding on **Google Classroom**.
+
+The rest runs on the home LAN: the backend, the question banks and every graded
+session stay on the Mac Mini. The Google Classroom panel is the one piece that
+reaches outside — it talks to Google through an Apps Script the kid deploys under
+their own account, and its URL and secret live on this Mac only.
 
 **Language: English | [中文](README.zh-CN.md)**
 
@@ -17,8 +22,12 @@ home LAN, so no data leaves the house.
 ## What's inside
 
 - **📋 Tasks** — daily checklist, parent/kid roles, kid-only locking, minutes, ⭐ stamps → Pokémon.
+- **🎓 作业 (Google Classroom)** — what hasn't been turned in, what's waiting to be
+  graded, plus each course's materials and announcements. Sorted by how soon it's due,
+  not by course.
 - **⏳ Countdown** — future-dated events with a live countdown.
 - **📚 听写 (Dictation)** — adaptive weakest-first vocabulary listening tests, parent-graded.
+- **✏️ 英语听写 (English spelling)** — spelling tests over the kid's own word bank, audio for every word.
 - **📖 英语错题 (English wrong answers)** — self-graded bank of the kid's real mistakes.
 - **🇬🇧 英语试卷 (English Paper 2)** — full scanned PSLE prelim papers: grammar, cloze, editing, synthesis, comprehension.
 - **🧪 科学 (Science)** — PSLE Booklet B open-ended, graded per mark point with a keyword auto-grader.
