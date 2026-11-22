@@ -436,3 +436,30 @@ struct EpaperPapersResponse: Codable {
     let papers: [EpaperPaper]
     let mistakeCount: Int
 }
+
+// MARK: - Word Wisely（孩子自己积累的不认识的单词 + 例句）
+
+/// One Word Wisely entry. created_at is the server's localtime string
+/// ("YYYY-MM-DD HH:mm:ss") — the day prefix is what the list groups by, and
+/// since the server runs on the kid's own timezone that day is the day the
+/// word was actually met.
+struct WordWiseEntry: Identifiable, Codable, Equatable {
+    let id: Int
+    let word: String
+    let sentence: String
+    let createdBy: String
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, word, sentence
+        case createdBy = "created_by"
+        case createdAt = "created_at"
+    }
+
+    var day: String { String(createdAt.prefix(10)) }
+}
+
+struct WordWiseListResponse: Codable {
+    let total: Int
+    let words: [WordWiseEntry]
+}

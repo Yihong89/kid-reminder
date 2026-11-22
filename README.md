@@ -28,6 +28,7 @@ their own account, and its URL and secret live on this Mac only.
 - **⏳ Countdown** — future-dated events with a live countdown.
 - **📚 听写 (Dictation)** — adaptive weakest-first vocabulary listening tests, parent-graded.
 - **✏️ 英语听写 (English spelling)** — spelling tests over the kid's own word bank, audio for every word.
+- **🌱 Word Wisely** — the kid's own journal of words they didn't know: word + the sentence it came from, a few a day, grouped by the day they were met.
 - **📖 英语错题 (English wrong answers)** — self-graded bank of the kid's real mistakes.
 - **🇬🇧 英语试卷 (English Paper 2)** — full scanned PSLE prelim papers: grammar, cloze, editing, synthesis, comprehension.
 - **🧪 科学 (Science)** — PSLE Booklet B open-ended, graded per mark point with a keyword auto-grader.
@@ -42,6 +43,7 @@ Three separate pieces, and no single feature needs all three:
 | Tasks / Calendar / Countdown / Stickers | **required** | — | — |
 | 听写 Chinese dictation | **required** | recommended | — |
 | 英语听写 English spelling | **required** | recommended | — |
+| Word Wisely word journal | **required** | — | — |
 | 英语错题 Wrong-answer bank | **required** | recommended | — |
 | 英语试卷 PSLE Paper 2 | **required** | — | — |
 | 科学 Science Booklet B | **required** | — | — |

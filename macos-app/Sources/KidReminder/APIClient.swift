@@ -4,11 +4,13 @@ enum APIError: LocalizedError {
     case badURL
     case network(String)
     case status(Int)
+    case server(String)   // {"error": "..."} from the backend, e.g. a duplicate-word 409
 
     var errorDescription: String? {
         switch self {
         case .badURL: return "Invalid server address"
         case .network(let s): return "Network error: \(s)"
+        case .server(let msg): return msg
         case .status(let c):
             switch c {
             case 401: return "Wrong PIN"
@@ -49,7 +51,16 @@ final class APIClient {
         if let body = body { req.httpBody = body }
         let (data, resp) = try await URLSession.shared.data(for: req)
         guard let http = resp as? HTTPURLResponse else { throw APIError.network("no response") }
-        guard (200..<300).contains(http.statusCode) else { throw APIError.status(http.statusCode) }
+        guard (200..<300).contains(http.statusCode) else {
+            // Every failed JSON response carries {"error": "..."} — show the kid
+            // that message instead of a bare status code when we can read it
+            // ("apple 已经在 Word Wisely 里了" beats "Server error (409)").
+            if let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let msg = obj["error"] as? String, !msg.isEmpty {
+                throw APIError.server(msg)
+            }
+            throw APIError.status(http.statusCode)
+        }
         return data
     }
 
@@ -446,5 +457,39 @@ final class APIClient {
         comps.port = settings.port
         comps.path = "/epaper-images/\(file)"
         return comps.url
+    }
+
+    // MARK: - Word Wisely（每日生词积累，孩子自己录入）
+    //
+    // The kid's own journal: unlike the graded 听写/错题 banks this is entered
+    // entirely from the app. Both roles may add/edit/delete (a fat-fingered
+    // correction shouldn't wait for the parent), which is what the backend
+    // enforces too.
+
+    func wordWiseList(search: String? = nil) async throws -> [WordWiseEntry] {
+        var query = ""
+        if let s = search?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty {
+            var comps = URLComponents()
+            comps.queryItems = [URLQueryItem(name: "search", value: s)]
+            query = comps.percentEncodedQuery.map { "?\($0)" } ?? ""
+        }
+        let data = try await request("/api/wordwise" + query)
+        return try JSONDecoder().decode(WordWiseListResponse.self, from: data).words
+    }
+
+    func addWordWise(word: String, sentence: String) async throws {
+        struct Req: Encodable { let word: String; let sentence: String }
+        let body = try JSONEncoder().encode(Req(word: word, sentence: sentence))
+        _ = try await request("/api/wordwise", method: "POST", body: body)
+    }
+
+    func updateWordWise(id: Int, word: String? = nil, sentence: String? = nil) async throws {
+        struct Req: Encodable { let word: String?; let sentence: String? }
+        let body = try JSONEncoder().encode(Req(word: word, sentence: sentence))
+        _ = try await request("/api/wordwise/\(id)", method: "PATCH", body: body)
+    }
+
+    func deleteWordWise(id: Int) async throws {
+        _ = try await request("/api/wordwise/\(id)", method: "DELETE")
     }
 }

@@ -320,6 +320,7 @@
         <button class="tab" id="tabEpaper" hidden>📘 英语试卷批改</button>
         <button class="tab" id="tabEpaperMistakes" hidden>📕 英语试卷错题本</button>
         <button class="tab" id="tabVocabQuiz" hidden>🎯 词汇测验</button>
+        <button class="tab" id="tabWordWisely" hidden>🌱 Word Wisely</button>
         <button class="tab" id="tabSettings" hidden>⚙️ 设置</button>
       </nav>
 
@@ -548,6 +549,17 @@
           <button class="ghost" id="epaperDrillNext">下一题 →</button>
           <button class="primary" id="epaperDrillSubmit">交卷</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Word Wisely：孩子每天在 App 里记的不认识的单词+例句，按天累计（家长查看/清理） -->
+    <div id="wordWiselyView" hidden>
+      <div class="card">
+        <div class="vocab-filters">
+          <input type="text" id="wwSearch" placeholder="搜索单词 / 例句…" />
+        </div>
+        <div class="vocab-summary" id="wwSummary"></div>
+        <div class="vocab-list" id="wwList"></div>
       </div>
     </div>
 
@@ -1211,6 +1223,7 @@
     $("#tabScienceMistakes").classList.toggle("active", t === "scienceMistakes");
     $("#tabEpaper").classList.toggle("active", t === "epaper");
     $("#tabEpaperMistakes").classList.toggle("active", t === "epaperMistakes");
+    $("#tabWordWisely").classList.toggle("active", t === "wordWisely");
     $("#tabSettings").classList.toggle("active", t === "settings");
     $("#todayView").hidden = t !== "today";
     $("#countdownView").hidden = t !== "countdown";
@@ -1225,8 +1238,9 @@
     $("#scienceMistakesView").hidden = t !== "scienceMistakes";
     $("#epaperView").hidden = t !== "epaper";
     $("#epaperMistakesView").hidden = t !== "epaperMistakes";
+    $("#wordWiselyView").hidden = t !== "wordWisely";
     $("#settingsView").hidden = t !== "settings";
-    const noTaskFab = ["vocab", "enVocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes", "epaper", "epaperMistakes", "settings"].includes(t);
+    const noTaskFab = ["vocab", "enVocab", "dictation", "english", "engRecords", "dictationLists", "science", "scienceMistakes", "epaper", "epaperMistakes", "wordWisely", "settings"].includes(t);
     $("#fabAdd").hidden = noTaskFab; // task FAB doesn't apply to these tabs
     $("#fabAddVocab").hidden = t !== "vocab" || role !== "admin";
     $("#fabAddEnVocab").hidden = t !== "enVocab" || role !== "admin";
@@ -1245,6 +1259,7 @@
     else if (t === "scienceMistakes") { refreshScienceMistakes(); }
     else if (t === "epaper") { refreshEpaper(); refreshEpaperPapers(); }
     else if (t === "epaperMistakes") { refreshEpaperMistakes(); }
+    else if (t === "wordWisely") { refreshWordWisely(); }
     else if (t === "settings") { refreshSettings(); }
   }
 
@@ -1920,9 +1935,11 @@
         sciDecisions[it.id] = {};
         for (const p of it.points) {
           // Pre-fill from the parent's earlier decision if this is a re-review,
-          // otherwise from the keyword matcher's guess.
+          // otherwise from the AI's mark-scheme verdict (Qwen, R1–R9), falling
+          // back to the keyword matcher's guess when no AI verdict exists yet.
           const finalKnown = p.finalHit === 0 || p.finalHit === 1;
-          sciDecisions[it.id][p.markPointId] = finalKnown ? !!p.finalHit : !!p.autoHit;
+          const aiKnown = p.aiHit === 0 || p.aiHit === 1;
+          sciDecisions[it.id][p.markPointId] = finalKnown ? !!p.finalHit : (aiKnown ? !!p.aiHit : !!p.autoHit);
         }
       }
       $("#sciDlgTitle").textContent = readOnly
@@ -1968,11 +1985,17 @@
       row.className = "sci-point-row";
       const autoClass = p.autoHit ? "auto-yes" : "auto-no";
       const autoLabel = p.autoHit ? "自动判：给分" : "自动判：不给分";
+      const aiKnown = p.aiHit === 0 || p.aiHit === 1;
+      const flipped = aiKnown && (!!p.aiHit !== !!p.autoHit);
+      const aiHtml = aiKnown
+        ? `<div class="desc" style="color:${p.aiHit ? "#15803d" : "#b91c1c"}">🤖 Qwen 对照判分标准：${p.aiHit ? "答到，给分" : "没答到"}${flipped ? "（已翻转关键词判定）" : ""}${p.aiReason ? ` —— ${escapeHtml(p.aiReason)}` : ""}</div>`
+        : `<div class="desc" style="color:var(--muted)">🤖 AI 复核中，稍后刷新可见</div>`;
       row.innerHTML = `
         <input type="checkbox" ${readOnly ? "disabled" : ""} ${sciDecisions[it.id][p.markPointId] ? "checked" : ""} />
         <div>
           <div class="kind ${autoClass}">${SCI_KIND_LABEL[p.pointKind] || p.pointKind} <span style="font-weight:400;color:var(--muted)">（${autoLabel}）</span></div>
           <div class="desc">${escapeHtml(p.description)}</div>
+          ${aiHtml}
           ${p.modelAnswerMiss ? '<div class="desc" style="color:#b45309">⚠️ 参考答案本身没写全这个要点，关键词匹配可能漏判 —— 请重点核对孩子的说法</div>' : ''}
         </div>`;
       if (!readOnly) {
@@ -3432,6 +3455,72 @@
   }
   const escapeHtml = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 
+  // ---- Word Wisely (kid's daily word accumulation, entered in the Mac app) --
+  // One GET pulls everything — a kid's own journal is dozens of rows, not
+  // thousands — and the search box filters client-side so typing feels instant.
+  let wwAll = [];
+  async function refreshWordWisely() {
+    try {
+      const data = await api("/api/wordwise");
+      wwAll = data.words;
+      renderWordWisely();
+    } catch (e) { showErr(e.message); }
+  }
+  function renderWordWisely() {
+    const q = $("#wwSearch").value.trim().toLowerCase();
+    const shown = q
+      ? wwAll.filter((w) => w.word.toLowerCase().includes(q) || w.sentence.toLowerCase().includes(q))
+      : wwAll;
+    $("#wwSummary").textContent = wwAll.length
+      ? `已积累 ${wwAll.length} 个单词` + (q ? ` · 匹配 ${shown.length} 个` : "")
+      : "";
+    const el = $("#wwList");
+    el.innerHTML = "";
+    if (!shown.length) {
+      el.innerHTML = wwAll.length
+        ? '<div class="empty">没有匹配的单词</div>'
+        : '<div class="empty">还没有积累单词 —— 孩子在 App 的 Word Wisely 里把不认识的单词和例句记进来后，会按天显示在这里</div>';
+      return;
+    }
+    // group by calendar day (created_at is stored in server localtime)
+    const byDay = new Map();
+    for (const w of shown) {
+      const day = String(w.created_at).slice(0, 10);
+      if (!byDay.has(day)) byDay.set(day, []);
+      byDay.get(day).push(w);
+    }
+    for (const [day, items] of byDay) el.appendChild(wwDayGroup(day, items));
+  }
+  function wwDayGroup(day, items) {
+    const wrap = document.createElement("div");
+    wrap.className = "card";
+    const label = day === todayStr() ? "今天" : prettyDate(day);
+    wrap.innerHTML = `<div class="vocab-summary">📅 ${escapeHtml(label)} · ${items.length} 个词</div>`;
+    const list = document.createElement("div");
+    list.className = "vocab-list";
+    for (const w of items) list.appendChild(wwRow(w));
+    wrap.appendChild(list);
+    return wrap;
+  }
+  function wwRow(w) {
+    const row = document.createElement("div");
+    row.className = "grade-item";
+    row.innerHTML = `
+      <div class="info">
+        <div class="word-line">${escapeHtml(w.word)}</div>
+        <div class="sentence">${escapeHtml(w.sentence)}</div>
+      </div>
+      ${w.created_by === "admin" ? '<div class="badge parent">家长</div>' : ""}
+      <div class="grade-toggle"><button class="del" title="删除">🗑</button></div>`;
+    row.querySelector(".del").onclick = async () => {
+      if (!confirm(`从 Word Wisely 里删除"${w.word}"？`)) return;
+      try { await api(`/api/wordwise/${w.id}`, { method: "DELETE" }); refreshWordWisely(); }
+      catch (e) { showErr(e.message); }
+    };
+    return row;
+  }
+  $("#wwSearch").addEventListener("input", renderWordWisely);
+
   // ---- pin gate -----------------------------------------------------------
   async function unlock() {
     const value = $("#pinInput").value.trim();
@@ -3482,6 +3571,8 @@
     $("#tabEpaperMistakes").onclick = () => setTab("epaperMistakes");
     $("#tabVocabQuiz").onclick = () => { location.href = "/quiz"; };
     $("#tabVocabQuiz").hidden = role !== "admin";
+    $("#tabWordWisely").onclick = () => setTab("wordWisely");
+    $("#tabWordWisely").hidden = role !== "admin"; // Word Wisely：孩子在 App 里录入，家长在这里查看累计
     $("#tabSettings").onclick = () => setTab("settings");
     $("#settingsSave").onclick = saveSettings;
     $("#tabEpaperMistakes").hidden = role !== "admin";

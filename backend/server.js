@@ -45,6 +45,10 @@
 //   GET  /api/english/sessions/:id         -> practice-set detail w/ answers       [X-Admin-Pin]
 //   DELETE /api/english/sessions/:id       -> delete a practice-set record         [X-Admin-Pin]
 //   GET  /english-audio/:id.wav           -> TTS audio for a spelling question (cached)
+//   GET  /api/wordwise                    -> Word Wise accumulation list (?search=)  [X-Admin-Pin or X-Kid-Pin]
+//   POST /api/wordwise                    -> add a word + example sentence (dupes rejected)  [X-Admin-Pin or X-Kid-Pin]
+//   PATCH /api/wordwise/:id               -> fix a word/sentence typo              [X-Admin-Pin or X-Kid-Pin]
+//   DELETE /api/wordwise/:id              -> remove an entry                       [X-Admin-Pin or X-Kid-Pin]
 //
 // Env vars: PORT (default 2021), ADMIN_PIN (default 1234), DB_PATH,
 //           TTS_SERVICE_URL (default http://127.0.0.1:3091), TTS_INSTRUCT (voice style),
@@ -693,6 +697,20 @@ db.exec(`
     value      TEXT NOT NULL,
     updated_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+  -- Word Wise (2026-11): the kid's own accumulation journal — every word they
+  -- met and didn't know goes in here with the sentence it came from, one entry
+  -- per word (UNIQUE on lower(word) so a re-add is a 409, not a second row).
+  -- created_at uses localtime on purpose: this table is browsed grouped by
+  -- "the day the kid found the word", and on a UTC+8 machine datetime('now')
+  -- would file any pre-08:00 entry under yesterday.
+  CREATE TABLE IF NOT EXISTS word_wise (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    word         TEXT NOT NULL,
+    sentence     TEXT NOT NULL,
+    created_by   TEXT NOT NULL DEFAULT 'kid',   -- 'kid' | 'admin', same distinction as tasks.created_by
+    created_at   TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS word_wise_unique ON word_wise (lower(word));
 `);
 // migrate older databases that predate newer columns
 try { db.exec("ALTER TABLE completions ADD COLUMN minutes INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
@@ -725,6 +743,11 @@ try { db.exec("ALTER TABLE science_sessions ADD COLUMN mode TEXT NOT NULL DEFAUL
 try { db.exec("ALTER TABLE science_sessions ADD COLUMN paper_key TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_sessions ADD COLUMN school TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 try { db.exec("ALTER TABLE science_sessions ADD COLUMN year INTEGER"); } catch { /* exists */ }
+// AI 复核（oeq-grader 科学路径 → Mac Studio Qwen 对照 R1–R9 判分标准）。
+// auto_hit 仍是提交那一刻的关键词基线（审计不动它）；ai_hit 为复核结果，
+// NULL = 还没复核/复核不可用 —— 读取方按 COALESCE(ai_hit, auto_hit) 出有效分。
+try { db.exec("ALTER TABLE science_item_points ADD COLUMN ai_hit INTEGER"); } catch { /* exists */ }
+try { db.exec("ALTER TABLE science_item_points ADD COLUMN ai_reason TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 // Full comprehension passage for a paper's comprehension_oeq questions, shown
 // once on the right of the runner. Stored per-question (duplicated across that
 // paper's oeq rows) so the grouping step can pick it up from any item; empty
@@ -996,7 +1019,7 @@ function readBody(req) {
 // in the request *body*, so recording its body would write the admin PIN into
 // the database in plaintext. scrubBody() strips pin-like keys as a second layer
 // in case a future endpoint does the same thing.
-const AUDIT_PATHS = /^\/api\/(stamps|unlock|tasks|vocab|dictation|dictation-lists|english|science|epaper)(\/|$)/;
+const AUDIT_PATHS = /^\/api\/(stamps|unlock|tasks|vocab|wordwise|dictation|dictation-lists|english|science|epaper)(\/|$)/;
 const AUDIT_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
 
 function auditRole(req) {
@@ -1273,6 +1296,64 @@ function epaperAutoHit(markPoint, answer) {
   const text = normalizeEnglishAnswer(answer);
   const groups = scienceParse(markPoint.keywords, []);
   return groups.every((g) => scienceGroupHit(text, g));
+}
+
+// ------------------------------------ 科学 OEQ: AI 对照判分标准复核（Qwen-Studio）
+// 科学关键词和英语同款问题：精确但召回差，而这边更严重 —— 库内校准过的
+// final_hit ≠ auto_hit 覆盖率达到两成。epaper 的经验直接搬：提交后把**全部**
+// 得分点（不只漏判的 —— 关键词误命中也在翻错方向）交给 oeq-grader 的
+// section=science 路径，由 Mac Studio 上的 Qwen 对照 R1–R9 判分标准逐点复核
+// （3 票多数，标准与翻车案例都在 oeq-grader/lib/science.js）。
+// Fire-and-forget 与 epaperRunAiSuggest 同款：孩子的答案已落库，10-30s 的
+// 模型调用绝不吊在请求上；失败静默，ai_hit 保持 NULL（= 没复核，读取方
+// 回退关键词分）。
+function scienceRunAiSuggest(item, question, answer, points) {
+  (async () => {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 180000);
+    try {
+      const res = await fetch(`${OEQ_GRADER_URL}/api/v1/grade`, {
+        method: "POST",
+        signal: ctrl.signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: {
+            prompt: question.prompt,
+            marks: Number(question.marks) || 1,
+            section: "science",
+            context: question.context || "",
+            questionType: question.question_type || "",
+            topic: question.topic || "",
+            doNotAccept: scienceParse(question.do_not_accept, []),
+          },
+          markPoints: points.map((p) => ({
+            seq: p.seq,
+            description: p.description,
+            pointKind: p.point_kind,
+            keywords: scienceParse(p.keywords, []),
+            anyOf: scienceParse(p.any_of, null) || undefined,
+          })),
+          answer: answer || "",
+        }),
+      });
+      if (!res.ok) { console.error(`[sci-ai] item ${item.id}: grader HTTP ${res.status}`); return; }
+      const out = await res.json();
+      const bySeq = new Map(points.map((p) => [p.seq, p.id]));
+      let wrote = 0;
+      for (const p of out.points || []) {
+        const v = String(p.aiVerdict || "").toLowerCase();
+        if (v !== "yes" && v !== "no") continue;   // 平票/没判 → 不写，回退关键词
+        const mpId = bySeq.get(Number(p.seq));
+        if (mpId == null) continue;
+        db.prepare("UPDATE science_item_points SET ai_hit = ?, ai_reason = ? WHERE item_id = ? AND mark_point_id = ?")
+          .run(v === "yes" ? 1 : 0, String(p.aiReason || "").slice(0, 400), item.id, mpId);
+        wrote++;
+      }
+      console.log(`[sci-ai] item ${item.id}: ${wrote}/${points.length} 点复核落库 (${out.ai?.model || "?"}, ${out.ai?.ms || "?"}ms)`);
+    } catch (e) {
+      console.error(`[sci-ai] item ${item.id}: ${e.message}`);   // 失败静默 —— 只是没有建议
+    } finally { clearTimeout(timer); }
+  })();
 }
 
 // ------------------------------------ 英语试卷 OEQ: 本地 AI 复核（兜底建议）
@@ -2840,6 +2921,86 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
+    // --- Word Wise: 孩子每天积累不认识的单词 + 例句 ---
+    // Mac app is the kid's entry point; the web tab is the parent's browsing
+    // view. Both roles get full CRUD on purpose — a kid who fat-fingers a
+    // correction should be able to fix or delete their own entry without
+    // waiting for the parent, the same stance tasks take with kid-created ones.
+    if (pathname === "/api/wordwise" && (method === "GET" || method === "POST")) {
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isKid && !isAdmin) return sendJSON(401, { error: "kid or admin pin required" });
+
+      if (method === "GET") {
+        const search = (url.searchParams.get("search") || "").trim().toLowerCase();
+        const where = search ? "WHERE lower(word) LIKE ? OR lower(sentence) LIKE ?" : "";
+        const params = search ? [`%${search}%`, `%${search}%`] : [];
+        const words = db
+          .prepare(`SELECT * FROM word_wise ${where} ORDER BY date(created_at) DESC, id DESC`)
+          .all(...params);
+        return sendJSON(200, { total: words.length, words });
+      }
+
+      const body = await readBody(req);
+      const word = String(body.word || "").trim();
+      const sentence = String(body.sentence || "").trim();
+      if (!word || !sentence) return sendJSON(400, { error: "word and sentence are required" });
+      try {
+        const info = db
+          .prepare("INSERT INTO word_wise (word, sentence, created_by) VALUES (?, ?, ?)")
+          .run(word, sentence, isAdmin ? "admin" : "kid");
+        const row = db.prepare("SELECT * FROM word_wise WHERE id = ?").get(Number(info.lastInsertRowid));
+        return sendJSON(201, row);
+      } catch (err) {
+        if (String(err.message).includes("UNIQUE")) return sendJSON(409, { error: `"${word}" is already in Word Wise` });
+        throw err;
+      }
+    }
+
+    const wordWiseMatch = pathname.match(/^\/api\/wordwise\/(\d+)$/);
+    if (wordWiseMatch) {
+      const id = Number(wordWiseMatch[1]);
+      const isKid = req.headers["x-kid-pin"] === KID_PIN;
+      const isAdmin = req.headers["x-admin-pin"] === ADMIN_PIN;
+      if (!isKid && !isAdmin) return sendJSON(401, { error: "kid or admin pin required" });
+
+      if (method === "PATCH") {
+        const existing = db.prepare("SELECT id FROM word_wise WHERE id = ?").get(id);
+        if (!existing) return sendJSON(404, { error: "entry not found" });
+        const body = await readBody(req);
+        const sets = [];
+        const vals = [];
+        if (body.word !== undefined) {
+          const word = String(body.word).trim();
+          if (!word) return sendJSON(400, { error: "word cannot be empty" });
+          sets.push("word = ?");
+          vals.push(word);
+        }
+        if (body.sentence !== undefined) {
+          const sentence = String(body.sentence).trim();
+          if (!sentence) return sendJSON(400, { error: "sentence cannot be empty" });
+          sets.push("sentence = ?");
+          vals.push(sentence);
+        }
+        if (!sets.length) return sendJSON(400, { error: "nothing to update" });
+        vals.push(id);
+        try {
+          const info = db.prepare(`UPDATE word_wise SET ${sets.join(", ")} WHERE id = ?`).run(...vals);
+          if (!info.changes) return sendJSON(404, { error: "entry not found" });
+          return sendJSON(200, { ok: true });
+        } catch (err) {
+          if (String(err.message).includes("UNIQUE")) return sendJSON(409, { error: "another entry already has that word" });
+          throw err;
+        }
+      }
+
+      if (method === "DELETE") {
+        const info = db.prepare("DELETE FROM word_wise WHERE id = ?").run(id);
+        if (!info.changes) return sendJSON(404, { error: "entry not found" });
+        return sendJSON(200, { ok: true });
+      }
+    }
+
     // --- dictation audio: lazily synthesized + cached, served as static files ---
     if (method === "GET" && pathname.startsWith("/dictation-audio/")) {
       const file = path.basename(pathname);
@@ -3623,7 +3784,9 @@ const server = http.createServer(async (req, res) => {
         const rows = db.prepare(`
           SELECT i.id itemId, i.seq, i.question_id questionId, q.theme, q.topic,
                  q.question_type questionType, q.answer_mode answerMode, q.marks,
-                 q.context, q.prompt, q.image, i.auto_score autoScore
+                 q.context, q.prompt, q.image, i.auto_score autoScore,
+                 (SELECT SUM(COALESCE(ip.ai_hit, ip.auto_hit)) FROM science_item_points ip
+                   WHERE ip.item_id = i.id) aiScore
             FROM science_session_items i JOIN science_questions q ON q.id = i.question_id
            WHERE i.session_id = ? ORDER BY i.seq`).all(existing.id);
         const existingSession = db.prepare("SELECT mode FROM science_sessions WHERE id = ?").get(existing.id);
@@ -3642,6 +3805,10 @@ const server = http.createServer(async (req, res) => {
           // it, matching the fresh-create path where the key is simply absent
           // (an optional Swift field decodes a missing key as nil).
           autoScore: it.autoScore,
+          // AI 复核后的有效分（COALESCE(ai_hit, auto_hit) 逐点求和）；
+          // 复核未完成时为 null，客户端回退 autoScore。Swift 侧是可选字段，
+          // 旧版 App 忽略这个键不会坏。
+          aiScore: it.aiScore,
         }));
         return sendJSON(200, { sessionId: existing.id, mode: existingSession.mode, items });
       }
@@ -3752,17 +3919,24 @@ const server = http.createServer(async (req, res) => {
         item.auto_score = auto;
       }
 
-      const hits = db.prepare("SELECT mark_point_id, auto_hit FROM science_item_points WHERE item_id = ?").all(itemId);
+      // AI 复核（Qwen-Studio 对照判分标准）：不吊在本请求上，完成后覆盖 ai_hit。
+      scienceRunAiSuggest(item, q, answer, points);
+
+      const hits = db.prepare("SELECT mark_point_id, auto_hit, ai_hit, ai_reason FROM science_item_points WHERE item_id = ?").all(itemId);
       const hitBy = new Map(hits.map((h) => [h.mark_point_id, h.auto_hit]));
+      const aiBy = new Map(hits.map((h) => [h.mark_point_id, h]));
       return sendJSON(200, {
         autoScore: item.auto_score,
         marks: q.marks,
         modelAnswer: q.model_answer,
         doNotAccept: scienceParse(q.do_not_accept, []),
         provisional: true,   // a parent still has to confirm this
+        aiPending: true,     // 复核进行中，App 稍后重取可拿到 aiHit
         points: points.map((p) => ({
           markPointId: p.id, seq: p.seq, pointKind: p.point_kind,
           description: p.description, autoHit: (hitBy.get(p.id) || 0) === 1,
+          aiHit: (aiBy.get(p.id) || {}).ai_hit ?? null,
+          aiReason: (aiBy.get(p.id) || {}).ai_reason || "",
         })),
       });
     }
@@ -3812,7 +3986,7 @@ const server = http.createServer(async (req, res) => {
         const pts = db.prepare(`
           SELECT mp.id markPointId, mp.seq, mp.point_kind pointKind, mp.description,
                  mp.keywords, mp.any_of, mp.need_n,
-                 ip.auto_hit autoHit, ip.final_hit finalHit
+                 ip.auto_hit autoHit, ip.final_hit finalHit, ip.ai_hit aiHit, ip.ai_reason aiReason
             FROM science_mark_points mp
             LEFT JOIN science_item_points ip
                    ON ip.mark_point_id = mp.id AND ip.item_id = ?
@@ -3833,6 +4007,7 @@ const server = http.createServer(async (req, res) => {
             return {
               markPointId: p.markPointId, seq: p.seq, pointKind: p.pointKind,
               description: p.description, autoHit: p.autoHit, finalHit: p.finalHit,
+              aiHit: p.aiHit, aiReason: p.aiReason,
               modelAnswerMiss,
             };
           });
