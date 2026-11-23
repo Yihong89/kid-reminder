@@ -134,10 +134,20 @@ function synthesizeWithSay(text, voice, outFile) {
 // Tries the Qwen3 service (with one retry after a brief pause), falling back to `say`
 // if both attempts fail — so a busy/unavailable TTS backend still yields *some* audio
 // for the 🔊 button instead of a dead one. Writes the result straight to `file`.
-async function synthesizeToFile(file, text, instruct, sayVoice) {
+//
+// 自定义听写表是自由文本，语言只能按字符占比估：CJK 字符占多数就当中文，
+// 明显是拉丁字母的当英文，各占一半这种拿不准的留给 auto（服务端默认）。
+function langForText(text) {
+  const cjk = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+  const latin = (text.match(/[A-Za-z]/g) || []).length;
+  if (cjk === 0 && latin === 0) return null;
+  return cjk >= latin ? "chinese" : "english";
+}
+
+async function synthesizeToFile(file, text, instruct, sayVoice, lang = null) {
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      fs.writeFileSync(file, await synthesizeSpeech(text, instruct));
+      fs.writeFileSync(file, await synthesizeSpeech(text, instruct, lang));
       return;
     } catch (err) {
       if (attempt === 0) await new Promise((r) => setTimeout(r, 2000));
@@ -192,8 +202,15 @@ function buildWav({ sampleRate, channels, bitsPerSample, data }) {
 
 // Calls /tts-stream (Server-Sent Events: `data: {"audio": "<base64 wav segment>", "isFinal": bool}`
 // per ~2s segment) and stitches the segments back into one complete WAV.
-async function synthesizeSpeech(text, instruct = TTS_INSTRUCT) {
-  const url = `${TTS_SERVICE_URL}/tts-stream?${new URLSearchParams({ text, instruct })}`;
+async function synthesizeSpeech(text, instruct = TTS_INSTRUCT, lang = null) {
+  // lang pins the model's output channel ("chinese"/"english"). Never leave
+  // dictation text to the service's auto-detector: on 2026-11-23 it read an
+  // unmistakably-Mandarin 听写 sentence ("慨然。他慨然答应帮助同学补习数学…")
+  // as Cantonese and the kid got 粤语 for a P5 Chinese word. Callers know the
+  // language; say so. (null = auto, fine for genuinely mixed content.)
+  const params = { text, instruct };
+  if (lang) params.lang = lang;
+  const url = `${TTS_SERVICE_URL}/tts-stream?${new URLSearchParams(params)}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`tts service HTTP ${res.status}`);
   const reader = res.body.getReader();
@@ -245,7 +262,7 @@ async function ensureDictationAudio(wordId, word, sentence, language) {
     // sentence; English dictation reads the same way but with a regular period+space —
     // ASCII punctuation here, not the zh one, or the TTS mispronounces the pause.
     const text = isEn ? `${word}. ${sentence}` : `${word}。${sentence}`;
-    await synthesizeToFile(file, text, isEn ? TTS_INSTRUCT_EN : TTS_INSTRUCT, isEn ? SAY_VOICE_EN : SAY_VOICE_ZH);
+    await synthesizeToFile(file, text, isEn ? TTS_INSTRUCT_EN : TTS_INSTRUCT, isEn ? SAY_VOICE_EN : SAY_VOICE_ZH, isEn ? "english" : "chinese");
     return file;
   })();
   inFlightDictationAudio.set(wordId, promise);
@@ -288,7 +305,9 @@ async function ensureCustomDictationAudio(itemId, text) {
   if (fs.existsSync(file)) return file;
   if (inFlightCustomDictationAudio.has(itemId)) return inFlightCustomDictationAudio.get(itemId);
   const promise = (async () => {
-    await synthesizeToFile(file, text, TTS_INSTRUCT, SAY_VOICE_ZH);
+    // 自由文本可能中文也可能英文短语，按字符占比猜一个再显式传给 TTS（宁缺毋猜时
+    // 传 null=auto）。兜底 say 语音仍按表配置的中文声，与历史行为一致。
+    await synthesizeToFile(file, text, TTS_INSTRUCT, SAY_VOICE_ZH, langForText(text));
     return file;
   })();
   inFlightCustomDictationAudio.set(itemId, promise);
@@ -339,7 +358,7 @@ async function ensureEnglishAudio(questionId, prompt, correctAnswer) {
   const file = path.join(ENGLISH_AUDIO_DIR, `${questionId}.wav`);
   if (fs.existsSync(file)) return file;
   const text = fillBlankSentence(prompt, correctAnswer);
-  await synthesizeToFile(file, text, TTS_INSTRUCT_EN, SAY_VOICE_EN);
+  await synthesizeToFile(file, text, TTS_INSTRUCT_EN, SAY_VOICE_EN, "english");
   return file;
 }
 function deleteEnglishAudio(questionId) {
