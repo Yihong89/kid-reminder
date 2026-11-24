@@ -2264,6 +2264,169 @@ function epaperReportPdf(html, timeoutMs = 25000) {
   });
 }
 
+// 句子改写 + 阅读理解「Booklet B」打印讲义 -----------------------------------
+// 这两类题不在线上作答（paper 模式开 session 时已排除，见 POST /api/epaper/sessions）：
+// 孩子把线上题做完，app 自动把这份 PDF 下载到「下载」文件夹并打开，打印后在纸上完成。
+// 2026-11-03 曾一次性批量生成过全部旧卷，之后新导入的卷没有讲义，app 又静默跳过，
+// 于是 2026-11-24 家长投诉「app 让孩子在屏幕上做句子改写」。现在改成服务端按需生成：
+// 版式复刻原版（蓝色章节条、原文整页图、红色分值、答题横线、表格），走 mistakes.pdf
+// 同一套本机 Chrome 渲染。缓存在 handouts/<paper_key>.pdf，自愈式失效：题干或原文图
+// 只要比 PDF 新就重渲染，导入工具重新导卷后无需任何手动清理。
+const HANDOUTS_DIR = path.join(__dirname, "handouts");
+// 模版改版时 +1：由**本服务**生成过的讲义（带旁车 .ver 文件）会重渲染。
+// 3: 原文图限高整页显示（v2 把竖长原文图劈成了两页）。
+// 11-03 那批没有旁车文件的旧 PDF 视为合格存量，不主动重刷（版式更好，含特例表格），
+// 题干/原文图更新后仍会按 mtime 自动重建。
+// 4: 去掉图页后重复的分页符（v3 多出一页空白页）。
+const HANDOUT_TEMPLATE_VERSION = "4";
+const handoutInFlight = new Map(); // paperKey -> Promise<Buffer|null>
+
+function epaperHandoutFresh(db, paperKey, file) {
+  let mt;
+  try { mt = fs.statSync(file).mtimeMs; } catch { return false; }
+  try {
+    if (fs.readFileSync(file + ".ver", "utf8").trim() !== HANDOUT_TEMPLATE_VERSION) return false;
+  } catch { /* 无旁车 = 11-03 存量批次，照常供给 */ }
+  // created_at 是 datetime('now')（UTC 文本）；mtimeMs 是纪元毫秒，可直接比。
+  const q = db.prepare(
+    `SELECT MAX(datetime(created_at)) AS newest FROM epaper_questions
+      WHERE paper_key = ? AND section IN ('synthesis', 'comprehension_oeq')`
+  ).get(paperKey);
+  if (q && q.newest && Date.parse(q.newest.replace(" ", "T") + "Z") > mt) return false;
+  try {
+    if (fs.statSync(path.join(EPAPER_IMAGES_DIR, `${paperKey}-passage.png`)).mtimeMs > mt) return false;
+  } catch { /* 没有原文图不算过期 */ }
+  return true;
+}
+
+function handoutEsc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// 题干 → HTML。支持：[2m] 分值标红、markdown 管道表格（True/False 那类）、换行。
+function handoutPromptHTML(raw) {
+  let t = handoutEsc(raw);
+  t = t.replace(/\[(\d+\s*m)\]/g, '<span class="mk">[$1]</span>');
+  const out = [];
+  let table = [];
+  const flush = () => {
+    if (!table.length) return;
+    const rows = table.map((line) => line.replace(/^\||\|$/g, "").split("|").map((c) => c.trim()));
+    let head = null;
+    const body = [];
+    for (const cells of rows) {
+      if (cells.every((c) => /^:?-{2,}:?$/.test(c) || c === "")) { continue; }
+      if (head === null) head = cells; else body.push(cells);
+    }
+    let html = '<table class="tbl">';
+    if (head) html += "<tr>" + head.map((c) => `<th>${c}</th>`).join("") + "</tr>";
+    for (const cells of body) html += "<tr>" + cells.map((c) => `<td>${c}</td>`).join("") + "</tr>";
+    out.push(html + "</table>");
+    table = [];
+  };
+  for (const line of t.split("\n")) {
+    if (/^\s*\|/.test(line)) { table.push(line); continue; }
+    flush();
+    out.push(line);
+  }
+  flush();
+  return out.join("<br>").replace(/(?:<br>)+$/, "");
+}
+
+function epaperBuildHandoutHTML(db, paperKey) {
+  const rows = db.prepare(
+    `SELECT * FROM epaper_questions
+      WHERE paper_key = ? AND section IN ('synthesis', 'comprehension_oeq')
+      ORDER BY CASE section WHEN 'synthesis' THEN 0 ELSE 1 END, paper_seq ASC`
+  ).all(paperKey);
+  if (!rows.length) return null;
+
+  const meta = db.prepare(
+    "SELECT school, year FROM epaper_questions WHERE paper_key = ? LIMIT 1"
+  ).get(paperKey) || {};
+  const school = meta.school || paperKey;
+  const lv = /\(P(\d)\)/.exec(school);
+  const levelTag = lv ? "" : "P6 ";
+  const synth = rows.filter((r) => r.section === "synthesis");
+  const oeq = rows.filter((r) => r.section === "comprehension_oeq");
+  const marks = (list) => list.reduce((a, r) => a + (r.marks || 1), 0);
+  const total = marks(synth) + marks(oeq);
+
+  const imgFile = path.join(EPAPER_IMAGES_DIR, `${paperKey}-passage.png`);
+  let passageTag = "";
+  let passageNote = "原文见试卷；题目里的行号就是原文右侧的编号。";
+  try {
+    const b64 = fs.readFileSync(imgFile).toString("base64");
+    passageTag = `<div class="passage-page"><img src="data:image/png;base64,${b64}" alt="passage"></div>`;
+    passageNote = "根据上一页的原文回答。题目里的行号就是原文右侧的编号。";
+  } catch { /* 没裁原文图：不带图页 */ }
+
+  const lines = (n) => '<div class="ans">' + '<div class="rl"></div>'.repeat(n) + "</div>";
+  const uni = synth.length && synth.every((r) => (r.marks || 1) === (synth[0].marks || 1))
+    ? ` (${synth.length} × ${synth[0].marks || 1} = ${marks(synth)} marks)` : ` (${marks(synth)} marks)`;
+
+  const secA = synth.length ? `
+    <h2>Section A · Sentence Synthesis${uni}</h2>
+    <div class="note">For each question, rewrite the sentence(s) in ONE sentence, keeping the same meaning, beginning with the words given.</div>
+    ${synth.map((r, i) => `<div class="q"><b>Q${i + 1}</b> ${handoutPromptHTML(r.prompt)}${lines(2)}</div>`).join("")}` : "";
+  const secB = oeq.length ? `
+    ${synth.length ? '<div class="brk"></div>' : ""}
+    ${passageTag}
+    <h2>Section B · Comprehension Open-Ended (${marks(oeq)} marks)</h2>
+    <div class="note zh">${passageNote}</div>
+    ${oeq.map((r, i) => `<div class="q"><b class="num">${i + 1}.</b> ${handoutPromptHTML(r.prompt)}${lines((r.marks || 1) + 1)}</div>`).join("")}` : "";
+
+  return `<!doctype html><html><head><meta charset="utf-8"><style>
+    @page { size: A4; margin: 16mm 18mm; }
+    body { font-family: "Times New Roman", "Songti SC", serif; font-size: 12pt; color: #111; margin: 0; }
+    h1 { font-family: -apple-system, "Helvetica Neue", sans-serif; font-size: 19pt; margin: 0 0 2px; }
+    .sub { font-family: -apple-system, sans-serif; color: #333; font-size: 10pt; margin-bottom: 14px; }
+    h2 { font-family: -apple-system, sans-serif; background: #2563a8; color: #fff; font-size: 12.5pt;
+         padding: 8px 12px; border-radius: 5px; margin: 14px 0 10px; }
+    .note { background: #eef4fb; border-left: 3px solid #2563a8; color: #333; font-size: 9.5pt;
+            font-family: -apple-system, sans-serif; padding: 7px 10px; margin-bottom: 12px; }
+    .note.zh { font-size: 10pt; }
+    .q { margin: 0 0 14px; page-break-inside: avoid; }
+    .q b { margin-right: 6px; }
+    .q .num { display: inline-block; min-width: 22px; }
+    .mk { color: #b00000; font-weight: bold; }
+    .rl { border-bottom: 1px solid #888; height: 27px; }
+    .ans { margin-top: 8px; }
+    .tbl { border-collapse: collapse; width: 100%; margin-top: 6px; font-size: 11pt; }
+    .tbl th { background: #ececec; border: 1px solid #999; padding: 6px 8px; text-align: left;
+              font-family: -apple-system, sans-serif; font-size: 10pt; }
+    .tbl td { border: 1px solid #999; padding: 14px 8px; min-width: 40px; }
+    .passage-page { page-break-after: always; }
+    .passage-page img { max-width: 100%; max-height: 263mm; display: block; margin: 0 auto; }
+    .brk { page-break-after: always; }
+  </style></head><body>
+    <h1>${handoutEsc(school)} · ${levelTag}English Prelim ${meta.year || ""}</h1>
+    <div class="sub">Booklet B — Sentence Synthesis &amp; Comprehension Open-Ended&nbsp;&nbsp;|&nbsp;&nbsp;${total} marks</div>
+    ${secA}
+    ${secB}
+  </body></html>`;
+}
+
+async function ensureEpaperHandout(db, paperKey) {
+  const file = path.join(HANDOUTS_DIR, `${paperKey}.pdf`);
+  if (epaperHandoutFresh(db, paperKey, file)) return fs.readFileSync(file);
+  if (handoutInFlight.has(paperKey)) return handoutInFlight.get(paperKey);
+  const p = (async () => {
+    const html = epaperBuildHandoutHTML(db, paperKey);
+    if (!html) return null;
+    const buf = await epaperReportPdf(html);
+    fs.mkdirSync(HANDOUTS_DIR, { recursive: true });
+    const tmp = `${file}.tmp${process.pid}`;
+    fs.writeFileSync(tmp, buf);
+    fs.renameSync(tmp, file);
+    fs.writeFileSync(file + ".ver", HANDOUT_TEMPLATE_VERSION);
+    console.log(`[kid-reminder] handout regenerated: ${paperKey}.pdf (${buf.length}B)`);
+    return buf;
+  })().finally(() => handoutInFlight.delete(paperKey));
+  handoutInFlight.set(paperKey, p);
+  return p;
+}
+
 // Returns the full HTML document (string) for a session's mistake report, or
 // null if the session doesn't exist or isn't fully reviewed yet.
 function epaperBuildReportHTML(db, sessionId) {
@@ -4321,8 +4484,13 @@ const server = http.createServer(async (req, res) => {
         label = (f.filterNote ? `错题本 · ${f.filterNote}` : "错题本") + (limit ? ` · 前 ${limit} 题` : "");
         }
       } else if (paperKey) {
+        // 句子改写 + 阅读理解开放题不上线：孩子线上做完其余题后，app 自动下载
+        // 打印讲义（/api/epaper/handout），这两类做在纸上（2026-11-24 家长要求，
+        // 之前这些题也被塞进屏幕逐题作答，和打印讲义重复）。
         const rows = db.prepare(
-          "SELECT id FROM epaper_questions WHERE paper_key = ? ORDER BY paper_seq ASC"
+          `SELECT id FROM epaper_questions
+            WHERE paper_key = ? AND section NOT IN ('synthesis', 'comprehension_oeq')
+           ORDER BY paper_seq ASC`
         ).all(paperKey);
         if (!rows.length) return sendJSON(404, { error: "paper not found" });
         qids = rows.map((r) => r.id);
@@ -4805,9 +4973,10 @@ const server = http.createServer(async (req, res) => {
       if (!ok) return sendJSON(401, { error: "pin required" });
       const paperKey = (url.searchParams.get("paperKey") || "").replace(/[^a-zA-Z0-9_-]/g, "");
       if (!paperKey) return sendJSON(400, { error: "paperKey required" });
-      const file = path.join(__dirname, "handouts", paperKey + ".pdf");
-      if (!fs.existsSync(file)) return sendJSON(404, { error: "no handout for this paper" });
-      const buf = fs.readFileSync(file);
+      let buf = null;
+      try { buf = await ensureEpaperHandout(db, paperKey); }
+      catch (err) { console.error(`[kid-reminder] handout render failed (${paperKey}): ${err.message}`); }
+      if (!buf) return sendJSON(404, { error: "no handout for this paper" });
       res.writeHead(200, {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="${paperKey}-synthesis-comprehension.pdf"`,

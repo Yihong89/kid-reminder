@@ -533,7 +533,11 @@ struct EnglishPaperRunnerView: View {
         VStack(spacing: 16) {
             Text("🎉").font(.system(size: 56))
             Text("做完啦！").font(.title2).bold()
-            Text("选择题、填空题已经批完；问答题交给家长在网页端批改。")
+            // 整卷模式：句子改写 + 阅读理解做在打印讲义上（做完时已自动下载并
+            // 打开），这里把这件事说明白；错题/练习模式仍是线上打字交家长批。
+            Text(session?.mode == "paper"
+                ? "选择题、填空题已经批完。\n📄 打印讲义（句子改写 + 阅读理解）已存进「下载」文件夹并打开，请打印出来做在纸上。"
+                : "选择题、填空题已经批完；问答题交给家长在网页端批改。")
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 

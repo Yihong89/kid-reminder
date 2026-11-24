@@ -202,17 +202,27 @@ pulled from their prelim papers; the papers and the extracted question bank are
 **private** (see below).
 
 - **Full paper, in order** — grammar MCQ, vocabulary MCQ, cloze MCQ, comprehension
-  MCQ, cloze word-bank, editing, cloze open, synthesis, and open-ended comprehension.
-  Each paper is exactly **75 questions / 90 marks**, matching the exam's section split.
+  MCQ, cloze word-bank, editing, and cloze open are answered **on screen**; each
+  paper is exactly **75 questions / 90 marks**, matching the exam's section split.
+- **Booklet B goes on paper** — sentence synthesis and open-ended comprehension
+  are *not* typed. When the kid finishes the online items, the app automatically
+  downloads that paper's printable **Booklet B handout** (synthesis + the full
+  comprehension passage with line numbers + questions with answer lines) into
+  ~/Downloads and opens it; the kid prints it and works those on paper
+  (2026-11-24 parent request). The server renders handouts on demand with local
+  headless Chrome and caches them in `backend/handouts/<paper_key>.pdf`, so a
+  freshly imported paper can never miss its printout; edited questions or a
+  replaced passage image invalidate the cache automatically.
 - **Full context** — cloze/editing passages and the **complete comprehension article**
   are shown in the runner, so the kid reads the real material (for comprehension the
   right-hand panel shows the whole passage, not a fragment; `comprehension_mcq`
   (Q21–25) shows Text 1 poster + Text 2 extract together).
 - **Grading** — objective items (MCQ / fill-in-the-blank) are graded instantly;
-  open-ended comprehension Q66–75 is auto-pre-graded against keyword mark points and
-  **finalised by the parent** on the web admin (which can override any item or
-  mark-point). Wrong answers only enter the shared **错题本** after the parent
-  reviews the paper, never on submit.
+  synthesis and open-ended comprehension live on the printed Booklet B and are
+  checked off paper by the parent. Wrong answers only enter the shared
+  **错题本** after the parent reviews the paper, never on submit. (In
+  错题本/drill mode, where the kid deliberately re-practises one type, oeq items
+  are still answered online and parent-finalised on the web admin.)
 - **Web admin** — `🇬🇧 英语试卷` tab (paper list + review), and a preview so the
   parent can check a paper's answer key before handing it to the kid.
 - **macOS app** — the runner shows the passage and the questions side by side, with
