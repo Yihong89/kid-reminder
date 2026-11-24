@@ -2278,7 +2278,9 @@ const HANDOUTS_DIR = path.join(__dirname, "handouts");
 // 11-03 那批没有旁车文件的旧 PDF 视为合格存量，不主动重刷（版式更好，含特例表格），
 // 题干/原文图更新后仍会按 mtime 自动重建。
 // 4: 去掉图页后重复的分页符（v3 多出一页空白页）。
-const HANDOUT_TEMPLATE_VERSION = "4";
+// 5: 句型转换原句与开局词分行（家长反馈老卷挤一行、新卷 context 里的原句没显示）。
+// 6: context 卷的开局词也走加粗缩进样式，与其余卷一致。
+const HANDOUT_TEMPLATE_VERSION = "6";
 const handoutInFlight = new Map(); // paperKey -> Promise<Buffer|null>
 
 function epaperHandoutFresh(db, paperKey, file) {
@@ -2333,6 +2335,35 @@ function handoutPromptHTML(raw) {
   return out.join("<br>").replace(/(?:<br>)+$/, "");
 }
 
+// 一道句型转换 → 原句一行 + 开局词一行。卷子存法不统一：新导入的原句在 context，
+// 老导入的混在 prompt 里（有的还带 "Rewrite the following…" 前缀指令，有的干脆
+// 原句和开局词直接连着）。统一拆开分行，打印出来题干结构一目了然
+// （2026-11-24 家长反馈：有的卷没显示原句、有的挤在一行）。
+function handoutSynthesisHTML(q) {
+  const bits = [];
+  const ctx = (q.context || "").trim();
+  if (ctx) bits.push(`<span class="src">${handoutPromptHTML(ctx)}</span>`);
+  const p = (q.prompt || "").trim();
+  const m = /^Rewrite\b[^:]*:\s*(?:"((?:[^"\\]|\\.)+)"|'((?:[^'\\]|\\.)+)')\s*([\s\S]*)$/.exec(p);
+  if (m) {
+    // 带引号的规范卷：丢掉重复的 Rewrite 指令（Section 开头已经说过），留原句+开局词
+    bits.push(`<span class="src">${handoutEsc(m[1] || m[2])}</span>`);
+    if ((m[3] || "").trim()) bits.push(`<b class="go">${handoutPromptHTML(m[3].trim())}</b>`);
+  } else if (ctx) {
+    // context 存了原句，那整个 prompt 就是开局词
+    bits.push(`<b class="go">${handoutPromptHTML(p)}</b>`);
+  } else if (/_{3,}/.test(p)) {
+    // 没引号也没 context：含下划线空的最后一句是开局词，前面几句是原句
+    const sents = p.split(/(?<=\.)\s+/);
+    const gi = sents.findIndex((s) => /_{3,}/.test(s));
+    if (gi > 0) {
+      bits.push(`<span class="src">${handoutPromptHTML(sents.slice(0, gi).join(" "))}</span>`);
+      bits.push(`<b class="go">${handoutPromptHTML(sents.slice(gi).join(" "))}</b>`);
+    } else bits.push(handoutPromptHTML(p));
+  } else bits.push(handoutPromptHTML(p));
+  return bits.join("<br>");
+}
+
 function epaperBuildHandoutHTML(db, paperKey) {
   const rows = db.prepare(
     `SELECT * FROM epaper_questions
@@ -2368,7 +2399,7 @@ function epaperBuildHandoutHTML(db, paperKey) {
   const secA = synth.length ? `
     <h2>Section A · Sentence Synthesis${uni}</h2>
     <div class="note">For each question, rewrite the sentence(s) in ONE sentence, keeping the same meaning, beginning with the words given.</div>
-    ${synth.map((r, i) => `<div class="q"><b>Q${i + 1}</b> ${handoutPromptHTML(r.prompt)}${lines(2)}</div>`).join("")}` : "";
+    ${synth.map((r, i) => `<div class="q"><b>Q${i + 1}</b> ${handoutSynthesisHTML(r)}${lines(2)}</div>`).join("")}` : "";
   const secB = oeq.length ? `
     ${synth.length ? '<div class="brk"></div>' : ""}
     ${passageTag}
@@ -2388,6 +2419,7 @@ function epaperBuildHandoutHTML(db, paperKey) {
     .note.zh { font-size: 10pt; }
     .q { margin: 0 0 14px; page-break-inside: avoid; }
     .q b { margin-right: 6px; }
+    .q .src, .q .go { display: block; margin: 1px 0 0 22px; }
     .q .num { display: inline-block; min-width: 22px; }
     .mk { color: #b00000; font-weight: bold; }
     .rl { border-bottom: 1px solid #888; height: 27px; }
