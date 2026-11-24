@@ -5059,7 +5059,9 @@ const server = http.createServer(async (req, res) => {
           // 满分就自动移出，家长批一道阅读理解时会把同一趟里孩子做对的客观题一起
           // 带走 —— 而移出是不可逆的，删掉就再也练不到了。要移出只有一条路：家长
           // 在错题本列表点「✅ 已掌握」。想「别看已经会的」用正确数筛选就行。
-          if (earned < q.marks) {
+          // 阅读理解开放题例外 —— 不收（2026-11-24 家长要求）：这类题连着整篇
+          // 原文才有意义，错题重练时孤立地刷一道问句没价值，纸上重做才对症。
+          if (earned < q.marks && q.section !== "comprehension_oeq") {
             db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
           }
           // 与人工批改统一：满分 → 正确数 +1，否则归零（重错之前攒的不作数）。
