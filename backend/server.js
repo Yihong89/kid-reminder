@@ -46,6 +46,8 @@
 //   DELETE /api/english/sessions/:id       -> delete a practice-set record         [X-Admin-Pin]
 //   GET  /english-audio/:id.wav           -> TTS audio for a spelling question (cached)
 //   GET  /api/wordwise                    -> Word Wise accumulation list (?search=)  [X-Admin-Pin or X-Kid-Pin]
+//   GET  /api/epaper/answers              -> 纸面题答案包: 改写+阅读的答案/得分点/翻译/思路 [X-Admin-Pin]
+//   POST /api/epaper/answers              -> (re)generate the AI translation/analysis  [X-Admin-Pin]
 //   POST /api/wordwise                    -> add a word + example sentence (dupes rejected)  [X-Admin-Pin or X-Kid-Pin]
 //   PATCH /api/wordwise/:id               -> fix a word/sentence typo              [X-Admin-Pin or X-Kid-Pin]
 //   DELETE /api/wordwise/:id              -> remove an entry                       [X-Admin-Pin or X-Kid-Pin]
@@ -59,6 +61,7 @@ const http = require("node:http");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const { execFileSync, execFile } = require("node:child_process");
 const { DatabaseSync } = require("node:sqlite");
 
@@ -674,6 +677,18 @@ db.exec(`
     keywords    TEXT NOT NULL DEFAULT ''   -- JSON [[a,b],[c]] = (a OR b) AND c
   );
   CREATE INDEX IF NOT EXISTS epaper_mark_points_q ON epaper_mark_points(question_id);
+
+  -- AI 生成的家长辅助内容（DeepSeek via oeq-grader），按内容哈希自动失效：
+  -- kind='passage' ref=paper_key，kind='question' ref=source_ref。
+  CREATE TABLE IF NOT EXISTS epaper_ai (
+    kind         TEXT NOT NULL,
+    ref          TEXT NOT NULL,
+    content_hash TEXT NOT NULL,
+    zh           TEXT NOT NULL,
+    model        TEXT NOT NULL DEFAULT '',
+    created_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (kind, ref)
+  );
 
   CREATE TABLE IF NOT EXISTS epaper_sessions (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -2335,32 +2350,28 @@ function handoutPromptHTML(raw) {
   return out.join("<br>").replace(/(?:<br>)+$/, "");
 }
 
-// 一道句型转换 → 原句一行 + 开局词一行。卷子存法不统一：新导入的原句在 context，
-// 老导入的混在 prompt 里（有的还带 "Rewrite the following…" 前缀指令，有的干脆
-// 原句和开局词直接连着）。统一拆开分行，打印出来题干结构一目了然
-// （2026-11-24 家长反馈：有的卷没显示原句、有的挤在一行）。
-function handoutSynthesisHTML(q) {
-  const bits = [];
+// 句型转换的存法在各卷之间不统一：新卷原句在 context；老卷混在 prompt 里（有的
+// 带 "Rewrite…" 指令 + 引号原句，有的干脆原句和开局词连写）。统一拆成
+// {original, opening}，打印讲义和家长答案包共用这一份拆解逻辑。
+function epaperSynthesisParts(q) {
   const ctx = (q.context || "").trim();
-  if (ctx) bits.push(`<span class="src">${handoutPromptHTML(ctx)}</span>`);
+  if (ctx) return { original: ctx, opening: (q.prompt || "").trim() };
   const p = (q.prompt || "").trim();
   const m = /^Rewrite\b[^:]*:\s*(?:"((?:[^"\\]|\\.)+)"|'((?:[^'\\]|\\.)+)')\s*([\s\S]*)$/.exec(p);
-  if (m) {
-    // 带引号的规范卷：丢掉重复的 Rewrite 指令（Section 开头已经说过），留原句+开局词
-    bits.push(`<span class="src">${handoutEsc(m[1] || m[2])}</span>`);
-    if ((m[3] || "").trim()) bits.push(`<b class="go">${handoutPromptHTML(m[3].trim())}</b>`);
-  } else if (ctx) {
-    // context 存了原句，那整个 prompt 就是开局词
-    bits.push(`<b class="go">${handoutPromptHTML(p)}</b>`);
-  } else if (/_{3,}/.test(p)) {
-    // 没引号也没 context：含下划线空的最后一句是开局词，前面几句是原句
+  if (m) return { original: m[1] || m[2] || "", opening: (m[3] || "").trim() };
+  if (/_{3,}/.test(p)) {
     const sents = p.split(/(?<=\.)\s+/);
     const gi = sents.findIndex((s) => /_{3,}/.test(s));
-    if (gi > 0) {
-      bits.push(`<span class="src">${handoutPromptHTML(sents.slice(0, gi).join(" "))}</span>`);
-      bits.push(`<b class="go">${handoutPromptHTML(sents.slice(gi).join(" "))}</b>`);
-    } else bits.push(handoutPromptHTML(p));
-  } else bits.push(handoutPromptHTML(p));
+    if (gi > 0) return { original: sents.slice(0, gi).join(" "), opening: sents.slice(gi).join(" ") };
+  }
+  return { original: "", opening: p };
+}
+
+function handoutSynthesisHTML(q) {
+  const { original, opening } = epaperSynthesisParts(q);
+  const bits = [];
+  if (original) bits.push(`<span class="src">${handoutPromptHTML(original)}</span>`);
+  if (opening) bits.push(`<b class="go">${handoutPromptHTML(opening)}</b>`);
   return bits.join("<br>");
 }
 
@@ -2457,6 +2468,132 @@ async function ensureEpaperHandout(db, paperKey) {
   })().finally(() => handoutInFlight.delete(paperKey));
   handoutInFlight.set(paperKey, p);
   return p;
+}
+
+// ---------------------------------------------------------- 纸面题答案包（家长核对）
+// 句子改写 + 阅读理解开放题孩子在纸上做，家长核对时需要答案：改写题给原句/开局词/
+// 参考答案；开放题给得分点，并由 AI（走 oeq-grader 的 /api/v1/chat 中转 DeepSeek，
+// 密钥单点存放在那边）补家长最想看的两样：原文中文翻译 + 逐题答题思路。
+// 生成结果按内容哈希缓存进 epaper_ai —— 题干/得分点/原文改过自动失效，重新点一下
+// 按钮即重生成。
+function hashText(s) { return crypto.createHash("sha256").update(String(s)).digest("hex").slice(0, 32); }
+
+const epaperAiInFlight = new Map(); // paperKey -> Promise
+
+async function callOeqChat(messages, maxTokens) {
+  const res = await fetch(`${OEQ_GRADER_URL}/api/v1/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages, max_tokens: maxTokens }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.content) throw new Error(data.error || `oeq-grader chat HTTP ${res.status}`);
+  return data;
+}
+
+function epaperAiGet(db, kind, ref, hash) {
+  const row = db.prepare("SELECT zh, content_hash FROM epaper_ai WHERE kind = ? AND ref = ?").get(kind, ref);
+  return row && row.content_hash === hash ? row.zh : "";
+}
+
+function epaperAiPut(db, kind, ref, hash, zh, model) {
+  db.prepare(
+    `INSERT INTO epaper_ai (kind, ref, content_hash, zh, model) VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(kind, ref) DO UPDATE SET content_hash = excluded.content_hash, zh = excluded.zh,
+                                          model = excluded.model, created_at = datetime('now')`
+  ).run(kind, ref, hash, zh, model || "");
+}
+
+// 组答案包。generate=true 时把缺的 AI 部分（逐题思路 + 原文翻译）补齐，force
+// 则全部重出 —— 思路一次调用出全卷（模型看得到全文，跨题指路更准），翻译单独一次。
+async function epaperBuildAnswerKey(db, paperKey, { generate = false, force = false } = {}) {
+  const meta = db.prepare("SELECT school, year FROM epaper_questions WHERE paper_key = ? LIMIT 1").get(paperKey);
+  if (!meta) return { error: "paper not found", status: 404 };
+  const qRows = db.prepare(
+    `SELECT * FROM epaper_questions
+      WHERE paper_key = ? AND section IN ('synthesis','comprehension_oeq')
+      ORDER BY CASE section WHEN 'synthesis' THEN 0 ELSE 1 END, paper_seq`
+  ).all(paperKey);
+  if (!qRows.length) return { error: "这份卷子没有纸面题（句子改写/阅读开放题）", status: 404 };
+
+  const jsonOr = (s, d) => { try { return JSON.parse(s); } catch { return d; } };
+  const pointStmt = db.prepare("SELECT seq, point_kind, description, keywords FROM epaper_mark_points WHERE question_id = ? ORDER BY seq");
+
+  const synthesis = qRows.filter((r) => r.section === "synthesis").map((r) => {
+    const { original, opening } = epaperSynthesisParts(r);
+    return {
+      seq: r.paper_seq, marks: r.marks, original, opening,
+      answers: (r.correct_answer || "").split("/").map((s) => s.trim()).filter(Boolean),
+      explanation: r.explanation || "",
+    };
+  });
+
+  const oeq = [];
+  let passageText = "";
+  for (const r of qRows.filter((x) => x.section === "comprehension_oeq")) {
+    if (!passageText && r.passage) passageText = r.passage;
+    const points = pointStmt.all(r.id).map((p) => ({
+      seq: p.seq, kind: p.point_kind, description: p.description, keywords: jsonOr(p.keywords, []),
+    }));
+    const qHash = hashText(`${r.prompt}\n${points.map((p) => p.description).join("|")}`);
+    oeq.push({
+      seq: r.paper_seq, marks: r.marks, prompt: r.prompt, explanation: r.explanation || "",
+      points, ref: r.source_ref, hash: qHash,
+      analysis: epaperAiGet(db, "question", r.source_ref, qHash),
+    });
+  }
+  const pHash = passageText ? hashText(passageText) : "";
+  let passageZh = pHash ? epaperAiGet(db, "passage", paperKey, pHash) : "";
+
+  const aiIssues = [];
+  if (generate) {
+    const needAnalysis = oeq.filter((q) => force || !q.analysis);
+    if (needAnalysis.length) {
+      const sys = "你是资深新加坡小学英语老师。给家长写每道阅读理解开放题的「答题思路」："
+        + "从原文哪里找（引用行号或段落）、要什么证据或推理、答案该包含哪些关键点。"
+        + "简体中文，每题两三句，站在『孩子还没做、家长还没细读原文』的角度。"
+        + "严格每题输出一行，格式：Q<卷面题号>: <思路>。不要输出其它任何文字。";
+      const listing = needAnalysis.map((q) =>
+        `Q${q.seq} (${q.marks}分): ${q.prompt}\n得分点: ${q.points.map((p) => p.description).join("；") || "（无得分点，按参考答案）"}`
+      ).join("\n");
+      const user = `【原文】\n${passageText || "（原文未入库，仅凭题干和得分点写思路）"}\n\n【题目】\n${listing}`;
+      try {
+        const r = await callOeqChat([{ role: "system", content: sys }, { role: "user", content: user }], 3000);
+        const got = new Map();
+        for (const line of String(r.content).split("\n")) {
+          const m = line.match(/^\s*Q?(\d{1,3})\s*[:：]\s*(.+)$/);
+          if (m) got.set(parseInt(m[1], 10), m[2].trim());
+        }
+        for (const q of needAnalysis) {
+          const text = got.get(q.seq);
+          if (text) { epaperAiPut(db, "question", q.ref, q.hash, text, r.model); q.analysis = text; }
+          else aiIssues.push(`第 ${q.seq} 题的思路模型没有按行返回，可再点一次重试`);
+        }
+      } catch (err) {
+        aiIssues.push(`思路生成失败：${err.message}`);
+      }
+    }
+    if (pHash && (force || !passageZh)) {
+      const sys = "把英文阅读理解原文翻译成忠实、通顺的简体中文，给小学生家长核对答案用。"
+        + "保留段落划分，每段以【第N段】开头；保留人名地名的原文；结尾不要加任何说明或总结。";
+      try {
+        const r = await callOeqChat([{ role: "system", content: sys }, { role: "user", content: passageText }], 4000);
+        passageZh = String(r.content).trim();
+        epaperAiPut(db, "passage", paperKey, pHash, passageZh, r.model);
+      } catch (err) {
+        aiIssues.push(`原文翻译生成失败：${err.message}`);
+      }
+    }
+  }
+
+  const marksTotal = synthesis.reduce((s, q) => s + q.marks, 0) + oeq.reduce((s, q) => s + q.marks, 0);
+  return {
+    paperKey, school: meta.school, year: meta.year, marksTotal,
+    passage: passageText, passageZh,
+    synthesis, oeq,
+    aiReady: !!(pHash ? passageZh : true) && oeq.every((q) => q.analysis),
+    aiIssues,
+  };
 }
 
 // Returns the full HTML document (string) for a session's mistake report, or
@@ -5016,6 +5153,36 @@ const server = http.createServer(async (req, res) => {
         "Cache-Control": "no-store",
       });
       return res.end(buf);
+    }
+
+    if (method === "GET" && pathname === "/api/epaper/answers") {
+      if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+      const paperKey = (url.searchParams.get("paperKey") || "").replace(/[^a-zA-Z0-9_-]/g, "");
+      if (!paperKey) return sendJSON(400, { error: "paperKey required" });
+      const r = await epaperBuildAnswerKey(db, paperKey);
+      if (r.error) return sendJSON(r.status || 400, { error: r.error });
+      return sendJSON(200, r);
+    }
+
+    if (method === "POST" && pathname === "/api/epaper/answers") {
+      if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+      const body = await readBody(req);
+      const paperKey = String(body.paperKey || "").replace(/[^a-zA-Z0-9_-]/g, "");
+      if (!paperKey) return sendJSON(400, { error: "paperKey required" });
+      if (epaperAiInFlight.has(paperKey)) return sendJSON(409, { error: "这份卷的解析正在生成，稍等一下" });
+      const p = (async () => {
+        try { return await epaperBuildAnswerKey(db, paperKey, { generate: true, force: !!body.force }); }
+        finally { epaperAiInFlight.delete(paperKey); }
+      })();
+      epaperAiInFlight.set(paperKey, p);
+      try {
+        const r = await p;
+        if (r.error) return sendJSON(r.status || 400, { error: r.error });
+        return sendJSON(200, r);
+      } catch (err) {
+        console.error(`[kid-reminder] answers generate failed (${paperKey}): ${err.message}`);
+        return sendJSON(502, { error: err.message });
+      }
     }
 
     if (method === "GET" && pathname === "/api/epaper/questions") {

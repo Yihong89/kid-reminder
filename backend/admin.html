@@ -778,6 +778,16 @@
   </div>
 </dialog>
 
+<dialog id="epaperAnswersDialog" class="sci-grade-dialog">
+  <h3 id="epaperAnswersTitle">📝 纸面题答案</h3>
+  <p>孩子打印做的句子改写 + 阅读理解开放题在这里对答案：参考答案、得分点、原文中文翻译和逐题答题思路。</p>
+  <div id="epaperAnswersBody"></div>
+  <div class="row">
+    <button class="ghost" id="epaperAnswersGen">🤖 生成翻译和思路</button>
+    <button class="ghost" id="epaperAnswersClose">关闭</button>
+  </div>
+</dialog>
+
 <dialog id="sciPreviewDialog" class="sci-grade-dialog">
   <h3 id="sciPreviewTitle">🔬 科学试卷预览</h3>
   <p>只读预览每道题的题干 + 裁剪图 + 得分点 + 参考答案 + 试卷的“不接受”提示，方便家长先校验整卷正确性，再给孩子做。</p>
@@ -2097,8 +2107,12 @@
             <div>${escapeHtml(p.school)} ${p.year || ""}</div>
             <div class="meta">${p.questionCount} 题 · ${p.marksTotal} 分</div>
           </div>
-          <button class="ghost">👁 预览</button>`;
-        row.querySelector("button").onclick = () => openEpaperPreview(p.paperKey, `${p.school} ${p.year || ""}`);
+          <span class="row-btns">
+            <button class="ghost" data-act="answers">📝 纸面答案</button>
+            <button class="ghost" data-act="preview">👁 预览</button>
+          </span>`;
+        row.querySelector('[data-act="preview"]').onclick = () => openEpaperPreview(p.paperKey, `${p.school} ${p.year || ""}`);
+        row.querySelector('[data-act="answers"]').onclick = () => openEpaperAnswers(p.paperKey, `${p.school} ${p.year || ""}`);
         el.appendChild(row);
       }
     } catch (e) { showErr(e.message); }
@@ -2115,6 +2129,95 @@
       $("#epaperPreviewDialog").showModal();
     } catch (e) { showErr(e.message); }
   }
+
+  // ---- 纸面题答案包：句子改写 + 阅读开放题，家长核对纸上答案用 -------------
+  // 打印讲义的镜像视图：孩子做纸上的，家长在这里对答案。AI（DeepSeek 经
+  // oeq-grader 中转）补原文中文翻译 + 逐题答题思路，缓存在服务端，题干改了
+  // 自动失效重新生成。
+  let answersPaperKey = "";
+
+  async function openEpaperAnswers(paperKey, label) {
+    answersPaperKey = paperKey;
+    $("#epaperAnswersTitle").textContent = `📝 纸面题答案 · ${label}`;
+    $("#epaperAnswersBody").innerHTML = '<div class="empty">加载中…</div>';
+    $("#epaperAnswersDialog").showModal();
+    try {
+      const d = await api(`/api/epaper/answers?paperKey=${encodeURIComponent(paperKey)}`);
+      renderEpaperAnswers(d);
+    } catch (e) { $("#epaperAnswersBody").innerHTML = `<div class="empty">${escapeHtml(e.message)}</div>`; }
+  }
+
+  function renderEpaperAnswers(d) {
+    const el = $("#epaperAnswersBody");
+    el.innerHTML = "";
+    if (d.aiIssues && d.aiIssues.length) {
+      const w = document.createElement("div");
+      w.className = "meta"; w.style.color = "#b45309"; w.style.marginBottom = "8px";
+      w.textContent = "⚠ " + d.aiIssues.join("；");
+      el.appendChild(w);
+    }
+    if (d.passageZh) {
+      const det = document.createElement("details");
+      det.className = "sci-item-card";
+      const range = d.oeq.length ? `（对应第 ${d.oeq[0].seq}–${d.oeq[d.oeq.length - 1].seq} 题）` : "";
+      det.innerHTML = `<summary style="cursor:pointer;font-weight:600">🀄 阅读理解原文 · 中文翻译${range}</summary>
+        <div style="white-space:pre-wrap;margin-top:8px;line-height:1.7">${escapeHtml(d.passageZh)}</div>`;
+      el.appendChild(det);
+    }
+    const sectionHead = (t) => {
+      const h = document.createElement("div");
+      h.style.cssText = "margin:14px 0 6px;font-weight:700";
+      h.textContent = t;
+      el.appendChild(h);
+    };
+    if (d.synthesis.length) {
+      sectionHead(`Section A · 句子改写（${d.synthesis.reduce((s, q) => s + q.marks, 0)} 分）`);
+      for (const q of d.synthesis) {
+        const c = document.createElement("div");
+        c.className = "sci-item-card";
+        c.innerHTML = `
+          <div class="head"><span>第 ${q.seq} 题</span><span>${q.marks} 分</span></div>
+          ${q.original ? `<div class="context">${escapeHtml(q.original)}</div>` : ""}
+          <div class="prompt">${escapeHtml(q.opening)}</div>
+          <div class="answer" style="color:#047857;white-space:pre-wrap">参考答案：${q.answers.map(escapeHtml).join("\n　　　　　　") || "—"}</div>
+          ${q.explanation ? `<div class="meta">${escapeHtml(q.explanation)}</div>` : ""}`;
+        el.appendChild(c);
+      }
+    }
+    if (d.oeq.length) {
+      sectionHead(`Section B · 阅读理解开放题（${d.oeq.reduce((s, q) => s + q.marks, 0)} 分）`);
+      for (const q of d.oeq) {
+        const c = document.createElement("div");
+        c.className = "sci-item-card";
+        const pts = q.points.map((p) =>
+          `<div class="sci-point-row"><div><div class="kind">${EPAPER_KIND_LABEL[p.kind] || p.kind}</div><div class="desc">${escapeHtml(p.description)}</div></div></div>`).join("");
+        c.innerHTML = `
+          <div class="head"><span>第 ${q.seq} 题</span><span>${q.marks} 分</span></div>
+          <div class="prompt">${escapeHtml(q.prompt)}</div>
+          ${pts}
+          ${q.explanation ? `<div class="answer">参考答案：${escapeHtml(q.explanation)}</div>` : ""}
+          <div class="sci-point-row" style="border-left:3px solid #2563eb">
+            <div><div class="kind">💡 答题思路</div>
+            <div class="desc">${q.analysis ? escapeHtml(q.analysis) : '<span style="color:#9ca3af">还没生成 —— 点下方按钮</span>'}</div></div></div>`;
+        el.appendChild(c);
+      }
+    }
+    const gen = $("#epaperAnswersGen");
+    gen.textContent = d.aiReady ? "🤖 重新生成翻译和思路" : "🤖 生成翻译和思路";
+  }
+
+  $("#epaperAnswersGen").onclick = async () => {
+    const btn = $("#epaperAnswersGen");
+    btn.disabled = true;
+    const old = btn.textContent;
+    btn.textContent = "⏳ 生成中，约十几秒…";
+    try {
+      const d = await api("/api/epaper/answers", { method: "POST", body: JSON.stringify({ paperKey: answersPaperKey, force: true }) });
+      renderEpaperAnswers(d);
+    } catch (e) { showErr(e.message); }
+    finally { btn.disabled = false; btn.textContent = old; }
+  };
+  $("#epaperAnswersClose").onclick = () => $("#epaperAnswersDialog").close();
 
   function epaperPreviewStepCard(step) {
     const card = document.createElement("div");
