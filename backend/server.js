@@ -4781,20 +4781,14 @@ const server = http.createServer(async (req, res) => {
         ).run(answer, correct ? 1 : 0, correct ? 1 : 0, itemId);
         db.prepare("UPDATE epaper_questions SET attempts = attempts + 1, score_total = score_total + ? WHERE id = ?")
           .run(correct ? q.marks : 0, q.id);
-        db.prepare("UPDATE epaper_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?")
-          .run(correct ? 1 : -1, q.id);
-        // drill（错题本练习 / 跨卷子专项）不经过家长复核，交卷即定分 —— 所以判错
-        // 直接收进错题本，否则这些题永远不会出现在错题本里。卷子模式仍然等家长
-        // 复核（下面这条 NOTE 描述的规则不变）。
-        try {
-          const sess = db.prepare("SELECT mode FROM epaper_sessions WHERE id = ?").get(item.session_id);
-          if (!correct && sess && sess.mode === "drill") {
-            db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
-          }
-        } catch { /* session deleted mid-submit */ }
-        // NOTE: a wrong objective answer is NOT added to 错题本 here. It only
-        // enters the mistake bank after the parent reviews/flags it (see the
-        // /review handler below), so test runs don't pollute the bank.
+        // 判错 → 进错题本 + 正确数归零；判对 → 正确数 +1。和「纸面答案」里
+        // 人工批改句子改写完全同一条规矩（2026-11-24 家长要求自动批的题也这样
+        // 收集）。原来判错只 -1、等家长复核才入本 —— 但整卷模式现在只在线上
+        // 做客观题、交卷即定分，基本不经过复核页，等复核等于永远进不了错题本。
+        // "误判污染错题本"的旧顾虑由 sticky + 手动「已掌握」兜底：错收的能出去，
+        // 真错过的不能漏进来。
+        db.prepare("UPDATE epaper_questions SET correct_count = ?, in_mistake_bank = ? WHERE id = ?")
+          .run(correct ? q.correct_count + 1 : 0, correct ? q.in_mistake_bank : 1, q.id);
         item.final_correct = correct ? 1 : 0;
         // Sentence rewrites that the string comparison rejected get a second
         // opinion from the local model, off the request path — same fire-and-
@@ -5068,14 +5062,15 @@ const server = http.createServer(async (req, res) => {
           if (earned < q.marks) {
             db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
           }
-          // correct_count: +1/-1 the first time this question is reviewed (mirrors
-          // the objective submit-time bump below); a later re-review that flips
-          // "full marks" either way nets ±2, same convention as english_questions'
-          // override endpoint (reverse the old delta, then apply the new one).
-          const prevFullMarks = prev >= q.marks, nowFullMarks = final >= q.marks;
-          const ccDelta = !alreadyReviewed ? (nowFullMarks ? 1 : -1)
-            : nowFullMarks !== prevFullMarks ? (nowFullMarks ? 2 : -2) : 0;
-          if (ccDelta) db.prepare("UPDATE epaper_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?").run(ccDelta, q.id);
+          // 与人工批改统一：满分 → 正确数 +1，否则归零（重错之前攒的不作数）。
+          // 只在本次复核改变了结论时动手（首次复核，或满分与否被翻案），
+          // 重复提交同一判定不重复计数。满分用扣分后的 earned 判断，
+          // 和上面入本同一口径（lift_zero/simplify/tense 都算进来）。
+          const nowFullMarks = earned >= q.marks;
+          if (!alreadyReviewed || nowFullMarks !== (prev >= q.marks)) {
+            if (nowFullMarks) db.prepare("UPDATE epaper_questions SET correct_count = correct_count + 1 WHERE id = ?").run(q.id);
+            else db.prepare("UPDATE epaper_questions SET correct_count = 0 WHERE id = ?").run(q.id);
+          }
         } else if (typeof entry.finalCorrect === "boolean") {
           // objective: a pure correction to what submit already counted once —
           // attempts never changes here, only score_total's delta and the
@@ -5086,16 +5081,13 @@ const server = http.createServer(async (req, res) => {
             .run(entry.finalCorrect ? 1 : 0, itemId);
           db.prepare("UPDATE epaper_questions SET score_total = score_total + ? WHERE id = ?")
             .run(now - prev, q.id);
-          // 和阅读理解同一条规矩：判错收进错题本，判对不动（移出只由家长手点
-          // 「已掌握」控制，见上面阅读理解那段的说明）。
+          // 和阅读理解、人工批改同一条规矩：判错 → 入错题本 + 正确数归零；
+          // 判对（把自动误判翻案回来）→ 正确数从归零后的状态重新 +1 起攒。
+          // 错题本移出只由家长在错题本管理页点「✅ 已掌握」控制。
           if (!entry.finalCorrect) {
-            db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1 WHERE id = ?").run(q.id);
-          }
-          // correct_count: submit already applied the initial +1/-1, so a
-          // correction here (if any) is always a flip — net ±2.
-          if (entry.finalCorrect !== !!item.final_correct) {
-            db.prepare("UPDATE epaper_questions SET correct_count = MAX(0, correct_count + ?) WHERE id = ?")
-              .run(entry.finalCorrect ? 2 : -2, q.id);
+            db.prepare("UPDATE epaper_questions SET in_mistake_bank = 1, correct_count = 0 WHERE id = ?").run(q.id);
+          } else if (entry.finalCorrect !== !!item.final_correct) {
+            db.prepare("UPDATE epaper_questions SET correct_count = correct_count + 1 WHERE id = ?").run(q.id);
           }
         }
       }
