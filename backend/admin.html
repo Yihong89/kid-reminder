@@ -2171,16 +2171,37 @@
       el.appendChild(h);
     };
     if (d.synthesis.length) {
-      sectionHead(`Section A · 句子改写（${d.synthesis.reduce((s, q) => s + q.marks, 0)} 分）`);
+      sectionHead(`Section A · 句子改写（${d.synthesis.reduce((s, q) => s + q.marks, 0)} 分）—— 对照纸上的作答，点 ✅/❌ 人工批改`);
       for (const q of d.synthesis) {
         const c = document.createElement("div");
         c.className = "sci-item-card";
+        const onC = q.verdict === "correct" ? "outline:2px solid #16a34a;" : "";
+        const onW = q.verdict === "wrong" ? "outline:2px solid #dc2626;" : "";
         c.innerHTML = `
           <div class="head"><span>第 ${q.seq} 题</span><span>${q.marks} 分</span></div>
           ${q.original ? `<div class="context">${escapeHtml(q.original)}</div>` : ""}
           <div class="prompt">${escapeHtml(q.opening)}</div>
           <div class="answer" style="color:#047857;white-space:pre-wrap">参考答案：${q.answers.map(escapeHtml).join("\n　　　　　　") || "—"}</div>
-          ${q.explanation ? `<div class="meta">${escapeHtml(q.explanation)}</div>` : ""}`;
+          ${q.explanation ? `<div class="meta">${escapeHtml(q.explanation)}</div>` : ""}
+          <div class="row" style="margin-top:8px;align-items:center;gap:8px">
+            <button class="ghost" data-v="correct" style="${onC}">✅ 对</button>
+            <button class="ghost" data-v="wrong" style="${onW}">❌ 错</button>
+            <span class="meta" data-meta>正确数 ${q.correctCount}${q.inMistakeBank ? " · 已入错题本" : ""}</span>
+          </div>`;
+        c.querySelectorAll("[data-v]").forEach((btn) => {
+          btn.onclick = async () => {
+            c.querySelectorAll("[data-v]").forEach((b) => { b.disabled = true; });
+            try {
+              const r = await api("/api/epaper/answers/grade", { method: "POST", body: JSON.stringify({ questionId: q.id, verdict: btn.dataset.v }) });
+              q.verdict = r.verdict; q.correctCount = r.correctCount; q.inMistakeBank = r.inMistakeBank;
+              const cbtnC = c.querySelector('[data-v="correct"]'), cbtnW = c.querySelector('[data-v="wrong"]');
+              cbtnC.style.outline = r.verdict === "correct" ? "2px solid #16a34a" : "";
+              cbtnW.style.outline = r.verdict === "wrong" ? "2px solid #dc2626" : "";
+              c.querySelector("[data-meta]").textContent = `正确数 ${r.correctCount}${r.inMistakeBank ? " · 已入错题本" : ""}`;
+              c.querySelectorAll("[data-v]").forEach((b) => { b.disabled = false; });
+            } catch (e) { showErr(e.message); c.querySelectorAll("[data-v]").forEach((b) => { b.disabled = false; }); }
+          };
+        });
         el.appendChild(c);
       }
     }

@@ -48,6 +48,7 @@
 //   GET  /api/wordwise                    -> Word Wise accumulation list (?search=)  [X-Admin-Pin or X-Kid-Pin]
 //   GET  /api/epaper/answers              -> 纸面题答案包: 改写+阅读的答案/得分点/翻译/思路 [X-Admin-Pin]
 //   POST /api/epaper/answers              -> (re)generate the AI translation/analysis  [X-Admin-Pin]
+//   POST /api/epaper/answers/grade        -> 人工批改纸面题 (判对/判错, 错题本联动)   [X-Admin-Pin]
 //   POST /api/wordwise                    -> add a word + example sentence (dupes rejected)  [X-Admin-Pin or X-Kid-Pin]
 //   PATCH /api/wordwise/:id               -> fix a word/sentence typo              [X-Admin-Pin or X-Kid-Pin]
 //   DELETE /api/wordwise/:id              -> remove an entry                       [X-Admin-Pin or X-Kid-Pin]
@@ -795,6 +796,11 @@ try { db.exec("ALTER TABLE epaper_questions ADD COLUMN passage TEXT NOT NULL DEF
 // 错题本 list so a parent can see progress on a mistake-bank question across
 // repeat attempts without it silently dropping out of the bank.
 try { db.exec("ALTER TABLE epaper_questions ADD COLUMN correct_count INTEGER NOT NULL DEFAULT 0"); } catch { /* exists */ }
+// 纸面题（句子改写）家长线下核对后在网页「纸面答案」里人工判对/判错，存最后一次
+// 判定用于回显按钮状态。判错 = 进错题本 + correct_count 归零（在不在错题本都归零，
+// 2026-11-24 家长要求：重错的题之前攒的正确数不作数）；判对 = correct_count +1。
+// 错题本仍是 sticky —— 只有错题本管理页能移出。
+try { db.exec("ALTER TABLE epaper_questions ADD COLUMN manual_verdict TEXT NOT NULL DEFAULT ''"); } catch { /* exists */ }
 // Local-AI second opinion on OEQ mark points the keyword matcher missed
 // (auto_hit = 0). NULL = not analysed — feature off, Ollama unavailable, or the
 // background job hasn't finished yet. Purely additive: when it's NULL the parent
@@ -2522,9 +2528,10 @@ async function epaperBuildAnswerKey(db, paperKey, { generate = false, force = fa
   const synthesis = qRows.filter((r) => r.section === "synthesis").map((r) => {
     const { original, opening } = epaperSynthesisParts(r);
     return {
-      seq: r.paper_seq, marks: r.marks, original, opening,
+      id: r.id, seq: r.paper_seq, marks: r.marks, original, opening,
       answers: (r.correct_answer || "").split("/").map((s) => s.trim()).filter(Boolean),
       explanation: r.explanation || "",
+      verdict: r.manual_verdict || "", correctCount: r.correct_count, inMistakeBank: !!r.in_mistake_bank,
     };
   });
 
@@ -5183,6 +5190,34 @@ const server = http.createServer(async (req, res) => {
         console.error(`[kid-reminder] answers generate failed (${paperKey}): ${err.message}`);
         return sendJSON(502, { error: err.message });
       }
+    }
+
+    // 人工批改纸面题（句子改写）：家长对着纸上的作答在网页判对/错。
+    // 判错 → 进错题本 + correct_count 归零 —— 已在错题本里的同样归零：重错的题
+    // 之前攒的正确数不作数（2026-11-24 家长要求）；判对 → correct_count +1。
+    // 错题本依然 sticky，移出只在错题本管理页手动来。
+    if (method === "POST" && pathname === "/api/epaper/answers/grade") {
+      if (req.headers["x-admin-pin"] !== ADMIN_PIN) return sendJSON(401, { error: "admin pin required" });
+      const body = await readBody(req);
+      const q = db.prepare(
+        "SELECT id, section, paper_key, paper_seq, in_mistake_bank, correct_count FROM epaper_questions WHERE id = ?"
+      ).get(Number(body.questionId));
+      if (!q) return sendJSON(404, { error: "question not found" });
+      if (q.section !== "synthesis") return sendJSON(400, { error: "只有句子改写题在这里人工批改" });
+      const verdict = body.verdict === "wrong" ? "wrong" : body.verdict === "correct" ? "correct" : "";
+      if (!verdict) return sendJSON(400, { error: "verdict 必须是 correct 或 wrong" });
+      let cc = q.correct_count, bank = q.in_mistake_bank, note;
+      if (verdict === "wrong") {
+        cc = 0; bank = 1;
+        note = q.in_mistake_bank ? "重错 —— 已在错题本，正确数归零" : "已加入错题本，正确数归零";
+      } else {
+        cc = q.correct_count + 1;
+        note = `已记答对，正确数 +1（当前 ${cc}）`;
+      }
+      db.prepare("UPDATE epaper_questions SET manual_verdict = ?, correct_count = ?, in_mistake_bank = ? WHERE id = ?")
+        .run(verdict, cc, bank, q.id);
+      console.log(`[kid-reminder] manual grade ${q.paper_key}#${q.paper_seq}: ${verdict}`);
+      return sendJSON(200, { ok: true, verdict, correctCount: cc, inMistakeBank: !!bank, note });
     }
 
     if (method === "GET" && pathname === "/api/epaper/questions") {
